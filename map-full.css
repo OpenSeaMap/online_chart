@@ -1,0 +1,23 @@
+html,body {
+	background-color: #ffffff;
+	height: 100%;
+	width: 100%;
+	margin: 0; 
+	padding: 0;
+	overflow: hidden;
+	color: #000000;
+}
+ 
+#map {
+	height: 100%;
+	width: 100%;
+	padding: 0; margin: 0;
+}
+ 
+
+#osm {
+	font-size: 0.7em;
+	font-style: italic;
+	margin-bottom: 20px;
+}
+
