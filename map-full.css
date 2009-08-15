@@ -14,6 +14,14 @@ html,body {
 	padding: 0; margin: 0;
 }
  
+#map_key {
+	margin-bottom: 5px;
+	border: 2px solid #000080;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	background-color: #FFF;
+	padding: 5px;
+}
 
 #osm {
 	font-size: 0.7em;

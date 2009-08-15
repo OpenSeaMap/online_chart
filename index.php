@@ -21,7 +21,7 @@ include("../classes/Translation.php");
 			var layer_tah;
 			var layer_markers;
 			
-			// Position und Zoomstufe der Karte
+			// Position and zoomlevel of the map
 			var lon = 12.0915;
 			var lat = 54.1878;
 			var zoom = 15;
@@ -131,11 +131,14 @@ include("../classes/Translation.php");
 				layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
 				// Osmarender
 				layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
-				// Seezeichen
-				layer_markers = new OpenLayers.Layer.TMS("<?=$t->tr("Seezeichen")?>", "../tiles/",
+				// Seamark
+				layer_seamark = new OpenLayers.Layer.TMS("<?=$t->tr("Seezeichen")?>", "http://openseamap.org/tiles/",
+				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
+				// Sport
+				layer_sport = new OpenLayers.Layer.TMS("Sport", "http://openseamap.org/tiles/sport/",
 				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
 
-				map.addLayers([layer_mapnik, layer_tah, layer_markers]);
+				map.addLayers([layer_mapnik, layer_tah, layer_sport, layer_seamark]);
 				jumpTo(lon, lat, zoom);
 			}
 			
@@ -149,7 +152,7 @@ include("../classes/Translation.php");
 						<div style="position:absolute; bottom:10px; left:90px; width:700px;">
 							<img src="resources/somerights20.png" height="30px" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 						</div>
-						<div onClick="showLegend()" style="position:absolute; top:10px; left:60px; background-color:darkblue;color:#FFF;padding: 4px;font-weight:bold;cursor:default;">
+						<div id="map_key" onClick="showLegend()" style="position:absolute; top:10px; left:60px; background-color:darkblue;color:#FFF;padding: 4px;font-weight:bold;cursor:default;">
 							<?=$t->tr("Legende")?>
 						</div>
 					</td>
