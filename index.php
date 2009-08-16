@@ -150,7 +150,7 @@ include("../classes/Translation.php");
 					<td valign="top" class="normal">
 						<div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
 						<div style="position:absolute; bottom:10px; left:90px; width:700px;">
-							<img src="resources/somerights20.png" height="30px" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
+							<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 						</div>
 						<div id="map_key" onClick="showLegend()" style="position:absolute; top:10px; left:60px; background-color:darkblue;color:#FFF;padding: 4px;font-weight:bold;cursor:default;">
 							<?=$t->tr("Legende")?>

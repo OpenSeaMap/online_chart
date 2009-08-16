@@ -16,9 +16,9 @@ html,body {
  
 #map_key {
 	margin-bottom: 5px;
-	border: 2px solid #000080;
-	-moz-border-radius: 8px;
-	border-radius: 8px;
+	border: 1px solid #000080;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
 	background-color: #FFF;
 	padding: 5px;
 }
