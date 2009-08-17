@@ -24,11 +24,11 @@ $p->setDefaultPage("harbour");
 
 	<body>
 		<div id="header">
-		<?=$p->makePageLinks("legend.php?lang=".$t->getCurrentLanguage()."&amp;")?>
+			<?=$p->makePageLinks("legend.php?lang=".$t->getCurrentLanguage()."&amp;")?>
 		</div>
 		<div id="content">
 			<br>
-<?php include($p->makeIncludePage()); ?>
+			<?php include($p->makeIncludePage()); ?>
 			<br>
 		</div>
 	</body>
