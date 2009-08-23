@@ -135,7 +135,7 @@ include("../classes/Translation.php");
 				layer_seamark = new OpenLayers.Layer.TMS("<?=$t->tr("Seezeichen")?>", "http://openseamap.org/tiles/",
 				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
 				// Sport
-				layer_sport = new OpenLayers.Layer.TMS("Sport", "http://openseamap.org/tiles/sport/",
+				layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
 				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
 
 				map.addLayers([layer_mapnik, layer_tah, layer_sport, layer_seamark]);
