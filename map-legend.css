@@ -11,17 +11,17 @@
 }
 
 #header a {
-		text-decoration: none;
-		display: block;
-		background: #eee;
-		padding: 0.24em 1em;
-		color: black;
-		width: 9em;
-		text-align: center;
+	text-decoration: none;
+	display: block;
+	background: #eee;
+	padding: 0.24em 1em;
+	color: black;
+	width: 11em;
+	text-align: center;
 }
 
 #header a:hover {
-		background: #ddf;
+	background: #ddf;
 }
 
 #header ul {

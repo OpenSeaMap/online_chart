@@ -31,7 +31,7 @@ include("../classes/Translation.php");
 			if (zoom=="") zoom=15
 
 			function showLegend() {
-				legendWindow = window.open("legend.php?lang=<?= $t->getCurrentLanguage() ?>", "Legende", "width=750, height=680, status=no, scrollbars=yes, resizable=yes");
+				legendWindow = window.open("legend.php?lang=<?= $t->getCurrentLanguage() ?>", "Legende", "width=880, height=680, status=no, scrollbars=yes, resizable=yes");
  				legendWindow.focus();
 			}
 			
