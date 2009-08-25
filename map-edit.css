@@ -1,0 +1,71 @@
+html,body {
+	background-color: #ffffff;
+	height: 100%;
+	width: 100%;
+	margin: 0; 
+	padding: 0;
+	overflow: hidden;
+	color: #000000;
+}
+
+#head {
+	width: 14%;
+	padding: 0;
+	margin: 10px;
+}
+
+#login {
+	width: 14%;
+	padding: 0;
+	margin: 10px;
+}
+
+#logout {
+	width: 14%;
+	padding: 0;
+	margin: 10px;
+}
+
+#data {
+	width: 14%;
+	padding: 0;
+	margin: 10px;
+}
+
+#action {
+	width: 14%;
+	padding: 0;
+	margin: 10px;
+}
+
+.infobox {
+	margin-bottom: 5px;
+	border: 2px solid #000080;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	background-color: #FFF;
+	font-size: 18px;
+	padding: 5px;
+}
+
+.dialog {
+	margin-bottom: 5px;
+	border: 2px solid #000080;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	background-color: #FFF;
+	padding: 5px;
+}
+
+#map {
+	height: 100%;
+	width: 85%;
+	padding: 0;
+	margin: 0;
+}
+
+#osm {
+	font-size: 0.7em;
+	font-style: italic;
+	margin-bottom: 20px;
+}
