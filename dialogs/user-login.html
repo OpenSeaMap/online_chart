@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+       "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta name="AUTHOR" content="Olaf Hannemann" />
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+		<meta http-equiv="content-language" content="de" />
+		<title>OpenSeaMap: Benutzeranmeldung</title>
+		<script type="text/javascript">
+
+			function login() {
+				opener.window.loginUser_login(window.document.Login.user_name.value, window.document.Login.password.value);
+				this.close();
+			}
+
+			function cancel() {
+				this.close();
+			}
+			
+		</script>
+	</head>
+	<body>
+		<form name="Login" action="">
+			<h3>Anmelden</h3>
+			<table>
+				<tr>
+					<td valign="top">
+						Benutzername:&nbsp;
+					</td>
+					<td valign="top">
+						<input type="text" name="user_name" align="left"/>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">
+						Passwort:&nbsp;
+					</td>
+					<td valign="top">
+						<input type="password" name="password" align="left"/>
+					</td>
+				</tr>
+			</table>
+			<p align="right">
+				<br>
+				<input type="button" value="Anmelden" onclick="login()">
+				&nbsp;&nbsp;
+				<input type="button" value="Abbrechen" onclick="cancel()">
+				&nbsp;&nbsp;
+			</p>
+		</form>
+	</body>
+</html>
