@@ -104,7 +104,7 @@
 			style="cursor:pointer"><?=$t->tr("isolated_danger")?>
 		</td>
 	</tr>
-	<!--<tr>
+	<tr>
 		<td	height="5" class="normal" colspan="2">
 			<hr>
 		</td>
@@ -118,7 +118,7 @@
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("special_purpose")?>
 		</td>
-	</tr>-->
+	</tr>
 	<tr height="100%">
 		<td>
 		</td>

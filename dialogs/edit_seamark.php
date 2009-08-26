@@ -34,20 +34,25 @@
 				_mode = getArgument("mode");
 				if (_mode == "create") {
 					document.getElementById("header_add").style.visibility = "visible";
-					var database = new DataModel();
+					database = new DataModel();
 					_category = getArgument("type")
 					_seamark = database.get("meta", _category);
 					if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
 						_tags[0] = "seamark:" + _seamark + ":category," + _category;
 					} else {
-						_tags[0] = "seamark:category," + _category;
+						_tags[0] = "seamark:category," + _seamark;
 					}
 				} else {
 					_id = getArgument("id");
 					_version = getArgument("version");
 					_node = opener.window.getKeys(_id);
 					_tags = _node.split("|");
-					_seamark = getKey("seamark");
+					var buff = getKey("seamark");
+					if (buff == "-1") {
+						_seamark = getKey("seamark:category");
+					} else {
+						_seamark = buff;
+					}
 
 					switch (_mode) {
 						case "delete":
@@ -65,6 +70,9 @@
 					switch (_seamark) {
 						case "buoy_safe_water":
 							_category = "safe_water";
+							break;
+						case "buoy_special_purpose":
+							_category = "special_purpose";
 							break;
 						case "buoy_lateral":
 							_category = getKey("seamark:buoy_lateral:category");
@@ -103,6 +111,7 @@
 					case "starboard":
 						_topmark_shape = "cone";
 						_light_colour = "green";
+						document.AddLateral.top.disabled = false;
 						buoyImage.src = "../resources/lateral/Lateral_Green.png";
 						buoyImageTop.src = "../resources/lateral/Lateral_Green_Conical.png";
 						buoyImageLighted.src = "../resources/lateral/Lateral_Green_Lighted.png";
@@ -111,6 +120,7 @@
 					case "port":
 						_topmark_shape = "cylinder";
 						_light_colour = "red";
+						document.AddLateral.top.disabled = false;
 						buoyImage.src = "../resources/lateral/Lateral_Red.png";
 						buoyImageTop.src = "../resources/lateral/Lateral_Red_Cylindrical.png";
 						buoyImageLighted.src = "../resources/lateral/Lateral_Red_Lighted.png";
@@ -119,6 +129,7 @@
 					case "safe_water":
 						_topmark_shape = "sphere";
 						_light_colour = "white";
+						document.AddLateral.top.disabled = false;
 						buoyImage.src = "../resources/lateral/Lateral_SafeWater.png";
 						buoyImageTop.src = "../resources/lateral/Lateral_SafeWater_Sphere.png";
 						buoyImageLighted.src = "../resources/lateral/Lateral_SafeWater_Lighted.png";
@@ -127,6 +138,7 @@
 					case "preferred_channel_starboard":
 						_topmark_shape = "cone";
 						_light_colour = "green";
+						document.AddLateral.top.disabled = false;
 						buoyImage.src = "../resources/lateral/Lateral_Pref_Starboard.png";
 						buoyImageTop.src = "../resources/lateral/Lateral_Pref_Starboard_Conical.png";
 						buoyImageLighted.src = "../resources/lateral/Lateral_Pref_Starboard_Lighted.png";
@@ -135,69 +147,83 @@
 					case "preferred_channel_port":
 						_topmark_shape = "cylinder";
 						_light_colour = "red";
+						document.AddLateral.top.disabled = false;
 						buoyImage.src = "../resources/lateral/Lateral_Pref_Port.png";
 						buoyImageTop.src = "../resources/lateral/Lateral_Pref_Port_Cylindrical.png";
 						buoyImageLighted.src = "../resources/lateral/Lateral_Pref_Port_Lighted.png";
 						buoyImageTopLighted.src = "../resources/lateral/Lateral_Pref_Port_Cylindrical_Lighted.png";
 						break;
 					case "north":
-						_topmark_shape = "sphere";
+						_topmark_shape = "2_cones_up";
 						_light_colour = "white";
 						document.AddLateral.top.checked = true;
+						document.AddLateral.top.disabled = true;
 						buoyImage.src = "../resources/cardinal/Cardinal_North.png";
 						buoyImageTop.src = "../resources/cardinal/Cardinal_North.png";
 						buoyImageLighted.src = "../resources/cardinal/Cardinal_North_Lighted.png";
 						buoyImageTopLighted.src = "../resources/cardinal/Cardinal_North_Lighted.png";
 						break;
 					case "east":
-						_topmark_shape = "sphere";
+						_topmark_shape = "2_cones_base_together";
 						_light_colour = "white";
 						document.AddLateral.top.checked = true;
+						document.AddLateral.top.disabled = true;
 						buoyImage.src = "../resources/cardinal/Cardinal_East.png";
 						buoyImageTop.src = "../resources/cardinal/Cardinal_East.png";
 						buoyImageLighted.src = "../resources/cardinal/Cardinal_East_Lighted.png";
 						buoyImageTopLighted.src = "../resources/cardinal/Cardinal_East_Lighted.png";
 						break;
 					case "south":
-						_topmark_shape = "sphere";
+						_topmark_shape = "2_cones_down";
 						_light_colour = "white";
 						document.AddLateral.top.checked = true;
+						document.AddLateral.top.disabled = true;
 						buoyImage.src = "../resources/cardinal/Cardinal_South.png";
 						buoyImageTop.src = "../resources/cardinal/Cardinal_South.png";
 						buoyImageLighted.src = "../resources/cardinal/Cardinal_South_Lighted.png";
 						buoyImageTopLighted.src = "../resources/cardinal/Cardinal_South_Lighted.png";
 						break;
 					case "west":
-						_topmark_shape = "sphere";
+						_topmark_shape = "2_cones_point_together";
 						_light_colour = "white";
 						document.AddLateral.top.checked = true;
+						document.AddLateral.top.disabled = true;
 						buoyImage.src = "../resources/cardinal/Cardinal_West.png";
-						buoyImageTop.src = "../resources/lateral/cardinal/Cardinal_West.png";
+						buoyImageTop.src = "../resources/cardinal/Cardinal_West.png";
 						buoyImageLighted.src = "../resources/cardinal/Cardinal_West_Lighted.png";
 						buoyImageTopLighted.src = "../resources/cardinal/Cardinal_West_Lighted.png";
 						break;
 					case "isolated_danger":
-						_topmark_shape = "2 spheres";
+						_topmark_shape = "2_spheres";
 						_light_colour = "white";
 						document.AddLateral.top.checked = true;
+						document.AddLateral.top.disabled = true;
 						buoyImage.src = "../resources/cardinal/Cardinal_Single.png";
 						buoyImageTop.src = "../resources/cardinal/Cardinal_Single.png";
 						buoyImageLighted.src = "../resources/cardinal/Cardinal_Single_Lighted.png";
 						buoyImageTopLighted.src = "../resources/cardinal/Cardinal_Single_Lighted.png";
 						break;
+					case "special_purpose":
+						_topmark_shape = "x-shape";
+						_light_colour = "white";
+						document.AddLateral.top.disabled = false;
+						buoyImage.src = "../resources/special_purpose/Special_Purpose.png";
+						buoyImageTop.src = "../resources/special_purpose/Special_Purpose_x-Shape.png";
+						buoyImageLighted.src = "../resources/special_purpose/Special_Purpose_Lighted.png";
+						buoyImageTopLighted.src = "../resources/special_purpose/Special_Purpose_x-Shape_Lighted.png";
+						break;
 				}
+				onChangeLights();
+				onChangeTopmark();
 			}
 
 			// Selection of seamark category has changed
 			function seamarkChanged() {
 				old_seamark = _seamark;
 				_category = document.AddLateral.seamark_category.value;
-				if (_category == "safe_water") {
-					_seamark = "buoy_safe_water";
-				} else {
-					_seamark = "buoy_lateral";
-				}
-				
+				database = new DataModel();
+				_seamark = database.get("meta", _category);
+
 				if (old_seamark != _seamark) {
 					if(_tags != "") {
 						for(i = 0; i < _tags.length; i++) {
@@ -212,10 +238,11 @@
 							}
 						}
 					}
-					setKey("seamark", _seamark);
 				}
-				if (_seamark != "buoy_safe_water") {
-					setKey("seamark:" + _seamark + ":category", _category);
+				if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
+					_tags[0] = "seamark:" + _seamark + ":category," + _category;
+				} else {
+					_tags[0] = "seamark:category," + _seamark;
 				}
 				loadImages();
 				onChangeLights();
@@ -293,7 +320,7 @@
 				// check for user login
 				if (!opener.window.userName) {
 					alert("Sie müssen angemeldet sein um die Daten zu speichern.");
-					opener.window.loginUser();
+					opener.window.loginUserSave();
 					return;
 				}
 				opener.window.editSeamarkOk(createXML(), _mode);
@@ -301,7 +328,9 @@
 			}
 
 			function cancel() {
-				opener.window.updateSeamarks();
+				if (_mode == "create" || _mode == "move") {
+					opener.window.updateSeamarks();
+				}
 				this.close();
 			}
 
@@ -401,6 +430,7 @@
 							<option value="south"/>Gefahr Süd
 							<option value="west"/>Gefahr West
 							<option value="isolated_danger"/>Einzelgefahrenzeichen
+							<option value="special_purpose"/>Sonderzeichen
 						</select>
 					</td>
 					<td rowspan="3" align="center" valign="middle" width="250" height="250">

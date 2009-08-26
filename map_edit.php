@@ -339,7 +339,13 @@
 
 			// Open login window
 			function loginUser() {
-				loginWindow = window.open("user-login.html", "Login", "width=380, height=200, resizable=yes");
+				loginWindow = window.open("./dialogs/user-login.html", "Login", "width=380, height=200, resizable=yes");
+ 				loginWindow.focus();
+			}
+
+			// Open login window
+			function loginUserSave() {
+				loginWindow = window.open("./user-login.html", "Login", "width=380, height=200, resizable=yes");
  				loginWindow.focus();
 			}
 
