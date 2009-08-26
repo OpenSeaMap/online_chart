@@ -16,6 +16,7 @@ DataModel.meta["east"] = "buoy_cardinal";
 DataModel.meta["south"] = "buoy_cardinal";
 DataModel.meta["west"] = "buoy_cardinal";
 DataModel.meta["isolated_danger"] = "buoy_isolated_danger";
+DataModel.meta["special_purpose"] = "buoy_special_purpose";
 
 DataModel.prototype.get = function(group, entry) {
 	return DataModel.meta[entry];
