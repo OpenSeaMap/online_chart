@@ -1,5 +1,5 @@
 <?php
-	include("../classes/Translation.php");
+	include("../../classes/Translation.php");
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -74,8 +74,14 @@
 						case "buoy_special_purpose":
 							_category = "special_purpose";
 							break;
+						case "buoy_isolated_danger":
+							_category = "isolated_danger";
+							break;
 						case "buoy_lateral":
 							_category = getKey("seamark:buoy_lateral:category");
+							break;
+						case "buoy_cardinal":
+							_category = getKey("seamark:buoy_cardinal:category");
 							break;
 					}
 				}
@@ -241,9 +247,8 @@
 				}
 				if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
 					_tags[0] = "seamark:" + _seamark + ":category," + _category;
-				} else {
-					_tags[0] = "seamark:category," + _seamark;
 				}
+				_tags[0] = "seamark:category," + _seamark;
 				loadImages();
 				onChangeLights();
 				onChangeTopmark(); 
@@ -351,7 +356,7 @@
 						}
 					}
 				}
-				alert(tagXML);
+				//alert(tagXML);
 				return tagXML
 			}
 

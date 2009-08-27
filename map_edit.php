@@ -1,5 +1,4 @@
 <?php
-	include("../classes/Pages.php");
 	include("../classes/Translation.php");
 ?>
 
@@ -425,7 +424,7 @@
 						if (action = "create") {
 							if (parseInt(response) > 0) {
 								_ChangeSetId = response;
-								alert(_ChangeSetId + " : " + todo);
+								//alert(_ChangeSetId + " : " + todo);
 								sendNodeOsm(todo);
 								document.getElementById("creating").style.visibility = "collapse";
 								return "0";
@@ -666,7 +665,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.91
+			Version 0.0.91.1
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
