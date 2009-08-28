@@ -514,6 +514,7 @@
 							var response = transport.responseText;
 							layer_markers.clearMarkers();
 							readOsmXml(response);
+							//alert(response);
 							document.getElementById("loading").style.visibility = "collapse";
 							return "0";
 						},
@@ -665,7 +666,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.91.1
+			Version 0.0.91.2
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />

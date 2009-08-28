@@ -39,9 +39,8 @@
 					_seamark = database.get("meta", _category);
 					if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
 						_tags[0] = "seamark:" + _seamark + ":category," + _category;
-					} else {
-						_tags[0] = "seamark:category," + _seamark;
 					}
+					_tags[1] = "seamark:category," + _seamark;
 				} else {
 					_id = getArgument("id");
 					_version = getArgument("version");
@@ -479,7 +478,35 @@
 					</td>
 					<td valign="top" align="right">
 						<div id="light_chr" style="visibility:hidden;">
-								<input type="text" name="lightchr" align="left" value="unknown"/>
+							<input type="text" name="lightchr" align="left" size="10" value="Befeuerung" disabled="true"/>
+							<input type="button" name="save_button" value="Bearbeiten" onclick="save()">
+
+							<!--<table>
+								<tr>
+									<td>
+										test
+									</td>
+									<td>
+										<input type="text" name="lightchr" align="left" value="unknown"/>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										test
+									</td>
+									<td>
+										<input type="text" name="lightchr" align="left" value="unknown"/>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										test
+									</td>
+									<td>
+										<input type="text" name="lightchr" align="left" value="unknown"/>
+									</td>
+								</tr>
+							</table>-->
 						</div>
 					</td>
 				</tr>
