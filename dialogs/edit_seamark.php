@@ -6,10 +6,11 @@
        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
+		<title>Seezeichen Bearbeiten</title>
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="content-language" content="de" />
-		<title>Seezeichen Bearbeiten</title>
+		<link rel="stylesheet" type="text/css" href="../map-edit.css">
 		<script type="text/javascript" src="../javascript/DataModel.js"></script>
 		<script type="text/javascript">
 
@@ -37,10 +38,10 @@
 					database = new DataModel();
 					_category = getArgument("type")
 					_seamark = database.get("meta", _category);
+					_tags[0] = "seamark:category," + _seamark;
 					if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
-						_tags[0] = "seamark:" + _seamark + ":category," + _category;
+						_tags[1] = "seamark:" + _seamark + ":category," + _category;
 					}
-					_tags[1] = "seamark:category," + _seamark;
 				} else {
 					_id = getArgument("id");
 					_version = getArgument("version");
@@ -101,7 +102,6 @@
 				}
 				if (getKey("seamark:light:colour") != "-1") {
 					document.AddLateral.light.checked = true;
-					document.AddLateral.lightchr.value = getKey("seamark:light:character");
 				}
 				var buff = getKey("seamark:" + _seamark + ":ref");
 				if (buff != "-1") {
@@ -244,10 +244,10 @@
 						}
 					}
 				}
+				setKey("seamark:category", _seamark);
 				if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
-					_tags[0] = "seamark:" + _seamark + ":category," + _category;
+					setKey("seamark:" + _seamark + ":category", _category);
 				}
-				_tags[0] = "seamark:category," + _seamark;
 				loadImages();
 				onChangeLights();
 				onChangeTopmark(); 
@@ -278,7 +278,7 @@
 			function onChangeLights() {
 				if (document.AddLateral.light.checked == true) {
 					setKey("seamark:light:colour", _light_colour);
-					setKey("seamark:light:character", document.AddLateral.lightchr.value);
+					displayLight();
 				} else {
 					setKey("seamark:light:colour", "");
 					setKey("seamark:light:character", "");
@@ -320,6 +320,71 @@
 				document.AddLateral.buoyImg.src = eval(imageName + ".src")
 			}
 
+			// Show the light edit dialog
+			function editLight() {
+				document.getElementById("edit_light").style.visibility = "visible";
+			}
+
+			// Light edit has been canceled -> hide dialog
+			function cancelLight() {
+				document.getElementById("edit_light").style.visibility = "hidden";
+			}
+
+			// Write keys for light
+			function saveLight() {
+				var character = document.getElementById("character").value;
+				var group = document.getElementById("group").value;
+				var period = document.getElementById("period").value;
+
+				if (character != "" && character != "unknown") {
+					setKey("seamark:light:character", character);
+					if (group != "" && group != "unknown") {
+						setKey("seamark:light:group", group);
+					}
+					if (period != "" && period != "unknown") {
+						setKey("seamark:light:period",period);
+					}
+					displayLight();
+				}
+			}
+
+			//Display light character underneath the image and set values for edit dialog
+			function displayLight() {
+				var character = getKey("seamark:light:character");
+				var group = getKey("seamark:light:group");
+				var period = getKey("seamark:light:period");
+				var val
+				if (character != "-1" && character != "unknown") {
+					document.getElementById("character").value = character;
+					val = character;
+					if (group != "-1" && group != "unknown") {
+						document.getElementById("group").value = group;
+						val += "(" + group + ")";
+					}
+					switch (_light_colour) {
+						case "white":
+							val += " W";
+							break
+						case "red":
+							val += " R";
+							break
+						case "green":
+							val += " G";
+							break
+					}
+					if (period != "-1" && period != "unknown") {
+						document.getElementById("period").value = period;
+						val += " " + period + "s";
+					}
+				} else {
+					val = "unbekannt";
+				}
+				//alert(val);
+
+				document.AddLateral.light_string.value = val;
+				document.getElementById("edit_light").style.visibility = "hidden";
+			}
+			
 			function save() {
 				// check for user login
 				if (!opener.window.userName) {
@@ -328,6 +393,7 @@
 					return;
 				}
 				opener.window.editSeamarkOk(createXML(), _mode);
+				//alert(createXML());
 				this.close();
 			}
 
@@ -341,9 +407,6 @@
 			// create the XML-File for OSM-API
 			function createXML() {
 				var tagXML = "";
-				if (document.AddLateral.light.checked == true) {
-					setKey("seamark:light:character", document.AddLateral.lightchr.value);
-				}
 				if (document.AddLateral.ref.value != null) {
 					setKey("seamark:name", document.AddLateral.ref.value);
 				}
@@ -478,35 +541,8 @@
 					</td>
 					<td valign="top" align="right">
 						<div id="light_chr" style="visibility:hidden;">
-							<input type="text" name="lightchr" align="left" size="10" value="Befeuerung" disabled="true"/>
-							<input type="button" name="save_button" value="Bearbeiten" onclick="save()">
-
-							<!--<table>
-								<tr>
-									<td>
-										test
-									</td>
-									<td>
-										<input type="text" name="lightchr" align="left" value="unknown"/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										test
-									</td>
-									<td>
-										<input type="text" name="lightchr" align="left" value="unknown"/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										test
-									</td>
-									<td>
-										<input type="text" name="lightchr" align="left" value="unknown"/>
-									</td>
-								</tr>
-							</table>-->
+							<input type="text" name="light_string" align="left" size="10" value="Befeuerung" disabled="true"/>
+							<input type="button" name="light_edit_button" value="Bearbeiten" onclick="editLight()">
 						</div>
 					</td>
 				</tr>
@@ -519,6 +555,9 @@
 				&nbsp;&nbsp;
 			</p>
 		</form>
+		</div>
+		<div id="edit_light" class="dialog" style="position:absolute; top:80px; right:5px; visibility:hidden;">
+			<?php include ("./edit_light.php"); ?>
 		</div>
 	</body>
 </html>
