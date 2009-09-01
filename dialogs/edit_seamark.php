@@ -218,7 +218,8 @@
 						buoyImageTopLighted.src = "../resources/special_purpose/Special_Purpose_x-Shape_Lighted.png";
 						break;
 				}
-				onChangeLights();
+				//onChangeLights();
+				displayLight();
 				onChangeTopmark();
 			}
 
@@ -279,6 +280,7 @@
 				if (document.AddLateral.light.checked == true) {
 					setKey("seamark:light:colour", _light_colour);
 					displayLight();
+					editLight()
 				} else {
 					setKey("seamark:light:colour", "");
 					setKey("seamark:light:character", "");
@@ -540,9 +542,8 @@
 						<input type="text" name="ref" align="left"/>
 					</td>
 					<td valign="top" align="right">
-						<div id="light_chr" style="visibility:hidden;">
-							<input type="text" name="light_string" align="left" size="10" value="Befeuerung" disabled="true"/>
-							<input type="button" name="light_edit_button" value="Bearbeiten" onclick="editLight()">
+						<div id="light_chr" style="position:absolute; top:200px; right:20px; visibility:hidden;">
+							<input type="text" name="light_string" align="left" size="10" value="Befeuerung" style="cursor:pointer;" readonly="readonly" onclick="editLight()"/>
 						</div>
 					</td>
 				</tr>
