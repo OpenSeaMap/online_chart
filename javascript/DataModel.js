@@ -18,6 +18,23 @@ DataModel.meta["west"] = "buoy_cardinal";
 DataModel.meta["isolated_danger"] = "buoy_isolated_danger";
 DataModel.meta["special_purpose"] = "buoy_special_purpose";
 
+DataModel.light = new Array(); //Metadaten
+DataModel.light["north"] = "Q:VQ";
+DataModel.light["east"] = "VQ";
+DataModel.light["south"] = "VQ";
+DataModel.light["west"] = "Q:VQ";
+
 DataModel.prototype.get = function(group, entry) {
-	return DataModel.meta[entry];
+	var Value = "-1"
+
+	switch (group) {
+		case "meta":
+			Value = DataModel.meta[entry];
+			break
+		case "light":
+			Value = DataModel.light[entry];
+			break
+	}
+	
+	return Value;
 }
