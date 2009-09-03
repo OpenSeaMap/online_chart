@@ -17,7 +17,7 @@
 
 	// Variables
 	$_response = "error";					// Server response that will be send to client
-	$_url = "api06.old-dev.openstreetmap.org";	// Url of the OSM server
+	$_url = "api06.dev.openstreetmap.org";	// Url of the OSM server
 	
 	// create the needed osm-api url
 	function createUrl($action, $id) {
