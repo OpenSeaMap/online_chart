@@ -103,7 +103,7 @@
 				if (getKey("seamark:light:colour") != "-1") {
 					document.AddLateral.light.checked = true;
 				}
-				var buff = getKey("seamark:" + _seamark + ":ref");
+				var buff = getKey("seamark:name");
 				if (buff != "-1") {
 					document.AddLateral.ref.value = buff;
 				}
@@ -349,8 +349,10 @@
 					} else {
 						setKey("seamark:light:group", "");
 					}
-					if (period != "" && period != "unknown") {
+					if (period != "" && period != "unknown" && period != " - - - ") {
 						setKey("seamark:light:period",period);
+					} else {
+						setKey("seamark:light:period", "");
 					}
 					displayLight();
 				}
@@ -380,7 +382,7 @@
 							val += " G";
 							break
 					}
-					if (period != "-1" && period != "unknown") {
+					if (period != "-1" && period != "unknown" && period != " - - - ") {
 						document.getElementById("lightPeriod").value = period;
 						val += " " + period + "s";
 					}
@@ -397,6 +399,17 @@
 				var lights = values.split(":");
 				for(i = 0; i < lights.length; i++) {
 					addSelectOption( document.getElementById("lightChar"), lights[i]);
+				}
+			}
+
+			function onChangeLightCharacter() {
+				var buff = document.getElementById("lightChar").value.split("(");
+				if (buff[0] == "Q" || buff[0] == "VQ") {
+					document.getElementById("lightPeriod").value = " - - - ";
+					document.getElementById("lightPeriod").disabled = true;
+				} else {
+					document.getElementById("lightPeriod").value = "unknown";
+					document.getElementById("lightPeriod").disabled = false;
 				}
 			}
 			

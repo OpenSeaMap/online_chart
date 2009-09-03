@@ -4,28 +4,18 @@
 			Kennung
 		</td>
 		<td>
-			<select  name="light_character" id="lightChar">
-				<option value="unspecified"/>Unbekannt- - - -
+			<select  name="light_character" id="lightChar" onChange="onChangeLightCharacter()">
+				<option value="unspecified"/>Unbekannt
 			</select>
 		</td>
 	</tr>
-	<!--<tr>
-		<td>
-			Gruppe
-		</td>
-		<td>
-			<select  name="light_group" id="lightGroup">
-				<option value="unspecified"/>Unbekannt- - - -
-				<option value="unspecified"/>None
-			</select>
-		</td>
-	</tr>-->
 	<tr>
 		<td>
 			Wiederkehr
 		</td>
 		<td>
-			<input type="text" name="light_period" id="lightPeriod" size="10" align="left" value="unknown"/>
+			<input type="text" name="light_period" id="lightPeriod" size="4" style="text-align:right;" value="unknown"/>
+			s
 		</td>
 	</tr>
 </table>
