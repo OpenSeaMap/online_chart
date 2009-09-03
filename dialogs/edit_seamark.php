@@ -218,7 +218,8 @@
 						buoyImageTopLighted.src = "../resources/special_purpose/Special_Purpose_x-Shape_Lighted.png";
 						break;
 				}
-				//onChangeLights();
+
+				fillLightCombobox();
 				displayLight();
 				onChangeTopmark();
 			}
@@ -334,14 +335,19 @@
 
 			// Write keys for light
 			function saveLight() {
-				var character = document.getElementById("character").value;
-				var group = document.getElementById("group").value;
-				var period = document.getElementById("period").value;
+				var buffCharacter = document.getElementById("lightChar").value;
+				var period = document.getElementById("lightPeriod").value;
 
-				if (character != "" && character != "unknown") {
+				if (buffCharacter != "" && buffCharacter != "unknown") {
+					var buff = buffCharacter.split("(");
+					var character = buff[0];
 					setKey("seamark:light:character", character);
-					if (group != "" && group != "unknown") {
+					if (buff.length >=2) {
+						var group = buff[1];
+						group = group.replace(")", '');
 						setKey("seamark:light:group", group);
+					} else {
+						setKey("seamark:light:group", "");
 					}
 					if (period != "" && period != "unknown") {
 						setKey("seamark:light:period",period);
@@ -355,14 +361,14 @@
 				var character = getKey("seamark:light:character");
 				var group = getKey("seamark:light:group");
 				var period = getKey("seamark:light:period");
-				var val
+				var val = "unbekannt";
+					
 				if (character != "-1" && character != "unknown") {
-					document.getElementById("character").value = character;
 					val = character;
 					if (group != "-1" && group != "unknown") {
-						document.getElementById("group").value = group;
 						val += "(" + group + ")";
 					}
+					document.getElementById("lightChar").value = val;
 					switch (_light_colour) {
 						case "white":
 							val += " W";
@@ -375,18 +381,32 @@
 							break
 					}
 					if (period != "-1" && period != "unknown") {
-						document.getElementById("period").value = period;
+						document.getElementById("lightPeriod").value = period;
 						val += " " + period + "s";
 					}
-				} else {
-					val = "unbekannt";
 				}
 				//alert(val);
 
 				document.AddLateral.light_string.value = val;
 				document.getElementById("edit_light").style.visibility = "hidden";
 			}
+
+			function fillLightCombobox() {
+				database = new DataModel();
+				var values = database.get("light", "light_" + _category);
+				var lights = values.split(":");
+				for(i = 0; i < lights.length; i++) {
+					addSelectOption( document.getElementById("lightChar"), lights[i]);
+				}
+			}
 			
+			function addSelectOption(selectionElement, value) {
+				var option = document.createElement("OPTION");
+				var text = document.createTextNode(value);
+				option.appendChild(text);
+				selectionElement.appendChild(option);
+			}
+
 			function save() {
 				// check for user login
 				if (!opener.window.userName) {

@@ -4,23 +4,28 @@
 			Kennung
 		</td>
 		<td>
-			<input type="text" name="light_character" id="character" size="10" align="left" value="unknown"/>
+			<select  name="light_character" id="lightChar">
+				<option value="unspecified"/>Unbekannt- - - -
+			</select>
 		</td>
 	</tr>
-	<tr>
+	<!--<tr>
 		<td>
 			Gruppe
 		</td>
 		<td>
-			<input type="text" name="light_group" id="group" size="10" align="left" value="unknown"/>
+			<select  name="light_group" id="lightGroup">
+				<option value="unspecified"/>Unbekannt- - - -
+				<option value="unspecified"/>None
+			</select>
 		</td>
-	</tr>
+	</tr>-->
 	<tr>
 		<td>
 			Wiederkehr
 		</td>
 		<td>
-			<input type="text" name="light_period" id="period" size="10" align="left" value="unknown"/>
+			<input type="text" name="light_period" id="lightPeriod" size="10" align="left" value="unknown"/>
 		</td>
 	</tr>
 </table>
