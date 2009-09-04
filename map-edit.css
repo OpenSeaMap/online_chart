@@ -1,38 +1,13 @@
 html,body {
-	background-color: #ffffff;
 	height: 100%;
 	width: 100%;
 	margin: 0; 
 	padding: 0;
 	overflow: hidden;
-	color: #000000;
+	font-family: Arial, sans-serif;
 }
 
-#head {
-	width: 14%;
-	padding: 0;
-	margin: 10px;
-}
-
-#login {
-	width: 14%;
-	padding: 0;
-	margin: 10px;
-}
-
-#logout {
-	width: 14%;
-	padding: 0;
-	margin: 10px;
-}
-
-#data {
-	width: 14%;
-	padding: 0;
-	margin: 10px;
-}
-
-#action {
+.sidebar {
 	width: 14%;
 	padding: 0;
 	margin: 10px;

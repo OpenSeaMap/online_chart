@@ -604,17 +604,17 @@
 		</script>
 	</head>
 	<body onload=drawmap();>
-		<div id="head" style="position:absolute; top:2px; left:0px;">
+		<div id="head" class="sidebar" style="position:absolute; top:2px; left:0px;">
 			<a><b>OpenSeaMap - Editor</b></a>
 		</div>
-		<div id="login" style="position:absolute; top:30px; left:0px;">
+		<div id="login" class="sidebar" style="position:absolute; top:30px; left:0px;">
 			<hr>
 			<form name="login" action="">
 				<a>Sie müssen amgemeldet sein um die Karte bearbeiten zu können.<br/><br/></a>
 				<input type="button" value="Anmelden" onclick="loginUser()">
 			</form>
 		</div>
-		<div id="logout" style="position:absolute; top:30px; left:0px; visibility:hidden;" >
+		<div id="logout" class="sidebar" style="position:absolute; top:30px; left:0px; visibility:hidden;" >
 			<hr>
 			<form name="logout" action="">
 				<p>Sie sind angemeldet.</p>
@@ -622,13 +622,13 @@
 			</form>
 		</div>
 		<div style="position:absolute; top:140px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank">Hilfe</a></div>
-		<div id="data" style="position:absolute; top:150px; left:0px;">
+		<div id="data" class="sidebar" style="position:absolute; top:150px; left:0px;">
 			<hr>
 			<a><b>Daten</b></a><br/><br/>
 			<input type="button" value="Laden" onclick="updateSeamarks()">
 		</div>
 		<div style="position:absolute; top:230px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank">Hilfe</a></div>
-		<div id="action" style="position:absolute; top:240px; left:0px;">
+		<div id="action" class="sidebar" style="position:absolute; top:240px; left:0px;">
 			<hr>
 			<a><b>Hinzufügen</b></a><br/><br/>
 			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
@@ -666,7 +666,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.91.4
+			Version 0.0.91.5
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />

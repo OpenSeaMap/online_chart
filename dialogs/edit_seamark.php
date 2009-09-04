@@ -211,6 +211,10 @@
 					case "special_purpose":
 						_topmark_shape = "x-shape";
 						_light_colour = "white";
+						var colour = getKey("seamark:topmark:colour")
+						if (colour != "-1") {
+							document.getElementById("topColour").value = colour;
+						}
 						document.AddLateral.top.disabled = false;
 						buoyImage.src = "../resources/special_purpose/Special_Purpose.png";
 						buoyImageTop.src = "../resources/special_purpose/Special_Purpose_x-Shape.png";
@@ -221,7 +225,7 @@
 
 				fillLightCombobox();
 				displayLight();
-				onChangeTopmark();
+				//onChangeTopmark();
 			}
 
 			// Selection of seamark category has changed
@@ -293,6 +297,9 @@
 			function onChangeTopmark() {
 				if (document.AddLateral.top.checked == true) {
 					setKey("seamark:topmark:shape", _topmark_shape);
+					if (_category == "special_purpose") {
+						editTopmark();
+					}
 				} else {
 					setKey("seamark:topmark:shape", "");
 				}
@@ -341,11 +348,14 @@
 				if (buffCharacter != "" && buffCharacter != "unknown") {
 					var buff = buffCharacter.split("(");
 					var character = buff[0];
+					if (_category == "south") {
+						character += "+Lfl";
+					}
 					setKey("seamark:light:character", character);
 					if (buff.length >=2) {
 						var group = buff[1];
-						group = group.replace(")", '');
-						setKey("seamark:light:group", group);
+						group = group.split(")");
+						setKey("seamark:light:group", group[0]);
 					} else {
 						setKey("seamark:light:group", "");
 					}
@@ -366,11 +376,20 @@
 				var val = "unbekannt";
 					
 				if (character != "-1" && character != "unknown") {
-					val = character;
+					if (_category == "south") {
+						var buff = character.split("+");
+						val = buff[0];
+					} else {
+						val = character;
+					}
 					if (group != "-1" && group != "unknown") {
 						val += "(" + group + ")";
 					}
+					if (_category == "south") {
+						val += "+Lfl";
+					}
 					document.getElementById("lightChar").value = val;
+					onChangeLightCharacter();
 					switch (_light_colour) {
 						case "white":
 							val += " W";
@@ -387,8 +406,6 @@
 						val += " " + period + "s";
 					}
 				}
-				//alert(val);
-
 				document.AddLateral.light_string.value = val;
 				document.getElementById("edit_light").style.visibility = "hidden";
 			}
@@ -412,7 +429,28 @@
 					document.getElementById("lightPeriod").disabled = false;
 				}
 			}
+
+			// Cancel topmark edit dialog
+			function editTopmark() {
+				document.getElementById("edit_topmark").style.visibility = "visible";
+			}
+
+			// Write keys for Topmark
+			function saveTopmark() {
+				var colour = document.getElementById("topColour").value;
+				if (colour != "" && colour != "unknown") {
+					setKey("seamark:topmark:colour", colour);
+				} else {
+					setKey("seamark:topmark:colour", "");
+				}
+				document.getElementById("edit_topmark").style.visibility = "hidden";
+			}
 			
+			// Show the topmark edit dialog
+			function cancelTopmark() {
+				document.getElementById("edit_topmark").style.visibility = "hidden";
+			}
+
 			function addSelectOption(selectionElement, value) {
 				var option = document.createElement("OPTION");
 				var text = document.createTextNode(value);
@@ -590,8 +628,11 @@
 			</p>
 		</form>
 		</div>
-		<div id="edit_light" class="dialog" style="position:absolute; top:80px; right:5px; visibility:hidden;">
+		<div id="edit_light" class="dialog" style="position:absolute; top:30px; right:5px; visibility:hidden;">
 			<?php include ("./edit_light.php"); ?>
+		</div>
+		<div id="edit_topmark" class="dialog" style="position:absolute; top:160px; right:20px; visibility:hidden;">
+			<?php include ("./edit_topmark.php"); ?>
 		</div>
 	</body>
 </html>
