@@ -473,6 +473,8 @@
 			function cancel() {
 				if (_mode == "create" || _mode == "move") {
 					opener.window.updateSeamarks();
+				} else {
+					opener.window.onEditDialogCancel(_id);
 				}
 				this.close();
 			}

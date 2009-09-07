@@ -171,12 +171,17 @@
 			function addMarker(id, popupText) {
 				var pos = new OpenLayers.LonLat(Lon2Merc(lon), Lat2Merc(lat));
 				var feature = new OpenLayers.Feature(layer_markers, pos);
+				//var iconBlack = new OpenLayers.Icon("./resources/action/circle_blue.png", new OpenLayers.Size(32, 32), new OpenLayers.Pixel(0, -16));
+				var size = new OpenLayers.Size(32,32);
+				var offset = new OpenLayers.Pixel(-0, -16);
+				var icon = new OpenLayers.Icon('./resources/action/circle_blue.png', size, offset);
+
 				feature.closeBox = true;
 				feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {minSize: new OpenLayers.Size(260, 100) } );
 				feature.data.popupContentHTML = popupText;
 				feature.data.overflow = "hidden";
 
-				arrayMarker[id] = new OpenLayers.Marker(pos);
+				arrayMarker[id] = new OpenLayers.Marker(pos, icon.clone());
 				arrayMarker[id].feature = feature;
 
 				markerClick = function(evt) {
@@ -190,6 +195,7 @@
 				};
 				layer_markers.addMarker(arrayMarker[id]);
 				arrayMarker[id].events.register("mousedown", feature, markerClick);
+				//arrayMarker[id].setUrl('./resources/action/circle_black.png');
 			}
 
 			// remove a marker from the map
@@ -228,6 +234,10 @@
 				click.deactivate();
 			}
 
+			function onEditDialogCancel(id) {
+				arrayMarker[id].setUrl('./resources/action/circle_blue.png');
+			}
+
 			function addSeamark(seamark) {
 				document.getElementById("position_dialog").style.visibility = "visible";
 				document.getElementById("add_seamark_dialog").style.visibility = "collapse";
@@ -245,6 +255,7 @@
 				lat = parseFloat(latValue);
 				_NodeId = "11";
 				addMarker(_NodeId, "");
+				arrayMarker[_NodeId].setUrl('./resources/action/circle_red.png');
 				addSeamarkEdit();
 			}
 
@@ -268,6 +279,7 @@
 				if (arrayMarker[id].feature.popup != null) {
 					arrayMarker[id].feature.popup.hide();
 				}
+				arrayMarker[id].setUrl('./resources/action/circle_red.png');
 				editWindow = window.open("./dialogs/edit_seamark.php?mode=update&id=" + id + "&version=" + version, "Bearbeiten", "width=650, height=450, resizable=yes");
  				editWindow.focus();
 			}
@@ -278,6 +290,7 @@
 				if (arrayMarker[id].feature.popup != null) {
 					arrayMarker[id].feature.popup.hide();
 				}
+				arrayMarker[id].setUrl('./resources/action/circle_yellow.png');
 				document.getElementById("position_dialog").style.visibility = "visible";
 				// activate click event for entering a new position
 				click.activate();
@@ -288,7 +301,7 @@
 
 			function moveSeamarkOk() {
 				// remove old marker
-				removeMarker();
+				//removeMarker();
 				// set popup text for the new marker
 				var popupText = "ID = " + _NodeId;
 				popupText += " - Lat = " + lat;
@@ -296,6 +309,7 @@
 				popupText += " - Version = " + _Version;
 				// add marker at the new position
 				addMarker(_NodeId, popupText);
+				arrayMarker[_NodeId].setUrl('./resources/action/circle_red.png');
 				moveSeamarkSave();
 			}
 
@@ -313,6 +327,7 @@
 				if (arrayMarker[id].feature.popup != null) {
 					arrayMarker[id].feature.popup.hide();
 				}
+				arrayMarker[id].setUrl('./resources/action/circle_red.png');
 				editWindow = window.open("./dialogs/edit_seamark.php?mode=delete&id=" + id + "&version=" + version, "Löschen", "width=650, height=450, resizable=yes");
  				editWindow.focus();
 			}
@@ -666,7 +681,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.91.5
+			Version 0.0.91.6
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
