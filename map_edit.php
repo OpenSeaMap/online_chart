@@ -220,8 +220,16 @@
 			}
 
 			function clickSeamarkMap() {
+				// remove existing temp marker
+				if (arrayMarker["22"] != 'undefined') {
+					layer_markers.removeMarker(arrayMarker["22"]);
+				}
+				// display new coordinates
 				document.getElementById("pos-lat").value = lat;
 				document.getElementById("pos-lon").value = lon;
+				// display temporary marker for orientation
+				addMarker("22", "");
+				arrayMarker["22"].setUrl('./resources/action/circle_red.png');
 				// workaround for openlayers resetting the cursor style on click
 				map.div.style.cursor="crosshair";
 			}
@@ -232,10 +240,15 @@
 				// disable click event
 				map.div.style.cursor="default";
 				click.deactivate();
+				// remove existing temp marker
+				if (arrayMarker["22"] != 'undefined') {
+					layer_markers.removeMarker(arrayMarker["22"]);
+				}
+				arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
 			}
 
 			function onEditDialogCancel(id) {
-				arrayMarker[id].setUrl('./resources/action/circle_blue.png');
+				arrayMarker[id].setUrl('./resources/action/circle_green.png');
 			}
 
 			function addSeamark(seamark) {
@@ -253,6 +266,9 @@
 			function addSeamarkPosOk(latValue, lonValue) {
 				lon = parseFloat(lonValue);
 				lat = parseFloat(latValue);
+				if (_NodeId != "-1") {
+					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
+				}
 				_NodeId = "11";
 				addMarker(_NodeId, "");
 				arrayMarker[_NodeId].setUrl('./resources/action/circle_red.png');
@@ -271,6 +287,9 @@
 			}
 
 			function editSeamarkEdit(id, version, pos_lat, pos_lon) {
+				if (_NodeId != "-1") {
+					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
+				}
 				_Version = version;
 				_NodeId = id;
 				lat = pos_lat;
@@ -285,6 +304,9 @@
 			}
 
 			function moveSeamarkEdit(id, version) {
+				if (_NodeId != "-1") {
+					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
+				}
 				_NodeId = id;
 				_Version = version;
 				if (arrayMarker[id].feature.popup != null) {
@@ -301,7 +323,7 @@
 
 			function moveSeamarkOk() {
 				// remove old marker
-				//removeMarker();
+				removeMarker();
 				// set popup text for the new marker
 				var popupText = "ID = " + _NodeId;
 				popupText += " - Lat = " + lat;
@@ -531,6 +553,9 @@
 							readOsmXml(response);
 							//alert(response);
 							document.getElementById("loading").style.visibility = "collapse";
+							if (_NodeId != "-1") {
+								arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
+							}
 							return "0";
 						},
 						onFailure: function() {
