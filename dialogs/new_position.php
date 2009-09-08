@@ -6,7 +6,7 @@
 			Lat:&nbsp;
 		</td>
 		<td valign="top">
-			<input type="text" name="lat-position" id="pos-lat" align="left"/>
+			<input type="text" name="lat-position" id="pos-lat" style="text-align:right;""/>
 		</td>
 	</tr>
 	<tr>
@@ -14,7 +14,7 @@
 			Lon:&nbsp;
 		</td>
 		<td valign="top">
-			<input type="text" name="lon-position" id="pos-lon" align="left"/>
+			<input type="text" name="lon-position" id="pos-lon" style="text-align:right;"/>
 		</td>
 	</tr>
 </table>

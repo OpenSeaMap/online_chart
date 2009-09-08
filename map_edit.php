@@ -31,6 +31,7 @@
 			var userPassword = null;		//OSM-Password of the user
 			var controls;					//OpenLayer-Controls
 			var _ToDo = null;				//actually selected action
+			var _moving = false;			//needed for cursor and first fixing
 			var click;						//click-event
 			var seamarkType;				//seamarks
 			var arrayMarker = new Array();	//Array of displayed Markers
@@ -117,11 +118,6 @@
 				}
 			});
 
-			// Map event listener
-			function mapEvent(event) {
-				// later needed for data update
-			}
-
 			// Draw the map
 			function drawmap() {
 
@@ -136,7 +132,7 @@
 					},
 					controls: [
 						new OpenLayers.Control.Permalink(),
-						new OpenLayers.Control.MouseDefaults(),
+						new OpenLayers.Control.Navigation(),
 						new OpenLayers.Control.LayerSwitcher(),
 						new OpenLayers.Control.MousePosition(),
 						new OpenLayers.Control.ScaleLine(),
@@ -167,13 +163,19 @@
 				jumpTo(lon, lat, zoom);
 			}
 
+			// Map event listener
+			function mapEvent(event) {
+				if (_moving) {
+					map.div.style.cursor="crosshair";
+				}
+			}
+
 			// add a marker on the map
 			function addMarker(id, popupText) {
 				var pos = new OpenLayers.LonLat(Lon2Merc(lon), Lat2Merc(lat));
 				var feature = new OpenLayers.Feature(layer_markers, pos);
-				//var iconBlack = new OpenLayers.Icon("./resources/action/circle_blue.png", new OpenLayers.Size(32, 32), new OpenLayers.Pixel(0, -16));
 				var size = new OpenLayers.Size(32,32);
-				var offset = new OpenLayers.Pixel(-0, -16);
+				var offset = new OpenLayers.Pixel(-16, -16);
 				var icon = new OpenLayers.Icon('./resources/action/circle_blue.png', size, offset);
 
 				feature.closeBox = true;
@@ -195,7 +197,6 @@
 				};
 				layer_markers.addMarker(arrayMarker[id]);
 				arrayMarker[id].events.register("mousedown", feature, markerClick);
-				//arrayMarker[id].setUrl('./resources/action/circle_black.png');
 			}
 
 			// remove a marker from the map
@@ -219,19 +220,35 @@
 				_ChangeSetId = "-1";
 			}
 
+			function showPositionDialog() {
+				// reset old values
+				document.getElementById("pos-lat").value = "0.0";
+				document.getElementById("pos-lon").value = "0.0";
+				//show dialog
+				document.getElementById("position_dialog").style.visibility = "visible";
+				// activate click event for entering a new position
+				click.activate();
+				// set cursor to crosshair style
+				map.div.style.cursor="crosshair";
+				// remeber that we are in moving mode
+				_moving = true;
+			}
+
+			
 			function clickSeamarkMap() {
 				// remove existing temp marker
-				if (arrayMarker["22"] != 'undefined') {
-					layer_markers.removeMarker(arrayMarker["22"]);
+				if (_moving) {
+					//FIXME Dirty workaround for not getting a defined state of marker creation
+					layer_markers.removeMarker(arrayMarker["2"]);
 				}
 				// display new coordinates
 				document.getElementById("pos-lat").value = lat;
 				document.getElementById("pos-lon").value = lon;
 				// display temporary marker for orientation
-				addMarker("22", "");
-				arrayMarker["22"].setUrl('./resources/action/circle_red.png');
-				// workaround for openlayers resetting the cursor style on click
-				map.div.style.cursor="crosshair";
+				addMarker("2", "");
+				arrayMarker["2"].setUrl('./resources/action/circle_red.png');
+				//FIXME Dirty workaround for not getting a defined state of marker creation
+				_moving = true;
 			}
 
 			function onPositionDialogCancel() {
@@ -240,9 +257,10 @@
 				// disable click event
 				map.div.style.cursor="default";
 				click.deactivate();
+				_moving = false;
 				// remove existing temp marker
-				if (arrayMarker["22"] != 'undefined') {
-					layer_markers.removeMarker(arrayMarker["22"]);
+				if (arrayMarker["2"] != 'undefined') {
+					layer_markers.removeMarker(arrayMarker["2"]);
 				}
 				arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
 			}
@@ -252,11 +270,8 @@
 			}
 
 			function addSeamark(seamark) {
-				document.getElementById("position_dialog").style.visibility = "visible";
+				showPositionDialog();
 				document.getElementById("add_seamark_dialog").style.visibility = "collapse";
-				// activate click event for entering a new position
-				click.activate();
-				map.div.style.cursor="crosshair";
 				// set the seamark type
 				seamarkType = seamark;
 				// remember what we are doing
@@ -313,10 +328,7 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/circle_yellow.png');
-				document.getElementById("position_dialog").style.visibility = "visible";
-				// activate click event for entering a new position
-				click.activate();
-				map.div.style.cursor="crosshair";
+				showPositionDialog()
 				// remember what we are doing
 				_ToDo = "move";
 			}
@@ -369,6 +381,7 @@
 				// disable click event
 				map.div.style.cursor="default";
 				click.deactivate();
+				_moving = false;
 				// hide position dialog
 				document.getElementById("position_dialog").style.visibility = "collapse";
 			}
@@ -706,7 +719,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.91.6
+			Version 0.0.91.8
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
