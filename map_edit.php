@@ -291,7 +291,7 @@
 			}
 
 			function addSeamarkEdit() {
-				editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType, "Bearbeiten", "width=650, height=450, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType, "Bearbeiten", "width=650, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -314,7 +314,7 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/circle_red.png');
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=update&id=" + id + "&version=" + version, "Bearbeiten", "width=650, height=450, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php?mode=update&id=" + id + "&version=" + version, "Bearbeiten", "width=650, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -351,18 +351,21 @@
 				if (arrayMarker[id].feature.popup != null) {
 					arrayMarker[id].feature.popup.hide();
 				}
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=move&id=" + _NodeId + "&version=" + _Version, "Bearbeiten", "width=650, height=450, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php?mode=move&id=" + _NodeId + "&version=" + _Version, "Bearbeiten", "width=650, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
 			function deleteSeamarkEdit(id, version) {
+				if (_NodeId != "-1") {
+					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
+				}
 				_NodeId = id;
 				_Version = version;
 				if (arrayMarker[id].feature.popup != null) {
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/circle_red.png');
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=delete&id=" + id + "&version=" + version, "Löschen", "width=650, height=450, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php?mode=delete&id=" + _NodeId + "&version=" + version, "Löschen", "width=650, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -719,7 +722,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.91.8
+			Version 0.0.91.9
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
