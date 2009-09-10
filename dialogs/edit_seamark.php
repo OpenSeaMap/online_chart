@@ -230,7 +230,6 @@
 
 				fillLightCombobox();
 				displayLight();
-				//onChangeTopmark();
 			}
 
 			function moveDivUp(id, offset) {
@@ -244,10 +243,31 @@
 				Y = Y + offset
 				document.getElementById(id).style.top = Y + "px";
 			}
-			
+
+			function clearSelectOptions(selectionElement) {
+				var selectionElement = document.getElementById("lightChar");
+				while (selectionElement.options.length > 0) {
+					selectionElement.options[0] = null;
+				}
+			}
+
+			function addSelectOption(selectionElement, value) {
+				var option = document.createElement("OPTION");
+				var text = document.createTextNode(value);
+				option.appendChild(text);
+				selectionElement.appendChild(option);
+			}
+
 			// Selection of seamark category has changed
 			function seamarkChanged() {
 				old_seamark = _seamark;
+				// reset old dialog visibility
+				if (document.getElementById("boxEditLightCharacter").style.visibility == "visible") {
+					showLightEdit(false);
+				}
+				if (document.getElementById("boxEditTopmark").style.visibility == "visible") {
+					showTopmarkColour(false);
+				}
 				_category = document.getElementById("comboCategory").value;
 				database = new DataModel();
 				_seamark = database.get("meta", _category);
@@ -272,8 +292,13 @@
 					setKey("seamark:" + _seamark + ":category", _category);
 				}
 				loadImages();
-				onChangeLights();
-				onChangeTopmark(); 
+				onChangeCheck();
+				if (document.getElementById("checkTopmark").checked == true && _category == "special_purpose") {
+					showTopmarkColour(true);
+				}
+				if (document.getElementById("checkLight").checked == true) {
+					showLightEdit(true);
+				} 
 			}
 
 			function onChangeShape() {
@@ -441,10 +466,13 @@
 
 			function fillLightCombobox() {
 				database = new DataModel();
+				var selectionElement = document.getElementById("lightChar")
+				clearSelectOptions();
+				addSelectOption(selectionElement, "unbekannt");
 				var values = database.get("light", "light_" + _category);
 				var lights = values.split(":");
 				for(i = 0; i < lights.length; i++) {
-					addSelectOption( document.getElementById("lightChar"), lights[i]);
+					addSelectOption(selectionElement, lights[i]);
 				}
 			}
 
@@ -492,13 +520,6 @@
 			// Show the topmark edit dialog
 			function cancelTopmark() {
 				document.getElementById("edit_topmark").style.visibility = "hidden";
-			}
-
-			function addSelectOption(selectionElement, value) {
-				var option = document.createElement("OPTION");
-				var text = document.createTextNode(value);
-				option.appendChild(text);
-				selectionElement.appendChild(option);
 			}
 
 			function save() {
@@ -660,7 +681,7 @@
 				Farbe:
 			</span>
 			<span style="float:right;">
-			<select  name="top_colour" id="topColour" onChange="saveTopmark()">
+			<select id="topColour" onChange="saveTopmark()">
 				<option value="unknown"/>Unbekannt
 				<option value="yellow"/>Gelb
 				<option value="red"/>Rot
