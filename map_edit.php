@@ -165,9 +165,7 @@
 
 			// Map event listener
 			function mapEvent(event) {
-				if (_moving) {
-					map.div.style.cursor="crosshair";
-				}
+				// needed later on for loading data on the fly
 			}
 
 			// add a marker on the map
@@ -291,7 +289,7 @@
 			}
 
 			function addSeamarkEdit() {
-				editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType, "Bearbeiten", "width=650, height=420, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType, "Bearbeiten", "width=630, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -314,7 +312,7 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/circle_red.png');
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=update&id=" + id + "&version=" + version, "Bearbeiten", "width=650, height=420, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php?mode=update&id=" + id + "&version=" + version, "Bearbeiten", "width=630, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -351,7 +349,7 @@
 				if (arrayMarker[id].feature.popup != null) {
 					arrayMarker[id].feature.popup.hide();
 				}
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=move&id=" + _NodeId + "&version=" + _Version, "Bearbeiten", "width=650, height=420, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php?mode=move&id=" + _NodeId + "&version=" + _Version, "Bearbeiten", "width=630, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -365,7 +363,7 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/circle_red.png');
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=delete&id=" + _NodeId + "&version=" + version, "Löschen", "width=650, height=420, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php?mode=delete&id=" + _NodeId + "&version=" + version, "Löschen", "width=630, height=420, resizable=yes");
  				editWindow.focus();
 			}
 

@@ -94,6 +94,9 @@
 
 				if (getKey("seamark:topmark:shape") != "-1") {
 					document.getElementById("checkTopmark").checked = true;
+					if (_category == "special_purpose") {
+						showTopmarkColour(true);
+					}
 				}
 				if (getKey("seamark:fog_signal") != "-1") {
 					document.getElementById("checkFogsignal").checked = true;
@@ -103,6 +106,7 @@
 				}
 				if (getKey("seamark:light:colour") != "-1") {
 					document.getElementById("checkLight").checked = true;
+					showLightEdit(true);
 				}
 				var buff = getKey("seamark:name");
 				if (buff != "-1") {
@@ -229,6 +233,18 @@
 				//onChangeTopmark();
 			}
 
+			function moveDivUp(id, offset) {
+				var Y = parseInt(document.getElementById(id).style.top);
+				Y = Y - offset
+				document.getElementById(id).style.top = Y + "px";
+			}
+
+			function moveDivDown(id, offset) {
+				var Y = parseInt(document.getElementById(id).style.top);
+				Y = Y + offset
+				document.getElementById(id).style.top = Y + "px";
+			}
+			
 			// Selection of seamark category has changed
 			function seamarkChanged() {
 				old_seamark = _seamark;
@@ -268,16 +284,16 @@
 			function onChangeCheck() {
 				if (document.getElementById("checkTopmark").checked == true && document.getElementById("checkLight").checked == false) {
 					SetBuoyImage("buoyImageTop");
-					document.getElementById("light_chr").style.visibility = "collapse";
+					document.getElementById("boxLightCharacter").style.visibility = "collapse";
 				} else if (document.getElementById("checkLight").checked == true && document.getElementById("checkTopmark").checked == true) {
 					SetBuoyImage("buoyImageTopLighted");
-					document.getElementById("light_chr").style.visibility = "visible";
+					document.getElementById("boxLightCharacter").style.visibility = "visible";
 				} else if (document.getElementById("checkLight").checked == true && document.getElementById("checkTopmark").checked == false) {
 					SetBuoyImage("buoyImageLighted");
-					document.getElementById("light_chr").style.visibility = "visible";
+					document.getElementById("boxLightCharacter").style.visibility = "visible";
 				} else {
 					SetBuoyImage("buoyImage");
-					document.getElementById("light_chr").style.visibility = "collapse";
+					document.getElementById("boxLightCharacter").style.visibility = "collapse";
 				}
 			}
 
@@ -285,11 +301,12 @@
 			function onChangeLights() {
 				if (document.getElementById("checkLight").checked == true) {
 					setKey("seamark:light:colour", _light_colour);
-					displayLight();
-					editLight()
+					showLightEdit(true);
+					saveLight();
 				} else {
 					setKey("seamark:light:colour", "");
 					setKey("seamark:light:character", "");
+					showLightEdit(false);
 				}
 				onChangeCheck();
 			}
@@ -299,10 +316,13 @@
 				if (document.getElementById("checkTopmark").checked == true) {
 					setKey("seamark:topmark:shape", _topmark_shape);
 					if (_category == "special_purpose") {
-						editTopmark();
+						showTopmarkColour(true);
 					}
 				} else {
 					setKey("seamark:topmark:shape", "");
+					if (_category == "special_purpose") {
+						showTopmarkColour(false);
+					}
 				}
 				onChangeCheck();
 			}
@@ -332,13 +352,22 @@
 			}
 
 			// Show the light edit dialog
-			function editLight() {
-				document.getElementById("edit_light").style.visibility = "visible";
-			}
-
-			// Light edit has been canceled -> hide dialog
-			function cancelLight() {
-				document.getElementById("edit_light").style.visibility = "hidden";
+			function showLightEdit(show) {
+				if (show) {
+					document.getElementById("boxEditLightCharacter").style.visibility = "visible";
+					moveDivDown("boxFogsignal", 22);
+					if (_seamark != "buoy_cardinal") {
+						document.getElementById("boxEditLightSequence").style.visibility = "visible";
+						moveDivDown("boxFogsignal", 25);
+					}
+				} else {
+					document.getElementById("boxEditLightCharacter").style.visibility = "hidden";
+					moveDivUp("boxFogsignal", 22);
+					if (_seamark != "buoy_cardinal") {
+						document.getElementById("boxEditLightSequence").style.visibility = "hidden";
+						moveDivUp("boxFogsignal", 25);
+					}
+				}
 			}
 
 			// Write keys for light
@@ -408,7 +437,6 @@
 					}
 				}
 				document.getElementById("inputLightString").value = val;
-				document.getElementById("edit_light").style.visibility = "hidden";
 			}
 
 			function fillLightCombobox() {
@@ -431,9 +459,23 @@
 				}
 			}
 
-			// Cancel topmark edit dialog
-			function editTopmark() {
-				document.getElementById("edit_topmark").style.visibility = "visible";
+			// Show topmark edit?
+			function showTopmarkColour(show) {
+				if (show) {
+					document.getElementById("boxEditTopmark").style.visibility = "visible";
+					moveDivDown("boxRadar", 22);
+					moveDivDown("boxLight", 22);
+					moveDivDown("boxFogsignal", 22);
+					moveDivDown("boxEditLightCharacter", 22);
+					moveDivDown("boxEditLightSequence", 22);
+				} else {
+					document.getElementById("boxEditTopmark").style.visibility = "hidden";
+					moveDivUp("boxRadar", 22);
+					moveDivUp("boxLight", 22);
+					moveDivUp("boxFogsignal", 22);
+					moveDivUp("boxEditLightCharacter", 22);
+					moveDivUp("boxEditLightSequence", 22);
+				}
 			}
 
 			// Write keys for Topmark
@@ -588,13 +630,13 @@
 		<div style="position:absolute; top:160px; left:165px;">
 			<input type="checkbox" id="checkTopmark" onclick="onChangeTopmark()"/> Topzeichen
 		</div>
-		<div style="position:absolute; top:182px; left:165px;">
+		<div id="boxRadar" style="position:absolute; top:182px; left:165px;">
 			<input type="checkbox" id="checkRadar" onclick="onChangeRadarRefl()"/> Radarreflektor
 		</div>
-		<div style="position:absolute; top:204px; left:165px;">
+		<div id="boxLight" style="position:absolute; top:204px; left:165px;">
 			<input type="checkbox" id="checkLight" onclick="onChangeLights()"/> Befeuert
 		</div>
-		<div style="position:absolute; top:226px; left:165px;">
+		<div id="boxFogsignal" style="position:absolute; top:226px; left:165px;">
 			<input type="checkbox" id="checkFogsignal" onclick="onChangeFogSig()"/> Nebelhorn
 		</div>
 		<div style="position:absolute; bottom:80px; left:7px;">Name des Zeichens:</div>
@@ -604,8 +646,8 @@
 		<div style="position:absolute; top:70px; right:40px;">
 			<img id="imageBuoy" src="../resources/Lateral_Green.png" align="center" border="0" />
 		</div>
-		<div id="light_chr" style="position:absolute; top:260px; right:20px; visibility:hidden;">
-			<input type="text" id="inputLightString" align="left" size="10" value="Befeuerung" style="cursor:pointer;" readonly="readonly" onclick="editLight()"/>
+		<div id="boxLightCharacter" style="position:absolute; top:260px; right:20px; visibility:hidden;">
+			<input type="text" id="inputLightString" align="left" size="10" value="Befeuerung" readonly="readonly"/>
 		</div>
 		<div style="position:absolute; bottom:20px; right:10px;">
 			<input type="button" id="buttonSave" value="Speichern" onclick="save()">
@@ -613,11 +655,36 @@
 			<input type="button" id="buttonCancel" value="Abbrechen" onclick="cancel()">
 			&nbsp;&nbsp;
 		</div>
-		<div id="edit_light" class="dialog" style="position:absolute; top:30px; right:5px; visibility:hidden;">
-			<?php include ("./edit_light.php"); ?>
+		<div id="boxEditTopmark" style="position:absolute; top:183px; left:190px; width:188px; visibility:hidden;">
+			<span>
+				Farbe:
+			</span>
+			<span style="float:right;">
+			<select  name="top_colour" id="topColour" onChange="saveTopmark()">
+				<option value="unknown"/>Unbekannt
+				<option value="yellow"/>Gelb
+				<option value="red"/>Rot
+			</select>
+			</span>
 		</div>
-		<div id="edit_topmark" class="dialog" style="position:absolute; top:160px; right:20px; visibility:hidden;">
-			<?php include ("./edit_topmark.php"); ?>
+		<div id="boxEditLightCharacter" style="position:absolute; top:226px; left:190px; width:188px; visibility:hidden;">
+			<span>
+				Kennung:
+			</span>
+			<span style="float:right;">
+				<select  name="light_character" id="lightChar" onChange="saveLight()">
+					<option value="unbekannt"/>Unbekannt
+				</select>
+			</span>
+		</div>
+		<div id="boxEditLightSequence" style="position:absolute; top:250px; left:190px; width:188px; visibility:hidden;">
+			<span>
+				Wiederkehr:
+			</span>
+			<span style="float:right;">
+				<input type="text" name="light_period" id="lightPeriod" size="7" style="text-align:right;" value="unknown" onChange="saveLight()"/>
+				s
+			</span>
 		</div>
 	</body>
 </html>
