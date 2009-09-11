@@ -536,7 +536,7 @@
 
 			function cancel() {
 				if (_mode == "create" || _mode == "move") {
-					opener.window.updateSeamarks();
+					opener.window.readOsmXml();
 				} else {
 					opener.window.onEditDialogCancel(_id);
 				}
@@ -676,36 +676,48 @@
 			<input type="button" id="buttonCancel" value="Abbrechen" onclick="cancel()">
 			&nbsp;&nbsp;
 		</div>
-		<div id="boxEditTopmark" style="position:absolute; top:183px; left:190px; width:188px; visibility:hidden;">
-			<span>
-				Farbe:
-			</span>
-			<span style="float:right;">
-			<select id="topColour" onChange="saveTopmark()">
-				<option value="unknown"/>Unbekannt
-				<option value="yellow"/>Gelb
-				<option value="red"/>Rot
-			</select>
-			</span>
+		<div id="boxEditTopmark" style="position:absolute; top:179px; left:190px; width:188px; visibility:hidden;">
+			<table border="0" width="100%">
+				<tr>
+					<td>
+						Farbe:
+					</td>
+					<td align="right">
+						<select id="topColour" onChange="saveTopmark()">
+							<option value="unknown"/>Unbekannt
+							<option value="yellow"/>Gelb
+							<option value="red"/>Rot
+						</select>
+					</td>
+				</tr>
+			</table>
 		</div>
-		<div id="boxEditLightCharacter" style="position:absolute; top:226px; left:190px; width:188px; visibility:hidden;">
-			<span>
-				Kennung:
-			</span>
-			<span style="float:right;">
-				<select  name="light_character" id="lightChar" onChange="saveLight()">
-					<option value="unbekannt"/>Unbekannt
-				</select>
-			</span>
+		<div id="boxEditLightCharacter" style="position:absolute; top:222px; left:190px; width:188px; visibility:hidden;" >
+			<table border="0" width="100%">
+				<tr>
+					<td>
+						Kennung:
+					</td>
+					<td align="right">
+						<select  name="light_character" id="lightChar" onChange="saveLight()">
+							<option value="unbekannt"/>Unbekannt
+						</select>
+					</td>
+				</tr>
+			</table>
 		</div>
-		<div id="boxEditLightSequence" style="position:absolute; top:250px; left:190px; width:188px; visibility:hidden;">
-			<span>
-				Wiederkehr:
-			</span>
-			<span style="float:right;">
-				<input type="text" name="light_period" id="lightPeriod" size="7" style="text-align:right;" value="unknown" onChange="saveLight()"/>
-				s
-			</span>
+		<div id="boxEditLightSequence" style="position:absolute; top:246px; left:190px; width:188px; visibility:hidden;">
+			<table border="0" width="100%">
+				<tr>
+					<td>
+						Wiederkehr:
+					</td>
+					<td align="right">
+						<input type="text" name="light_period" id="lightPeriod" size="5" style="text-align:right;" value="unknown" onChange="saveLight()"/>
+						s
+					</td>
+				</tr>
+			</table>
 		</div>
 	</body>
 </html>

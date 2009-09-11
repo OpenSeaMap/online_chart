@@ -26,6 +26,7 @@
 			var _NodeId = "-1";				//OSM-Node ID
 			var _Comment = null;			//Comment for Changeset
 			var _Version = null;			//Version of the node
+			var _xmlOsm = null;				//XML data read from OSM database
 			var NodeXml = null;				//XML-Data for node creation
 			var userName = null;			//OSM-Username of the user
 			var userPassword = null;		//OSM-Password of the user
@@ -161,6 +162,8 @@
 				map.addControl(click);
 
 				jumpTo(lon, lat, zoom);
+
+				updateSeamarks();
 			}
 
 			// Map event listener
@@ -229,7 +232,6 @@
 				// set cursor to crosshair style
 				map.div.style.cursor="crosshair";
 				// remeber that we are in moving mode
-				_moving = true;
 			}
 
 			
@@ -563,8 +565,8 @@
 						parameters : params,
 						onSuccess: function(transport) {
 							var response = transport.responseText;
-							layer_markers.clearMarkers();
-							readOsmXml(response);
+							_xmlOsm = response;
+							readOsmXml();
 							//alert(response);
 							document.getElementById("loading").style.visibility = "collapse";
 							if (_NodeId != "-1") {
@@ -588,12 +590,25 @@
 				}
 			}
 
-			function readOsmXml(xmlData) {
-				xmlParser = new DOMParser();
-				var xmlObject = xmlParser.parseFromString(xmlData, "text/xml");
+			function readOsmXml() {
+
+				var xmlData = _xmlOsm;
+				var xmlObject;
+				// Browserweiche für den DOMParser:
+				// Mozilla and Netscape browsers
+				if (document.implementation.createDocument) {
+					xmlParser = new DOMParser();
+					xmlObject = xmlParser.parseFromString(xmlData, "text/xml");
+				 // MSIE
+				} else if (window.ActiveXObject) {
+					xmlObject = new ActiveXObject("Microsoft.XMLDOM")
+					xmlObject.async="false"
+					xmlObject.loadXML(xmlData)
+				}
 				var root = xmlObject.getElementsByTagName('osm')[0];
 				var items = root.getElementsByTagName("node");
 
+				layer_markers.clearMarkers();
 				for (var i=0; i < items.length; ++i) {
 					// get one node after the other
 					var item = items[i];
@@ -720,7 +735,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.91.10
+			Version 0.0.91.11
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
