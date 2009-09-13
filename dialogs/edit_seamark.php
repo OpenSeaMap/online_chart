@@ -59,6 +59,15 @@
 						case "delete":
 							document.getElementById("headerDelete").style.visibility = "visible";
 							document.getElementById("buttonSave").value = "Löschen";
+							document.getElementById("titleCategory").style.visibility = "hidden";
+							document.getElementById("boxCategory").style.visibility = "hidden";
+							document.getElementById("titleType").style.visibility = "hidden";
+							document.getElementById("boxType").style.visibility = "hidden";
+							document.getElementById("titleMisc").style.visibility = "hidden";
+							document.getElementById("boxTopmark").style.visibility = "hidden";
+							document.getElementById("boxRadar").style.visibility = "hidden";
+							document.getElementById("boxLight").style.visibility = "hidden";
+							document.getElementById("boxFogsignal").style.visibility = "hidden";
 							break
 						case "move":
 							document.getElementById("headerMove").style.visibility = "visible";
@@ -94,7 +103,7 @@
 
 				if (getKey("seamark:topmark:shape") != "-1") {
 					document.getElementById("checkTopmark").checked = true;
-					if (_category == "special_purpose") {
+					if (_category == "special_purpose" && _mode != "delete") {
 						showTopmarkColour(true);
 					}
 				}
@@ -106,7 +115,9 @@
 				}
 				if (getKey("seamark:light:colour") != "-1") {
 					document.getElementById("checkLight").checked = true;
-					showLightEdit(true);
+					if (_mode != "delete") {
+						showLightEdit(true);
+					}
 				}
 				var buff = getKey("seamark:name");
 				if (buff != "-1") {
@@ -616,9 +627,9 @@
 		<div id="headerAdd" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2>Seezeichen hinzufügen</h2></div>
 		<div id="headerEdit" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2>Seezeichen bearbeiten</h2></div>
 		<div id="headerMove" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2>Seezeichen verschieben</h2></div>
-		<div id="headerDelete" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2>Seezeichen löschen</h2></div>
-		<div style="position:absolute; top:80px; left:7px;">Art des Zeichens:</div>
-		<div style="position:absolute; top:80px; left:165px;">
+		<div id="headerDelete" style="position:absolute; top:0px; left:5px; visibility:hidden; color:red;"><h2>Seezeichen löschen</h2></div>
+		<div id="titleCategory" style="position:absolute; top:80px; left:7px;">Art des Zeichens:</div>
+		<div id="boxCategory" style="position:absolute; top:80px; left:165px;">
 			<select id="comboCategory" onChange="seamarkChanged()">
 				<option value="unspecified"/>Unbekannt- - - - - - - - - - - - -
 				<option value="safe_water"/>Ansteuerung
@@ -634,8 +645,8 @@
 				<option value="special_purpose"/>Sonderzeichen
 			</select>
 		</div>
-		<div style="position:absolute; top:120px; left:7px;">Bauart des Zeichens:</div>
-		<div style="position:absolute; top:120px; left:165px;">
+		<div id="titleType" style="position:absolute; top:120px; left:7px;">Bauart des Zeichens:</div>
+		<div id="boxType" style="position:absolute; top:120px; left:165px;">
 			<select id="comboShape" onChange="onChangeShape()">
 				<option selected value="unspecified"/>Unbekannt- - - - - - - - - - - - -
 				<option value="sphere"/>Kugeltonne
@@ -647,8 +658,8 @@
 				<option value="beacon"/>Spiere
 			</select>
 		</div>
-		<div style="position:absolute; top:160px; left:7px;">Weitere<br/>Eigenschaften:</div>
-		<div style="position:absolute; top:160px; left:165px;">
+		<div id="titleMisc" style="position:absolute; top:160px; left:7px;">Weitere<br/>Eigenschaften:</div>
+		<div id="boxTopmark" style="position:absolute; top:160px; left:165px;">
 			<input type="checkbox" id="checkTopmark" onclick="onChangeTopmark()"/> Topzeichen
 		</div>
 		<div id="boxRadar" style="position:absolute; top:182px; left:165px;">

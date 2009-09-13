@@ -26,8 +26,8 @@
 			var _NodeId = "-1";				//OSM-Node ID
 			var _Comment = null;			//Comment for Changeset
 			var _Version = null;			//Version of the node
-			var _xmlOsm = null;				//XML data read from OSM database
-			var NodeXml = null;				//XML-Data for node creation
+			var _xmlOsm = null;				//XML Data read from OSM database
+			var _xmlNode = null;				//XML-Data for node creation
 			var userName = null;			//OSM-Username of the user
 			var userPassword = null;		//OSM-Password of the user
 			var controls;					//OpenLayer-Controls
@@ -211,7 +211,7 @@
 				var xmlOSM = "<\?xml version='1.0' encoding='UTF-8'\?>\n"
 				xmlOSM += "<osm version=\"0.6\" generator=\"OpenSeaMap-Editor\"> \n";
 				xmlOSM += "<node id=\"" + _NodeId + "\" changeset=\"" + _ChangeSetId + "\" version=\"" + _Version + "\" lat=\"" + lat + "\" lon=\"" + lon + "\">\n";
-				xmlOSM += NodeXml;
+				xmlOSM += _xmlNode;
 				xmlOSM += "</node>\n</osm>";
 				// Sending content
 				osmNode(action, xmlOSM);
@@ -297,7 +297,7 @@
 
 			// Editing of the Seamark finished with OK
 			function editSeamarkOk(xmlTags, action) {
-				NodeXml = xmlTags;
+				_xmlNode = xmlTags;
 				sendWindow = window.open("./sending.php?action=" + action, "Sending", "width=460, height=170, resizable=yes");
 			}
 
@@ -364,8 +364,8 @@
 				if (arrayMarker[id].feature.popup != null) {
 					arrayMarker[id].feature.popup.hide();
 				}
-				arrayMarker[id].setUrl('./resources/action/circle_red.png');
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=delete&id=" + _NodeId + "&version=" + version, "Löschen", "width=630, height=420, resizable=yes");
+				arrayMarker[id].setUrl('./resources/action/delete.png');
+				editWindow = window.open("./dialogs/edit_seamark.php?mode=delete&id=" + _NodeId + "&version=" + version, "Löschen", "width=380, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -735,7 +735,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.91.11
+			Version 0.0.91.12
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
