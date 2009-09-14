@@ -19,7 +19,6 @@
 	</tr>
 </table>
 <p align="right">
-	<br>
 	<input type="button" value="OK" onclick="positionOk(document.getElementById('pos-lat').value, document.getElementById('pos-lon').value);">
 	&nbsp;&nbsp;
 	<input type="button" value="Abbrechen" onclick="onPositionDialogCancel()">

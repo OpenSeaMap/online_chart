@@ -700,8 +700,8 @@
 			</select>&nbsp; &nbsp;
 			<input type="button" value="Laden" onclick="updateSeamarks()">
 		</div>
-		<div style="position:absolute; top:240px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank">Hilfe</a></div>
-		<div id="action" class="sidebar" style="position:absolute; top:250px; left:0px;">
+		<div style="position:absolute; top:245px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank">Hilfe</a></div>
+		<div id="action" class="sidebar" style="position:absolute; top:255px; left:0px;">
 			<hr>
 			<a><b>Hinzufügen</b></a><br/><br/>
 			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
@@ -739,7 +739,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.91.12
+			Version 0.0.91.14
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
@@ -757,7 +757,7 @@
 			<?php include ("./dialogs/add_harbour.php"); ?>
 		</div>
 		<!--Position-Dialog-->
-		<div id="position_dialog" class="dialog" style="position:absolute; top:25px; left:20%; width:280px; height:180px; visibility:hidden;">
+		<div id="position_dialog" class="dialog" style="position:absolute; top:25px; left:20%; width:280px; height:170px; visibility:hidden;">
 			<?php include ("./dialogs/new_position.php"); ?>
 		</div>
 		<!--Load Data Wait-Dialog-->
