@@ -693,11 +693,15 @@
 		<div style="position:absolute; top:140px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank">Hilfe</a></div>
 		<div id="data" class="sidebar" style="position:absolute; top:150px; left:0px;">
 			<hr>
-			<a><b>Daten</b></a><br/><br/>
+			<b>Daten</b>
+			<br/><br/>
+			<select id="pos-iala">
+				<option selected value="A" disabled = "true"/>IALA - A
+			</select>&nbsp; &nbsp;
 			<input type="button" value="Laden" onclick="updateSeamarks()">
 		</div>
-		<div style="position:absolute; top:230px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank">Hilfe</a></div>
-		<div id="action" class="sidebar" style="position:absolute; top:240px; left:0px;">
+		<div style="position:absolute; top:240px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank">Hilfe</a></div>
+		<div id="action" class="sidebar" style="position:absolute; top:250px; left:0px;">
 			<hr>
 			<a><b>Hinzufügen</b></a><br/><br/>
 			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
@@ -753,7 +757,7 @@
 			<?php include ("./dialogs/add_harbour.php"); ?>
 		</div>
 		<!--Position-Dialog-->
-		<div id="position_dialog" class="dialog" style="position:absolute; top:25px; left:20%; width:300px; height:180px; visibility:hidden;">
+		<div id="position_dialog" class="dialog" style="position:absolute; top:25px; left:20%; width:280px; height:180px; visibility:hidden;">
 			<?php include ("./dialogs/new_position.php"); ?>
 		</div>
 		<!--Load Data Wait-Dialog-->
