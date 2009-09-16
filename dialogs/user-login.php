@@ -1,3 +1,7 @@
+<?php
+	include("../../classes/Translation.php");
+?>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -21,11 +25,11 @@
 	</head>
 	<body>
 		<form name="Login" action="">
-			<h3>Anmelden</h3>
+			<h3><?=$t->tr("login")?></h3>
 			<table>
 				<tr>
 					<td valign="top">
-						Benutzername:&nbsp;
+						<?=$t->tr("userName")?>:&nbsp;
 					</td>
 					<td valign="top">
 						<input type="text" name="user_name" align="left"/>
@@ -33,7 +37,7 @@
 				</tr>
 				<tr>
 					<td valign="top">
-						Passwort:&nbsp;
+						<?=$t->tr("password")?>:&nbsp;
 					</td>
 					<td valign="top">
 						<input type="password" name="password" align="left"/>
@@ -42,9 +46,9 @@
 			</table>
 			<p align="right">
 				<br>
-				<input type="button" value="Anmelden" onclick="login()">
+				<input type="button" value='<?=$t->tr("login")?>' onclick="login()">
 				&nbsp;&nbsp;
-				<input type="button" value="Abbrechen" onclick="cancel()">
+				<input type="button" value='<?=$t->tr("cancel")?>' onclick="cancel()">
 				&nbsp;&nbsp;
 			</p>
 		</form>

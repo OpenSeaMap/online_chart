@@ -163,7 +163,7 @@
 
 				jumpTo(lon, lat, zoom);
 
-				updateSeamarks();
+				//updateSeamarks();
 			}
 
 			// Map event listener
@@ -291,14 +291,14 @@
 			}
 
 			function addSeamarkEdit() {
-				editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType, "Bearbeiten", "width=630, height=420, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
 			// Editing of the Seamark finished with OK
 			function editSeamarkOk(xmlTags, action) {
 				_xmlNode = xmlTags;
-				sendWindow = window.open("./sending.php?action=" + action, "Sending", "width=460, height=170, resizable=yes");
+				sendWindow = window.open("./sending.php?action=" + action + "&lang=<?=$t->getCurrentLanguage()?>", "Sending", "width=460, height=170, resizable=yes");
 			}
 
 			function editSeamarkEdit(id, version, pos_lat, pos_lon) {
@@ -314,7 +314,7 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/circle_red.png');
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=update&id=" + id + "&version=" + version, "Bearbeiten", "width=630, height=420, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php?mode=update&id=" + id + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>" , "Bearbeiten", "width=630, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -351,7 +351,7 @@
 				if (arrayMarker[id].feature.popup != null) {
 					arrayMarker[id].feature.popup.hide();
 				}
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=move&id=" + _NodeId + "&version=" + _Version, "Bearbeiten", "width=630, height=420, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php?mode=move&id=" + _NodeId + "&version=" + _Version + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -365,7 +365,7 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/delete.png');
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=delete&id=" + _NodeId + "&version=" + version, "Löschen", "width=380, height=420, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php?mode=delete&id=" + _NodeId + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>", "Löschen", "width=380, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -391,13 +391,13 @@
 
 			// Open login window
 			function loginUser() {
-				loginWindow = window.open("./dialogs/user-login.html", "Login", "width=380, height=200, resizable=yes");
+				loginWindow = window.open("./dialogs/user-login.php?lang=<?=$t->getCurrentLanguage()?>", "Login", "width=380, height=200, resizable=yes");
  				loginWindow.focus();
 			}
 
 			// Open login window
 			function loginUserSave() {
-				loginWindow = window.open("./user-login.html", "Login", "width=380, height=200, resizable=yes");
+				loginWindow = window.open("./user-login.php?", "Login", "width=380, height=200, resizable=yes");
  				loginWindow.focus();
 			}
 
@@ -679,37 +679,37 @@
 		<div id="login" class="sidebar" style="position:absolute; top:30px; left:0px;">
 			<hr>
 			<form name="login" action="">
-				<a>Sie müssen amgemeldet sein um die Karte bearbeiten zu können.<br/><br/></a>
-				<input type="button" value="Anmelden" onclick="loginUser()">
+				<p><?=$t->tr("loged_out")?></p>
+				<input type="button" value='<?=$t->tr("login")?>' onclick="loginUser()">
 			</form>
 		</div>
 		<div id="logout" class="sidebar" style="position:absolute; top:30px; left:0px; visibility:hidden;" >
 			<hr>
 			<form name="logout" action="">
-				<p>Sie sind angemeldet.</p>
-				<input type="button" value="Abmelden" onclick="logoutUser()" >
+				<p><?=$t->tr("loged_out")?></p>
+				<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
 			</form>
 		</div>
-		<div style="position:absolute; top:140px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank">Hilfe</a></div>
-		<div id="data" class="sidebar" style="position:absolute; top:150px; left:0px;">
+		<div style="position:absolute; top:140px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
+		<div id="data" class="sidebar" style="position:absolute; top:160px; left:0px;">
 			<hr>
-			<b>Daten</b>
+			<b><?=$t->tr("data")?></b>
 			<br/><br/>
 			<select id="pos-iala">
 				<option selected value="A" disabled = "true"/>IALA - A
 			</select>&nbsp; &nbsp;
-			<input type="button" value="Laden" onclick="updateSeamarks()">
+			<input type="button" value='<?=$t->tr("load")?>' onclick="updateSeamarks()">
 		</div>
-		<div style="position:absolute; top:245px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank">Hilfe</a></div>
-		<div id="action" class="sidebar" style="position:absolute; top:255px; left:0px;">
+		<div style="position:absolute; top:255px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
+		<div id="action" class="sidebar" style="position:absolute; top:265px; left:0px;">
 			<hr>
-			<a><b>Hinzufügen</b></a><br/><br/>
+			<a><b><?=$t->tr("add")?></b></a><br/><br/>
 			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
 				<tr>
 					<td	onclick="showSeamarkAdd('true')"
 						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 						onmouseout="this.parentNode.style.backgroundColor = 'white';"
-						style="cursor:pointer">Seezeichen
+						style="cursor:pointer"><?=$t->tr("Seezeichen")?>
 					</td>
 					<td>
 						<IMG src="resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
@@ -719,7 +719,7 @@
 					<td	onclick="showLandmarkAdd('true')"
 						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 						onmouseout="this.parentNode.style.backgroundColor = 'white';"
-						style="cursor:pointer">Leuchtfeuer
+						style="cursor:pointer"><?=$t->tr("Leuchtfeuer")?>
 					</td>
 					<td>
 						<IMG src="resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
@@ -729,7 +729,7 @@
 					<td	onclick="showHarbourAdd('true')"
 						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 						onmouseout="this.parentNode.style.backgroundColor = 'white';"
-						style="cursor:pointer">Hafenanlage
+						style="cursor:pointer"><?=$t->tr("Hafen")?>
 					</td>
 					<td>
 						<IMG src="./resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
@@ -739,7 +739,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.91.14
+			Version 0.0.92.1
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
@@ -762,15 +762,15 @@
 		</div>
 		<!--Load Data Wait-Dialog-->
 		<div id="loading" class="infobox" style="position:absolute; top:50%; left:50%; width:250px; height:30px; visibility:hidden;">
-			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;Daten werden geladen.
+			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("dataLoad")?>
 		</div>
 		<!--Create Changeset Wait-Dialog-->
 		<div id="creating" class="infobox" style="position:absolute; top:50%; left:50%; width:250px; height:30px; visibility:hidden;">
-			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;Changeset wird erzeugt.
+			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("changesetCreate")?>
 		</div>
 		<!--Save Data Wait-Dialog-->
 		<div id="saving" class="infobox" style="position:absolute; top:50%; left:50%; width:300px; height:30px; visibility:hidden;">
-			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;Daten werden gespeichert.
+			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("dataSave")?>
 		</div>
 	</body>
 </html>

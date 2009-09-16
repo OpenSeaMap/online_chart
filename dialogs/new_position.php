@@ -1,4 +1,4 @@
-<h3>Position des Seezeichens</h3>
+<h3><?=$t->tr("positionSeamark")?></h3>
 <form name="position" action="">
 <table>
 	<tr>
@@ -19,9 +19,9 @@
 	</tr>
 </table>
 <p align="right">
-	<input type="button" value="OK" onclick="positionOk(document.getElementById('pos-lat').value, document.getElementById('pos-lon').value);">
+	<input type="button" value='<?=$t->tr("ok")?>' onclick="positionOk(document.getElementById('pos-lat').value, document.getElementById('pos-lon').value);">
 	&nbsp;&nbsp;
-	<input type="button" value="Abbrechen" onclick="onPositionDialogCancel()">
+	<input type="button" value='<?=$t->tr("cancel")?>' onclick="onPositionDialogCancel()">
 	&nbsp;&nbsp;
 </p>
 </form>

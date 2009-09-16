@@ -11,7 +11,7 @@
 		<td>
 		</td>
 		<td align="right" valign="bottom" >
-			<input type="button" value="Schließen" onclick="showHarbourAdd('false')" >
+			<input type="button" value='<?=$t->tr("close")?>' onclick="showHarbourAdd('false')" >
 		</td>
 	</tr>
 </table>

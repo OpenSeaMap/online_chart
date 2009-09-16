@@ -1,4 +1,4 @@
-<table height="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
+<table height="100%" width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
 	<tr>
 		<td>
 			<IMG src="resources/lateral/Lateral_SafeWater_Sphere.png" width="30" height="36" align="center" border="0"/>
@@ -123,7 +123,7 @@
 		<td>
 		</td>
 		<td align="right" valign="bottom" >
-			<input type="button" value="Schließen" onclick="showSeamarkAdd('false')" >
+			<input type="button" value='<?=$t->tr("close")?>' onclick="showSeamarkAdd('false')" >
 		</td>
 	</tr>
 </table>

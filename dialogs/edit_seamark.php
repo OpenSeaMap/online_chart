@@ -441,14 +441,14 @@
 				var period = getKey("seamark:light:period");
 				var val = "unbekannt";
 					
-				if (character != "-1" && character != "unknown") {
+				if (character != "-1" && character != "<?=$t->tr("unknown")?>") {
 					if (_category == "south") {
 						var buff = character.split("+");
 						val = buff[0];
 					} else {
 						val = character;
 					}
-					if (group != "-1" && group != "unknown") {
+					if (group != "-1" && group != "<?=$t->tr("unknown")?>") {
 						val += "(" + group + ")";
 					}
 					if (_category == "south") {
@@ -479,7 +479,7 @@
 				database = new DataModel();
 				var selectionElement = document.getElementById("lightChar")
 				clearSelectOptions();
-				addSelectOption(selectionElement, "unbekannt");
+				addSelectOption(selectionElement, "<?=$t->tr("unknown")?>");
 				var values = database.get("light", "light_" + _category);
 				var lights = values.split(":");
 				for(i = 0; i < lights.length; i++) {
@@ -624,14 +624,14 @@
 	</head>
 
 	<body onload=init();>
-		<div id="headerAdd" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2>Seezeichen hinzufügen</h2></div>
-		<div id="headerEdit" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2>Seezeichen bearbeiten</h2></div>
-		<div id="headerMove" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2>Seezeichen verschieben</h2></div>
-		<div id="headerDelete" style="position:absolute; top:0px; left:5px; visibility:hidden; color:red;"><h2>Seezeichen löschen</h2></div>
-		<div id="titleCategory" style="position:absolute; top:80px; left:7px;">Art des Zeichens:</div>
+		<div id="headerAdd" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkAdd")?></h2></div>
+		<div id="headerEdit" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkEdit")?></h2></div>
+		<div id="headerMove" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkMove")?></h2></div>
+		<div id="headerDelete" style="position:absolute; top:0px; left:5px; visibility:hidden; color:red;"><h2><?=$t->tr("seamarkDelete")?></h2></div>
+		<div id="titleCategory" style="position:absolute; top:80px; left:7px;"><?=$t->tr("seamarkCategory")?>:</div>
 		<div id="boxCategory" style="position:absolute; top:80px; left:165px;">
 			<select id="comboCategory" onChange="seamarkChanged()">
-				<option value="unspecified"/>Unbekannt- - - - - - - - - - - - -
+				<option value="unspecified"/><?=$t->tr("comboUnknown")?>
 				<option value="safe_water"/>Ansteuerung
 				<option value="starboard"/>Steuerbord
 				<option value="port"/>Backbord
@@ -645,33 +645,33 @@
 				<option value="special_purpose"/>Sonderzeichen
 			</select>
 		</div>
-		<div id="titleType" style="position:absolute; top:120px; left:7px;">Bauart des Zeichens:</div>
+		<div id="titleType" style="position:absolute; top:120px; left:7px;"><?=$t->tr("seamarkType")?>:</div>
 		<div id="boxType" style="position:absolute; top:120px; left:165px;">
 			<select id="comboShape" onChange="onChangeShape()">
-				<option selected value="unspecified"/>Unbekannt- - - - - - - - - - - - -
-				<option value="sphere"/>Kugeltonne
-				<option value="conical"/>Spitztonne
-				<option value="can"/>Stumpftonne
-				<option value="barrel"/>Fasstonne
-				<option value="pillar"/>Bakentonne
-				<option value="spar"/>Spierentonne
-				<option value="beacon"/>Spiere
+				<option selected value="unspecified"/><?=$t->tr("comboUnknown")?>
+				<option value="sphere"/><?=$t->tr("sphere")?>
+				<option value="conical"/><?=$t->tr("conical")?>
+				<option value="can"/><?=$t->tr("can")?>
+				<option value="barrel"/><?=$t->tr("barrel")?>
+				<option value="pillar"/><?=$t->tr("pillar")?>
+				<option value="spar"/><?=$t->tr("spar")?>
+				<option value="beacon"/><?=$t->tr("beacon")?>
 			</select>
 		</div>
-		<div id="titleMisc" style="position:absolute; top:160px; left:7px;">Weitere<br/>Eigenschaften:</div>
+		<div id="titleMisc" style="position:absolute; top:160px; left:7px;"><?=$t->tr("miscItems")?>:</div>
 		<div id="boxTopmark" style="position:absolute; top:160px; left:165px;">
-			<input type="checkbox" id="checkTopmark" onclick="onChangeTopmark()"/> Topzeichen
+			<input type="checkbox" id="checkTopmark" onclick="onChangeTopmark()"/><?=$t->tr("topmark")?>
 		</div>
 		<div id="boxRadar" style="position:absolute; top:182px; left:165px;">
-			<input type="checkbox" id="checkRadar" onclick="onChangeRadarRefl()"/> Radarreflektor
+			<input type="checkbox" id="checkRadar" onclick="onChangeRadarRefl()"/><?=$t->tr("radar")?>
 		</div>
 		<div id="boxLight" style="position:absolute; top:204px; left:165px;">
-			<input type="checkbox" id="checkLight" onclick="onChangeLights()"/> Befeuert
+			<input type="checkbox" id="checkLight" onclick="onChangeLights()"/><?=$t->tr("lighted")?>
 		</div>
 		<div id="boxFogsignal" style="position:absolute; top:226px; left:165px;">
-			<input type="checkbox" id="checkFogsignal" onclick="onChangeFogSig()"/> Nebelhorn
+			<input type="checkbox" id="checkFogsignal" onclick="onChangeFogSig()"/><?=$t->tr("fogsignal")?>
 		</div>
-		<div style="position:absolute; bottom:80px; left:7px;">Name des Zeichens:</div>
+		<div style="position:absolute; bottom:80px; left:7px;"><?=$t->tr("seamarkName")?>:</div>
 		<div style="position:absolute; bottom:80px; left:165px;">
 			<input type="text" id="inputName" align="left"/>
 		</div>
@@ -682,22 +682,22 @@
 			<input type="text" id="inputLightString" align="left" size="10" value="Befeuerung" readonly="readonly"/>
 		</div>
 		<div style="position:absolute; bottom:20px; right:10px;">
-			<input type="button" id="buttonSave" value="Speichern" onclick="save()">
+			<input type="button" id="buttonSave" value='<?=$t->tr("save")?>' onclick="save()">
 			&nbsp;&nbsp;
-			<input type="button" id="buttonCancel" value="Abbrechen" onclick="cancel()">
+			<input type="button" id="buttonCancel" value='<?=$t->tr("cancel")?>' onclick="cancel()">
 			&nbsp;&nbsp;
 		</div>
 		<div id="boxEditTopmark" style="position:absolute; top:179px; left:190px; width:188px; visibility:hidden;">
 			<table border="0" width="100%">
 				<tr>
 					<td>
-						Farbe:
+						<?=$t->tr("colour")?>:
 					</td>
 					<td align="right">
 						<select id="topColour" onChange="saveTopmark()">
-							<option value="unknown"/>Unbekannt
-							<option value="yellow"/>Gelb
-							<option value="red"/>Rot
+							<option value="unknown"/><?=$t->tr("unknown")?>
+							<option value="red"/><?=$t->tr("red")?>
+							<option value="yellow"/><?=$t->tr("yellow")?>
 						</select>
 					</td>
 				</tr>
@@ -711,7 +711,7 @@
 					</td>
 					<td align="right">
 						<select  name="light_character" id="lightChar" onChange="saveLight()">
-							<option value="unbekannt"/>Unbekannt
+							<option value="unknown"/><?=$t->tr("unknown")?>
 						</select>
 					</td>
 				</tr>
