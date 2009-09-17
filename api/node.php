@@ -27,6 +27,7 @@
 			$_path = "/api/0.6/node/create";
 			$_method = "PUT";
 			break;
+		case "move":
 		case "update":
 			$buff = trim($_node_id);
 			$_path = "/api/0.6/node/" .$buff;
@@ -79,6 +80,6 @@
 
 	$_response = sendOSM($_url, $_path, base64_encode($_user_name .":" .$_user_password), $_data, $_method);
 	
-	echo $_response;
+	echo trim($_response);
 
 ?> 

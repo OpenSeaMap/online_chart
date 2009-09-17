@@ -24,6 +24,7 @@
 			var _version = 0;
 			var _id = 0;
 			var _mode;
+			var _saving = false;
 			var _topmark_shape;
 
 			// Images
@@ -58,7 +59,7 @@
 					switch (_mode) {
 						case "delete":
 							document.getElementById("headerDelete").style.visibility = "visible";
-							document.getElementById("buttonSave").value = "Löschen";
+							document.getElementById("buttonSave").value = '<?=$t->tr("delete")?>';
 							document.getElementById("titleCategory").style.visibility = "hidden";
 							document.getElementById("boxCategory").style.visibility = "hidden";
 							document.getElementById("titleType").style.visibility = "hidden";
@@ -411,7 +412,7 @@
 				var buffCharacter = document.getElementById("lightChar").value;
 				var period = document.getElementById("lightPeriod").value;
 
-				if (buffCharacter != "" && buffCharacter != "unknown") {
+				if (buffCharacter != "" && buffCharacter != "<?=$t->tr("unknown")?>") {
 					var buff = buffCharacter.split("(");
 					var character = buff[0];
 					if (_category == "south") {
@@ -439,7 +440,7 @@
 				var character = getKey("seamark:light:character");
 				var group = getKey("seamark:light:group");
 				var period = getKey("seamark:light:period");
-				var val = "unbekannt";
+				var val = "<?=$t->tr("unknown")?>";
 					
 				if (character != "-1" && character != "<?=$t->tr("unknown")?>") {
 					if (_category == "south") {
@@ -467,7 +468,7 @@
 							val += " G";
 							break
 					}
-					if (period != "-1" && period != "unknown" && period != " - - - ") {
+					if (period != "-1" && period != "<?=$t->tr("unknown")?>" && period != " - - - ") {
 						document.getElementById("lightPeriod").value = period;
 						val += " " + period + "s";
 					}
@@ -536,11 +537,12 @@
 			function save() {
 				// check for user login
 				if (!opener.window.userName) {
-					alert("Sie müssen angemeldet sein um die Daten zu speichern.");
+					alert("<?=$t->tr("loged_out_save")?>");
 					opener.window.loginUserSave();
 					return;
 				}
 				opener.window.editSeamarkOk(createXML(), _mode);
+				_saving = true;
 				//alert(createXML());
 				this.close();
 			}
@@ -623,7 +625,7 @@
 		</script>
 	</head>
 
-	<body onload=init();>
+	<body onload=init(); onUnload="if (!_saving) cancel()">
 		<div id="headerAdd" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkAdd")?></h2></div>
 		<div id="headerEdit" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkEdit")?></h2></div>
 		<div id="headerMove" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkMove")?></h2></div>
@@ -632,17 +634,17 @@
 		<div id="boxCategory" style="position:absolute; top:80px; left:165px;">
 			<select id="comboCategory" onChange="seamarkChanged()">
 				<option value="unspecified"/><?=$t->tr("comboUnknown")?>
-				<option value="safe_water"/>Ansteuerung
-				<option value="starboard"/>Steuerbord
-				<option value="port"/>Backbord
-				<option value="preferred_channel_starboard"/>Abzweigung Steuerbord
-				<option value="preferred_channel_port"/>Abzweigung Backbord
-				<option value="north"/>Gefahr Nord
-				<option value="east"/>Gefahr Ost
-				<option value="south"/>Gefahr Süd
-				<option value="west"/>Gefahr West
-				<option value="isolated_danger"/>Einzelgefahrenzeichen
-				<option value="special_purpose"/>Sonderzeichen
+				<option value="safe_water"/><?=$t->tr("comboSafeWater")?>
+				<option value="starboard"/><?=$t->tr("comboStarboard")?>
+				<option value="port"/><?=$t->tr("comboPort")?>
+				<option value="preferred_channel_starboard"/><?=$t->tr("comboPrefStarboard")?>
+				<option value="preferred_channel_port"/><?=$t->tr("comboPrefPort")?>
+				<option value="north"/><?=$t->tr("comboNorth")?>
+				<option value="east"/><?=$t->tr("comboEast")?>
+				<option value="south"/><?=$t->tr("comboSouth")?>
+				<option value="west"/><?=$t->tr("comboWest")?>
+				<option value="isolated_danger"/><?=$t->tr("comboIsolatedDanger")?>
+				<option value="special_purpose"/><?=$t->tr("comboSpecialPurpose")?>
 			</select>
 		</div>
 		<div id="titleType" style="position:absolute; top:120px; left:7px;"><?=$t->tr("seamarkType")?>:</div>
@@ -707,7 +709,7 @@
 			<table border="0" width="100%">
 				<tr>
 					<td>
-						Kennung:
+						<?=$t->tr("character")?>:
 					</td>
 					<td align="right">
 						<select  name="light_character" id="lightChar" onChange="saveLight()">
@@ -721,10 +723,10 @@
 			<table border="0" width="100%">
 				<tr>
 					<td>
-						Wiederkehr:
+						<?=$t->tr("period")?>:
 					</td>
 					<td align="right">
-						<input type="text" name="light_period" id="lightPeriod" size="5" style="text-align:right;" value="unknown" onChange="saveLight()"/>
+						<input type="text" name="light_period" id="lightPeriod" size="5" style="text-align:right;" value='<?=$t->tr("unknown")?>' onChange="saveLight()"/>
 						s
 					</td>
 				</tr>

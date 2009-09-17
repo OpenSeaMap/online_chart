@@ -27,7 +27,7 @@
 			var _Comment = null;			//Comment for Changeset
 			var _Version = null;			//Version of the node
 			var _xmlOsm = null;				//XML Data read from OSM database
-			var _xmlNode = null;				//XML-Data for node creation
+			var _xmlNode = null;			//XML-Data for node creation
 			var userName = null;			//OSM-Username of the user
 			var userPassword = null;		//OSM-Password of the user
 			var controls;					//OpenLayer-Controls
@@ -262,11 +262,11 @@
 				if (arrayMarker["2"] != 'undefined') {
 					layer_markers.removeMarker(arrayMarker["2"]);
 				}
-				arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
+				arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
 			}
 
 			function onEditDialogCancel(id) {
-				arrayMarker[id].setUrl('./resources/action/circle_green.png');
+				arrayMarker[id].setUrl('./resources/action/circle_blue.png');
 			}
 
 			function addSeamark(seamark) {
@@ -284,7 +284,7 @@
 				if (_NodeId != "-1") {
 					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
 				}
-				_NodeId = "11";
+				_NodeId = "1";
 				addMarker(_NodeId, "");
 				arrayMarker[_NodeId].setUrl('./resources/action/circle_red.png');
 				addSeamarkEdit();
@@ -395,16 +395,18 @@
  				loginWindow.focus();
 			}
 
-			// Open login window
+			// Open login window from edit dialog
 			function loginUserSave() {
-				loginWindow = window.open("./user-login.php?", "Login", "width=380, height=200, resizable=yes");
+				loginWindow = window.open("./user-login.php?lang=<?=$t->getCurrentLanguage()?>", "Login", "width=380, height=200, resizable=yes");
  				loginWindow.focus();
 			}
 
 			// Logout user and close changeset
 			function logoutUser() {
-				// close changeset
-				osmChangeSet("close", "void");
+				// close existing changeset
+				if (_ChangeSetId >= 1) {
+					osmChangeSet("close", "void");
+				}
 				// delete user data
 				userName = null;
 				userPassword = null;
@@ -457,9 +459,14 @@
 				updateSeamarks();
 			}
 
+			function trim (buffer) {
+				  return buffer.replace (/^\s+/, '').replace (/\s+$/, '');
+			}
+
 			function osmChangeSet(action, todo) {
 				var url = './api/changeset.php';
 				var params = new Object();
+				var dialog;
 
 				params["action"] = action;
 				params["id"] = _ChangeSetId;
@@ -467,7 +474,13 @@
 				params["userName"] = userName;
 				params["userPassword"] = userPassword;
 
-				document.getElementById("creating").style.visibility = "visible";
+				if (action = "create") {
+					dialog = "creating";
+				} else {
+					dialog = "closing";
+				}
+				
+				document.getElementById(dialog).style.visibility = "visible";
 
 				new Ajax.Request(url, {
 					method: 'get',
@@ -476,25 +489,25 @@
 						var response = transport.responseText;
 						if (action = "create") {
 							if (parseInt(response) > 0) {
-								_ChangeSetId = response;
+								_ChangeSetId = trim(response);
 								//alert(_ChangeSetId + " : " + todo);
 								sendNodeOsm(todo);
-								document.getElementById("creating").style.visibility = "collapse";
+								document.getElementById(dialog).style.visibility = "collapse";
 								return "0";
 							} else {
-								document.getElementById("creating").style.visibility = "collapse";
+								document.getElementById(dialog).style.visibility = "collapse";
 								alert("Erzeugen des Changesets Fehlgeschlagen");
 								return "-1";
 							}
 						}
 					},
 					onFailure: function() {
-						document.getElementById("creating").style.visibility = "collapse";
+						document.getElementById(dialog).style.visibility = "collapse";
 						alert("damm");
 						return "-1";
 					},
 					onException: function(request, exception) {
-						document.getElementById("creating").style.visibility = "collapse";
+						document.getElementById(dialog).style.visibility = "collapse";
 						alert("mist: " + exception + request);
 						return "-1";
 					}
@@ -521,7 +534,8 @@
 						var response = transport.responseText;
 						switch (action) {
 							case "create":
-								_NodeId = response;
+								_NodeId = trim(response);
+							case "move":
 							case "update":
 							case "delete":
 								updateNode();
@@ -569,7 +583,7 @@
 							readOsmXml();
 							//alert(response);
 							document.getElementById("loading").style.visibility = "collapse";
-							if (_NodeId != "-1") {
+							if (_NodeId != "-1" && _NodeId != "1") {
 								arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
 							}
 							return "0";
@@ -638,9 +652,9 @@
 							popupText += " - <input type=\"text\" name=\"value\" value=\"" + val + "\"/>";
 						}
 						popupText += "<br/> <br/>";
-						popupText += "<input type=\"button\" value=\"Bearbeiten\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
-						popupText += "<input type=\"button\" value=\"Verschieben\"onclick=\"moveSeamarkEdit(" + id + "," + version + ")\">&nbsp;&nbsp;";
-						popupText += "<input type=\"button\" value=\"Löschen\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
+						popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
+						popupText += "<input type=\"button\" value=\"<?=$t->tr("move")?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + ")\">&nbsp;&nbsp;";
+						popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
 						addMarker(id, popupText);
 					}
 				}
@@ -686,7 +700,7 @@
 		<div id="logout" class="sidebar" style="position:absolute; top:30px; left:0px; visibility:hidden;" >
 			<hr>
 			<form name="logout" action="">
-				<p><?=$t->tr("loged_out")?></p>
+				<p><?=$t->tr("loged_in")?></p>
 				<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
 			</form>
 		</div>
@@ -767,6 +781,10 @@
 		<!--Create Changeset Wait-Dialog-->
 		<div id="creating" class="infobox" style="position:absolute; top:50%; left:50%; width:250px; height:30px; visibility:hidden;">
 			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("changesetCreate")?>
+		</div>
+		<!--Close Changeset Wait-Dialog-->
+		<div id="closing" class="infobox" style="position:absolute; top:50%; left:50%; width:250px; height:30px; visibility:hidden;">
+			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("changesetClose")?>
 		</div>
 		<!--Save Data Wait-Dialog-->
 		<div id="saving" class="infobox" style="position:absolute; top:50%; left:50%; width:300px; height:30px; visibility:hidden;">

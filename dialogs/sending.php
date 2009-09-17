@@ -1,3 +1,7 @@
+<?php
+	include("../../classes/Translation.php");
+?>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -24,7 +28,7 @@
 				_Comment = this.document.sendOSM.comment.value;
 				
 				if (_Comment == "") {
-					alert("Sie müssen einen Kommentar eingeben!");
+					alert("<?=$t->tr("enterComment")?>");
 					return;
 				} else {
 					opener.window.setComment(_Comment);
@@ -38,7 +42,7 @@
 			}
 
 			function cancel() {
-				opener.window.updateSeamarks();
+				opener.window.readOsmXml();
 				this.close();
 			}
 
@@ -62,11 +66,11 @@
 	</head>
 	<body onload=init();>
 		<form name="sendOSM" action="">
-			<h3>Seezeichen speichern</h3>
+			<h3><?=$t->tr("seamarkSave")?></h3>
 			<table>
 				<tr>
 					<td valign="top">
-						Kommentar:&nbsp;
+						<?=$t->tr("comment")?>:&nbsp;
 					</td>
 					<td valign="top">
 						<input type="text" name="comment" align="left" size="40"/>
@@ -75,9 +79,9 @@
 			</table>
 			<p align="right">
 				<br>
-				<input type="button" value="OK" onclick="ok()">
+				<input type="button" value='<?=$t->tr("ok")?>' onclick="ok()">
 				&nbsp;&nbsp;
-				<input type="button" value="Abbrechen" onclick="cancel()">
+				<input type="button" value='<?=$t->tr("cancel")?>' onclick="cancel()">
 				&nbsp;&nbsp;
 			</p>
 		</form>
