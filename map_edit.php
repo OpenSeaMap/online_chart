@@ -334,8 +334,6 @@
 			}
 
 			function moveSeamarkOk() {
-				// remove old marker
-				removeMarker();
 				// set popup text for the new marker
 				var popupText = "ID = " + _NodeId;
 				popupText += " - Lat = " + lat;
@@ -693,14 +691,14 @@
 		<div id="login" class="sidebar" style="position:absolute; top:30px; left:0px;">
 			<hr>
 			<form name="login" action="">
-				<p><?=$t->tr("loged_out")?></p>
+				<p><?=$t->tr("logged_out")?></p>
 				<input type="button" value='<?=$t->tr("login")?>' onclick="loginUser()">
 			</form>
 		</div>
 		<div id="logout" class="sidebar" style="position:absolute; top:30px; left:0px; visibility:hidden;" >
 			<hr>
 			<form name="logout" action="">
-				<p><?=$t->tr("loged_in")?></p>
+				<p><?=$t->tr("logged_in")?></p>
 				<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
 			</form>
 		</div>

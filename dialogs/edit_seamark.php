@@ -537,7 +537,7 @@
 			function save() {
 				// check for user login
 				if (!opener.window.userName) {
-					alert("<?=$t->tr("loged_out_save")?>");
+					alert("<?=$t->tr("logged_out_save")?>");
 					opener.window.loginUserSave();
 					return;
 				}
