@@ -17,6 +17,17 @@ DataModel.meta["south"] = "buoy_cardinal";
 DataModel.meta["west"] = "buoy_cardinal";
 DataModel.meta["isolated_danger"] = "buoy_isolated_danger";
 DataModel.meta["special_purpose"] = "buoy_special_purpose";
+DataModel.meta["shape_safe_water"] = "sphere:pillar:spar";
+DataModel.meta["shape_starboard"] = "conical:pillar";
+DataModel.meta["shape_port"] = "can:pillar:spar";
+DataModel.meta["shape_preferred_channel_starboard"] = "conical:pillar";
+DataModel.meta["shape_preferred_channel_port"] = "can:pillar:spar";
+DataModel.meta["shape_north"] = "pillar:spar";
+DataModel.meta["shape_east"] = "pillar:spar";
+DataModel.meta["shape_south"] = "pillar:spar";
+DataModel.meta["shape_west"] = "pillar:spar";
+DataModel.meta["shape_isolated_danger"] = "pillar:spar";
+DataModel.meta["shape_special_purpose"] = "barrel:pillar:spar";
 
 DataModel.light = new Array(); //Metadaten
 DataModel.light["light_safe_water"] = "Iso:Oc";
@@ -33,16 +44,16 @@ DataModel.light["light_special_purpose"] = "Fl:Oc(2):Oc(3)";
 
 
 DataModel.prototype.get = function(group, entry) {
-	var Value = "-1"
+	var value = "-1"
 
 	switch (group) {
 		case "meta":
-			Value = DataModel.meta[entry];
+			value = DataModel.meta[entry];
 			break
 		case "light":
-			Value = DataModel.light[entry];
+			value = DataModel.light[entry];
 			break
 	}
 	
-	return Value;
+	return value;
 }

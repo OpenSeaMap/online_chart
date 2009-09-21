@@ -27,12 +27,6 @@
 			var _saving = false;
 			var _topmark_shape;
 
-			// Images
-			buoyImage = new Image();
-			buoyImageTop = new Image();
-			buoyImageLighted = new Image();
-			buoyImageTopLighted = new Image();
-
 			function init() {
 				_mode = getArgument("mode");
 				if (_mode == "create") {
@@ -96,14 +90,15 @@
 							break;
 					}
 				}
-				
 				_buoy_shape = getKey("seamark:" + _seamark + ":shape");
-
+				fillShapeCombobox();
 				document.getElementById("comboCategory").value = _category;
 				document.getElementById("comboShape").value = _buoy_shape;
 
+				loadImages();
 				if (getKey("seamark:topmark:shape") != "-1") {
 					document.getElementById("checkTopmark").checked = true;
+					document.getElementById("boxImageTop").style.visibility = "visible";
 					if (_category == "special_purpose" && _mode != "delete") {
 						showTopmarkColour(true);
 					}
@@ -116,6 +111,7 @@
 				}
 				if (getKey("seamark:light:colour") != "-1") {
 					document.getElementById("checkLight").checked = true;
+					document.getElementById("boxImageLight").style.visibility = "visible";
 					if (_mode != "delete") {
 						showLightEdit(true);
 					}
@@ -124,7 +120,6 @@
 				if (buff != "-1") {
 					document.getElementById("inputName").value = buff;
 				}
-				loadImages();
 				onChangeCheck();
 			}
 
@@ -134,96 +129,174 @@
 						_topmark_shape = "cone";
 						_light_colour = "green";
 						document.getElementById("checkTopmark").disabled = false;
-						buoyImage.src = "../resources/lateral/Lateral_Green.png";
-						buoyImageTop.src = "../resources/lateral/Lateral_Green_Conical.png";
-						buoyImageLighted.src = "../resources/lateral/Lateral_Green_Lighted.png";
-						buoyImageTopLighted.src = "../resources/lateral/Lateral_Green_Conical_Lighted.png";
+						switch (_buoy_shape) {
+							case "conical":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Green_Cone.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Green_Conical_Low.png";
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Green_Pillar.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Green_Conical.png";
+								break;
+						}
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_Green.png";
 						break;
 					case "port":
 						_topmark_shape = "cylinder";
 						_light_colour = "red";
 						document.getElementById("checkTopmark").disabled = false;
-						buoyImage.src = "../resources/lateral/Lateral_Red.png";
-						buoyImageTop.src = "../resources/lateral/Lateral_Red_Cylindrical.png";
-						buoyImageLighted.src = "../resources/lateral/Lateral_Red_Lighted.png";
-						buoyImageTopLighted.src = "../resources/lateral/Lateral_Red_Cylindrical_Lighted.png";
+						switch (_buoy_shape) {
+							case "spar":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Red_Spar.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical.png";
+								break;
+							case "can":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Red_Can.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical_Low.png";
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Red_Pillar.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical.png";
+								break;
+						}
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_Red.png";
 						break;
 					case "safe_water":
 						_topmark_shape = "sphere";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").disabled = false;
-						buoyImage.src = "../resources/lateral/Lateral_SafeWater.png";
-						buoyImageTop.src = "../resources/lateral/Lateral_SafeWater_Sphere.png";
-						buoyImageLighted.src = "../resources/lateral/Lateral_SafeWater_Lighted.png";
-						buoyImageTopLighted.src = "../resources/lateral/Lateral_SafeWater_Sphere_Lighted.png";
+						switch (_buoy_shape) {
+							case "spar":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_SafeWater_Spar.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Sphere.png";
+								break;
+							case "sphere":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_SafeWater_Spherical.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Sphere_Low.png";
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_SafeWater_Pillar.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Sphere.png";
+								break;
+						}
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png"
 						break;
 					case "preferred_channel_starboard":
 						_topmark_shape = "cone";
 						_light_colour = "green";
 						document.getElementById("checkTopmark").disabled = false;
-						buoyImage.src = "../resources/lateral/Lateral_Pref_Starboard.png";
-						buoyImageTop.src = "../resources/lateral/Lateral_Pref_Starboard_Conical.png";
-						buoyImageLighted.src = "../resources/lateral/Lateral_Pref_Starboard_Lighted.png";
-						buoyImageTopLighted.src = "../resources/lateral/Lateral_Pref_Starboard_Conical_Lighted.png";
+						switch (_buoy_shape) {
+							case "conical":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Starboard_Cone.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Green_Conical_Low.png";
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Starboard_Pillar.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Green_Conical.png";
+								break;
+						}
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_Green.png";
 						break;
 					case "preferred_channel_port":
 						_topmark_shape = "cylinder";
 						_light_colour = "red";
 						document.getElementById("checkTopmark").disabled = false;
-						buoyImage.src = "../resources/lateral/Lateral_Pref_Port.png";
-						buoyImageTop.src = "../resources/lateral/Lateral_Pref_Port_Cylindrical.png";
-						buoyImageLighted.src = "../resources/lateral/Lateral_Pref_Port_Lighted.png";
-						buoyImageTopLighted.src = "../resources/lateral/Lateral_Pref_Port_Cylindrical_Lighted.png";
+						switch (_buoy_shape) {
+							case "spar":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Port_Spar.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical.png";
+								break;
+							case "can":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Port_Can.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical_Low.png";
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Port_Pillar.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical.png";
+								break;
+						}
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_Red.png";
 						break;
 					case "north":
 						_topmark_shape = "2_cones_up";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
-						buoyImage.src = "../resources/cardinal/Cardinal_North.png";
-						buoyImageTop.src = "../resources/cardinal/Cardinal_North.png";
-						buoyImageLighted.src = "../resources/cardinal/Cardinal_North_Lighted.png";
-						buoyImageTopLighted.src = "../resources/cardinal/Cardinal_North_Lighted.png";
+						switch (_buoy_shape) {
+							case "spar":
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_North_Spar.png";
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_North_Pillar.png";
+								break;
+						}
+						document.getElementById("fieldImageTop").src = "../resources/cardinal/Topmark_Clear.png";
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 					case "east":
 						_topmark_shape = "2_cones_base_together";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
-						buoyImage.src = "../resources/cardinal/Cardinal_East.png";
-						buoyImageTop.src = "../resources/cardinal/Cardinal_East.png";
-						buoyImageLighted.src = "../resources/cardinal/Cardinal_East_Lighted.png";
-						buoyImageTopLighted.src = "../resources/cardinal/Cardinal_East_Lighted.png";
+						switch (_buoy_shape) {
+							case "spar":
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_East_Spar.png";
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_East_Pillar.png";
+								break;
+						}
+						document.getElementById("fieldImageTop").src = "../resources/cardinal/Topmark_Clear.png";
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 					case "south":
 						_topmark_shape = "2_cones_down";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
-						buoyImage.src = "../resources/cardinal/Cardinal_South.png";
-						buoyImageTop.src = "../resources/cardinal/Cardinal_South.png";
-						buoyImageLighted.src = "../resources/cardinal/Cardinal_South_Lighted.png";
-						buoyImageTopLighted.src = "../resources/cardinal/Cardinal_South_Lighted.png";
+						switch (_buoy_shape) {
+							case "spar":
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_South_Spar.png";
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_South_Pillar.png";
+								break;
+						}
+						document.getElementById("fieldImageTop").src = "../resources/cardinal/Topmark_Clear.png";
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 					case "west":
 						_topmark_shape = "2_cones_point_together";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
-						buoyImage.src = "../resources/cardinal/Cardinal_West.png";
-						buoyImageTop.src = "../resources/cardinal/Cardinal_West.png";
-						buoyImageLighted.src = "../resources/cardinal/Cardinal_West_Lighted.png";
-						buoyImageTopLighted.src = "../resources/cardinal/Cardinal_West_Lighted.png";
+						switch (_buoy_shape) {
+							case "spar":
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_West_Spar.png";
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_West_Pillar.png";
+								break;
+						}
+						document.getElementById("fieldImageTop").src = "../resources/cardinal/Topmark_Clear.png";
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 					case "isolated_danger":
 						_topmark_shape = "2_spheres";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
-						buoyImage.src = "../resources/cardinal/Cardinal_Single.png";
-						buoyImageTop.src = "../resources/cardinal/Cardinal_Single.png";
-						buoyImageLighted.src = "../resources/cardinal/Cardinal_Single_Lighted.png";
-						buoyImageTopLighted.src = "../resources/cardinal/Cardinal_Single_Lighted.png";
+						switch (_buoy_shape) {
+							case "spar":
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_Single_Spar.png";
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_Single_Pillar.png";
+								break;
+						}
+						
+						document.getElementById("fieldImageTop").src = "../resources/cardinal/Topmark_Clear.png";
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 					case "special_purpose":
 						_topmark_shape = "x-shape";
@@ -233,15 +306,57 @@
 							document.getElementById("topColour").value = colour;
 						}
 						document.getElementById("checkTopmark").disabled = false;
-						buoyImage.src = "../resources/special_purpose/Special_Purpose.png";
-						buoyImageTop.src = "../resources/special_purpose/Special_Purpose_x-Shape.png";
-						buoyImageLighted.src = "../resources/special_purpose/Special_Purpose_Lighted.png";
-						buoyImageTopLighted.src = "../resources/special_purpose/Special_Purpose_x-Shape_Lighted.png";
+						switch (_buoy_shape) {
+							case "spar":
+								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Spar.png";
+								if (getKey("seamark:topmark:colour") == "red") {
+									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross.png";
+								} else {
+									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
+								}
+								break;
+							case "barrel":
+								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Barrel.png";
+								if (getKey("seamark:topmark:colour") == "red") {
+									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Low.png";
+								} else {
+									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Low.png";
+								}
+								break;
+							default:
+								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Pillar.png";
+								if (getKey("seamark:topmark:colour") == "red") {
+									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross.png";
+								} else {
+									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
+								}
+								break;
+						}
+						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 				}
-
 				fillLightCombobox();
 				displayLight();
+			}
+
+			function fillShapeCombobox() {
+				database = new DataModel();
+				// workaround for getting translation until database works
+				var translation = new Array();
+				translation["sphere"] = "<?=$t->tr("sphere")?>";
+				translation["conical"] = "<?=$t->tr("conical")?>";
+				translation["can"] = "<?=$t->tr("can")?>";
+				translation["barrel"] = "<?=$t->tr("barrel")?>";
+				translation["pillar"] = "<?=$t->tr("pillar")?>";
+				translation["spar"] = "<?=$t->tr("spar")?>";
+				var selectionElement = document.getElementById("comboShape");
+				clearSelectOptions(selectionElement);
+				addSelectOption(selectionElement, "<?=$t->tr("comboUnknown")?>", "");
+				var values = database.get("meta", "shape_" + _category);
+				var shape = values.split(":");
+				for(i = 0; i < shape.length; i++) {
+					addSelectOption(selectionElement, shape[i], translation[shape[i]]);
+				}
 			}
 
 			function moveDivUp(id, offset) {
@@ -257,16 +372,19 @@
 			}
 
 			function clearSelectOptions(selectionElement) {
-				var selectionElement = document.getElementById("lightChar");
 				while (selectionElement.options.length > 0) {
 					selectionElement.options[0] = null;
 				}
 			}
 
-			function addSelectOption(selectionElement, value) {
+			function addSelectOption(selectionElement, value, string) {
 				var option = document.createElement("OPTION");
 				var text = document.createTextNode(value);
 				option.appendChild(text);
+				option.value = value;
+				if (string != "") {
+					option.text = string;
+				}
 				selectionElement.appendChild(option);
 			}
 
@@ -316,20 +434,17 @@
 			function onChangeShape() {
 				_buoy_shape = document.getElementById("comboShape").value;
 				setKey("seamark:" + _seamark + ":shape", _buoy_shape);
+				loadImages();
 			}
 			
 			function onChangeCheck() {
 				if (document.getElementById("checkTopmark").checked == true && document.getElementById("checkLight").checked == false) {
-					SetBuoyImage("buoyImageTop");
 					document.getElementById("boxLightCharacter").style.visibility = "collapse";
 				} else if (document.getElementById("checkLight").checked == true && document.getElementById("checkTopmark").checked == true) {
-					SetBuoyImage("buoyImageTopLighted");
 					document.getElementById("boxLightCharacter").style.visibility = "visible";
 				} else if (document.getElementById("checkLight").checked == true && document.getElementById("checkTopmark").checked == false) {
-					SetBuoyImage("buoyImageLighted");
 					document.getElementById("boxLightCharacter").style.visibility = "visible";
 				} else {
-					SetBuoyImage("buoyImage");
 					document.getElementById("boxLightCharacter").style.visibility = "collapse";
 				}
 			}
@@ -338,11 +453,13 @@
 			function onChangeLights() {
 				if (document.getElementById("checkLight").checked == true) {
 					setKey("seamark:light:colour", _light_colour);
+					document.getElementById("boxImageLight").style.visibility = "visible";
 					showLightEdit(true);
 					saveLight();
 				} else {
 					setKey("seamark:light:colour", "");
 					setKey("seamark:light:character", "");
+					document.getElementById("boxImageLight").style.visibility = "hidden";
 					showLightEdit(false);
 				}
 				onChangeCheck();
@@ -352,11 +469,13 @@
 			function onChangeTopmark() {
 				if (document.getElementById("checkTopmark").checked == true) {
 					setKey("seamark:topmark:shape", _topmark_shape);
+					document.getElementById("boxImageTop").style.visibility = "visible";
 					if (_category == "special_purpose") {
 						showTopmarkColour(true);
 					}
 				} else {
 					setKey("seamark:topmark:shape", "");
+					document.getElementById("boxImageTop").style.visibility = "hidden";
 					if (_category == "special_purpose") {
 						showTopmarkColour(false);
 					}
@@ -368,8 +487,10 @@
 			function onChangeFogSig() {
 				if (document.getElementById("checkFogsignal").checked == true) {
 					setKey("seamark:fog_signal", "yes");
+					document.getElementById("boxImageFogsignal").style.visibility = "visible";
 				} else {
 					setKey("seamark:fog_signal", "");
+					document.getElementById("boxImageFogsignal").style.visibility = "hidden";
 				}
 				onChangeCheck();
 			}
@@ -382,10 +503,6 @@
 					setKey("seamark:radar_reflector", "");
 				}
 				onChangeCheck();
-			}
-
-			function SetBuoyImage(imageName) {
-				document.getElementById("imageBuoy").src = eval(imageName + ".src")
 			}
 
 			// Show the light edit dialog
@@ -479,12 +596,12 @@
 			function fillLightCombobox() {
 				database = new DataModel();
 				var selectionElement = document.getElementById("lightChar")
-				clearSelectOptions();
-				addSelectOption(selectionElement, "<?=$t->tr("unknown")?>");
+				clearSelectOptions(selectionElement);
+				addSelectOption(selectionElement, "<?=$t->tr("unknown")?>", "");
 				var values = database.get("light", "light_" + _category);
 				var lights = values.split(":");
 				for(i = 0; i < lights.length; i++) {
-					addSelectOption(selectionElement, lights[i]);
+					addSelectOption(selectionElement, lights[i], "");
 				}
 			}
 
@@ -521,17 +638,24 @@
 			// Write keys for Topmark
 			function saveTopmark() {
 				var colour = document.getElementById("topColour").value;
+				if (colour == "red"){
+					if (_buoy_shape == "barrel") {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Low.png";
+					} else {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross.png";
+					}
+				} else {
+					if (_buoy_shape == "barrel") {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Low.png";
+					} else {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
+					}
+				}
 				if (colour != "" && colour != "unknown") {
 					setKey("seamark:topmark:colour", colour);
 				} else {
 					setKey("seamark:topmark:colour", "");
 				}
-				document.getElementById("edit_topmark").style.visibility = "hidden";
-			}
-			
-			// Show the topmark edit dialog
-			function cancelTopmark() {
-				document.getElementById("edit_topmark").style.visibility = "hidden";
 			}
 
 			function save() {
@@ -651,13 +775,6 @@
 		<div id="boxType" style="position:absolute; top:120px; left:165px;">
 			<select id="comboShape" onChange="onChangeShape()">
 				<option selected value="unspecified"/><?=$t->tr("comboUnknown")?>
-				<option value="sphere"/><?=$t->tr("sphere")?>
-				<option value="conical"/><?=$t->tr("conical")?>
-				<option value="can"/><?=$t->tr("can")?>
-				<option value="barrel"/><?=$t->tr("barrel")?>
-				<option value="pillar"/><?=$t->tr("pillar")?>
-				<option value="spar"/><?=$t->tr("spar")?>
-				<option value="beacon"/><?=$t->tr("beacon")?>
 			</select>
 		</div>
 		<div id="titleMisc" style="position:absolute; top:160px; left:7px;"><?=$t->tr("miscItems")?>:</div>
@@ -677,10 +794,19 @@
 		<div style="position:absolute; bottom:80px; left:165px;">
 			<input type="text" id="inputName" align="left"/>
 		</div>
-		<div style="position:absolute; top:70px; right:40px;">
-			<img id="imageBuoy" src="../resources/Lateral_Green.png" align="center" border="0" />
+		<div id="boxImageBuoy" style="position:absolute; top:70px; right:0px;">
+			<img id="fieldImageBuoy" src="../resources/lateral/Lateral_Green_Pillar.png" width="256" height="320" align="center" border="0" />
 		</div>
-		<div id="boxLightCharacter" style="position:absolute; top:260px; right:20px; visibility:hidden;">
+		<div id="boxImageTop" style="position:absolute; top:70px; right:0px; visibility:hidden;">
+			<img id="fieldImageTop" src="../resources/lateral/Topmark_Green_Conical.png" width="256" height="320" align="center" border="0" />
+		</div>
+		<div id="boxImageLight" style="position:absolute; top:70px; right:0px; visibility:hidden;">
+			<img id="fieldImageLight" src="../resources/light/Light_Green.png" width="256" height="320" align="center" border="0" />
+		</div>
+		<div id="boxImageFogsignal" style="position:absolute; top:70px; right:0px; visibility:hidden;">
+			<img id="fieldImageFogsignal" src="../resources/misc/Fogsignal.png" width="256" height="320" align="center" border="0" />
+		</div>
+		<div id="boxLightCharacter" style="position:absolute; top:280px; right:20px; visibility:hidden;">
 			<input type="text" id="inputLightString" align="left" size="10" value="Befeuerung" readonly="readonly"/>
 		</div>
 		<div style="position:absolute; bottom:20px; right:10px;">
