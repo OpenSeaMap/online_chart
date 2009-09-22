@@ -171,7 +171,7 @@
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Sphere.png";
 								break;
 							case "sphere":
-								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_SafeWater_Spherical.png";
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_SafeWater_Sphere.png";
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Sphere_Low.png";
 								break;
 							default:
