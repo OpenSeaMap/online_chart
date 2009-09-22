@@ -120,7 +120,6 @@
 				if (buff != "-1") {
 					document.getElementById("inputName").value = buff;
 				}
-				onChangeCheck();
 			}
 
 			function loadImages() {
@@ -422,13 +421,13 @@
 					setKey("seamark:" + _seamark + ":category", _category);
 				}
 				loadImages();
-				onChangeCheck();
 				if (document.getElementById("checkTopmark").checked == true && _category == "special_purpose") {
 					showTopmarkColour(true);
 				}
 				if (document.getElementById("checkLight").checked == true) {
 					showLightEdit(true);
-				} 
+				}
+				onChangeTopmark();
 			}
 
 			function onChangeShape() {
@@ -437,17 +436,6 @@
 				loadImages();
 			}
 			
-			function onChangeCheck() {
-				if (document.getElementById("checkTopmark").checked == true && document.getElementById("checkLight").checked == false) {
-					document.getElementById("boxLightCharacter").style.visibility = "collapse";
-				} else if (document.getElementById("checkLight").checked == true && document.getElementById("checkTopmark").checked == true) {
-					document.getElementById("boxLightCharacter").style.visibility = "visible";
-				} else if (document.getElementById("checkLight").checked == true && document.getElementById("checkTopmark").checked == false) {
-					document.getElementById("boxLightCharacter").style.visibility = "visible";
-				} else {
-					document.getElementById("boxLightCharacter").style.visibility = "collapse";
-				}
-			}
 
 			// Selection of the Light checkbox has changed
 			function onChangeLights() {
@@ -462,7 +450,6 @@
 					document.getElementById("boxImageLight").style.visibility = "hidden";
 					showLightEdit(false);
 				}
-				onChangeCheck();
 			}
 
 			// Selection of the Topmark checkbox has changed
@@ -480,7 +467,6 @@
 						showTopmarkColour(false);
 					}
 				}
-				onChangeCheck();
 			}
 
 			// Selection of the Fog signal checkbox has changed
@@ -492,7 +478,6 @@
 					setKey("seamark:fog_signal", "");
 					document.getElementById("boxImageFogsignal").style.visibility = "hidden";
 				}
-				onChangeCheck();
 			}
 
 			// Selection of the radar reflector checkbox has changed
@@ -502,7 +487,6 @@
 				} else {
 					setKey("seamark:radar_reflector", "");
 				}
-				onChangeCheck();
 			}
 
 			// Show the light edit dialog
@@ -514,6 +498,7 @@
 						document.getElementById("boxEditLightSequence").style.visibility = "visible";
 						moveDivDown("boxFogsignal", 25);
 					}
+					document.getElementById("boxLightCharacter").style.visibility = "visible";
 				} else {
 					document.getElementById("boxEditLightCharacter").style.visibility = "hidden";
 					moveDivUp("boxFogsignal", 22);
@@ -521,6 +506,7 @@
 						document.getElementById("boxEditLightSequence").style.visibility = "hidden";
 						moveDivUp("boxFogsignal", 25);
 					}
+					document.getElementById("boxLightCharacter").style.visibility = "hidden";
 				}
 			}
 
@@ -672,14 +658,18 @@
 			}
 
 			function cancel() {
+				onClosing();
+				this.close();
+			}
+
+			function onClosing() {
 				if (_mode == "create" || _mode == "move") {
 					opener.window.readOsmXml();
 				} else {
 					opener.window.onEditDialogCancel(_id);
 				}
-				this.close();
 			}
-
+			
 			// create the XML-File for OSM-API
 			function createXML() {
 				var tagXML = "";
@@ -749,7 +739,7 @@
 		</script>
 	</head>
 
-	<body onload=init(); onUnload="if (!_saving) cancel()">
+	<body onload=init(); onUnload="if (!_saving) onClosing()">
 		<div id="headerAdd" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkAdd")?></h2></div>
 		<div id="headerEdit" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkEdit")?></h2></div>
 		<div id="headerMove" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkMove")?></h2></div>
