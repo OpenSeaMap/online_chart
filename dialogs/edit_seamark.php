@@ -9,7 +9,7 @@
 		<title>Seezeichen Bearbeiten</title>
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-		<meta http-equiv="content-language" content="de" />
+		<meta http-equiv="content-language" content="<?=$t->getCurrentLanguage()?>" />
 		<link rel="stylesheet" type="text/css" href="../map-edit.css">
 		<script type="text/javascript" src="../javascript/DataModel.js"></script>
 		<script type="text/javascript">
@@ -120,6 +120,7 @@
 				if (buff != "-1") {
 					document.getElementById("inputName").value = buff;
 				}
+				onChangeFogSig();
 			}
 
 			function loadImages() {
@@ -356,6 +357,7 @@
 				for(i = 0; i < shape.length; i++) {
 					addSelectOption(selectionElement, shape[i], translation[shape[i]]);
 				}
+				selectionElement.value = _buoy_shape;
 			}
 
 			function moveDivUp(id, offset) {
@@ -427,6 +429,7 @@
 				if (document.getElementById("checkLight").checked == true) {
 					showLightEdit(true);
 				}
+				fillShapeCombobox();
 				onChangeTopmark();
 			}
 
@@ -796,7 +799,7 @@
 		<div id="boxImageFogsignal" style="position:absolute; top:70px; right:0px; visibility:hidden;">
 			<img id="fieldImageFogsignal" src="../resources/misc/Fogsignal.png" width="256" height="320" align="center" border="0" />
 		</div>
-		<div id="boxLightCharacter" style="position:absolute; top:280px; right:20px; visibility:hidden;">
+		<div id="boxLightCharacter" style="position:absolute; top:280px; right:20px; background-color:grey; visibility:hidden;">
 			<input type="text" id="inputLightString" align="left" size="10" value="Befeuerung" readonly="readonly"/>
 		</div>
 		<div style="position:absolute; bottom:20px; right:10px;">

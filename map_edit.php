@@ -10,7 +10,7 @@
 		<title>OpenSeaMap: Karte bearbeiten</title>
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-		<meta http-equiv="content-language" content="de" />
+		<meta http-equiv="content-language" content="<?=$t->getCurrentLanguage()?>" />
 		<link rel="stylesheet" type="text/css" href="map-edit.css">
 		<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
 		<script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
@@ -751,7 +751,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.92.2
+			Version 0.0.92.3
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
