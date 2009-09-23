@@ -1,8 +1,7 @@
 <?php
-include("../classes/Pages.php");
 include("../classes/Translation.php");
-
 ?>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -10,7 +9,7 @@ include("../classes/Translation.php");
 		<title>OpenSeaMap - <?php echo $t->tr("dieFreieSeekarte")?></title>
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-		<meta http-equiv="content-language" content="de" />
+		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>" />
 		<link rel="stylesheet" type="text/css" href="map-full.css">
 		<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
 		<script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
@@ -54,35 +53,6 @@ include("../classes/Translation.php");
 				return 20037508.34 * lat / 180;
 			}
  
-			function addMarker(layer, lon, lat, popupContentHTML) {
-			
-				var ll = new OpenLayers.LonLat(Lon2Merc(lon), Lat2Merc(lat));
-				var feature = new OpenLayers.Feature(layer, ll);
-				feature.closeBox = true;
-				feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {minSize: new OpenLayers.Size(260, 100) } );
-				feature.data.popupContentHTML = popupContentHTML;
-				feature.data.overflow = "hidden";
-			
-				var marker = new OpenLayers.Marker(ll);
-				marker.feature = feature;
-			
-				var markerClick = function(evt) {
-					if (this.popup == null) {
-						this.popup = this.createPopup(this.closeBox);
-						map.addPopup(this.popup);
-						this.popup.show();
-					} else {
-						this.popup.toggle();
-					}
-					OpenLayers.Event.stop(evt);
-				};
-				marker.events.register("mousedown", feature, markerClick);
-			
-				layer.addMarker(marker);
-				map.addPopup(feature.createPopup(feature.closeBox));
-			}
- 
-			
 			function getTileURL(bounds) {
 				var res = this.map.getResolution();
 				var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
@@ -103,17 +73,13 @@ include("../classes/Translation.php");
 			}
 
 			function drawmap() {
-				// Popup und Popuptext
-				var popuptext="<font color=\"black\"><b>OpenSource-Werkstatt</b></font>";
-				OpenLayers.Lang.setCode('de');
-
 				map = new OpenLayers.Map('map', {
 					projection: new OpenLayers.Projection("EPSG:900913"),
 					displayProjection: new OpenLayers.Projection("EPSG:4326"),
 					controls: [
 						new OpenLayers.Control.Permalink(),
-						new OpenLayers.Control.MouseDefaults(),
-						new OpenLayers.Control.ScaleLine(),
+						new OpenLayers.Control.Navigation(),
+						new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'm'}),
 						new OpenLayers.Control.LayerSwitcher(),
 						new OpenLayers.Control.MousePosition(),
 						new OpenLayers.Control.PanZoomBar()],
@@ -121,18 +87,17 @@ include("../classes/Translation.php");
 						new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
 					numZoomLevels: 18,
 					maxResolution: 156543,
-					units: 'meters'
 				});
 				
 				
 				// Layer hinzufuegen
-				
+
 				// Mapnik
 				layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
 				// Osmarender
 				layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 				// Seamark
-				layer_seamark = new OpenLayers.Layer.TMS("<?=$t->tr("Seezeichen")?>", "http://openseamap.org/tiles/",
+				layer_seamark = new OpenLayers.Layer.TMS("<?=$t->tr("Seezeichen")?>", "http://tiles.openseamap.org/seamark/",
 				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
 				// Sport
 				layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
@@ -149,7 +114,7 @@ include("../classes/Translation.php");
 				<tr>
 					<td valign="top" class="normal">
 						<div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
-						<div style="position:absolute; bottom:10px; left:90px; width:700px;">
+						<div style="position:absolute; bottom:48px; left:12px; width:700px;">
 							<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 						</div>
 						<div id="map_key" onClick="showLegend()" style="position:absolute; top:10px; left:60px; background-color:darkblue;color:#FFF;padding: 4px;font-weight:bold;cursor:default;">

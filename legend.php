@@ -18,7 +18,7 @@ $p->setDefaultPage("harbour");
 	<title>OpenSeaMap: <?=$t->tr("Legende")?> - <?=$p->getCurrentPageName()?></title>
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-		<meta http-equiv="content-language" content="de" />
+		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>" />
 		<link rel="stylesheet" type="text/css" href="map-legend.css">
 	</head>
 
