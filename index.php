@@ -13,6 +13,7 @@ include("../classes/Translation.php");
 		<link rel="stylesheet" type="text/css" href="map-full.css">
 		<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
 		<script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+		<script type="text/javascript" src="./haefen.js"></script>
 		<script type="text/javascript">
 
 			var map;
@@ -104,6 +105,9 @@ include("../classes/Translation.php");
 
 				map.addLayers([layer_mapnik, layer_tah, layer_sport, layer_seamark]);
 				jumpTo(lon, lat, zoom);
+
+				// Add harbour layer
+				init_haefen(map, ".");
 			}
 			
 		</script>

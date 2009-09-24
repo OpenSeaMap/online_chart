@@ -196,8 +196,8 @@ function create_feature(x, y, popup_content, type)
 
  if(!create_feature.harbour_icon)
 	{
-		var harbourIcon='./map/resources/places/harbour.png';
-		var marinaIcon='./map/resources/places/marina.png';
+		var harbourIcon='./resources/places/harbour.png';
+		var marinaIcon='./resources/places/marina.png';
 		icon_size = new OpenLayers.Size(32, 32);
 		icon_offset = new OpenLayers.Pixel(-icon_size.w/2, -icon_size.h/2);
 		create_feature.harbour_icon = new OpenLayers.Icon(harbourIcon, icon_size, icon_offset);
