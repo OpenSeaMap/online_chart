@@ -14,8 +14,8 @@ include("../classes/Translation.php");
 		<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
 		<script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
 		<script type="text/javascript">
+
 			var map;
-			
 			var layer_mapnik;
 			var layer_tah;
 			var layer_markers;
@@ -25,11 +25,11 @@ include("../classes/Translation.php");
 			var lat = 54.1878;
 			var zoom = 15;
 
-			if (lon=="") lon=12.0915;
-			if (lat=="") lat=54.1878;
-			if (zoom=="") zoom=15
+			// Set current language for internationalization
+			OpenLayers.Lang.setCode("<?= $t->getCurrentLanguage() ?>");
 
-			function showLegend() {
+			// Show popup window with the map key
+			function showMapKey() {
 				legendWindow = window.open("legend.php?lang=<?= $t->getCurrentLanguage() ?>", "Legende", "width=880, height=680, status=no, scrollbars=yes, resizable=yes");
  				legendWindow.focus();
 			}
@@ -79,7 +79,7 @@ include("../classes/Translation.php");
 					controls: [
 						new OpenLayers.Control.Permalink(),
 						new OpenLayers.Control.Navigation(),
-						new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'm'}),
+						new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: '40'}),
 						new OpenLayers.Control.LayerSwitcher(),
 						new OpenLayers.Control.MousePosition(),
 						new OpenLayers.Control.PanZoomBar()],
@@ -87,21 +87,20 @@ include("../classes/Translation.php");
 						new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
 					numZoomLevels: 18,
 					maxResolution: 156543,
+					units: 'meters'
 				});
-				
-				
-				// Layer hinzufuegen
 
+				// Add Layers to map-------------------------------------------------------------------------------------------------------
 				// Mapnik
 				layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
 				// Osmarender
 				layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 				// Seamark
 				layer_seamark = new OpenLayers.Layer.TMS("<?=$t->tr("Seezeichen")?>", "http://tiles.openseamap.org/seamark/",
-				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
+				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
 				// Sport
 				layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
-				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
+				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
 
 				map.addLayers([layer_mapnik, layer_tah, layer_sport, layer_seamark]);
 				jumpTo(lon, lat, zoom);
@@ -117,7 +116,7 @@ include("../classes/Translation.php");
 						<div style="position:absolute; bottom:48px; left:12px; width:700px;">
 							<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 						</div>
-						<div id="map_key" onClick="showLegend()" style="position:absolute; top:10px; left:60px; background-color:darkblue;color:#FFF;padding: 4px;font-weight:bold;cursor:default;">
+						<div id="map_key" onClick="showMapKey()" style="position:absolute; top:10px; left:60px; background-color:darkblue;color:#FFF;padding: 4px;font-weight:bold;cursor:default;">
 							<?=$t->tr("Legende")?>
 						</div>
 					</td>
