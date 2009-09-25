@@ -43,6 +43,21 @@
 			var lat = 54.1878;
 			var zoom = 16;
 
+			function init() {
+				// Set current language for internationalization
+				OpenLayers.Lang.setCode("<?= $t->getCurrentLanguage() ?>");
+				document.getElementById("selectLanguage").value = "<?= $t->getCurrentLanguage() ?>";
+				// Display the map
+				drawmap();
+				// Load Data
+				//updateSeamarks();
+			}
+
+			// Language selection has been changed
+			function onLanguageChanged() {
+				window.location.href = "./map_edit.php?lang=" + document.getElementById("selectLanguage").value;
+			}
+
 			function jumpTo(lon, lat, zoom) {
 				var x = Lon2Merc(lon);
 				var y = Lat2Merc(lat);
@@ -136,7 +151,7 @@
 						new OpenLayers.Control.Navigation(),
 						new OpenLayers.Control.LayerSwitcher(),
 						new OpenLayers.Control.MousePosition(),
-						new OpenLayers.Control.ScaleLine(),
+						new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: '40'}),
 						new OpenLayers.Control.PanZoomBar()],
 						maxExtent:
 						new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
@@ -150,20 +165,18 @@
 				// Osmarender
 				layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 				// seamark
-				layer_seamap = new OpenLayers.Layer.TMS("Seezeichen", "../tiles/",
-				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
+				//layer_seamap = new OpenLayers.Layer.TMS("Seezeichen", "../tiles/",
+				//{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
 				// markers
 				layer_markers = new OpenLayers.Layer.Markers("Address",
 				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayInLayerSwitcher: false });
 				// click events
 				click = new OpenLayers.Control.Click();
 
-				map.addLayers([layer_mapnik, layer_tah, layer_markers, layer_seamap]);
+				map.addLayers([layer_mapnik, layer_tah, layer_markers]);
 				map.addControl(click);
 
 				jumpTo(lon, lat, zoom);
-
-				updateSeamarks();
 			}
 
 			// Map event listener
@@ -684,26 +697,34 @@
 
 		</script>
 	</head>
-	<body onload=drawmap();>
+	<body onload=init();>
 		<div id="head" class="sidebar" style="position:absolute; top:2px; left:0px;">
 			<a><b>OpenSeaMap - Editor</b></a>
 		</div>
-		<div id="login" class="sidebar" style="position:absolute; top:30px; left:0px;">
+		<div id="language" class="sidebar" style="position:absolute; top:30px; left:0px;">
+			<hr>
+			<?=$t->tr("language")?>:&nbsp;
+			<select id="selectLanguage" onChange="onLanguageChanged()">
+				<option value="en"/>English
+				<option value="de"/>Deutsch
+			</select>
+		</div>
+		<div id="login" class="sidebar" style="position:absolute; top:70px; left:0px;">
 			<hr>
 			<form name="login" action="">
 				<p><?=$t->tr("logged_out")?></p>
 				<input type="button" value='<?=$t->tr("login")?>' onclick="loginUser()">
 			</form>
 		</div>
-		<div id="logout" class="sidebar" style="position:absolute; top:30px; left:0px; visibility:hidden;" >
+		<div id="logout" class="sidebar" style="position:absolute; top:70px; left:0px; visibility:hidden;" >
 			<hr>
 			<form name="logout" action="">
 				<p><?=$t->tr("logged_in")?></p>
 				<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
 			</form>
 		</div>
-		<div style="position:absolute; top:140px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
-		<div id="data" class="sidebar" style="position:absolute; top:160px; left:0px;">
+		<div style="position:absolute; top:180px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
+		<div id="data" class="sidebar" style="position:absolute; top:200px; left:0px;">
 			<hr>
 			<b><?=$t->tr("data")?></b>
 			<br/><br/>
@@ -712,8 +733,8 @@
 			</select>&nbsp; &nbsp;
 			<input type="button" value='<?=$t->tr("load")?>' onclick="updateSeamarks()">
 		</div>
-		<div style="position:absolute; top:255px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
-		<div id="action" class="sidebar" style="position:absolute; top:265px; left:0px;">
+		<div style="position:absolute; top:295px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
+		<div id="action" class="sidebar" style="position:absolute; top:305px; left:0px;">
 			<hr>
 			<a><b><?=$t->tr("add")?></b></a><br/><br/>
 			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
@@ -751,7 +772,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.92.3
+			Version 0.0.92.4
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
