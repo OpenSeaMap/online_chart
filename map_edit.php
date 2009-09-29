@@ -49,7 +49,7 @@
 				document.getElementById("selectLanguage").value = "<?= $t->getCurrentLanguage() ?>";
 				// Display the map
 				drawmap();
-				// Load Data
+				// Load seamarks from database
 				//updateSeamarks();
 			}
 
@@ -165,15 +165,15 @@
 				// Osmarender
 				layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 				// seamark
-				//layer_seamap = new OpenLayers.Layer.TMS("Seezeichen", "../tiles/",
-				//{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
+				layer_seamap = new OpenLayers.Layer.TMS("Seezeichen", "http://tiles.openseamap.org/seamark/",
+				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
 				// markers
 				layer_markers = new OpenLayers.Layer.Markers("Address",
 				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayInLayerSwitcher: false });
 				// click events
 				click = new OpenLayers.Control.Click();
 
-				map.addLayers([layer_mapnik, layer_tah, layer_markers]);
+				map.addLayers([layer_mapnik, layer_tah, layer_seamap, layer_markers]);
 				map.addControl(click);
 
 				jumpTo(lon, lat, zoom);
@@ -619,6 +619,7 @@
 
 				var xmlData = _xmlOsm;
 				var xmlObject;
+				var show = false;
 				// Browserweiche für den DOMParser:
 				// Mozilla and Netscape browsers
 				if (document.implementation.createDocument) {
@@ -657,16 +658,22 @@
 						for (var n=0; n < tags.length; ++n) {
 							var tag = tags[n];
 							var key = tag.getAttribute("k");
+							if (key == "seamark") {
+								show = true;
+							}
 							var val = tag.getAttribute("v");
 							arrayNodes[id] += key + "," + val + "|";
 							popupText += "<br/><input type=\"text\"  size=\"25\"  name=\"kev\" value=\"" + key + "\"/>";
 							popupText += " - <input type=\"text\" name=\"value\" value=\"" + val + "\"/>";
 						}
-						popupText += "<br/> <br/>";
-						popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
-						popupText += "<input type=\"button\" value=\"<?=$t->tr("move")?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + ")\">&nbsp;&nbsp;";
-						popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
-						addMarker(id, popupText);
+						if (show) {
+							popupText += "<br/> <br/>";
+							popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
+							popupText += "<input type=\"button\" value=\"<?=$t->tr("move")?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + ")\">&nbsp;&nbsp;";
+							popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
+							addMarker(id, popupText);
+							show = false;
+						}
 					}
 				}
 				//FIXME: dirty hack for redrawing the map. Needed for popup click events.
@@ -731,7 +738,7 @@
 			<select id="pos-iala">
 				<option selected value="A" disabled = "true"/>IALA - A
 			</select>&nbsp; &nbsp;
-			<input type="button" value='<?=$t->tr("load")?>' onclick="updateSeamarks()">
+			<input type="button" value='<?=$t->tr("reload")?>' onclick="updateSeamarks()">
 		</div>
 		<div style="position:absolute; top:295px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
 		<div id="action" class="sidebar" style="position:absolute; top:305px; left:0px;">
@@ -772,7 +779,7 @@
 		</div>
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.92.4
+			Version 0.0.92.5
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />

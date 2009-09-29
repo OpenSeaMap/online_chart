@@ -28,13 +28,13 @@
 			var _topmark_shape;
 
 			function init() {
+				database = new DataModel();
 				_mode = getArgument("mode");
 				if (_mode == "create") {
 					document.getElementById("headerAdd").style.visibility = "visible";
-					database = new DataModel();
 					_category = getArgument("type")
 					_seamark = database.get("meta", _category);
-					_tags[0] = "seamark:category," + _seamark;
+					_tags[0] = "seamark:type," + _seamark;
 					if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
 						_tags[1] = "seamark:" + _seamark + ":category," + _category;
 					}
@@ -46,6 +46,8 @@
 					var buff = getKey("seamark");
 					if (buff == "-1") {
 						_seamark = getKey("seamark:category");
+					} else if (buff == "buoy") {
+						_seamark = database.get("trans", getKey("buoy"));
 					} else {
 						_seamark = buff;
 					}
@@ -418,7 +420,7 @@
 						}
 					}
 				}
-				setKey("seamark:category", _seamark);
+				setKey("seamark:type", _seamark);
 				if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
 					setKey("seamark:" + _seamark + ":category", _category);
 				}

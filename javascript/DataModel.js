@@ -5,7 +5,7 @@ function DataModel() {
 	this.group;
 }
 
-DataModel.meta = new Array(); //Metadaten
+DataModel.meta = new Array(); //Metadata
 DataModel.meta["safe_water"] = "buoy_safe_water";
 DataModel.meta["starboard"] = "buoy_lateral";
 DataModel.meta["port"] = "buoy_lateral";
@@ -29,7 +29,7 @@ DataModel.meta["shape_west"] = "pillar:spar";
 DataModel.meta["shape_isolated_danger"] = "pillar:spar";
 DataModel.meta["shape_special_purpose"] = "barrel:pillar:spar";
 
-DataModel.light = new Array(); //Metadaten
+DataModel.light = new Array(); //Lights
 DataModel.light["light_safe_water"] = "Iso:Oc";
 DataModel.light["light_starboard"] = "Fl:Fl(2):Oc(2):Oc(3):Q:IQ";
 DataModel.light["light_port"] = "Fl:Fl(2):Oc(2):Oc(3):Q:IQ";
@@ -42,6 +42,19 @@ DataModel.light["light_west"] = "Q(9):VQ(9)";
 DataModel.light["light_isolated_danger"] = "Fl(2)";
 DataModel.light["light_special_purpose"] = "Fl:Oc(2):Oc(3)";
 
+DataModel.trans = new Array(); //ft2oseam
+DataModel.trans["safe_water"] = "buoy_safe_water";
+DataModel.trans["lateral_starboard"] = "buoy_lateral";
+DataModel.trans["lateral_port"] = "buoy_lateral";
+DataModel.trans["lateral_preferred_channel_starboard"] = "buoy_lateral";
+DataModel.trans["lateral_preferred_channel_port"] = "buoy_lateral";
+DataModel.trans["cardinal_north"] = "buoy_cardinal";
+DataModel.trans["cardinal_east"] = "buoy_cardinal";
+DataModel.trans["cardinal_south"] = "buoy_cardinal";
+DataModel.trans["cardinal_west"] = "buoy_cardinal";
+DataModel.trans["isolated_danger"] = "buoy_isolated_danger";
+DataModel.trans["special_purpose"] = "buoy_special_purpose";
+
 
 DataModel.prototype.get = function(group, entry) {
 	var value = "-1"
@@ -53,7 +66,10 @@ DataModel.prototype.get = function(group, entry) {
 		case "light":
 			value = DataModel.light[entry];
 			break
+		case "trans":
+			value = DataModel.trans[entry];
+			break
 	}
-	
+
 	return value;
 }
