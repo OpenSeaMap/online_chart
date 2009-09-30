@@ -15,12 +15,14 @@ html,body {
 }
  
 #map_key {
-	margin-bottom: 5px;
+	margin-bottom: 2px;
 	border: 1px solid #000080;
 	-moz-border-radius: 10px;
-	border-radius: 10px;
-	background-color: #FFF;
-	padding: 5px;
+	color: white;
+	background-color: darkblue;
+	font-weight:bold;
+	padding: 3px;
+	cursor: pointer;
 }
 
 #osm {

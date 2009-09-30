@@ -17,14 +17,6 @@ include("../classes/Translation.php");
 		<script type="text/javascript">
 
 			var map;
-			var layer_mapnik;
-			var layer_tah;
-			var layer_markers;
-			
-			// Position and zoomlevel of the map
-			var lon = 12.0915;
-			var lat = 54.1878;
-			var zoom = 15;
 
 			// Set current language for internationalization
 			OpenLayers.Lang.setCode("<?= $t->getCurrentLanguage() ?>");
@@ -74,6 +66,12 @@ include("../classes/Translation.php");
 			}
 
 			function drawmap() {
+
+				// Position and zoomlevel of the map
+				var lon = 12.0915;
+				var lat = 54.1878;
+				var zoom = 15;
+
 				map = new OpenLayers.Map('map', {
 					projection: new OpenLayers.Projection("EPSG:900913"),
 					displayProjection: new OpenLayers.Projection("EPSG:4326"),
@@ -93,14 +91,14 @@ include("../classes/Translation.php");
 
 				// Add Layers to map-------------------------------------------------------------------------------------------------------
 				// Mapnik
-				layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+				var layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
 				// Osmarender
-				layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
+				var layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 				// Seamark
-				layer_seamark = new OpenLayers.Layer.TMS("<?=$t->tr("Seezeichen")?>", "http://tiles.openseamap.org/seamark/",
+				var layer_seamark = new OpenLayers.Layer.TMS("<?=$t->tr("Seezeichen")?>", "http://tiles.openseamap.org/seamark/",
 				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
 				// Sport
-				layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
+				var layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
 				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
 
 				map.addLayers([layer_mapnik, layer_tah, layer_sport, layer_seamark]);
@@ -109,22 +107,17 @@ include("../classes/Translation.php");
 				// Add harbour layer
 				init_haefen(map, ".");
 			}
-			
+
 		</script>
 	</head>
 	<body onload=drawmap();>
-			<table style="width:100%; height:100%;" border="0" cellpadding="10">
-				<tr>
-					<td valign="top" class="normal">
-						<div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
-						<div style="position:absolute; bottom:48px; left:12px; width:700px;">
-							<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
-						</div>
-						<div id="map_key" onClick="showMapKey()" style="position:absolute; top:10px; left:60px; background-color:darkblue;color:#FFF;padding: 4px;font-weight:bold;cursor:default;">
-							<?=$t->tr("Legende")?>
-						</div>
-					</td>
-				</tr>
-			</table>
+		<div id="map" style="position:absolute; bottom:0px; left:0px;">
+		</div>
+		<div style="position:absolute; bottom:48px; left:12px; width:700px;">
+			<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
+		</div>
+		<div id="map_key" onClick="showMapKey()" style="position:absolute; top:10px; left:60px;">
+			<?=$t->tr("Legende")?>
+		</div>
 	</body>
 </html>
