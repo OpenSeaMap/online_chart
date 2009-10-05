@@ -11,7 +11,7 @@
 		<td>
 		</td>
 		<td align="right" valign="bottom" >
-			<input type="button" value='<?=$t->tr("close")?>' onclick="showLandmarkAdd('false')" >
+			<input type="button" value='<?=$t->tr("close")?>' onclick="showLandmarkAdd(false)" >
 		</td>
 	</tr>
 </table>

@@ -650,15 +650,8 @@
 			}
 
 			function save() {
-				// check for user login
-				if (!opener.window.userName) {
-					alert("<?=$t->tr("logged_out_save")?>");
-					opener.window.loginUserSave();
-					return;
-				}
 				opener.window.editSeamarkOk(createXML(), _mode);
 				_saving = true;
-				//alert(createXML());
 				this.close();
 			}
 

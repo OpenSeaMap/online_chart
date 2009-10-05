@@ -22,14 +22,15 @@
 			var layer_mapnik;
 			var layer_tah;
 			var layer_markers;
+			var _Saving = false;			//Saving data in progress
 			var _ChangeSetId = "-1";		//OSM-Changeset ID
 			var _NodeId = "-1";				//OSM-Node ID
 			var _Comment = null;			//Comment for Changeset
 			var _Version = null;			//Version of the node
 			var _xmlOsm = null;				//XML Data read from OSM database
 			var _xmlNode = null;			//XML-Data for node creation
-			var userName = null;			//OSM-Username of the user
-			var userPassword = null;		//OSM-Password of the user
+			var _userName = null;			//OSM-Username of the user
+			var _userPassword = null;		//OSM-Password of the user
 			var controls;					//OpenLayer-Controls
 			var _ToDo = null;				//actually selected action
 			var _moving = false;			//needed for cursor and first fixing
@@ -50,7 +51,7 @@
 				// Display the map
 				drawmap();
 				// Load seamarks from database
-				//updateSeamarks();
+				updateSeamarks();
 			}
 
 			// Language selection has been changed
@@ -230,7 +231,7 @@
 				osmNode(action, xmlOSM);
 			}
 
-			function closeChangeSetOsm(comment) {
+			function closeChangeSetOsm() {
 				_ChangeSetId = "-1";
 			}
 
@@ -309,9 +310,17 @@
 			}
 
 			// Editing of the Seamark finished with OK
-			function editSeamarkOk(xmlTags, action) {
+			function editSeamarkOk(xmlTags, todo) {
 				_xmlNode = xmlTags;
-				sendWindow = window.open("./sending.php?action=" + action + "&lang=<?=$t->getCurrentLanguage()?>", "Sending", "width=460, height=170, resizable=yes");
+				_ToDo = todo;
+				if (!_userName) {
+					alert("<?=$t->tr("logged_out_save")?>");
+					_Saving = true;
+					loginUser();
+				} else {
+					document.getElementById('send_dialog').style.visibility = 'visible';
+					document.getElementById('sendComment').focus();
+				}
 			}
 
 			function editSeamarkEdit(id, version, pos_lat, pos_lon) {
@@ -327,7 +336,7 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/circle_red.png');
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=update&id=" + id + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>" , "Bearbeiten", "width=630, height=420, resizable=yes");
+				editWindow = window.open('./dialogs/edit_seamark.php?mode=update&id=' + id + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>" , "Bearbeiten", "width=630, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -362,7 +371,7 @@
 				if (arrayMarker[id].feature.popup != null) {
 					arrayMarker[id].feature.popup.hide();
 				}
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=move&id=" + _NodeId + "&version=" + _Version + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=420, resizable=yes");
+				editWindow = window.open('./dialogs/edit_seamark.php?mode=move&id=' + _NodeId + "&version=" + _Version + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -376,7 +385,7 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/delete.png');
-				editWindow = window.open("./dialogs/edit_seamark.php?mode=delete&id=" + _NodeId + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>", "Löschen", "width=380, height=420, resizable=yes");
+				editWindow = window.open('./dialogs/edit_seamark.php?mode=delete&id=' + _NodeId + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>", "Löschen", "width=380, height=420, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -397,70 +406,83 @@
 				click.deactivate();
 				_moving = false;
 				// hide position dialog
-				document.getElementById("position_dialog").style.visibility = "collapse";
+				document.getElementById('position_dialog').style.visibility = 'hidden';
 			}
 
 			// Open login window
 			function loginUser() {
-				loginWindow = window.open("./dialogs/user-login.php?lang=<?=$t->getCurrentLanguage()?>", "Login", "width=380, height=200, resizable=yes");
- 				loginWindow.focus();
-			}
-
-			// Open login window from edit dialog
-			function loginUserSave() {
-				loginWindow = window.open("./user-login.php?lang=<?=$t->getCurrentLanguage()?>", "Login", "width=380, height=200, resizable=yes");
- 				loginWindow.focus();
+				document.getElementById('login_dialog').style.visibility = 'visible';
+				document.getElementById('loginUsername').focus();
 			}
 
 			// Logout user and close changeset
 			function logoutUser() {
 				// close existing changeset
 				if (_ChangeSetId >= 1) {
-					osmChangeSet("close", "void");
+					//osmChangeSet("close", "void");
 				}
 				// delete user data
-				userName = null;
-				userPassword = null;
+				_userName = null;
+				_userPassword = null;
 				// show login screen on the sidebar
-				document.getElementById("login").style.visibility = "visible";
-				document.getElementById("logout").style.visibility = "collapse";
+				document.getElementById('login').style.visibility = 'visible';
+				document.getElementById('logout').style.visibility = 'hidden';
 			}
 
 			// Get user name and password from login dialog
-			function loginUser_login(username, password) {
-				userName = username;
-				userPassword = password;
-				document.getElementById("login").style.visibility = "collapse";
-				document.getElementById("logout").style.visibility = "visible";
+			function loginUser_login() {
+				_userName = document.getElementById('loginUsername').value;
+				_userPassword = document.getElementById('loginPassword').value;
+				document.getElementById('login').style.visibility = 'hidden';
+				document.getElementById('logout').style.visibility = 'visible';
+				document.getElementById('login_dialog').style.visibility = 'hidden';
+				if (_Saving) {
+					document.getElementById('send_dialog').style.visibility = 'visible';
+					document.getElementById('sendComment').focus();
+				}
+			}
+
+			function sendingOk() {
+				_Comment = document.getElementById('sendComment').value;
+				if (_Comment == "") {
+					alert("<?=$t->tr("enterComment")?>");
+					return;
+				}
+				if (_ChangeSetId == "-1") {
+					osmChangeSet("create", _ToDo);
+				} else {
+					sendNodeOsm(_ToDo);
+				}
+				document.getElementById('send_dialog').style.visibility = 'hidden';
 			}
 
 			function showSeamarkAdd(visible) {
-				if (visible == "true") {
-					document.getElementById("add_seamark_dialog").style.visibility = "visible";
-					document.getElementById("add_landmark_dialog").style.visibility = "collapse";
-					document.getElementById("add_harbour_dialog").style.visibility = "collapse";
+				if (visible) {
+					document.getElementById('add_seamark_dialog').style.visibility = 'visible';
+					document.getElementById('add_landmark_dialog').style.visibility = 'hidden';
+					document.getElementById('add_harbour_dialog').style.visibility = 'hidden';
 				} else {
-					document.getElementById("add_seamark_dialog").style.visibility = "collapse";
+					document.getElementById('add_seamark_dialog').style.visibility = 'hidden';
 				}
 			}
 
 			function showLandmarkAdd(visible) {
-				if (visible == "true") {
-					document.getElementById("add_landmark_dialog").style.visibility = "visible";
-					document.getElementById("add_seamark_dialog").style.visibility = "collapse";
-					document.getElementById("add_harbour_dialog").style.visibility = "collapse";
+				if (visible) {
+					document.getElementById('add_landmark_dialog').style.visibility = 'visible';
+					document.getElementById('add_seamark_dialog').style.visibility = 'hidden';
+					document.getElementById('add_harbour_dialog').style.visibility = 'hidden';
 				} else {
-					document.getElementById("add_landmark_dialog").style.visibility = "collapse";
+					document.getElementById('add_landmark_dialog').style.visibility = 'hidden';
 				}
 			}
 
 			function showHarbourAdd(visible) {
-				if (visible == "true") {
-					document.getElementById("add_harbour_dialog").style.visibility = "visible";
-					document.getElementById("add_seamark_dialog").style.visibility = "collapse";
-					document.getElementById("add_landmark_dialog").style.visibility = "collapse";
+				if (visible) {
+					document.getElementById('add_harbour_dialog').style.visibility = 'visible';
+					document.getElementById('add_seamark_dialog').style.visibility = 'hidden';
+					document.getElementById('add_landmark_dialog').style.visibility = 'hidden';
 				} else {
-					document.getElementById("add_harbour_dialog").style.visibility = "collapse";
+					document.getElementById('add_harbour_dialog').style.visibility = 'hidden';
 				}
 			}
 
@@ -482,8 +504,8 @@
 				params["action"] = action;
 				params["id"] = _ChangeSetId;
 				params["comment"] = _Comment;
-				params["userName"] = userName;
-				params["userPassword"] = userPassword;
+				params["userName"] = _userName;
+				params["userPassword"] = _userPassword;
 
 				if (action = "create") {
 					dialog = "creating";
@@ -507,7 +529,7 @@
 								return "0";
 							} else {
 								document.getElementById(dialog).style.visibility = "collapse";
-								alert("Erzeugen des Changesets Fehlgeschlagen");
+								alert("Erzeugen des Changesets Fehlgeschlagen: " + response);
 								return "-1";
 							}
 						}
@@ -532,8 +554,8 @@
 				params["changeset_id"] = _ChangeSetId;
 				params["node_id"] = _NodeId;
 				params["comment"] = _Comment;
-				params["name"] = userName;
-				params["password"] = userPassword;
+				params["name"] = _userName;
+				params["password"] = _userPassword;
 				params["data"] = data;
 
 				document.getElementById("saving").style.visibility = "visible";
@@ -666,14 +688,14 @@
 							popupText += "<br/><input type=\"text\"  size=\"25\"  name=\"kev\" value=\"" + key + "\"/>";
 							popupText += " - <input type=\"text\" name=\"value\" value=\"" + val + "\"/>";
 						}
-						if (show) {
+						//if (show) {
 							popupText += "<br/> <br/>";
 							popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
 							popupText += "<input type=\"button\" value=\"<?=$t->tr("move")?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + ")\">&nbsp;&nbsp;";
 							popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
 							addMarker(id, popupText);
 							show = false;
-						}
+						//}
 					}
 				}
 				//FIXME: dirty hack for redrawing the map. Needed for popup click events.
@@ -681,7 +703,7 @@
 				map.zoomIn();
 			}
 
-			// Some api stuff
+			// Some api stuff*********************************************************************************************************
 			function getChangeSetId() {
 				return _ChangeSetId;
 			}
@@ -702,9 +724,21 @@
 				return arrayNodes[id];
 			}
 
+			// Event handling*********************************************************************************************************
+			function checkKeyReturn(e) {
+				if (e.keyCode == 13) {
+					//alert("You pressed enter!");
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+
 		</script>
 	</head>
 	<body onload=init();>
+		<!--Sidebar ****************************************************************************************************************** -->
 		<div id="head" class="sidebar" style="position:absolute; top:2px; left:0px;">
 			<a><b>OpenSeaMap - Editor</b></a>
 		</div>
@@ -746,7 +780,7 @@
 			<a><b><?=$t->tr("add")?></b></a><br/><br/>
 			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
 				<tr>
-					<td	onclick="showSeamarkAdd('true')"
+					<td	onclick="showSeamarkAdd(true)"
 						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 						onmouseout="this.parentNode.style.backgroundColor = 'white';"
 						style="cursor:pointer"><?=$t->tr("Seezeichen")?>
@@ -756,7 +790,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td	onclick="showLandmarkAdd('true')"
+					<td	onclick="showLandmarkAdd(true)"
 						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 						onmouseout="this.parentNode.style.backgroundColor = 'white';"
 						style="cursor:pointer"><?=$t->tr("Leuchtfeuer")?>
@@ -766,7 +800,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td	onclick="showHarbourAdd('true')"
+					<td	onclick="showHarbourAdd(true)"
 						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 						onmouseout="this.parentNode.style.backgroundColor = 'white';"
 						style="cursor:pointer"><?=$t->tr("Hafen")?>
@@ -777,6 +811,7 @@
 				</tr>
 			</table>
 		</div>
+		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
 			Version 0.0.92.5
@@ -784,36 +819,45 @@
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 		</div>
+		<!--Sidebar dialogs ********************************************************************************************************** -->
 		<!--Add Seamark-Data-Dialog-->
-		<div id="add_seamark_dialog" class="dialog" style="position:absolute; top:50px; left:15%; width:300px; height:620px; visibility:hidden;">
+		<div id="add_seamark_dialog" class="dialog" style="position:absolute; top:50px; left:15%;">
 			<?php include ("./dialogs/add_seamark.php"); ?>
 		</div>
 		<!--Add Landmark-Data-Dialog-->
-		<div id="add_landmark_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:300px; visibility:hidden;">
+		<div id="add_landmark_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:300px">
 			<?php include ("./dialogs/add_light.php"); ?>
 		</div>
 		<!--Add Harbour-Data-Dialog-->
-		<div id="add_harbour_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:300px; visibility:hidden;">
+		<div id="add_harbour_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:300px;">
 			<?php include ("./dialogs/add_harbour.php"); ?>
 		</div>
+		<!--Pop up dialogs  ********************************************************************************************************** -->
 		<!--Position-Dialog-->
-		<div id="position_dialog" class="dialog" style="position:absolute; top:25px; left:20%; width:280px; height:170px; visibility:hidden;">
+		<div id="position_dialog" class="dialog" style="position:absolute; top:25px; left:20%;">
 			<?php include ("./dialogs/new_position.php"); ?>
 		</div>
+		<div id="login_dialog" class="dialog" style="position:absolute; top:40%; left:40%;">
+			<?php include ("./dialogs/user_login.php"); ?>
+		</div>
+		<div id="send_dialog" class="dialog" style="position:absolute; top:45%; left:40%;">
+			<?php include ("./dialogs/sending.php"); ?>
+		</div>
+		<!--Status dialog ************************************************************************************************************ -->
 		<!--Load Data Wait-Dialog-->
-		<div id="loading" class="infobox" style="position:absolute; top:50%; left:50%; width:250px; height:30px; visibility:hidden;">
+		<div id="loading" class="infobox" style="position:absolute; top:50%; left:50%;">
 			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("dataLoad")?>
 		</div>
 		<!--Create Changeset Wait-Dialog-->
-		<div id="creating" class="infobox" style="position:absolute; top:50%; left:50%; width:250px; height:30px; visibility:hidden;">
+		<div id="creating" class="infobox" style="position:absolute; top:50%; left:50%;">
 			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("changesetCreate")?>
 		</div>
 		<!--Close Changeset Wait-Dialog-->
-		<div id="closing" class="infobox" style="position:absolute; top:50%; left:50%; width:250px; height:30px; visibility:hidden;">
+		<div id="closing" class="infobox" style="position:absolute; top:50%; left:50%;">
 			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("changesetClose")?>
 		</div>
 		<!--Save Data Wait-Dialog-->
-		<div id="saving" class="infobox" style="position:absolute; top:50%; left:50%; width:300px; height:30px; visibility:hidden;">
+		<div id="saving" class="infobox" style="position:absolute; top:50%; left:50%;">
 			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("dataSave")?>
 		</div>
 	</body>

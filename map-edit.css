@@ -7,6 +7,10 @@ html,body {
 	font-family: Arial, sans-serif;
 }
 
+img {
+   vertical-align: middle;
+}
+
 .sidebar {
 	width: 14%;
 	padding: 0;
@@ -17,19 +21,19 @@ html,body {
 	margin-bottom: 5px;
 	border: 2px solid #000080;
 	-moz-border-radius: 6px;
-	border-radius: 6px;
 	background-color: #FFF;
 	font-size: 18px;
 	padding: 5px;
+	visibility:hidden;
 }
 
 .dialog {
 	margin-bottom: 5px;
 	border: 2px solid #000080;
 	-moz-border-radius: 6px;
-	border-radius: 6px;
 	background-color: #FFF;
 	padding: 5px;
+	visibility:hidden;
 }
 
 #map {

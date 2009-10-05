@@ -123,7 +123,7 @@
 		<td>
 		</td>
 		<td align="right" valign="bottom" >
-			<input type="button" value='<?=$t->tr("close")?>' onclick="showSeamarkAdd('false')" >
+			<input type="button" value='<?=$t->tr("close")?>' onclick="showSeamarkAdd(false)" >
 		</td>
 	</tr>
 </table>
