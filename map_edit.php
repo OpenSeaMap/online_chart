@@ -61,7 +61,7 @@
 				// Display the map
 				drawmap();
 				// Load seamark-nodes from database
-				//updateSeamarks();
+				updateSeamarks();
 			}
 
 			// Language selection has been changed
@@ -90,10 +90,7 @@
 			function jumpTo(lon, lat, zoom) {
 				var x = Lon2Merc(lon);
 				var y = Lat2Merc(lat);
-				if (!map.getCenter()) {
-					map.setCenter(new OpenLayers.LonLat(x, y), zoom);
-				}
-				return false;
+				map.setCenter(new OpenLayers.LonLat(x, y), zoom);
 			}
 
 			function Lon2Merc(lon) {
@@ -289,6 +286,8 @@
 				// display temporary marker for orientation
 				addMarker("2", "");
 				arrayMarker["2"].setUrl('./resources/action/circle_red.png');
+				// set actual position as center
+				jumpTo(lon, lat, map.getZoom());
 				//FIXME Dirty workaround for not getting a defined state of marker creation
 				_moving = true;
 			}
@@ -325,6 +324,10 @@
 				lat = parseFloat(latValue);
 				if (_NodeId != "-1") {
 					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
+				}
+				// remove existing temp marker
+				if (arrayMarker["2"] != 'undefined') {
+					layer_markers.removeMarker(arrayMarker["2"]);
 				}
 				_NodeId = "1";
 				addMarker(_NodeId, "");
@@ -427,6 +430,8 @@
 						moveSeamarkOk();
 						break;
 				}
+				// set actual position as center
+				jumpTo(lon, lat, map.getZoom());
 				// nothing todo left
 				_ToDo = null;
 				// disable click event
@@ -455,6 +460,7 @@
 				// show login screen on the sidebar
 				document.getElementById('login').style.visibility = 'visible';
 				document.getElementById('logout').style.visibility = 'hidden';
+				document.getElementById('loggedInName').style.visibility = 'hidden';
 			}
 
 			// Get user name and password from login dialog
@@ -466,7 +472,9 @@
 				//document.getElementById('logout').innerHTML("hallo");
 				document.getElementById('login').style.visibility = 'hidden';
 				document.getElementById('logout').style.visibility = 'visible';
+				document.getElementById('loggedInName').style.visibility = 'visible';
 				document.getElementById('login_dialog').style.visibility = 'hidden';
+				document.getElementById('loggedInName').innerHTML=""+ _userName +"";
 				if (_Saving) {
 					document.getElementById('send_dialog').style.visibility = 'visible';
 					document.getElementById('sendComment').focus();
@@ -788,9 +796,10 @@
 		</div>
 		<div id="logout" class="sidebar" style="position:absolute; top:70px; left:0px; visibility:hidden;" >
 			<hr>
-			<p><?=$t->tr("logged_in")?></p>
+			<p><?=$t->tr("logged_in")?></p><br/><br/>
 			<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
 		</div>
+		<div id="loggedInName" style="position:absolute; top:132px; left:10px; visibility:hidden;">- - -</div>
 		<div style="position:absolute; top:185px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
 		<div id="data" class="sidebar" style="position:absolute; top:200px; left:0px;">
 			<hr>
@@ -841,7 +850,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.92.5
+			Version 0.0.92.6
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
