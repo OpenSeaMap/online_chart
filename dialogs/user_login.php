@@ -6,15 +6,21 @@
 				<?=$t->tr("userName")?>:&nbsp;
 			</td>
 			<td valign="top">
-				<input type="text" id="loginUsername" align="left"/>
+				<input type="text" id="loginUsername" align="left"/>&nbsp;&nbsp;
+			</td>
+			<td valign="top">
+				<?=$t->tr("haveAccount")?>
 			</td>
 		</tr>
 		<tr>
-			<td valign="top">
+			<td valign="bottom">
 				<?=$t->tr("password")?>:&nbsp;
 			</td>
-			<td valign="top">
-				<input type="password" id="loginPassword" align="left" onkeydown="if (checkKeyReturn(event)) {loginUser_login()}"/>
+			<td valign="bottom">
+				<input type="password" id="loginPassword" align="left" onkeydown="if (checkKeyReturn(event)) {loginUser_login()}"/>&nbsp;&nbsp;
+			</td>
+			<td valign="bottom">
+				<a href="http://www.openstreetmap.org/user/new" target="blank"><?=$t->tr("createAccount")?></a></div>
 			</td>
 		</tr>
 	</table>

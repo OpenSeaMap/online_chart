@@ -48,15 +48,43 @@
 				// Set current language for internationalization
 				OpenLayers.Lang.setCode("<?= $t->getCurrentLanguage() ?>");
 				document.getElementById("selectLanguage").value = "<?= $t->getCurrentLanguage() ?>";
+				// look for existing cookies
+				if (document.cookie != "")  {
+					var user = readCookie("user");
+					var pass = readCookie("pass");
+					if (user != "-1" && pass != "-1") {
+						document.getElementById('loginUsername').value = user;
+						document.getElementById('loginPassword').value = pass;
+						loginUser_login();
+					}
+				}
 				// Display the map
 				drawmap();
-				// Load seamarks from database
-				updateSeamarks();
+				// Load seamark-nodes from database
+				//updateSeamarks();
 			}
 
 			// Language selection has been changed
 			function onLanguageChanged() {
 				window.location.href = "./map_edit.php?lang=" + document.getElementById("selectLanguage").value;
+			}
+
+			function setCookie(key, value) {
+				var expireDate = new Date;
+				expireDate.setMonth(expireDate.getMonth() + 6);
+				document.cookie = key + "=" + value + ";" + "expires=" + expireDate.toGMTString() + ";";
+			}
+
+			function readCookie(argument) {
+ 				var buff = document.cookie;
+				var args = buff.split(";");
+				for(i = 0; i < args.length; i++) {
+					var a = args[i].split("=");
+					if(trim(a[0]) == argument) {
+						return trim(a[1]);
+					}
+				}
+				return "-1";
 			}
 
 			function jumpTo(lon, lat, zoom) {
@@ -433,6 +461,9 @@
 			function loginUser_login() {
 				_userName = document.getElementById('loginUsername').value;
 				_userPassword = document.getElementById('loginPassword').value;
+				setCookie("user", _userName);
+				setCookie("pass", _userPassword);
+				//document.getElementById('logout').innerHTML("hallo");
 				document.getElementById('login').style.visibility = 'hidden';
 				document.getElementById('logout').style.visibility = 'visible';
 				document.getElementById('login_dialog').style.visibility = 'hidden';
@@ -752,19 +783,15 @@
 		</div>
 		<div id="login" class="sidebar" style="position:absolute; top:70px; left:0px;">
 			<hr>
-			<form name="login" action="">
-				<p><?=$t->tr("logged_out")?></p>
-				<input type="button" value='<?=$t->tr("login")?>' onclick="loginUser()">
-			</form>
+			<p><?=$t->tr("logged_out")?></p>
+			<input type="button" value='<?=$t->tr("login")?>' onclick="loginUser()">
 		</div>
 		<div id="logout" class="sidebar" style="position:absolute; top:70px; left:0px; visibility:hidden;" >
 			<hr>
-			<form name="logout" action="">
-				<p><?=$t->tr("logged_in")?></p>
-				<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
-			</form>
+			<p><?=$t->tr("logged_in")?></p>
+			<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
 		</div>
-		<div style="position:absolute; top:180px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
+		<div style="position:absolute; top:185px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
 		<div id="data" class="sidebar" style="position:absolute; top:200px; left:0px;">
 			<hr>
 			<b><?=$t->tr("data")?></b>
