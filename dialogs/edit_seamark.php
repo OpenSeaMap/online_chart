@@ -46,6 +46,12 @@
 					var buff = getKey("seamark");
 					if (buff == "-1") {
 						_seamark = getKey("seamark:category");
+						// Temporal work around for writing all category tags to type
+						if (_seamark == "-1") {
+							_seamark = getKey("seamark:type");
+						} else {
+							setKey("seamark:type", _seamark)
+						}
 					} else if (buff == "buoy") {
 						_seamark = database.get("trans", getKey("buoy"));
 					} else {

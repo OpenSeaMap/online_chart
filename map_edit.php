@@ -191,18 +191,20 @@
 				// Osmarender
 				layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 				// seamark
-				layer_seamap = new OpenLayers.Layer.TMS("Seezeichen", "http://tiles.openseamap.org/seamark/",
-				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
+				//layer_seamap = new OpenLayers.Layer.TMS("Seezeichen", "http://tiles.openseamap.org/seamark/",
+				//{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
 				// markers
 				layer_markers = new OpenLayers.Layer.Markers("Address",
 				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayInLayerSwitcher: false });
 				// click events
 				click = new OpenLayers.Control.Click();
 
-				map.addLayers([layer_mapnik, layer_tah, layer_seamap, layer_markers]);
+				map.addLayers([layer_mapnik, layer_tah, layer_markers]);
 				map.addControl(click);
 
-				jumpTo(lon, lat, zoom);
+				if (!map.getCenter()) {
+					jumpTo(lon, lat, zoom);
+				}
 			}
 
 			// Map event listener
@@ -286,8 +288,6 @@
 				// display temporary marker for orientation
 				addMarker("2", "");
 				arrayMarker["2"].setUrl('./resources/action/circle_red.png');
-				// set actual position as center
-				jumpTo(lon, lat, map.getZoom());
 				//FIXME Dirty workaround for not getting a defined state of marker creation
 				_moving = true;
 			}
@@ -386,7 +386,13 @@
 				_ToDo = "move";
 			}
 
-			function moveSeamarkOk() {
+			function moveSeamarkOk(pos_lat, pos_lon) {
+				lat = parseFloat(pos_lat);
+				lon = parseFloat(pos_lon);
+				// remove existing temp marker
+				if (arrayMarker["2"] != 'undefined') {
+					layer_markers.removeMarker(arrayMarker["2"]);
+				}
 				// set popup text for the new marker
 				var popupText = "ID = " + _NodeId;
 				popupText += " - Lat = " + lat;
@@ -422,16 +428,20 @@
 
 			// Entering a new position finished
 			function positionOk(latValue, lonValue) {
+				if (latValue != lat || lonValue != lon) {
+					// set actual position as center
+					jumpTo( parseFloat(lonValue),  parseFloat(latValue), map.getZoom());
+					addMarker("2", "");
+					arrayMarker["2"].setUrl('./resources/action/circle_red.png');
+				}
 				switch (_ToDo) {
 					case "add":
 						addSeamarkPosOk(latValue, lonValue);
 						break;
 					case "move":
-						moveSeamarkOk();
+						moveSeamarkOk(latValue, lonValue);
 						break;
 				}
-				// set actual position as center
-				jumpTo(lon, lat, map.getZoom());
 				// nothing todo left
 				_ToDo = null;
 				// disable click event
@@ -708,10 +718,7 @@
 						var version = parseInt(item.getAttribute("version"));
 						// Set head of the popup text
 						var popupText = "ID = " + id;
-						popupText += " - Lat = " + lat;
-						popupText += " - Lon = " + lon;
-						popupText += " - Version = " + version;
-						popupText += "<br/> <br/>";
+						popupText += "<br/>Version = " + version;
 						arrayNodes[id] = "";
 
 						// Getting the tags (key value pairs)
@@ -723,11 +730,17 @@
 								show = true;
 							}
 							var val = tag.getAttribute("v");
+							if (key == "seamark:type") {
+								popupText += "<br/>seamark = " + val;
+							}
 							arrayNodes[id] += key + "," + val + "|";
-							popupText += "<br/><input type=\"text\"  size=\"25\"  name=\"kev\" value=\"" + key + "\"/>";
-							popupText += " - <input type=\"text\" name=\"value\" value=\"" + val + "\"/>";
 						}
 						//if (show) {
+							popupText += "<br/>Lat = " + lat;
+							popupText += "<br/>Lon = " + lon;
+							popupText += "<br/><br/>";
+							popupText += "<a href='http://api06.dev.openstreetmap.org/browse/node/" + id + "/history' target='blank'>Geschichte des Elements</a>";
+							popupText += "<br/>";
 							popupText += "<br/> <br/>";
 							popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
 							popupText += "<input type=\"button\" value=\"<?=$t->tr("move")?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + ")\">&nbsp;&nbsp;";
@@ -850,7 +863,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.92.6
+			Version 0.0.92.7
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
