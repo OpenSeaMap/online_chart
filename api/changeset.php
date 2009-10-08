@@ -1,12 +1,12 @@
 <?PHP
 
-/*
+/**************************************
  Osm_Api_Service_Changeset
  Required: PHP 5 
  author Olaf Hannemann
- license GPL
- version 0.1.0
-*/
+ license GPL V3
+ version 0.1.1
+**************************************/
 
 	// get parameter values
 	$_todo = $_GET['action'];
@@ -52,6 +52,8 @@
 
 	// Send to the OSM-Api
 	function sendOSM($url, $path, $login, $data) {
+		$status = "";
+		$response = "";
 		$fp = @fsockopen($url, 80, $errno, $errstr);
 		if (!$fp) {
 			return "$errstr ($errno)\n";
@@ -64,7 +66,6 @@
 			fputs($fp, "Connection: Keep-Alive\r\n\r\n");
 			fputs($fp, $data ."\r\n");
 
-			$response = "";
 			$header = "not yet";
 			while (!feof($fp)) {
 				$line = fgets($fp, 1024);
@@ -73,16 +74,22 @@
 				}
 				if( $header == "passed" ) {
 					$response .= $line;
+				} else {
+					$arg = split(":", $line);
+					if ($arg[0] == "Status") {
+						$status .= trim($arg[1]);
+					}
 				}
 			}
 		}
 		fclose($fp);
-
+		if ($status != "200") {
+			$response = "Error:" .$status;
+		} 
 		return trim($response);
 	}
 
 	$_response = sendOSM($_url, "/api/0.6/changeset/create", base64_encode($_user_name .":" .$_user_password), createChangeSet($_comment));
 	
 	echo $_response;
-
 ?> 
