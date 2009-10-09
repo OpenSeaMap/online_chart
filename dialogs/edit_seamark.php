@@ -662,7 +662,6 @@
 			}
 
 			function cancel() {
-				onClosing();
 				this.close();
 			}
 

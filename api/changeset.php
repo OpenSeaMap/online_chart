@@ -23,19 +23,19 @@
 	function createUrl($action, $id) {
 		switch ($action) {
 			case "create":
-				$path = "api/0.6/changeset/create";
+				$path = "/api/0.6/changeset/create";
 				break;
 			case "update":
-				$path = "api/0.6/changeset/" .$id;
+				$path = "/api/0.6/changeset/" .$id;
 				break;
 			case "close":
-				$path = "api/0.6/changeset/" .$id ."/close";
+				$path = "/api/0.6/changeset/" .$id ."/close";
 				break;
 			default:
 				 $path = "error";
 		}
 
-		return $url;
+		return trim($path);
 	}
 
 	// Create XML for a new changeset
@@ -43,7 +43,7 @@
 		$xmlOSM = "<?xml version='1.0' encoding='UTF-8'?>\n";
 		$xmlOSM .= "<osm> \n";
 		$xmlOSM .= "<changeset>\n";
-		$xmlOSM .= "<tag k=\"created_by\" v=\"OpenSeaMap-Editor-0.0.92.7\"/>\n";
+		$xmlOSM .= "<tag k=\"created_by\" v=\"OpenSeaMap-Editor-0.0.92.8\"/>\n";
 		$xmlOSM .= "<tag k=\"comment\" v=\"" .$comment ."\"/>";
 		$xmlOSM .= "\n</changeset>\n</osm>";
 
@@ -89,7 +89,7 @@
 		return trim($response);
 	}
 
-	$_response = sendOSM($_url, "/api/0.6/changeset/create", base64_encode($_user_name .":" .$_user_password), createChangeSet($_comment));
+	$_response = sendOSM($_url, createUrl($_todo, $_changset_id), base64_encode($_user_name .":" .$_user_password), createChangeSet($_comment));
 	
 	echo $_response;
 ?> 

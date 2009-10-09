@@ -344,9 +344,9 @@
 			function editSeamarkOk(xmlTags, todo) {
 				_xmlNode = xmlTags;
 				_ToDo = todo;
+				_Saving = true;
 				if (!_userName) {
 					alert("<?=$t->tr("logged_out_save")?>");
-					_Saving = true;
 					loginUser();
 				} else {
 					document.getElementById('send_dialog').style.visibility = 'visible';
@@ -479,7 +479,6 @@
 				_userPassword = document.getElementById('loginPassword').value;
 				setCookie("user", _userName);
 				setCookie("pass", _userPassword);
-				//document.getElementById('logout').innerHTML("hallo");
 				document.getElementById('login').style.visibility = 'hidden';
 				document.getElementById('logout').style.visibility = 'visible';
 				document.getElementById('loggedInName').style.visibility = 'visible';
@@ -491,6 +490,14 @@
 				}
 			}
 
+			function loginUser_cancel() {
+				document.getElementById('login_dialog').style.visibility = 'hidden';
+				if (_Saving) {
+					_Saving = false;
+					readOsmXml();
+				}
+			}
+			
 			function sendingOk() {
 				_Comment = document.getElementById('sendComment').value;
 				if (_Comment == "") {
@@ -541,10 +548,6 @@
 				updateSeamarks();
 			}
 
-			function trim (buffer) {
-				  return buffer.replace (/^\s+/, '').replace (/\s+$/, '');
-			}
-
 			function osmChangeSet(action, todo) {
 				var url = './api/changeset.php';
 				var params = new Object();
@@ -570,15 +573,31 @@
 					onSuccess: function(transport) {
 						var response = transport.responseText;
 						if (action = "create") {
-							if (parseInt(response) > 0) {
-								_ChangeSetId = trim(response);
+							var args = response.split(":");
+							if (args[0] != "Error") {
+								setChangeSetId(response);
 								//alert(_ChangeSetId + " : " + todo);
 								sendNodeOsm(todo);
 								document.getElementById(dialog).style.visibility = "collapse";
 								return "0";
 							} else {
 								document.getElementById(dialog).style.visibility = "collapse";
-								alert("Erzeugen des Changesets Fehlgeschlagen: " + response);
+								switch (trim(args[1])) {
+									case "401":
+										alert("<?=$t->tr('send401')?>");
+										logoutUser();
+										loginUser();
+										break;
+									case "404":
+										alert("<?=$t->tr('send404')?>");
+										loginUser_cancel();
+										break;
+									default:
+										alert("Erzeugen des Changesets Fehlgeschlagen: " + response);
+										loginUser_cancel();
+										break;
+								}
+								setChangeSetId("-1");
 								return "-1";
 							}
 						}
@@ -627,6 +646,7 @@
 								break;
 						}
 						document.getElementById("saving").style.visibility = "collapse";
+						_Saving = false;
 						return "0";
 					},
 					onFailure: function() {
@@ -761,7 +781,7 @@
 			}
 
 			function setChangeSetId(id) {
-				_ChangeSetId = id;
+				_ChangeSetId = trim(id);
 			}
 
 			function getComment() {
@@ -769,24 +789,26 @@
 			}
 
 			function setComment(value) {
-				_Comment = value;
+				_Comment = trim(value);
 			}
 
 			function getKeys(id) {
 				return arrayNodes[id];
 			}
 
-			// Event handling*********************************************************************************************************
+			// Some little helpers****************************************************************************************************
 			function checkKeyReturn(e) {
 				if (e.keyCode == 13) {
-					//alert("You pressed enter!");
 					return true;
 				} else {
 					return false;
 				}
 			}
 
-
+			function trim(buffer) {
+				  return buffer.replace (/^\s+/, '').replace (/\s+$/, '');
+			}
+			
 		</script>
 	</head>
 	<body onload=init();>
@@ -863,7 +885,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.92.7
+			Version 0.0.92.8
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />

@@ -28,7 +28,7 @@
 		<br>
 		<input type="button" value='<?=$t->tr("login")?>' onclick="loginUser_login()">
 		&nbsp;&nbsp;
-		<input type="button" value='<?=$t->tr("cancel")?>' onclick="document.getElementById('login_dialog').style.visibility = 'hidden'">
+		<input type="button" value='<?=$t->tr("cancel")?>' onclick="loginUser_cancel()">
 		&nbsp;&nbsp;
 	</p>
 </form>
