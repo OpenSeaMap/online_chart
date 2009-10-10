@@ -22,6 +22,7 @@
 			var layer_mapnik;
 			var layer_tah;
 			var layer_markers;
+			var _ZoomOld = "1";				//Previus zoom level
 			var _Saving = false;			//Saving data in progress
 			var _ChangeSetId = "-1";		//OSM-Changeset ID
 			var _NodeId = "-1";				//OSM-Node ID
@@ -58,33 +59,13 @@
 						loginUser_login();
 					}
 				}
-				// Display the map
+				// Display map
 				drawmap();
-				// Load seamark-nodes from database
-				updateSeamarks();
 			}
 
 			// Language selection has been changed
 			function onLanguageChanged() {
 				window.location.href = "./map_edit.php?lang=" + document.getElementById("selectLanguage").value;
-			}
-
-			function setCookie(key, value) {
-				var expireDate = new Date;
-				expireDate.setMonth(expireDate.getMonth() + 6);
-				document.cookie = key + "=" + value + ";" + "expires=" + expireDate.toGMTString() + ";";
-			}
-
-			function readCookie(argument) {
- 				var buff = document.cookie;
-				var args = buff.split(";");
-				for(i = 0; i < args.length; i++) {
-					var a = args[i].split("=");
-					if(trim(a[0]) == argument) {
-						return trim(a[1]);
-					}
-				}
-				return "-1";
 			}
 
 			function jumpTo(lon, lat, zoom) {
@@ -162,15 +143,11 @@
 
 			// Draw the map
 			function drawmap() {
-
-				OpenLayers.Lang.setCode('de');
-
 				map = new OpenLayers.Map('map', {
-					projection: new OpenLayers.Projection("EPSG:900913"),
 					displayProjection: new OpenLayers.Projection("EPSG:4326"),
 					eventListeners: {
-						"moveend": mapEvent,
-						"zoomend": mapEvent
+						"moveend": mapEventMove,
+						"zoomend": mapEventZoom
 					},
 					controls: [
 						new OpenLayers.Control.Permalink(),
@@ -208,10 +185,38 @@
 			}
 
 			// Map event listener
-			function mapEvent(event) {
+			function mapEventMove(event) {
 				// needed later on for loading data on the fly
+				//alert("Moved");
 			}
 
+			// Map event listener
+			function mapEventZoom(event) {
+				// needed later on for loading data on the fly
+				var zoomLevel = map.getZoom();
+				//alert("Zoomed:" + zoomLevel);
+				if (zoomLevel <= 15) {
+					mapHideMarker();
+				} else {
+					mapShowMarker();
+				}
+				_ZoomOld = zoomLevel;
+			}
+
+			function mapShowMarker() {
+				document.getElementById('info_dialog').style.visibility = 'hidden';
+				if (_ZoomOld <= 15) {
+					//alert("Zoomed:" + zoomLevel);
+					updateSeamarks();
+				}
+			}
+
+			function mapHideMarker() {
+				layer_markers.clearMarkers();
+				_NodeId = "-1";
+				document.getElementById('info_dialog').style.visibility = 'visible';
+			}
+			
 			// add a marker on the map
 			function addMarker(id, popupText) {
 				var pos = new OpenLayers.LonLat(Lon2Merc(lon), Lat2Merc(lat));
@@ -263,9 +268,14 @@
 			}
 
 			function showPositionDialog() {
-				// reset old values
-				document.getElementById("pos-lat").value = "0.0";
-				document.getElementById("pos-lon").value = "0.0";
+				if (_ToDo == "add") {
+					// reset old values
+					document.getElementById("pos-lat").value = "0.0";
+					document.getElementById("pos-lon").value = "0.0";
+				} else {
+					document.getElementById("pos-lat").value = lat;
+					document.getElementById("pos-lon").value = lon;
+				}
 				//show dialog
 				document.getElementById("position_dialog").style.visibility = "visible";
 				// activate click event for entering a new position
@@ -300,7 +310,7 @@
 				click.deactivate();
 				_moving = false;
 				// remove existing temp marker
-				if (arrayMarker["2"] != 'undefined') {
+				if (arrayMarker["2"] != null) {
 					layer_markers.removeMarker(arrayMarker["2"]);
 				}
 				arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
@@ -311,12 +321,12 @@
 			}
 
 			function addSeamark(seamark) {
+				_ToDo = "add";
 				showPositionDialog();
 				document.getElementById("add_seamark_dialog").style.visibility = "collapse";
 				// set the seamark type
 				seamarkType = seamark;
 				// remember what we are doing
-				_ToDo = "add";
 			}
 
 			function addSeamarkPosOk(latValue, lonValue) {
@@ -371,7 +381,9 @@
  				editWindow.focus();
 			}
 
-			function moveSeamarkEdit(id, version) {
+			function moveSeamarkEdit(id, version, pos_lat, pos_lon) {
+				lat = pos_lat;
+				lon = pos_lon;
 				if (_NodeId != "-1") {
 					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
 				}
@@ -381,9 +393,9 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/circle_yellow.png');
-				showPositionDialog()
 				// remember what we are doing
 				_ToDo = "move";
+				showPositionDialog()
 			}
 
 			function moveSeamarkOk(pos_lat, pos_lon) {
@@ -667,7 +679,6 @@
 				var zoomLevel = map.getZoom();
 				if (zoomLevel > 15) {
 					document.getElementById("loading").style.visibility = "visible";
-
 					var url = './api/map.php';
 					var params = new Object();
 					var bounds = map.getExtent().toArray();
@@ -702,7 +713,7 @@
 						}
 					});
 				} else {
-					alert("Der Zoomlevel ist zu klein!");
+					mapHideMarker();
 				}
 			}
 
@@ -763,7 +774,7 @@
 							popupText += "<br/>";
 							popupText += "<br/> <br/>";
 							popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
-							popupText += "<input type=\"button\" value=\"<?=$t->tr("move")?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + ")\">&nbsp;&nbsp;";
+							popupText += "<input type=\"button\" value=\"<?=$t->tr("move")?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
 							popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
 							addMarker(id, popupText);
 							show = false;
@@ -771,8 +782,8 @@
 					}
 				}
 				//FIXME: dirty hack for redrawing the map. Needed for popup click events.
-				map.zoomOut();
 				map.zoomIn();
+				map.zoomOut();
 			}
 
 			// Some api stuff*********************************************************************************************************
@@ -797,6 +808,24 @@
 			}
 
 			// Some little helpers****************************************************************************************************
+			function setCookie(key, value) {
+				var expireDate = new Date;
+				expireDate.setMonth(expireDate.getMonth() + 6);
+				document.cookie = key + "=" + value + ";" + "expires=" + expireDate.toGMTString() + ";";
+			}
+
+			function readCookie(argument) {
+ 				var buff = document.cookie;
+				var args = buff.split(";");
+				for(i = 0; i < args.length; i++) {
+					var a = args[i].split("=");
+					if(trim(a[0]) == argument) {
+						return trim(a[1]);
+					}
+				}
+				return "-1";
+			}
+
 			function checkKeyReturn(e) {
 				if (e.keyCode == 13) {
 					return true;
@@ -885,7 +914,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.92.8
+			Version 0.0.92.9
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
@@ -913,6 +942,9 @@
 		</div>
 		<div id="send_dialog" class="dialog" style="position:absolute; top:45%; left:40%;">
 			<?php include ("./dialogs/sending.php"); ?>
+		</div>
+		<div id="info_dialog" class="dialog" style="position:absolute; top:20px; right:40px;">
+			<?=$t->tr("zoomToSmall")?>
 		</div>
 		<!--Status dialog ************************************************************************************************************ -->
 		<!--Load Data Wait-Dialog-->
