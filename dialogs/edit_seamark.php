@@ -555,7 +555,6 @@
 				var group = getKey("seamark:light:group");
 				var period = getKey("seamark:light:period");
 				var val = "<?=$t->tr("unknown")?>";
-					
 				if (character != "-1" && character != "<?=$t->tr("unknown")?>") {
 					if (_category == "south") {
 						var buff = character.split("+");
@@ -570,7 +569,6 @@
 						val += "+Lfl";
 					}
 					document.getElementById("lightChar").value = val;
-					onChangeLightCharacter();
 					switch (_light_colour) {
 						case "white":
 							val += " W";
@@ -611,6 +609,7 @@
 					document.getElementById("lightPeriod").value = "unknown";
 					document.getElementById("lightPeriod").disabled = false;
 				}
+				saveLight()
 			}
 
 			// Show topmark edit?
@@ -831,7 +830,7 @@
 						<?=$t->tr("character")?>:
 					</td>
 					<td align="right">
-						<select  name="light_character" id="lightChar" onChange="saveLight()">
+						<select  name="light_character" id="lightChar" onChange="onChangeLightCharacter();">
 							<option value="unknown"/><?=$t->tr("unknown")?>
 						</select>
 					</td>
