@@ -192,9 +192,7 @@
 
 			// Map event listener
 			function mapEventZoom(event) {
-				// needed later on for loading data on the fly
 				var zoomLevel = map.getZoom();
-				//alert("Zoomed:" + zoomLevel);
 				if (zoomLevel <= 15) {
 					mapHideMarker();
 				} else {
@@ -206,7 +204,6 @@
 			function mapShowMarker() {
 				document.getElementById('info_dialog').style.visibility = 'hidden';
 				if (_ZoomOld <= 15) {
-					//alert("Zoomed:" + zoomLevel);
 					updateSeamarks();
 				}
 			}
@@ -234,12 +231,14 @@
 				arrayMarker[id].feature = feature;
 
 				markerClick = function(evt) {
+					if (_ToDo != "add" && _ToDo != "move") {
 					if (this.popup == null) {
 						this.popup = this.createPopup(this.closeBox);
 						map.addPopup(this.popup);
 						this.popup.show();
 					} else {
 						this.popup.toggle();
+					}
 					}
 				};
 				layer_markers.addMarker(arrayMarker[id]);
@@ -309,6 +308,7 @@
 				map.div.style.cursor="default";
 				click.deactivate();
 				_moving = false;
+				_ToDo = null;
 				// remove existing temp marker
 				if (arrayMarker["2"] != null) {
 					layer_markers.removeMarker(arrayMarker["2"]);
@@ -318,6 +318,7 @@
 
 			function onEditDialogCancel(id) {
 				arrayMarker[id].setUrl('./resources/action/circle_blue.png');
+				_ToDo = null;
 			}
 
 			function addSeamark(seamark) {
@@ -506,6 +507,7 @@
 				document.getElementById('login_dialog').style.visibility = 'hidden';
 				if (_Saving) {
 					_Saving = false;
+					_ToDo = null;
 					readOsmXml();
 				}
 			}
@@ -722,6 +724,9 @@
 				var xmlData = _xmlOsm;
 				var xmlObject;
 				var show = false;
+
+				_ToDo = null;
+
 				// Browserweiche für den DOMParser:
 				// Mozilla and Netscape browsers
 				if (document.implementation.createDocument) {

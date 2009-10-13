@@ -14,7 +14,7 @@
 			Lon:&nbsp;
 		</td>
 		<td valign="top">
-			<input type="text" id="pos-lon" style="text-align:right;"/>
+			<input type="text" id="pos-lon" style="text-align:right;" onkeydown="if (checkKeyReturn(event)) {positionOk(document.getElementById('pos-lat').value, document.getElementById('pos-lon').value);}"/>
 		</td>
 	</tr>
 </table>
