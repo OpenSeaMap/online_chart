@@ -51,12 +51,22 @@
 				document.getElementById("selectLanguage").value = "<?= $t->getCurrentLanguage() ?>";
 				// look for existing cookies
 				if (document.cookie != "")  {
-					var user = readCookie("user");
-					var pass = readCookie("pass");
+					var user = getCookie("user");
+					var pass = getCookie("pass");
 					if (user != "-1" && pass != "-1") {
 						document.getElementById('loginUsername').value = user;
 						document.getElementById('loginPassword').value = pass;
 						loginUser_login();
+					}
+					var buffZoom = parseInt(getCookie("zoom"));
+					var buffLat = parseFloat(getCookie("lat"));
+					var buffLon = parseFloat(getCookie("lon"));
+					if (buffZoom != -1) {
+						zoom = buffZoom;
+					}
+					if (buffLat != -1 && buffLon != -1) {
+						lat = buffLat;
+						lon = buffLon;
 					}
 				}
 				// Display map
@@ -144,6 +154,7 @@
 			// Draw the map
 			function drawmap() {
 				map = new OpenLayers.Map('map', {
+					projection: new OpenLayers.Projection("EPSG:900913"),
 					displayProjection: new OpenLayers.Projection("EPSG:4326"),
 					eventListeners: {
 						"moveend": mapEventMove,
@@ -178,7 +189,6 @@
 
 				map.addLayers([layer_mapnik, layer_tah, layer_markers]);
 				map.addControl(click);
-
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
 				}
@@ -187,7 +197,8 @@
 			// Map event listener
 			function mapEventMove(event) {
 				// needed later on for loading data on the fly
-				//alert("Moved");
+				setCookie("lat", y2lat(map.getCenter().lat).toFixed(4));
+				setCookie("lon", x2lon(map.getCenter().lon).toFixed(4));
 			}
 
 			// Map event listener
@@ -199,6 +210,7 @@
 					mapShowMarker();
 				}
 				_ZoomOld = zoomLevel;
+				setCookie("zoom", zoomLevel);
 			}
 
 			function mapShowMarker() {
@@ -272,8 +284,8 @@
 					document.getElementById("pos-lat").value = "0.0";
 					document.getElementById("pos-lon").value = "0.0";
 				} else {
-					document.getElementById("pos-lat").value = lat;
-					document.getElementById("pos-lon").value = lon;
+					document.getElementById("pos-lat").value = lat.toFixed(4);
+					document.getElementById("pos-lon").value = lon.toFixed(4);
 				}
 				//show dialog
 				document.getElementById("position_dialog").style.visibility = "visible";
@@ -292,8 +304,8 @@
 					layer_markers.removeMarker(arrayMarker["2"]);
 				}
 				// display new coordinates
-				document.getElementById("pos-lat").value = lat;
-				document.getElementById("pos-lon").value = lon;
+				document.getElementById("pos-lat").value = lat.toFixed(4);
+				document.getElementById("pos-lon").value = lon.toFixed(4);
 				// display temporary marker for orientation
 				addMarker("2", "");
 				arrayMarker["2"].setUrl('./resources/action/circle_red.png');
@@ -441,7 +453,7 @@
 
 			// Entering a new position finished
 			function positionOk(latValue, lonValue) {
-				if (latValue != lat || lonValue != lon) {
+				if (latValue != lat.toFixed(4) || lonValue != lon.toFixed(4)) {
 					// set actual position as center
 					jumpTo( parseFloat(lonValue),  parseFloat(latValue), map.getZoom());
 					addMarker("2", "");
@@ -772,8 +784,8 @@
 							arrayNodes[id] += key + "," + val + "|";
 						}
 						//if (show) {
-							popupText += "<br/>Lat = " + lat;
-							popupText += "<br/>Lon = " + lon;
+							popupText += "<br/>Lat = " + lat.toFixed(4);
+							popupText += "<br/>Lon = " + lon.toFixed(4);
 							popupText += "<br/><br/>";
 							popupText += "<a href='http://api06.dev.openstreetmap.org/browse/node/" + id + "/history' target='blank'>Geschichte des Elements</a>";
 							popupText += "<br/>";
@@ -819,7 +831,7 @@
 				document.cookie = key + "=" + value + ";" + "expires=" + expireDate.toGMTString() + ";";
 			}
 
-			function readCookie(argument) {
+			function getCookie(argument) {
  				var buff = document.cookie;
 				var args = buff.split(";");
 				for(i = 0; i < args.length; i++) {
@@ -919,7 +931,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.92.9
+			Version 0.0.92.10
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
