@@ -14,7 +14,8 @@
 		<link rel="stylesheet" type="text/css" href="map-edit.css">
 		<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
 		<script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
-		<script type="text/javascript" src="javascript/prototype.js"></script>
+		<script type="text/javascript" src="./javascript/prototype.js"></script>
+		<script type="text/javascript" src="./javascript/map_utils.js"></script>
 		<script type="text/javascript">
 
 			//global variables
@@ -78,48 +79,6 @@
 				window.location.href = "./map_edit.php?lang=" + document.getElementById("selectLanguage").value;
 			}
 
-			function jumpTo(lon, lat, zoom) {
-				var x = Lon2Merc(lon);
-				var y = Lat2Merc(lat);
-				map.setCenter(new OpenLayers.LonLat(x, y), zoom);
-			}
-
-			function Lon2Merc(lon) {
-				return 20037508.34 * lon / 180;
-			}
-
-			function Lat2Merc(lat) {
-				var PI = 3.14159265358979323846;
-				lat = Math.log(Math.tan( (90 + lat) * PI / 360)) / (PI / 180);
-				return 20037508.34 * lat / 180;
-			}
-
-			function plusfacteur(a) { return a * (20037508.34 / 180); }
-			function moinsfacteur(a) { return a / (20037508.34 / 180); }
-			function y2lat(a) { return 180/Math.PI * (2 * Math.atan(Math.exp(moinsfacteur(a)*Math.PI/180)) - Math.PI/2); }
-			function lat2y(a) { return plusfacteur(180/Math.PI * Math.log(Math.tan(Math.PI/4+a*(Math.PI/180)/2))); }
-			function x2lon(a) { return moinsfacteur(a); }
-			function lon2x(a) { return plusfacteur(a); }
-
-			function getTileURL(bounds) {
-				var res = this.map.getResolution();
-				var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
-				var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
-				var z = this.map.getZoom();
-				var limit = Math.pow(2, z);
-				if (y < 0 || y >= limit) {
-					return null;
-				} else {
-					x = ((x % limit) + limit) % limit;
-					url = this.url;
-					path= z + "/" + x + "/" + y + "." + this.type;
-					if (url instanceof Array) {
-						url = this.selectUrl(path, url);
-					}
-					return url+path;
-				}
-			}
-
 			OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
 				defaultHandlerOptions: {
 					'single': true,
@@ -154,8 +113,8 @@
 			// Draw the map
 			function drawmap() {
 				map = new OpenLayers.Map('map', {
-					projection: new OpenLayers.Projection("EPSG:900913"),
-					displayProjection: new OpenLayers.Projection("EPSG:4326"),
+					projection: projMerc,
+					displayProjection: proj4326,
 					eventListeners: {
 						"moveend": mapEventMove,
 						"zoomend": mapEventZoom
@@ -197,8 +156,8 @@
 			// Map event listener
 			function mapEventMove(event) {
 				// needed later on for loading data on the fly
-				setCookie("lat", y2lat(map.getCenter().lat).toFixed(4));
-				setCookie("lon", x2lon(map.getCenter().lon).toFixed(4));
+				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
+				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
 			}
 
 			// Map event listener
@@ -228,7 +187,8 @@
 			
 			// add a marker on the map
 			function addMarker(id, popupText) {
-				var pos = new OpenLayers.LonLat(Lon2Merc(lon), Lat2Merc(lat));
+				var pos = new OpenLayers.LonLat(lon, lat);
+				pos.transform(proj4326, projMerc);
 				var feature = new OpenLayers.Feature(layer_markers, pos);
 				var size = new OpenLayers.Size(32,32);
 				var offset = new OpenLayers.Pixel(-16, -16);
@@ -284,8 +244,8 @@
 					document.getElementById("pos-lat").value = "0.0";
 					document.getElementById("pos-lon").value = "0.0";
 				} else {
-					document.getElementById("pos-lat").value = lat.toFixed(4);
-					document.getElementById("pos-lon").value = lon.toFixed(4);
+					document.getElementById("pos-lat").value = lat.toFixed(5);
+					document.getElementById("pos-lon").value = lon.toFixed(5);
 				}
 				//show dialog
 				document.getElementById("position_dialog").style.visibility = "visible";
@@ -304,8 +264,8 @@
 					layer_markers.removeMarker(arrayMarker["2"]);
 				}
 				// display new coordinates
-				document.getElementById("pos-lat").value = lat.toFixed(4);
-				document.getElementById("pos-lon").value = lon.toFixed(4);
+				document.getElementById("pos-lat").value = lat.toFixed(5);
+				document.getElementById("pos-lon").value = lon.toFixed(5);
 				// display temporary marker for orientation
 				addMarker("2", "");
 				arrayMarker["2"].setUrl('./resources/action/circle_red.png');
@@ -453,7 +413,7 @@
 
 			// Entering a new position finished
 			function positionOk(latValue, lonValue) {
-				if (latValue != lat.toFixed(4) || lonValue != lon.toFixed(4)) {
+				if (latValue != lat.toFixed(5) || lonValue != lon.toFixed(5)) {
 					// set actual position as center
 					jumpTo( parseFloat(lonValue),  parseFloat(latValue), map.getZoom());
 					addMarker("2", "");
@@ -693,6 +653,8 @@
 				var zoomLevel = map.getZoom();
 				if (zoomLevel > 15) {
 					document.getElementById("loading").style.visibility = "visible";
+					document.getElementById("selectLanguage").disabled = true;
+					document.getElementById("buttonReload").disabled = true;
 					var url = './api/map.php';
 					var params = new Object();
 					var bounds = map.getExtent().toArray();
@@ -710,19 +672,25 @@
 							readOsmXml();
 							//alert(response);
 							document.getElementById("loading").style.visibility = "collapse";
+							document.getElementById("selectLanguage").disabled = false;
+							document.getElementById("buttonReload").disabled = false;
 							if (_NodeId != "-1" && _NodeId != "1") {
 								arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
 							}
 							return "0";
 						},
 						onFailure: function() {
-							alert("Error while sending data");
+							alert("Error while loading data");
 							document.getElementById("loading").style.visibility = "collapse";
+							document.getElementById("selectLanguage").disabled = false;
+							document.getElementById("buttonReload").disabled = false;
 							return "-1";
 						},
 						onException: function(request, exception) {
 							alert("Error: " + exception);
 							document.getElementById("loading").style.visibility = "collapse";
+							document.getElementById("selectLanguage").disabled = false;
+							document.getElementById("buttonReload").disabled = false;
 							return "-1";
 						}
 					});
@@ -784,8 +752,8 @@
 							arrayNodes[id] += key + "," + val + "|";
 						}
 						//if (show) {
-							popupText += "<br/>Lat = " + lat.toFixed(4);
-							popupText += "<br/>Lon = " + lon.toFixed(4);
+							popupText += "<br/>Lat = " + lat.toFixed(5);
+							popupText += "<br/>Lon = " + lon.toFixed(5);
 							popupText += "<br/><br/>";
 							popupText += "<a href='http://api06.dev.openstreetmap.org/browse/node/" + id + "/history' target='blank'>Geschichte des Elements</a>";
 							popupText += "<br/>";
@@ -798,9 +766,6 @@
 						//}
 					}
 				}
-				//FIXME: dirty hack for redrawing the map. Needed for popup click events.
-				map.zoomIn();
-				map.zoomOut();
 			}
 
 			// Some api stuff*********************************************************************************************************
@@ -889,7 +854,7 @@
 			<select id="pos-iala">
 				<option selected value="A" disabled = "true"/>IALA - A
 			</select>&nbsp; &nbsp;
-			<input type="button" value='<?=$t->tr("reload")?>' onclick="updateSeamarks()">
+			<input type="button" id="buttonReload" value='<?=$t->tr("reload")?>' onclick="updateSeamarks()">
 		</div>
 		<div style="position:absolute; top:295px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
 		<div id="action" class="sidebar" style="position:absolute; top:305px; left:0px;">
@@ -931,7 +896,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.92.10
+			Version 0.0.92.11
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
