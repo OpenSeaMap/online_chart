@@ -12,10 +12,11 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="content-language" content="<?=$t->getCurrentLanguage()?>" />
 		<link rel="stylesheet" type="text/css" href="map-edit.css">
-		<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
-		<script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
+		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
 		<script type="text/javascript" src="./javascript/prototype.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
+		<script type="text/javascript" src="./javascript/utilities.js"></script>
 		<script type="text/javascript">
 
 			//global variables
@@ -69,6 +70,11 @@
 						lat = buffLat;
 						lon = buffLon;
 					}
+					var lang = getCookie("lang")
+					if (lang != -1 && lang != "<?= $t->getCurrentLanguage() ?>") {
+						document.getElementById("selectLanguage").value = lang;
+						onLanguageChanged();
+					}
 				}
 				// Display map
 				drawmap();
@@ -76,7 +82,9 @@
 
 			// Language selection has been changed
 			function onLanguageChanged() {
-				window.location.href = "./map_edit.php?lang=" + document.getElementById("selectLanguage").value;
+				var lang = document.getElementById("selectLanguage").value;
+				window.location.href = "./map_edit.php?lang=" + lang;
+				setCookie("lang", lang); 
 			}
 
 			OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
@@ -125,6 +133,7 @@
 						new OpenLayers.Control.LayerSwitcher(),
 						new OpenLayers.Control.MousePosition(),
 						new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: '40'}),
+						new OpenLayers.Control.OverviewMap(),
 						new OpenLayers.Control.PanZoomBar()],
 						maxExtent:
 						new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
@@ -789,37 +798,6 @@
 				return arrayNodes[id];
 			}
 
-			// Some little helpers****************************************************************************************************
-			function setCookie(key, value) {
-				var expireDate = new Date;
-				expireDate.setMonth(expireDate.getMonth() + 6);
-				document.cookie = key + "=" + value + ";" + "expires=" + expireDate.toGMTString() + ";";
-			}
-
-			function getCookie(argument) {
- 				var buff = document.cookie;
-				var args = buff.split(";");
-				for(i = 0; i < args.length; i++) {
-					var a = args[i].split("=");
-					if(trim(a[0]) == argument) {
-						return trim(a[1]);
-					}
-				}
-				return "-1";
-			}
-
-			function checkKeyReturn(e) {
-				if (e.keyCode == 13) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-
-			function trim(buffer) {
-				  return buffer.replace (/^\s+/, '').replace (/\s+$/, '');
-			}
-			
 		</script>
 	</head>
 	<body onload=init();>

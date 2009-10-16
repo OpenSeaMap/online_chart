@@ -11,8 +11,8 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>" />
 		<link rel="stylesheet" type="text/css" href="map-full.css">
-		<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
-		<script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
+		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
 		<script type="text/javascript" src="./haefen.js"></script>
 		<script type="text/javascript">
