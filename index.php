@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
-		<script type="text/javascript" src="./haefen.js"></script>
+		<script type="text/javascript" src="./javascript/harbours.js"></script>
 		<script type="text/javascript">
 
 			var map;

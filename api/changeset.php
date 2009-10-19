@@ -1,12 +1,22 @@
 <?PHP
 
-/**************************************
+/******************************************************************************
  Osm_Api_Service_Changeset
  Required: PHP 5 
  author Olaf Hannemann
  license GPL V3
  version 0.1.1
-**************************************/
+ 
+ This file is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This file is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License (http://www.gnu.org/licenses/) for more details.
+*******************************************************************************/
 
 	// get parameter values
 	$_todo = $_GET['action'];
@@ -43,7 +53,7 @@
 		$xmlOSM = "<?xml version='1.0' encoding='UTF-8'?>\n";
 		$xmlOSM .= "<osm> \n";
 		$xmlOSM .= "<changeset>\n";
-		$xmlOSM .= "<tag k=\"created_by\" v=\"OpenSeaMap-Editor-0.0.92.10\"/>\n";
+		$xmlOSM .= "<tag k=\"created_by\" v=\"OpenSeaMap-Editor-0.0.96\"/>\n";
 		$xmlOSM .= "<tag k=\"comment\" v=\"" .$comment ."\"/>";
 		$xmlOSM .= "\n</changeset>\n</osm>";
 

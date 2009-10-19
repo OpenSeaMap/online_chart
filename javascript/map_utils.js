@@ -1,14 +1,25 @@
+/******************************************************************************
+ Javascript OpenLayers map_utils
+ author Olaf Hannemann
+ license GPL V3
+ version 0.1.0
 
+ This file is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This file is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License (http://www.gnu.org/licenses/) for more details.
+ ******************************************************************************/
+
+// Projections-----------------------------------------------------------------
 var projMerc = new OpenLayers.Projection("EPSG:900913");
 var proj4326 = new OpenLayers.Projection("EPSG:4326");
 
-
-function jumpTo(lon, lat, zoom) {
-	var lonlat = new OpenLayers.LonLat(lon, lat);
-	lonlat.transform(proj4326, projMerc);
-	map.setCenter(lonlat, zoom);
-}
-
+// Transformations-------------------------------------------------------------
 function Lon2Merc(lon) {
 	return 20037508.34 * lon / 180;
 }
@@ -41,6 +52,17 @@ function x2lon(a) {
 
 function lon2x(a) {
 	return plusfacteur(a);
+}
+
+function lonLatToMercator(ll) {
+	return new OpenLayers.LonLat(lon2x(ll.lon), lat2y(ll.lat));
+}
+
+// Utilities-------------------------------------------------------------------
+function jumpTo(lon, lat, zoom) {
+	var lonlat = new OpenLayers.LonLat(lon, lat);
+	lonlat.transform(proj4326, projMerc);
+	map.setCenter(lonlat, zoom);
 }
 
 function getTileURL(bounds) {

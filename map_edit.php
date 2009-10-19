@@ -174,7 +174,9 @@
 				var zoomLevel = map.getZoom();
 				if (zoomLevel <= 15) {
 					mapHideMarker();
+					document.getElementById("buttonReload").disabled = true;
 				} else {
+					document.getElementById("buttonReload").disabled = false;
 					mapShowMarker();
 				}
 				_ZoomOld = zoomLevel;
@@ -182,7 +184,7 @@
 			}
 
 			function mapShowMarker() {
-				document.getElementById('info_dialog').style.visibility = 'hidden';
+				showInfoDialog(false);
 				if (_ZoomOld <= 15) {
 					updateSeamarks();
 				}
@@ -191,7 +193,7 @@
 			function mapHideMarker() {
 				layer_markers.clearMarkers();
 				_NodeId = "-1";
-				document.getElementById('info_dialog').style.visibility = 'visible';
+				showInfoDialog(true, "<?=$t->tr('zoomToSmall')?>");
 			}
 			
 			// add a marker on the map
@@ -507,6 +509,7 @@
 				document.getElementById('send_dialog').style.visibility = 'hidden';
 			}
 
+			// Dialogs----------------------------------------------------------------------------------------------------------------
 			function showSeamarkAdd(visible) {
 				if (visible) {
 					document.getElementById('add_seamark_dialog').style.visibility = 'visible';
@@ -537,7 +540,19 @@
 				}
 			}
 
-
+			function showInfoDialog(visible, text) {
+				if(typeof text == "undefined"){
+					text = " - - -";
+				}
+				if (visible) {
+					document.getElementById('info_dialog').style.visibility = 'visible';
+					document.getElementById('info_dialog').innerHTML=""+ text +"";
+				} else {
+					document.getElementById('info_dialog').style.visibility = 'hidden';
+				}
+			}
+			
+			// OSM-Api----------------------------------------------------------------------------------------------------------------
 			function updateNode() {
 				// FIXME: it is not necessary to reload all nodes. The updated one should be enough.
 				updateSeamarks();
@@ -777,7 +792,7 @@
 				}
 			}
 
-			// Some api stuff*********************************************************************************************************
+			// Some api stuff---------------------------------------------------------------------------------------------------------
 			function getChangeSetId() {
 				return _ChangeSetId;
 			}
@@ -874,7 +889,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.92.11
+			Version 0.0.96
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
@@ -904,9 +919,9 @@
 			<?php include ("./dialogs/sending.php"); ?>
 		</div>
 		<div id="info_dialog" class="dialog" style="position:absolute; top:20px; right:40px;">
-			<?=$t->tr("zoomToSmall")?>
+			 - - -
 		</div>
-		<!--Status dialog ************************************************************************************************************ -->
+		<!--Status dialogs *********************************************************************************************************** -->
 		<!--Load Data Wait-Dialog-->
 		<div id="loading" class="infobox" style="position:absolute; top:50%; left:50%;">
 			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("dataLoad")?>
