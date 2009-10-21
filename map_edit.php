@@ -25,6 +25,7 @@
 			var layer_tah;
 			var layer_markers;
 			var _ZoomOld = "1";				//Previus zoom level
+			var _Loaded = false;			//Map data is initially loaded
 			var _Saving = false;			//Saving data in progress
 			var _ChangeSetId = "-1";		//OSM-Changeset ID
 			var _NodeId = "-1";				//OSM-Node ID
@@ -164,7 +165,9 @@
 
 			// Map event listener
 			function mapEventMove(event) {
-				// needed later on for loading data on the fly
+				if (map.getZoom() >= 15) {
+					updateSeamarks();
+				}
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
 				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
 			}
@@ -193,6 +196,7 @@
 			function mapHideMarker() {
 				layer_markers.clearMarkers();
 				_NodeId = "-1";
+				_Loaded = false;
 				showInfoDialog(true, "<?=$t->tr('zoomToSmall')?>");
 			}
 			
@@ -649,6 +653,7 @@
 							case "move":
 							case "update":
 							case "delete":
+								_Loaded = false;
 								updateNode();
 								break;
 							case "get":
@@ -676,7 +681,11 @@
 			function updateSeamarks() {
 				var zoomLevel = map.getZoom();
 				if (zoomLevel > 15) {
-					document.getElementById("loading").style.visibility = "visible";
+					if (_Loaded) {
+						showInfoDialog(true, "<img src=\"resources/action/wait.gif\" width=\"22\" height=\"22\" /> &nbsp;&nbsp;<?=$t->tr('loading')?>");
+					} else {
+						document.getElementById("loading").style.visibility = "visible";
+					}
 					document.getElementById("selectLanguage").disabled = true;
 					document.getElementById("buttonReload").disabled = true;
 					var url = './api/map.php';
@@ -696,11 +705,13 @@
 							readOsmXml();
 							//alert(response);
 							document.getElementById("loading").style.visibility = "collapse";
+							showInfoDialog(false);
 							document.getElementById("selectLanguage").disabled = false;
 							document.getElementById("buttonReload").disabled = false;
 							if (_NodeId != "-1" && _NodeId != "1") {
 								arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
 							}
+							_Loaded = true;
 							return "0";
 						},
 						onFailure: function() {
@@ -708,6 +719,7 @@
 							document.getElementById("loading").style.visibility = "collapse";
 							document.getElementById("selectLanguage").disabled = false;
 							document.getElementById("buttonReload").disabled = false;
+							_Loaded = false;
 							return "-1";
 						},
 						onException: function(request, exception) {
@@ -715,6 +727,7 @@
 							document.getElementById("loading").style.visibility = "collapse";
 							document.getElementById("selectLanguage").disabled = false;
 							document.getElementById("buttonReload").disabled = false;
+							_Loaded = false;
 							return "-1";
 						}
 					});
