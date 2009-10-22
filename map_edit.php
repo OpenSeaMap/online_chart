@@ -305,6 +305,7 @@
 
 			function onEditDialogCancel(id) {
 				arrayMarker[id].setUrl('./resources/action/circle_blue.png');
+				_NodeId = "-1"
 				_ToDo = null;
 			}
 
@@ -852,7 +853,7 @@
 			<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
 		</div>
 		<div id="loggedInName" style="position:absolute; top:132px; left:10px; visibility:hidden;">- - -</div>
-		<div style="position:absolute; top:185px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
+		<div style="position:absolute; top:185px; left:11.5%;"><a href="http://sourceforge.net/apps/mediawiki/openseamap/index.php?title=De:Online-Editor" target="blank"><?=$t->tr("help")?></a></div>
 		<div id="data" class="sidebar" style="position:absolute; top:200px; left:0px;">
 			<hr>
 			<b><?=$t->tr("data")?></b>
@@ -862,7 +863,7 @@
 			</select>&nbsp; &nbsp;
 			<input type="button" id="buttonReload" value='<?=$t->tr("reload")?>' onclick="updateSeamarks()">
 		</div>
-		<div style="position:absolute; top:295px; left:11.5%;"><a href="http://wiki.openstreetmap.org/wiki/de:Seekarte" target="blank"><?=$t->tr("help")?></a></div>
+		<div style="position:absolute; top:295px; left:11.5%;"><a href="http://sourceforge.net/apps/mediawiki/openseamap/index.php?title=De:Online-Editor" target="blank"><?=$t->tr("help")?></a></div>
 		<div id="action" class="sidebar" style="position:absolute; top:305px; left:0px;">
 			<hr>
 			<a><b><?=$t->tr("add")?></b></a><br/><br/>
@@ -878,20 +879,16 @@
 					</td>
 				</tr>
 				<tr>
-					<td	onclick="showLandmarkAdd(true)"
-						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
-						onmouseout="this.parentNode.style.backgroundColor = 'white';"
-						style="cursor:pointer"><?=$t->tr("Leuchtfeuer")?>
-					</td>
 					<td>
+						<?=$t->tr("Leuchtfeuer")?>
+					</td>
+					<td backgroundColor = 'gainsboro'>
 						<IMG src="resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
 					</td>
 				</tr>
 				<tr>
-					<td	onclick="showHarbourAdd(true)"
-						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
-						onmouseout="this.parentNode.style.backgroundColor = 'white';"
-						style="cursor:pointer"><?=$t->tr("Hafen")?>
+					<td>
+						<?=$t->tr("Hafen")?>
 					</td>
 					<td>
 						<IMG src="./resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
@@ -902,7 +899,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.96
+			Version 0.0.96.1
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
