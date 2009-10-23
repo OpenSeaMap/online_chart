@@ -20,14 +20,14 @@ var projMerc = new OpenLayers.Projection("EPSG:900913");
 var proj4326 = new OpenLayers.Projection("EPSG:4326");
 
 // Transformations-------------------------------------------------------------
-function Lon2Merc(lon) {
-	return 20037508.34 * lon / 180;
+function Lon2Merc(value) {
+	return 20037508.34 * value / 180;
 }
 
-function Lat2Merc(lat) {
+function Lat2Merc(value) {
 	var PI = 3.14159265358979323846;
-	lat = Math.log(Math.tan( (90 + lat) * PI / 360)) / (PI / 180);
-	return 20037508.34 * lat / 180;
+	lat = Math.log(Math.tan( (90 + value) * PI / 360)) / (PI / 180);
+	return 20037508.34 * value / 180;
 }
 
 function plusfacteur(a) {

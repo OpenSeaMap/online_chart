@@ -24,6 +24,7 @@
 			var layer_mapnik;
 			var layer_tah;
 			var layer_markers;
+			var _Request;					//AJAX requests
 			var _ZoomOld = "1";				//Previus zoom level
 			var _Loaded = false;			//Map data is initially loaded
 			var _Saving = false;			//Saving data in progress
@@ -198,6 +199,7 @@
 				_NodeId = "-1";
 				_Loaded = false;
 				showInfoDialog(true, "<?=$t->tr('zoomToSmall')?>");
+				document.getElementById("loading").style.visibility = 'hidden';
 			}
 			
 			// add a marker on the map
@@ -545,6 +547,14 @@
 				}
 			}
 
+			function showAboutDialog(visible) {
+				if (visible) {
+					document.getElementById('about_dialog').style.visibility = 'visible';
+				} else {
+					document.getElementById('about_dialog').style.visibility = 'hidden';
+				}
+			}
+			
 			function showInfoDialog(visible, text) {
 				if(typeof text == "undefined"){
 					text = " - - -";
@@ -680,8 +690,8 @@
 
 			// Get seamarks from database
 			function updateSeamarks() {
-				var zoomLevel = map.getZoom();
-				if (zoomLevel > 15) {
+				//var zoomLevel = map.getZoom();
+				if (map.getZoom() > 15) {
 					if (_Loaded) {
 						showInfoDialog(true, "<img src=\"resources/action/wait.gif\" width=\"22\" height=\"22\" /> &nbsp;&nbsp;<?=$t->tr('loading')?>");
 					} else {
@@ -696,23 +706,31 @@
 					params["s"] = y2lat(bounds[1]);
 					params["w"] = x2lon(bounds[0]);
 					params["e"] = x2lon(bounds[2]);
-
-					new Ajax.Request(url, {
+					if (_Request != null) {
+						// Abort running requests
+						_Request.abort();
+					}
+					_Request = new Ajax.Request(url, {
 						method: 'get',
 						parameters : params,
 						onSuccess: function(transport) {
 							var response = transport.responseText;
-							_xmlOsm = response;
-							readOsmXml();
-							//alert(response);
-							document.getElementById("loading").style.visibility = "collapse";
-							showInfoDialog(false);
-							document.getElementById("selectLanguage").disabled = false;
-							document.getElementById("buttonReload").disabled = false;
-							if (_NodeId != "-1" && _NodeId != "1") {
-								arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
+							alert(map.getZoom());
+							if (map.getZoom() > 15) {
+								_xmlOsm = response;
+								readOsmXml();
+								//alert(response);
+								document.getElementById("loading").style.visibility = "collapse";
+								showInfoDialog(false);
+								document.getElementById("selectLanguage").disabled = false;
+								document.getElementById("buttonReload").disabled = false;
+								if (_NodeId != "-1" && _NodeId != "1") {
+									arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
+								}
+								 _Loaded = true;
+							} else {
+								_Loaded = false;
 							}
-							_Loaded = true;
 							return "0";
 						},
 						onFailure: function() {
@@ -759,49 +777,51 @@
 				var root = xmlObject.getElementsByTagName('osm')[0];
 				var items = root.getElementsByTagName("node");
 
-				layer_markers.clearMarkers();
-				for (var i=0; i < items.length; ++i) {
-					// get one node after the other
-					var item = items[i];
-					// Ensure Seamark is visible (don't add deleted ones)
-					if(item.getAttribute("visible") == "true") {
-						// get Lat/Lon of the node
-						lat = parseFloat(item.getAttribute("lat"));
-						lon = parseFloat(item.getAttribute("lon"));
-						id = item.getAttribute("id");
-						var version = parseInt(item.getAttribute("version"));
-						// Set head of the popup text
-						var popupText = "ID = " + id;
-						popupText += "<br/>Version = " + version;
-						arrayNodes[id] = "";
+				if (map.getZoom() > 15) {
+					layer_markers.clearMarkers();
+					for (var i=0; i < items.length; ++i) {
+						// get one node after the other
+						var item = items[i];
+						// Ensure Seamark is visible (don't add deleted ones)
+						if(item.getAttribute("visible") == "true") {
+							// get Lat/Lon of the node
+							lat = parseFloat(item.getAttribute("lat"));
+							lon = parseFloat(item.getAttribute("lon"));
+							id = item.getAttribute("id");
+							var version = parseInt(item.getAttribute("version"));
+							// Set head of the popup text
+							var popupText = "ID = " + id;
+							popupText += "<br/>Version = " + version;
+							arrayNodes[id] = "";
 
-						// Getting the tags (key value pairs)
-						var tags = item.getElementsByTagName("tag");
-						for (var n=0; n < tags.length; ++n) {
-							var tag = tags[n];
-							var key = tag.getAttribute("k");
-							if (key == "seamark") {
-								show = true;
+							// Getting the tags (key value pairs)
+							var tags = item.getElementsByTagName("tag");
+							for (var n=0; n < tags.length; ++n) {
+								var tag = tags[n];
+								var key = tag.getAttribute("k");
+								if (key == "seamark") {
+									show = true;
+								}
+								var val = tag.getAttribute("v");
+								if (key == "seamark:type") {
+									popupText += "<br/>seamark = " + val;
+								}
+								arrayNodes[id] += key + "," + val + "|";
 							}
-							var val = tag.getAttribute("v");
-							if (key == "seamark:type") {
-								popupText += "<br/>seamark = " + val;
-							}
-							arrayNodes[id] += key + "," + val + "|";
+							//if (show) {
+								popupText += "<br/>Lat = " + lat.toFixed(5);
+								popupText += "<br/>Lon = " + lon.toFixed(5);
+								popupText += "<br/><br/>";
+								popupText += "<a href='http://api06.dev.openstreetmap.org/browse/node/" + id + "/history' target='blank'>Geschichte des Elements</a>";
+								popupText += "<br/>";
+								popupText += "<br/> <br/>";
+								popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
+								popupText += "<input type=\"button\" value=\"<?=$t->tr("move")?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
+								popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
+								addMarker(id, popupText);
+								show = false;
+							//}
 						}
-						//if (show) {
-							popupText += "<br/>Lat = " + lat.toFixed(5);
-							popupText += "<br/>Lon = " + lon.toFixed(5);
-							popupText += "<br/><br/>";
-							popupText += "<a href='http://api06.dev.openstreetmap.org/browse/node/" + id + "/history' target='blank'>Geschichte des Elements</a>";
-							popupText += "<br/>";
-							popupText += "<br/> <br/>";
-							popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
-							popupText += "<input type=\"button\" value=\"<?=$t->tr("move")?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
-							popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
-							addMarker(id, popupText);
-							show = false;
-						//}
 					}
 				}
 			}
@@ -827,12 +847,23 @@
 				return arrayNodes[id];
 			}
 
+			// Some little helpers----------------------------------------------------------------------------------------------------
+			// Abort an AJAX request
+			Ajax.Request.prototype.abort = function() {
+				// prevent and state change callbacks from being issued
+				this.transport.onreadystatechange = Prototype.emptyFunction;
+				// abort the XHR
+				this.transport.abort();
+				// update the request counter
+				Ajax.activeRequestCount--;
+			};
+
 		</script>
 	</head>
 	<body onload=init();>
 		<!--Sidebar ****************************************************************************************************************** -->
 		<div id="head" class="sidebar" style="position:absolute; top:2px; left:0px;">
-			<a><b>OpenSeaMap - Editor</b></a>
+			<a><b><?=$t->tr("online_editor")?></b></a>
 		</div>
 		<div id="language" class="sidebar" style="position:absolute; top:30px; left:0px;">
 			<hr>
@@ -878,23 +909,34 @@
 						<IMG src="resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
 					</td>
 				</tr>
+			</table>
+		</div>
+		<div id="data" class="sidebar" style="position:absolute; top:400px; left:0px;">
+			<hr>
+			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
 				<tr>
-					<td>
-						<?=$t->tr("Leuchtfeuer")?>
-					</td>
-					<td backgroundColor = 'gainsboro'>
-						<IMG src="resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
+					<td	onclick="showAboutDialog(true)"
+						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
+						onmouseout="this.parentNode.style.backgroundColor = 'white';"
+						style="cursor:pointer"><?=$t->tr("about_editor")?>
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<?=$t->tr("Hafen")?>
+					<td	onclick="window.open('http://sourceforge.net/apps/mediawiki/openseamap/index.php?title=De:Online-Editor/edit');"
+						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
+						onmouseout="this.parentNode.style.backgroundColor = 'white';"
+						style="cursor:pointer"><?=$t->tr("help")?>
 					</td>
-					<td>
-						<IMG src="./resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
+				</tr>
+				<tr>
+					<td	onclick="window.location.href='../index.php'"
+						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
+						onmouseout="this.parentNode.style.backgroundColor = 'white';"
+						style="cursor:pointer"><?=$t->tr("Startseite")?>
 					</td>
 				</tr>
 			</table>
+			<hr>
 		</div>
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
@@ -930,6 +972,9 @@
 		</div>
 		<div id="info_dialog" class="dialog" style="position:absolute; top:20px; right:40px;">
 			 - - -
+		</div>
+		<div id="about_dialog" class="dialog" style="position:absolute; top:40%; left:50%;">
+			<?php include ("./dialogs/about_editor.php"); ?>
 		</div>
 		<!--Status dialogs *********************************************************************************************************** -->
 		<!--Load Data Wait-Dialog-->
