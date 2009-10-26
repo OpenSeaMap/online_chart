@@ -5,7 +5,7 @@
 			<?=$t->tr("version")?>:&nbsp;
 		</td>
 		<td valign="top">
-			0.0.96&nbsp;&nbsp;Release: 1
+			0.0.96&nbsp;&nbsp;Release: 2
 		</td>
 	<tr>
 	</tr>

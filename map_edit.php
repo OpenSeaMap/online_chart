@@ -38,7 +38,7 @@
 			var _userPassword = null;		//OSM-Password of the user
 			var controls;					//OpenLayer-Controls
 			var _ToDo = null;				//actually selected action
-			var _moving = false;			//needed for cursor and first fixing
+			var _Moving = false;			//needed for cursor and first fixing
 			var click;						//click-event
 			var seamarkType;				//seamarks
 			var arrayMarker = new Array();	//Array of displayed Markers
@@ -166,7 +166,7 @@
 
 			// Map event listener
 			function mapEventMove(event) {
-				if (map.getZoom() >= 15) {
+				if (map.getZoom() >= 15 &&  _Loaded) {
 					updateSeamarks();
 				}
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
@@ -276,7 +276,7 @@
 			
 			function clickSeamarkMap() {
 				// remove existing temp marker
-				if (_moving) {
+				if (_Moving) {
 					//FIXME Dirty workaround for not getting a defined state of marker creation
 					layer_markers.removeMarker(arrayMarker["2"]);
 				}
@@ -287,7 +287,7 @@
 				addMarker("2", "");
 				arrayMarker["2"].setUrl('./resources/action/circle_red.png');
 				//FIXME Dirty workaround for not getting a defined state of marker creation
-				_moving = true;
+				_Moving = true;
 			}
 
 			function onPositionDialogCancel() {
@@ -296,7 +296,7 @@
 				// disable click event
 				map.div.style.cursor="default";
 				click.deactivate();
-				_moving = false;
+				_Moving = false;
 				_ToDo = null;
 				// remove existing temp marker
 				if (arrayMarker["2"] != null) {
@@ -346,6 +346,7 @@
 				_xmlNode = xmlTags;
 				_ToDo = todo;
 				_Saving = true;
+				_Moving = false;
 				if (!_userName) {
 					alert("<?=$t->tr("logged_out_save")?>");
 					loginUser();
@@ -432,10 +433,12 @@
 			// Entering a new position finished
 			function positionOk(latValue, lonValue) {
 				if (latValue != lat.toFixed(5) || lonValue != lon.toFixed(5)) {
-					// set actual position as center
-					jumpTo( parseFloat(lonValue),  parseFloat(latValue), map.getZoom());
-					addMarker("2", "");
-					arrayMarker["2"].setUrl('./resources/action/circle_red.png');
+					if (!_Moving) {
+						// set actual position as center
+						jumpTo( parseFloat(lonValue),  parseFloat(latValue), map.getZoom());
+						addMarker("2", "");
+						arrayMarker["2"].setUrl('./resources/action/circle_red.png');
+					}
 				}
 				switch (_ToDo) {
 					case "add":
@@ -450,7 +453,6 @@
 				// disable click event
 				map.div.style.cursor="default";
 				click.deactivate();
-				_moving = false;
 				// hide position dialog
 				document.getElementById('position_dialog').style.visibility = 'hidden';
 			}
@@ -710,26 +712,23 @@
 						// Abort running requests
 						_Request.abort();
 					}
+					//alert("lade");
 					_Request = new Ajax.Request(url, {
 						method: 'get',
-						parameters : params,
+						parameters: params,
 						onSuccess: function(transport) {
 							var response = transport.responseText;
-							alert(map.getZoom());
 							if (map.getZoom() > 15) {
 								_xmlOsm = response;
 								readOsmXml();
-								//alert(response);
 								document.getElementById("loading").style.visibility = "collapse";
 								showInfoDialog(false);
 								document.getElementById("selectLanguage").disabled = false;
 								document.getElementById("buttonReload").disabled = false;
-								if (_NodeId != "-1" && _NodeId != "1") {
+								if (_NodeId != "-1" && _NodeId != "1" && !_Moving) {
 									arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
 								}
 								 _Loaded = true;
-							} else {
-								_Loaded = false;
 							}
 							return "0";
 						},
@@ -761,13 +760,15 @@
 				var xmlObject;
 				var show = false;
 
-				_ToDo = null;
-
 				// Browserweiche für den DOMParser:
 				// Mozilla and Netscape browsers
 				if (document.implementation.createDocument) {
-					xmlParser = new DOMParser();
-					xmlObject = xmlParser.parseFromString(xmlData, "text/xml");
+					try {
+						xmlParser = new DOMParser();
+						xmlObject = xmlParser.parseFromString(xmlData, "text/xml");
+					} catch(e) {
+						alert("Fehler");
+					}
 				 // MSIE
 				} else if (window.ActiveXObject) {
 					xmlObject = new ActiveXObject("Microsoft.XMLDOM")
@@ -779,6 +780,14 @@
 
 				if (map.getZoom() > 15) {
 					layer_markers.clearMarkers();
+					if (_Moving) {
+						addMarker("2", "");
+						arrayMarker["2"].setUrl('./resources/action/circle_red.png');
+					} else {
+						_ToDo = null;
+					}
+					var buffLat = lat;
+					var buffLon = lon;
 					for (var i=0; i < items.length; ++i) {
 						// get one node after the other
 						var item = items[i];
@@ -823,6 +832,11 @@
 							//}
 						}
 					}
+					if (_Moving) {
+						arrayMarker[_NodeId].setUrl('./resources/action/circle_yellow.png');
+					}
+					lat = buffLat;
+					lon = buffLon;
 				}
 			}
 
@@ -941,7 +955,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.96.1
+			Version 0.0.96.2
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
