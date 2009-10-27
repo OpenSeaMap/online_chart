@@ -82,6 +82,14 @@
 				drawmap();
 			}
 
+			function closing() {
+				
+				if (_Request != null) {
+					// Abort running requests
+					_Request.abort();
+				}
+			}
+
 			// Language selection has been changed
 			function onLanguageChanged() {
 				var lang = document.getElementById("selectLanguage").value;
@@ -720,17 +728,20 @@
 							var response = transport.responseText;
 							if (map.getZoom() > 15) {
 								_xmlOsm = response;
-								readOsmXml();
-								document.getElementById("loading").style.visibility = "collapse";
-								showInfoDialog(false);
-								document.getElementById("selectLanguage").disabled = false;
-								document.getElementById("buttonReload").disabled = false;
-								if (_NodeId != "-1" && _NodeId != "1" && !_Moving) {
-									arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
+								if (readOsmXml() >= 0) {
+									document.getElementById("loading").style.visibility = "collapse";
+									showInfoDialog(false);
+									document.getElementById("selectLanguage").disabled = false;
+									document.getElementById("buttonReload").disabled = false;
+									if (_NodeId != "-1" && _NodeId != "1" && !_Moving) {
+										arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
+									}
+									_Loaded = true;
+								} else {
+									_Loaded = false;
 								}
-								 _Loaded = true;
 							}
-							return "0";
+							return 0;
 						},
 						onFailure: function() {
 							alert("Error while loading data");
@@ -738,15 +749,15 @@
 							document.getElementById("selectLanguage").disabled = false;
 							document.getElementById("buttonReload").disabled = false;
 							_Loaded = false;
-							return "-1";
+							return -1;
 						},
 						onException: function(request, exception) {
-							alert("Error: " + exception);
+							/*alert("Error (prototype): " + exception);
 							document.getElementById("loading").style.visibility = "collapse";
 							document.getElementById("selectLanguage").disabled = false;
 							document.getElementById("buttonReload").disabled = false;
-							_Loaded = false;
-							return "-1";
+							_Loaded = false;*/
+							return -1;
 						}
 					});
 				} else {
@@ -766,18 +777,28 @@
 					try {
 						xmlParser = new DOMParser();
 						xmlObject = xmlParser.parseFromString(xmlData, "text/xml");
-					} catch(e) {
-						alert("Fehler");
+ 					} catch(e) {
+						alert("Error (dom): " + e);
+						return -1;
 					}
 				 // MSIE
 				} else if (window.ActiveXObject) {
-					xmlObject = new ActiveXObject("Microsoft.XMLDOM")
-					xmlObject.async="false"
-					xmlObject.loadXML(xmlData)
+					try {
+						xmlObject = new ActiveXObject("Microsoft.XMLDOM")
+						xmlObject.async="false"
+						xmlObject.loadXML(xmlData)
+					} catch(e) {
+						alert("Error (msie-dom): " + e);
+						return -1;
+					}
 				}
-				var root = xmlObject.getElementsByTagName('osm')[0];
-				var items = root.getElementsByTagName("node");
-
+				try {
+					var root = xmlObject.getElementsByTagName('osm')[0];
+					var items = root.getElementsByTagName("node");
+				} catch(e) {
+					//alert("Error (root): " + e);
+					return -1;
+				}
 				if (map.getZoom() > 15) {
 					layer_markers.clearMarkers();
 					if (_Moving) {
@@ -838,6 +859,7 @@
 					lat = buffLat;
 					lon = buffLon;
 				}
+				return 0;
 			}
 
 			// Some api stuff---------------------------------------------------------------------------------------------------------
@@ -870,11 +892,15 @@
 				this.transport.abort();
 				// update the request counter
 				Ajax.activeRequestCount--;
+				// just to be sure ;-)
+				if (Ajax.activeRequestCount < 0) {
+    				Ajax.activeRequestCount = 0;
+				}
 			};
 
 		</script>
 	</head>
-	<body onload=init();>
+	<body onload=init(); onUnload=closing();>
 		<!--Sidebar ****************************************************************************************************************** -->
 		<div id="head" class="sidebar" style="position:absolute; top:2px; left:0px;">
 			<a><b><?=$t->tr("online_editor")?></b></a>
