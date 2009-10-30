@@ -819,9 +819,6 @@
 							lon = parseFloat(item.getAttribute("lon"));
 							id = item.getAttribute("id");
 							var version = parseInt(item.getAttribute("version"));
-							// Set head of the popup text
-							var popupText = "ID = " + id;
-							popupText += "<br/>Version = " + version;
 							arrayNodes[id] = "";
 
 							// Getting the tags (key value pairs)
@@ -833,16 +830,19 @@
 									show = true;
 								}
 								var val = tag.getAttribute("v");
-								if (key == "seamark:type") {
+								/*if (key == "seamark:type") {
 									popupText += "<br/>seamark = " + val;
-								}
+								}*/
 								arrayNodes[id] += key + "," + val + "|";
 							}
 							//if (show) {
-								popupText += "<br/>Lat = " + lat.toFixed(5);
-								popupText += "<br/>Lon = " + lon.toFixed(5);
+								var popupText = "<table border=\"0\" cellpadding=\"1\">"
+								popupText += "<tr><td>ID</td><td> = <t/d><td>" + id + "</td></tr>";
+								popupText += "<tr><td>Version</td><td> = <t/d><td>" + version + "</td></tr>";
+								popupText += "<tr><td>Lat</td><td> = <t/d><td>" + lat.toFixed(5) + "</td></tr>";
+								popupText += "<tr><td>Lon</td><td> = <t/d><td>" + lon.toFixed(5) + "</td></tr></table>";
 								popupText += "<br/><br/>";
-								popupText += "<a href='http://api06.dev.openstreetmap.org/browse/node/" + id + "/history' target='blank'>Geschichte des Elements</a>";
+								popupText += "<a href='http://api06.dev.openstreetmap.org/browse/node/" + id + "/history' target='blank'><?=$t->tr("historyNode")?></a>";
 								popupText += "<br/>";
 								popupText += "<br/> <br/>";
 								popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
