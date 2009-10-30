@@ -981,7 +981,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.96.2
+			Version 0.0.97.1
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
@@ -1013,7 +1013,7 @@
 		<div id="info_dialog" class="dialog" style="position:absolute; top:20px; right:40px;">
 			 - - -
 		</div>
-		<div id="about_dialog" class="dialog" style="position:absolute; top:40%; left:50%;">
+		<div id="about_dialog" class="dialog" style="position:absolute; top:35%; left:50%;">
 			<?php include ("./dialogs/about_editor.php"); ?>
 		</div>
 		<!--Status dialogs *********************************************************************************************************** -->

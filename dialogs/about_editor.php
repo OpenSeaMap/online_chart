@@ -1,11 +1,12 @@
 <h3><?=$t->tr("online_editor")?></h3>
+(c) 2009, OpenSeaMap <br/><br/>
 <table>
 	<tr>
 		<td valign="top">
 			<?=$t->tr("version")?>:&nbsp;
 		</td>
 		<td valign="top">
-			0.0.96&nbsp;&nbsp;Release: 2
+			0.0.97&nbsp;&nbsp;Release: 1
 		</td>
 	<tr>
 	</tr>
@@ -13,7 +14,7 @@
 			<?=$t->tr("license")?>:&nbsp;
 		</td>
 		<td valign="top">
-			GPL V3
+			<a href="<?=$t->tr("UrlGPLV3")?>" target="blank">GPL V3</a>
 		</td>
 	<tr>
 	</tr>
@@ -22,6 +23,11 @@
 		</td>
 		<td valign="top">
 			Olaf Hannemann
+		</td>
+	</tr>
+	</tr>
+		<td valign="top" colspan = "2">
+			<br/><?=$t->tr("reportBugs")?>
 		</td>
 	</tr>
 </table>
