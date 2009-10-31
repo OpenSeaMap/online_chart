@@ -1,12 +1,23 @@
 <?PHP
 
-/*
+/******************************************************************************
  Osm_Api_Service_Node
  Required: PHP 5 
  author Olaf Hannemann
  license GPL
  version 0.1.0
-*/
+
+ This file is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This file is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License (http://www.gnu.org/licenses/) for more details.
+*******************************************************************************/
+
 
 	// get parameter values
 	$_todo = $_GET['action'];
@@ -19,7 +30,8 @@
 
 	// Variables
 	$_response = "error";					// Server response that will be send to client
-	$_url = "api06.dev.openstreetmap.org";	// Url of the OSM server
+	//$_url = "api06.dev.openstreetmap.org";	// Url of the OSM dev server
+	$_url = "api.openstreetmap.org";		// Url of the OSM server
 	
 	// create the needed osm-api url
 	switch ($_todo) {

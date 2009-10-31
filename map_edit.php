@@ -157,15 +157,15 @@
 				// Osmarender
 				layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 				// seamark
-				//layer_seamap = new OpenLayers.Layer.TMS("Seezeichen", "http://tiles.openseamap.org/seamark/",
-				//{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
+				layer_seamap = new OpenLayers.Layer.TMS("Seezeichen", "http://tiles.openseamap.org/seamark/",
+				{ numZoomLevels: 18, type: 'png', getURL: getTileURL, isBaseLayer: false, displayOutsideMaxExtent: true});
 				// markers
 				layer_markers = new OpenLayers.Layer.Markers("Address",
 				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayInLayerSwitcher: false });
 				// click events
 				click = new OpenLayers.Control.Click();
 
-				map.addLayers([layer_mapnik, layer_tah, layer_markers]);
+				map.addLayers([layer_mapnik, layer_tah, layer_seamap, layer_markers]);
 				map.addControl(click);
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
@@ -835,14 +835,14 @@
 								}*/
 								arrayNodes[id] += key + "," + val + "|";
 							}
-							//if (show) {
+							if (show) {
 								var popupText = "<table border=\"0\" cellpadding=\"1\">"
 								popupText += "<tr><td>ID</td><td> = <t/d><td>" + id + "</td></tr>";
 								popupText += "<tr><td>Version</td><td> = <t/d><td>" + version + "</td></tr>";
 								popupText += "<tr><td>Lat</td><td> = <t/d><td>" + lat.toFixed(5) + "</td></tr>";
 								popupText += "<tr><td>Lon</td><td> = <t/d><td>" + lon.toFixed(5) + "</td></tr></table>";
 								popupText += "<br/><br/>";
-								popupText += "<a href='http://api06.dev.openstreetmap.org/browse/node/" + id + "/history' target='blank'><?=$t->tr("historyNode")?></a>";
+								popupText += "<a href='http://www.openstreetmap.org/browse/node/" + id + "/history' target='blank'><?=$t->tr("historyNode")?></a>";
 								popupText += "<br/>";
 								popupText += "<br/> <br/>";
 								popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
@@ -850,7 +850,7 @@
 								popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
 								addMarker(id, popupText);
 								show = false;
-							//}
+							}
 						}
 					}
 					if (_Moving) {
