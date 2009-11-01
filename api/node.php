@@ -5,7 +5,7 @@
  Required: PHP 5 
  author Olaf Hannemann
  license GPL
- version 0.1.0
+ version 0.1.1
 
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@
 
 	// Variables
 	$_response = "error";					// Server response that will be send to client
-	//$_url = "api06.dev.openstreetmap.org";	// Url of the OSM dev server
-	$_url = "api.openstreetmap.org";		// Url of the OSM server
+	$_url = "api06.dev.openstreetmap.org";	// Url of the OSM dev server
+	//$_url = "api.openstreetmap.org";		// Url of the OSM server
 	
 	// create the needed osm-api url
 	switch ($_todo) {
@@ -90,6 +90,7 @@
 		return trim($line);
 	}
 
+	//$_response = "antwort: " .$_method ." - " .$_url .$_path;
 	$_response = sendOSM($_url, $_path, base64_encode($_user_name .":" .$_user_password), $_data, $_method);
 	
 	echo trim($_response);

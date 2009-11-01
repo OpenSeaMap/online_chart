@@ -425,7 +425,7 @@
 			}
 
 			function deleteSeamarkEdit(id, version) {
-				if (_NodeId != "-1") {
+				/*if (_NodeId != "-1") {
 					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
 				}
 				_NodeId = id;
@@ -435,7 +435,9 @@
 				}
 				arrayMarker[id].setUrl('./resources/action/delete.png');
 				editWindow = window.open('./dialogs/edit_seamark.php?mode=delete&id=' + _NodeId + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>", "Löschen", "width=380, height=420, resizable=yes");
- 				editWindow.focus();
+ 				editWindow.focus();*/
+				_NodeId = "860280";
+				updateNode();
 			}
 
 			// Entering a new position finished
@@ -580,7 +582,29 @@
 			// OSM-Api----------------------------------------------------------------------------------------------------------------
 			function updateNode() {
 				// FIXME: it is not necessary to reload all nodes. The updated one should be enough.
-				updateSeamarks();
+				//updateSeamarks();
+				var url = "./api/get_node.php";
+				var params = new Object();
+				params["node_id"] = _NodeId;
+
+					new Ajax.Request(url, {
+					method: "get",
+					parameters : params,
+					onSuccess: function(transport) {
+					  var response = transport.responseText;
+					  alert("Node= " + response);
+					},
+					onFailure: function() {
+						document.getElementById("saving").style.visibility = "collapse";
+						alert("Error while sending data");
+						return "-1";
+					},
+					onException: function(request, exception) {
+						document.getElementById("saving").style.visibility = "collapse";
+						alert("Error: " + exception + request);
+						return "-1";
+					}
+				});
 			}
 
 			function osmChangeSet(action, todo) {
@@ -676,9 +700,6 @@
 							case "delete":
 								_Loaded = false;
 								updateNode();
-								break;
-							case "get":
-								alert("Node= " + response);
 								break;
 						}
 						document.getElementById("saving").style.visibility = "collapse";
@@ -835,7 +856,7 @@
 								}*/
 								arrayNodes[id] += key + "," + val + "|";
 							}
-							if (show) {
+							//if (show) {
 								var popupText = "<table border=\"0\" cellpadding=\"1\">"
 								popupText += "<tr><td>ID</td><td> = <t/d><td>" + id + "</td></tr>";
 								popupText += "<tr><td>Version</td><td> = <t/d><td>" + version + "</td></tr>";
@@ -850,7 +871,7 @@
 								popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
 								addMarker(id, popupText);
 								show = false;
-							}
+							//}
 						}
 					}
 					if (_Moving) {
@@ -981,7 +1002,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.97.1
+			Version 0.0.97.2
 		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
