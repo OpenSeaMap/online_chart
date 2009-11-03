@@ -417,9 +417,6 @@
 			}
 
 			function moveSeamarkSave() {
-				if (arrayMarker[id].feature.popup != null) {
-					arrayMarker[id].feature.popup.hide();
-				}
 				editWindow = window.open('./dialogs/edit_seamark.php?mode=move&id=' + _NodeId + "&version=" + _Version + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=420, resizable=yes");
  				editWindow.focus();
 			}
@@ -508,7 +505,7 @@
 				if (_Saving) {
 					_Saving = false;
 					_ToDo = null;
-					clearMarker();
+					//clearMarker();
 					readOsmXml();
 				}
 			}
@@ -751,8 +748,8 @@
 							var response = transport.responseText;
 							if (map.getZoom() > 15) {
 								_xmlOsm = response;
-								layer_markers.clearMarkers();
-								if (readOsmXml(_xmlOsm) >= 0) {
+								//layer_markers.clearMarkers();
+								if (readOsmXml() >= 0) {
 									document.getElementById("loading").style.visibility = "collapse";
 									showInfoDialog(false);
 									document.getElementById("selectLanguage").disabled = false;
@@ -789,9 +786,9 @@
 				}
 			}
 
-			function readOsmXml(xmlData) {
+			function readOsmXml() {
 
-				//var xmlData = _xmlOsm;
+				var xmlData = _xmlOsm;
 				var xmlObject;
 				var show = false;
 
@@ -824,7 +821,8 @@
 					return -1;
 				}
 				if (map.getZoom() > 15) {
-
+					alert("Error (root): ");
+					 clearMarker();
 					if (_Moving) {
 						addMarker("2", "");
 						arrayMarker["2"].setUrl('./resources/action/circle_red.png');
@@ -908,8 +906,12 @@
 			}
 
 			function clearMarker() {
-				_Moving = false;
+				//_Moving = false;
 				layer_markers.clearMarkers();
+			}
+
+			function clearMoving() {
+				_Moving = false;
 			}
 
 			// Some little helpers----------------------------------------------------------------------------------------------------

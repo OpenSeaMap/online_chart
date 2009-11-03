@@ -666,7 +666,7 @@
 
 			function onClosing() {
 				if (_mode == "create" || _mode == "move") {
-					opener.window.clearMarker();
+					opener.window.clearMoving();
 					opener.window.readOsmXml();
 				} else {
 					opener.window.onEditDialogCancel(_id);
@@ -742,7 +742,7 @@
 		</script>
 	</head>
 
-	<body onload=init(); onUnload="if (!_saving) onClosing()">
+	<body onload=init(); onUnload="if (!_saving) onClosing();">
 		<div id="headerAdd" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkAdd")?></h2></div>
 		<div id="headerEdit" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkEdit")?></h2></div>
 		<div id="headerMove" style="position:absolute; top:0px; left:5px; visibility:hidden;"><h2><?=$t->tr("seamarkMove")?></h2></div>

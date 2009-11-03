@@ -13,7 +13,7 @@
 	<br>
 	<input type="button" value='<?=$t->tr("ok")?>' onclick="sendingOk()">
 	&nbsp;&nbsp;
-	<input type="button" value='<?=$t->tr("cancel")?>' onclick="document.getElementById('send_dialog').style.visibility = 'hidden'; clearMarker(); readOsmXml();">
+	<input type="button" value='<?=$t->tr("cancel")?>' onclick="document.getElementById('send_dialog').style.visibility = 'hidden'; readOsmXml();">
 	&nbsp;&nbsp;
 </p>
 
