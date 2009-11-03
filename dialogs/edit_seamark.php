@@ -666,6 +666,7 @@
 
 			function onClosing() {
 				if (_mode == "create" || _mode == "move") {
+					opener.window.clearMarker();
 					opener.window.readOsmXml();
 				} else {
 					opener.window.onEditDialogCancel(_id);

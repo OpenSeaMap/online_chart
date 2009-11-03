@@ -425,7 +425,7 @@
 			}
 
 			function deleteSeamarkEdit(id, version) {
-				/*if (_NodeId != "-1") {
+				if (_NodeId != "-1") {
 					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
 				}
 				_NodeId = id;
@@ -435,9 +435,7 @@
 				}
 				arrayMarker[id].setUrl('./resources/action/delete.png');
 				editWindow = window.open('./dialogs/edit_seamark.php?mode=delete&id=' + _NodeId + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>", "Löschen", "width=380, height=420, resizable=yes");
- 				editWindow.focus();*/
-				_NodeId = "860280";
-				updateNode();
+ 				editWindow.focus();
 			}
 
 			// Entering a new position finished
@@ -510,6 +508,7 @@
 				if (_Saving) {
 					_Saving = false;
 					_ToDo = null;
+					clearMarker();
 					readOsmXml();
 				}
 			}
@@ -580,27 +579,30 @@
 			}
 			
 			// OSM-Api----------------------------------------------------------------------------------------------------------------
-			function updateNode() {
-				// FIXME: it is not necessary to reload all nodes. The updated one should be enough.
-				//updateSeamarks();
+			function updateNode(id) {
 				var url = "./api/get_node.php";
 				var params = new Object();
-				params["node_id"] = _NodeId;
+				params["node_id"] = id;
+
+				document.getElementById("loading").style.visibility = "visible";
 
 					new Ajax.Request(url, {
 					method: "get",
 					parameters : params,
 					onSuccess: function(transport) {
-					  var response = transport.responseText;
-					  alert("Node= " + response);
+						var response = transport.responseText;
+						alert("Node= " + response);
+						layer_markers.removeMarker(arrayMarker[id]);
+						readOsmXml(response);
+						document.getElementById("loading").style.visibility = "hidden";
 					},
 					onFailure: function() {
-						document.getElementById("saving").style.visibility = "collapse";
+						document.getElementById("loading").style.visibility = "hidden";
 						alert("Error while sending data");
 						return "-1";
 					},
 					onException: function(request, exception) {
-						document.getElementById("saving").style.visibility = "collapse";
+						document.getElementById("loading").style.visibility = "hidden";
 						alert("Error: " + exception + request);
 						return "-1";
 					}
@@ -699,7 +701,7 @@
 							case "update":
 							case "delete":
 								_Loaded = false;
-								updateNode();
+								updateSeamarks();
 								break;
 						}
 						document.getElementById("saving").style.visibility = "collapse";
@@ -749,7 +751,8 @@
 							var response = transport.responseText;
 							if (map.getZoom() > 15) {
 								_xmlOsm = response;
-								if (readOsmXml() >= 0) {
+								layer_markers.clearMarkers();
+								if (readOsmXml(_xmlOsm) >= 0) {
 									document.getElementById("loading").style.visibility = "collapse";
 									showInfoDialog(false);
 									document.getElementById("selectLanguage").disabled = false;
@@ -786,9 +789,9 @@
 				}
 			}
 
-			function readOsmXml() {
+			function readOsmXml(xmlData) {
 
-				var xmlData = _xmlOsm;
+				//var xmlData = _xmlOsm;
 				var xmlObject;
 				var show = false;
 
@@ -821,7 +824,7 @@
 					return -1;
 				}
 				if (map.getZoom() > 15) {
-					layer_markers.clearMarkers();
+
 					if (_Moving) {
 						addMarker("2", "");
 						arrayMarker["2"].setUrl('./resources/action/circle_red.png');
@@ -856,7 +859,7 @@
 								}*/
 								arrayNodes[id] += key + "," + val + "|";
 							}
-							//if (show) {
+							if (show) {
 								var popupText = "<table border=\"0\" cellpadding=\"1\">"
 								popupText += "<tr><td>ID</td><td> = <t/d><td>" + id + "</td></tr>";
 								popupText += "<tr><td>Version</td><td> = <t/d><td>" + version + "</td></tr>";
@@ -871,7 +874,7 @@
 								popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
 								addMarker(id, popupText);
 								show = false;
-							//}
+							}
 						}
 					}
 					if (_Moving) {
@@ -902,6 +905,11 @@
 
 			function getKeys(id) {
 				return arrayNodes[id];
+			}
+
+			function clearMarker() {
+				_Moving = false;
+				layer_markers.clearMarkers();
 			}
 
 			// Some little helpers----------------------------------------------------------------------------------------------------
