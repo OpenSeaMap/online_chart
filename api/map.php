@@ -5,7 +5,7 @@
  Required: PHP 5 
  author Olaf Hannemann
  license GPL
- version 0.1.0
+ version 0.1.1
 
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 	// Variables
 	$_response = "error";					// Server response that will be send to client
 	//$_url = "api06.dev.openstreetmap.org";	// Url of the OSM dev server
-	$_url = "api.openstreetmap.org";		// Url of the OSM server
+	$_url = "www.openstreetmap.org";		// Url of the OSM server
 	$_path = "/api/0.6/map?" .$_data;
 	
 	// Send to the OSM-Api
@@ -39,9 +39,9 @@
 		} else {
 			fputs($fp, "GET " .$path ." HTTP/1.1\r\n");
 			fputs($fp, "Host: " .$url ."\r\n");
-			fputs($fp, "Accept:  text/xml; application/xml;q=0.9, application/xhtml+xml, image/x-xbitmap, */*;q=0.1\r\n");
+			fputs($fp, "User-Agent: OpenSeaMap-Editor/0.0.97\r\n");
+			fputs($fp, "Accept: text/html, *; q=.2, */*\r\n");
 			fputs($fp, "Connection: Keep-Alive\r\n\r\n");
-
 			$response = "";
 			$header = "not yet";
 			while (!feof($fp)) {
