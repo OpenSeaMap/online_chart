@@ -39,7 +39,7 @@
 		} else {
 			fputs($fp, "GET " .$path ." HTTP/1.1\r\n");
 			fputs($fp, "Host: " .$url ."\r\n");
-			fputs($fp, "User-Agent: OpenSeaMap-Editor/0.0.97\r\n");
+			fputs($fp, "User-Agent: OpenSeaMap-Editor/0.1.0\r\n");
 			fputs($fp, "Accept: text/html, *; q=.2, */*\r\n");
 			fputs($fp, "Connection: Keep-Alive\r\n\r\n");
 			$response = "";

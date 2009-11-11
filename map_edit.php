@@ -83,7 +83,6 @@
 			}
 
 			function closing() {
-				
 				if (_Request != null) {
 					// Abort running requests
 					_Request.abort();
@@ -472,7 +471,7 @@
 			function logoutUser() {
 				// close existing changeset
 				if (_ChangeSetId >= 1) {
-					//osmChangeSet("close", "void");
+					closeChangeSetOsm();
 				}
 				// delete user data
 				_userName = null;
@@ -631,30 +630,30 @@
 					onSuccess: function(transport) {
 						var response = transport.responseText;
 						if (action = "create") {
-							var args = response.split(":");
-							if (args[0] != "Error") {
+							//var args = response.split(":");
+							if (trim(response) != "Couldn't authenticate you") {
 								setChangeSetId(response);
-								//alert(_ChangeSetId + " : " + todo);
+								//alert(response);
 								sendNodeOsm(todo);
 								document.getElementById(dialog).style.visibility = "collapse";
 								return "0";
 							} else {
 								document.getElementById(dialog).style.visibility = "collapse";
-								switch (trim(args[1])) {
+								/*switch (trim(args[1])) {
 									case "401":
 										alert("<?=$t->tr('send401')?>");
 										logoutUser();
 										loginUser();
 										break;
-									case "404":
-										alert("<?=$t->tr('send404')?>");
+									case "404":*/
+										alert("<?=$t->tr('send401')?>");
 										loginUser_cancel();
-										break;
-									default:
+										//break;
+									/*default:
 										alert("Erzeugen des Changesets Fehlgeschlagen: " + response);
 										loginUser_cancel();
 										break;
-								}
+								}*/
 								setChangeSetId("-1");
 								return "-1";
 							}
@@ -720,7 +719,6 @@
 
 			// Get seamarks from database
 			function updateSeamarks() {
-				//var zoomLevel = map.getZoom();
 				if (map.getZoom() > 15) {
 					if (_Loaded) {
 						showInfoDialog(true, "<img src=\"resources/action/wait.gif\" width=\"22\" height=\"22\" /> &nbsp;&nbsp;<?=$t->tr('loading')?>");
@@ -821,7 +819,6 @@
 					return -1;
 				}
 				if (map.getZoom() > 15) {
-					alert("Error (root): ");
 					 clearMarker();
 					if (_Moving) {
 						addMarker("2", "");
@@ -906,7 +903,6 @@
 			}
 
 			function clearMarker() {
-				//_Moving = false;
 				layer_markers.clearMarkers();
 			}
 
@@ -1011,9 +1007,6 @@
 		</div>
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
-		<div style="position:absolute; bottom:50px; left:3%;">
-			Version 0.0.97.2
-		</div>
 		<div style="position:absolute; bottom:10px; left:4%;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 		</div>

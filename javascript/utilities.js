@@ -42,5 +42,15 @@ function checkKeyReturn(e) {
 }
 
 function trim(buffer) {
-	  return buffer.replace (/^\s+/, '').replace (/\s+$/, '');
+	  return buffer.replace(/^\s+/, '').replace(/\s+$/, '');
+}
+
+function convert2Web(buffer) {
+	buffer = buffer.replace('&', '&amp;');
+	buffer = buffer.replace('<', '&lt;');
+	buffer = buffer.replace('>', '&gt;');
+	buffer = buffer.replace('\'', '&apos;');
+	buffer = buffer.replace('\"', '&quot;');
+	
+	return buffer
 }

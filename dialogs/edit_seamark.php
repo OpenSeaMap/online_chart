@@ -12,6 +12,7 @@
 		<meta http-equiv="content-language" content="<?=$t->getCurrentLanguage()?>" />
 		<link rel="stylesheet" type="text/css" href="../map-edit.css">
 		<script type="text/javascript" src="../javascript/DataModel.js"></script>
+		<script type="text/javascript" src="../javascript/utilities.js"></script>
 		<script type="text/javascript">
 
 			// Global Variables
@@ -684,7 +685,7 @@
 					for(i = 0; i < _tags.length; i++) {
 						var tag = _tags[i].split(",");
 						if (tag[0] != "") {
-							tagXML += "<tag k=\"" + tag[0] + "\" v=\"" + tag[1] + "\"/>" + "\n";
+							tagXML += "<tag k=\"" + convert2Web(tag[0]) + "\" v=\"" +  convert2Web(tag[1]) + "\"/>" + "\n";
 						}
 					}
 				}

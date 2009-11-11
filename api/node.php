@@ -67,7 +67,7 @@
 		} else {
 			fputs($fp, $method ." " .$path ." HTTP/1.1\r\n");
 			fputs($fp, "Host: " .$url ."\r\n");
-			fputs($fp, "User-Agent: OpenSeaMap-Editor/0.0.97\r\n");
+			fputs($fp, "User-Agent: OpenSeaMap-Editor/0.1.0\r\n");
 			fputs($fp, "Authorization: Basic " .$login ."\r\n");
 			fputs($fp, "Content-type:  text/xml; charset=utf-8\r\n");
 			fputs($fp, "Content-length: ". strlen($data) ."\r\n");
@@ -95,5 +95,6 @@
 	$_response = sendOSM($_url, $_path, base64_encode($_user_name .":" .$_user_password), $_data, $_method);
 	
 	echo trim($_response);
+	//echo trim($_data);
 
 ?> 

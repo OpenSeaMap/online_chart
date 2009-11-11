@@ -53,7 +53,7 @@
 		$xmlOSM = "<?xml version='1.0' encoding='UTF-8'?>\n";
 		$xmlOSM .= "<osm> \n";
 		$xmlOSM .= "<changeset>\n";
-		$xmlOSM .= "<tag k=\"created_by\" v=\"OpenSeaMap-Editor-0.0.97\"/>\n";
+		$xmlOSM .= "<tag k=\"created_by\" v=\"OpenSeaMap-Editor-0.1.0\"/>\n";
 		$xmlOSM .= "<tag k=\"comment\" v=\"" .$comment ."\"/>";
 		$xmlOSM .= "\n</changeset>\n</osm>";
 
@@ -70,7 +70,7 @@
 		} else {
 			fputs($fp, "PUT " .$path ." HTTP/1.1\r\n");
 			fputs($fp, "Host: " .$url ."\r\n");
-			fputs($fp, "User-Agent: OpenSeaMap-Editor/0.0.97\r\n");
+			fputs($fp, "User-Agent: OpenSeaMap-Editor/0.1.0\r\n");
 			fputs($fp, "Authorization: Basic " .$login ."\r\n");
 			fputs($fp, "Content-type:  text/xml; charset=utf-8\r\n");
 			fputs($fp, "Content-length: ". strlen($data) ."\r\n");
@@ -85,22 +85,22 @@
 				}
 				if( $header == "passed" ) {
 					$response .= $line;
-				} else {
+				} /*else {
 					$arg = split(":", $line);
-					if ($arg[0] == "Status") {
+					if ($arg[0] == "status") {
 						$status .= trim($arg[1]);
 					}
-				}
+				}*/
 			}
 		}
 		fclose($fp);
 		/*if ($status != "200") {
-			$response = "Error:" .$response;
-		} */
+			$response = "Error:" .$status;
+		}*/
 		return trim($response);
 	}
 
 	$_response = sendOSM($_url, createUrl($_todo, $_changset_id), base64_encode($_user_name .":" .$_user_password), createChangeSet($_comment));
-	
+
 	echo $_response;
 ?> 
