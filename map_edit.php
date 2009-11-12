@@ -173,7 +173,7 @@
 
 			// Map event listener
 			function mapEventMove(event) {
-				if (map.getZoom() >= 15 &&  _Loaded) {
+				if (map.getZoom() >= 16 &&  _Loaded) {
 					updateSeamarks();
 				}
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
@@ -198,6 +198,7 @@
 				showInfoDialog(false);
 				if (_ZoomOld <= 15) {
 					updateSeamarks();
+					document.getElementById("action").style.visibility = 'visible';
 				}
 			}
 
@@ -205,8 +206,9 @@
 				layer_markers.clearMarkers();
 				_NodeId = "-1";
 				_Loaded = false;
-				showInfoDialog(true, "<?=$t->tr('zoomToSmall')?>");
+				showInfoDialog(true, "<?=$t->tr('zoomToSmall')?>" + map.getZoom());
 				document.getElementById("loading").style.visibility = 'hidden';
+				document.getElementById("action").style.visibility = 'hidden';
 			}
 			
 			// add a marker on the map
@@ -525,7 +527,7 @@
 
 			// Dialogs----------------------------------------------------------------------------------------------------------------
 			function showSeamarkAdd(visible) {
-				if (visible) {
+				if (visible && map.getZoom()>= 16) {
 					document.getElementById('add_seamark_dialog').style.visibility = 'visible';
 					document.getElementById('add_landmark_dialog').style.visibility = 'hidden';
 					document.getElementById('add_harbour_dialog').style.visibility = 'hidden';
@@ -639,21 +641,8 @@
 								return "0";
 							} else {
 								document.getElementById(dialog).style.visibility = "collapse";
-								/*switch (trim(args[1])) {
-									case "401":
-										alert("<?=$t->tr('send401')?>");
-										logoutUser();
-										loginUser();
-										break;
-									case "404":*/
-										alert("<?=$t->tr('send401')?>");
-										loginUser_cancel();
-										//break;
-									/*default:
-										alert("Erzeugen des Changesets Fehlgeschlagen: " + response);
-										loginUser_cancel();
-										break;
-								}*/
+								alert("<?=$t->tr('send401')?>");
+								loginUser_cancel();
 								setChangeSetId("-1");
 								return "-1";
 							}
@@ -962,6 +951,20 @@
 			<input type="button" id="buttonReload" value='<?=$t->tr("reload")?>' onclick="updateSeamarks()">
 		</div>
 		<div style="position:absolute; top:295px; left:11.5%;"><a href="http://sourceforge.net/apps/mediawiki/openseamap/index.php?title=De:Online-Editor" target="blank"><?=$t->tr("help")?></a></div>
+		<div class="sidebar" style="position:absolute; top:305px; left:0px;">
+			<hr>
+			<a><b><?=$t->tr("add")?></b></a><br/><br/>
+			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
+				<tr>
+					<td style="color: grey;">
+						<?=$t->tr("Seezeichen")?>
+					</td>
+					<td>
+						<IMG src="resources/action/go-next-disabled.png" width="16" height="16" align="right" border="0"/>
+					</td>
+				</tr>
+			</table>
+		</div>
 		<div id="action" class="sidebar" style="position:absolute; top:305px; left:0px;">
 			<hr>
 			<a><b><?=$t->tr("add")?></b></a><br/><br/>
