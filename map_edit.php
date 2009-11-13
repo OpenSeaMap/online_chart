@@ -831,6 +831,7 @@
 
 							// Getting the tags (key value pairs)
 							var tags = item.getElementsByTagName("tag");
+							var name = "- - -"
 							for (var n=0; n < tags.length; ++n) {
 								var tag = tags[n];
 								var key = tag.getAttribute("k");
@@ -838,13 +839,14 @@
 									show = true;
 								}
 								var val = tag.getAttribute("v");
-								/*if (key == "seamark:type") {
-									popupText += "<br/>seamark = " + val;
-								}*/
+								if (key == "seamark:name") {
+									name= val;
+								}
 								arrayNodes[id] += key + "," + val + "|";
 							}
 							if (show) {
 								var popupText = "<table border=\"0\" cellpadding=\"1\">"
+								popupText += "<tr><td>Name</td><td> = <t/d><td>" + name + "</td></tr>";
 								popupText += "<tr><td>ID</td><td> = <t/d><td>" + id + "</td></tr>";
 								popupText += "<tr><td>Version</td><td> = <t/d><td>" + version + "</td></tr>";
 								popupText += "<tr><td>Lat</td><td> = <t/d><td>" + lat.toFixed(5) + "</td></tr>";
