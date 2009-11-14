@@ -92,6 +92,9 @@
 			// Language selection has been changed
 			function onLanguageChanged() {
 				var lang = document.getElementById("selectLanguage").value;
+				if (lang != "de" && lang != "en") {
+					lang = "en";
+				}
 				window.location.href = "./map_edit.php?lang=" + lang;
 				setCookie("lang", lang); 
 			}
