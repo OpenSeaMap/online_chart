@@ -13,6 +13,7 @@
 		<link rel="stylesheet" type="text/css" href="map-full.css">
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
+		<script type="text/javascript" src="./javascript/utilities.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
 		<script type="text/javascript" src="./javascript/harbours.js"></script>
 		<script type="text/javascript">
@@ -23,7 +24,23 @@
 			var lon = 12.0915;
 			var lat = 54.1878;
 			var zoom = 15;
-
+			
+			function init() {
+				var buffZoom = parseInt(getCookie("zoom"));
+				var buffLat = parseFloat(getCookie("lat"));
+				var buffLon = parseFloat(getCookie("lon"));
+				if (buffZoom != -1) {
+					zoom = buffZoom;
+				}
+				if (buffLat != -1 && buffLon != -1) {
+					lat = buffLat;
+					lon = buffLon;
+				}
+				drawmap();
+				// Add harbour layer
+				init_haefen(map, ".");
+			}
+			
 			// Set current language for internationalization
 			OpenLayers.Lang.setCode("<?= $t->getCurrentLanguage() ?>");
 
@@ -38,6 +55,10 @@
 				map = new OpenLayers.Map('map', {
 					projection: projMerc,
 					displayProjection: proj4326,
+					eventListeners: {
+						"moveend": mapEventMove,
+						"zoomend": mapEventZoom
+					},
 					controls: [
 						new OpenLayers.Control.Permalink(),
 						new OpenLayers.Control.Navigation(),
@@ -70,14 +91,23 @@
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
 				}
+			}
 
-				// Add harbour layer
-				init_haefen(map, ".");
+			// Map event listener moved
+			function mapEventMove(event) {
+				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
+				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
+			}
+
+			// Map event listener Zoomed
+			function mapEventZoom(event) {
+				var zoomLevel = map.getZoom();
+				setCookie("zoom", zoomLevel);
 			}
 
 		</script>
 	</head>
-	<body onload=drawmap();>
+	<body onload=init();>
 		<div id="map" style="position:absolute; bottom:0px; left:0px;">
 		</div>
 		<div style="position:absolute; bottom:48px; left:12px; width:700px;">
