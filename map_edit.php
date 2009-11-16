@@ -75,7 +75,7 @@
 					var lang = getCookie("lang")
 					if (lang != -1 && lang != "<?= $t->getCurrentLanguage() ?>") {
 						document.getElementById("selectLanguage").value = lang;
-						onLanguageChanged();
+						onLanguageChanged(lang);
 					}
 				}
 				// Display map
@@ -92,9 +92,6 @@
 			// Language selection has been changed
 			function onLanguageChanged() {
 				var lang = document.getElementById("selectLanguage").value;
-				if (lang != "de" && lang != "en") {
-					lang = "en";
-				}
 				window.location.href = "./map_edit.php?lang=" + lang;
 				setCookie("lang", lang); 
 			}
@@ -201,7 +198,6 @@
 				showInfoDialog(false);
 				if (_ZoomOld <= 15) {
 					updateSeamarks();
-					document.getElementById("action").style.visibility = 'visible';
 				}
 			}
 
@@ -740,7 +736,8 @@
 								_xmlOsm = response;
 								//layer_markers.clearMarkers();
 								if (readOsmXml() >= 0) {
-									document.getElementById("loading").style.visibility = "collapse";
+									document.getElementById("loading").style.visibility = 'hidden';
+									document.getElementById("action").style.visibility = 'visible';
 									showInfoDialog(false);
 									document.getElementById("selectLanguage").disabled = false;
 									document.getElementById("buttonReload").disabled = false;

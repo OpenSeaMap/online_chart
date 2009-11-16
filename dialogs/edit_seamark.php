@@ -27,6 +27,7 @@
 			var _mode;
 			var _saving = false;
 			var _topmark_shape;
+			var _topmark_colour;
 
 			function init() {
 				database = new DataModel();
@@ -136,6 +137,7 @@
 				switch (_category) {
 					case "starboard":
 						_topmark_shape = "cone";
+						_topmark_colour  = "green";
 						_light_colour = "green";
 						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
@@ -152,6 +154,7 @@
 						break;
 					case "port":
 						_topmark_shape = "cylinder";
+						_topmark_colour = "red";
 						_light_colour = "red";
 						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
@@ -172,6 +175,7 @@
 						break;
 					case "safe_water":
 						_topmark_shape = "sphere";
+						_topmark_colour = "red";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
@@ -192,6 +196,7 @@
 						break;
 					case "preferred_channel_starboard":
 						_topmark_shape = "cone";
+						_topmark_colour = "green";
 						_light_colour = "green";
 						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
@@ -208,6 +213,7 @@
 						break;
 					case "preferred_channel_port":
 						_topmark_shape = "cylinder";
+						_topmark_colour = "red";
 						_light_colour = "red";
 						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
@@ -228,6 +234,7 @@
 						break;
 					case "north":
 						_topmark_shape = "2_cones_up";
+						_topmark_colour = "black";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
@@ -244,6 +251,7 @@
 						break;
 					case "east":
 						_topmark_shape = "2_cones_base_together";
+						_topmark_colour = "black";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
@@ -260,6 +268,7 @@
 						break;
 					case "south":
 						_topmark_shape = "2_cones_down";
+						_topmark_colour = "black";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
@@ -276,6 +285,7 @@
 						break;
 					case "west":
 						_topmark_shape = "2_cones_point_together";
+						_topmark_colour = "black";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
@@ -292,6 +302,7 @@
 						break;
 					case "isolated_danger":
 						_topmark_shape = "2_spheres";
+						_topmark_colour = "black";
 						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
@@ -309,16 +320,18 @@
 						break;
 					case "special_purpose":
 						_topmark_shape = "x-shape";
+						_topmark_colour = "yellow";
 						_light_colour = "white";
 						var colour = getKey("seamark:topmark:colour")
 						if (colour != "-1") {
 							document.getElementById("topColour").value = colour;
+							_light_colour = colour;
 						}
 						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Spar.png";
-								if (getKey("seamark:topmark:colour") == "red") {
+								if (colour == "red") {
 									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross.png";
 								} else {
 									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
@@ -326,7 +339,7 @@
 								break;
 							case "barrel":
 								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Barrel.png";
-								if (getKey("seamark:topmark:colour") == "red") {
+								if (colour == "red") {
 									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Low.png";
 								} else {
 									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Low.png";
@@ -334,7 +347,7 @@
 								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Pillar.png";
-								if (getKey("seamark:topmark:colour") == "red") {
+								if (colour == "red") {
 									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross.png";
 								} else {
 									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
@@ -468,6 +481,7 @@
 			function onChangeTopmark() {
 				if (document.getElementById("checkTopmark").checked == true) {
 					setKey("seamark:topmark:shape", _topmark_shape);
+					setKey("seamark:topmark:colour", _topmark_colour);
 					document.getElementById("boxImageTop").style.visibility = "visible";
 					if (_category == "special_purpose") {
 						showTopmarkColour(true);
@@ -607,7 +621,9 @@
 					document.getElementById("lightPeriod").value = " - - - ";
 					document.getElementById("lightPeriod").disabled = true;
 				} else {
-					document.getElementById("lightPeriod").value = "unknown";
+					if (document.getElementById("lightPeriod").value == " - - - ") {
+						document.getElementById("lightPeriod").value = "<?=$t->tr("unknown")?>";
+					}
 					document.getElementById("lightPeriod").disabled = false;
 				}
 				saveLight()
@@ -650,6 +666,7 @@
 				}
 				if (colour != "" && colour != "unknown") {
 					setKey("seamark:topmark:colour", colour);
+					_topmark_colour = colour;
 				} else {
 					setKey("seamark:topmark:colour", "");
 				}
