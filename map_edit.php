@@ -27,6 +27,7 @@
 			var _Request;					//AJAX requests
 			var _ZoomOld = "1";				//Previus zoom level
 			var _Loaded = false;			//Map data is initially loaded
+			var _Loading = false;			//Map data is loading
 			var _Saving = false;			//Saving data in progress
 			var _ChangeSetId = "-1";		//OSM-Changeset ID
 			var _NodeId = "-1";				//OSM-Node ID
@@ -229,13 +230,13 @@
 
 				markerClick = function(evt) {
 					if (_ToDo != "add" && _ToDo != "move") {
-					if (this.popup == null) {
-						this.popup = this.createPopup(this.closeBox);
-						map.addPopup(this.popup);
-						this.popup.show();
-					} else {
-						this.popup.toggle();
-					}
+						if (this.popup == null) {
+							this.popup = this.createPopup(this.closeBox);
+							map.addPopup(this.popup);
+							this.popup.show();
+						} else {
+							this.popup.toggle();
+						}
 					}
 				};
 				layer_markers.addMarker(arrayMarker[id]);
@@ -274,6 +275,8 @@
 				}
 				//show dialog
 				document.getElementById("position_dialog").style.visibility = "visible";
+				// show online help
+				showInfoDialog(true, "<?=$t->tr('helpPositionDialog')?>");
 				// activate click event for entering a new position
 				click.activate();
 				// set cursor to crosshair style
@@ -301,6 +304,9 @@
 			function onPositionDialogCancel() {
 				// hide position dialog
 				document.getElementById("position_dialog").style.visibility = "collapse";
+				if (!_Loading) {
+					showInfoDialog(false, "");
+				}
 				// disable click event
 				map.div.style.cursor="default";
 				click.deactivate();
@@ -457,6 +463,10 @@
 				_ToDo = null;
 				// disable click event
 				map.div.style.cursor="default";
+				// hide online help
+				if (!_Loading) {
+					showInfoDialog(false, "");
+				}
 				click.deactivate();
 				// hide position dialog
 				document.getElementById('position_dialog').style.visibility = 'hidden';
@@ -643,6 +653,7 @@
 								alert("<?=$t->tr('send401')?>");
 								loginUser_cancel();
 								setChangeSetId("-1");
+								readOsmXml();
 								return "-1";
 							}
 						}
@@ -713,6 +724,7 @@
 					} else {
 						document.getElementById("loading").style.visibility = "visible";
 					}
+					_Loading = true;
 					document.getElementById("selectLanguage").disabled = true;
 					document.getElementById("buttonReload").disabled = true;
 					var url = './api/map.php';
@@ -749,6 +761,7 @@
 									_Loaded = false;
 								}
 							}
+							_Loading = false;
 							return 0;
 						},
 						onFailure: function() {
@@ -756,6 +769,7 @@
 							document.getElementById("loading").style.visibility = "collapse";
 							document.getElementById("selectLanguage").disabled = false;
 							document.getElementById("buttonReload").disabled = false;
+							_Loading = false;
 							_Loaded = false;
 							return -1;
 						},
@@ -763,8 +777,9 @@
 							/*alert("Error (prototype): " + exception);
 							document.getElementById("loading").style.visibility = "collapse";
 							document.getElementById("selectLanguage").disabled = false;
-							document.getElementById("buttonReload").disabled = false;
-							_Loaded = false;*/
+							document.getElementById("buttonReload").disabled = false;*/
+							_Loaded = false;
+							_Loading = false;
 							return -1;
 						}
 					});
@@ -808,7 +823,7 @@
 					return -1;
 				}
 				if (map.getZoom() > 15) {
-					 clearMarker();
+					clearMarker();
 					if (_Moving) {
 						addMarker("2", "");
 						arrayMarker["2"].setUrl('./resources/action/circle_red.png');

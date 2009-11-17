@@ -45,17 +45,13 @@
 					_version = getArgument("version");
 					_node = opener.window.getKeys(_id);
 					_tags = _node.split("|");
-					var buff = getKey("seamark");
+					var buff = getKey("seamark:type");
 					if (buff == "-1") {
-						_seamark = getKey("seamark:category");
-						// Temporal work around for writing all category tags to type
-						if (_seamark == "-1") {
-							_seamark = getKey("seamark:type");
-						} else {
-							setKey("seamark:type", _seamark)
+						buff = getKey("seamark");
+						if (buff == "buoy") {
+							_seamark = database.get("trans", getKey("buoy"));
+							setKey("seamark:type", _seamark);
 						}
-					} else if (buff == "buoy") {
-						_seamark = database.get("trans", getKey("buoy"));
 					} else {
 						_seamark = buff;
 					}
