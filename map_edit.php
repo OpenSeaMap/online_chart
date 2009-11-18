@@ -850,7 +850,7 @@
 							for (var n=0; n < tags.length; ++n) {
 								var tag = tags[n];
 								var key = tag.getAttribute("k");
-								if (key == "seamark") {
+								if (key == "seamark" || key == "seamark:type") {
 									show = true;
 								}
 								var val = tag.getAttribute("v");
