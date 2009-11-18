@@ -10,6 +10,7 @@
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>" />
+		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_32.png"/>
 		<link rel="stylesheet" type="text/css" href="map-full.css">
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
@@ -38,7 +39,7 @@
 				}
 				drawmap();
 				// Add harbour layer
-				init_haefen(map, ".");
+				//init_haefen(map, ".");
 			}
 			
 			// Set current language for internationalization
