@@ -11,6 +11,7 @@
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="content-language" content="<?=$t->getCurrentLanguage()?>" />
+		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_32.png"/>
 		<link rel="stylesheet" type="text/css" href="map-edit.css">
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
@@ -207,6 +208,7 @@
 				_NodeId = "-1";
 				_Loaded = false;
 				showInfoDialog(true, "<?=$t->tr('zoomToSmall')?>" + map.getZoom());
+				document.getElementById("selectLanguage").disabled = false;
 				document.getElementById("loading").style.visibility = 'hidden';
 				document.getElementById("action").style.visibility = 'hidden';
 			}
@@ -778,6 +780,7 @@
 							document.getElementById("loading").style.visibility = "collapse";
 							document.getElementById("selectLanguage").disabled = false;
 							document.getElementById("buttonReload").disabled = false;*/
+							document.getElementById("selectLanguage").disabled = false;
 							_Loaded = false;
 							_Loading = false;
 							return -1;

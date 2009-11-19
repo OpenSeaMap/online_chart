@@ -6,10 +6,11 @@
        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>Seezeichen Bearbeiten</title>
+		<title><?=$t->tr("editSeamark")?></title>
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="content-language" content="<?=$t->getCurrentLanguage()?>" />
+		<link rel="SHORTCUT ICON" href="../../resources/icons/OpenSeaMapLogo_32.png"/>
 		<link rel="stylesheet" type="text/css" href="../map-edit.css">
 		<script type="text/javascript" src="../javascript/DataModel.js"></script>
 		<script type="text/javascript" src="../javascript/utilities.js"></script>

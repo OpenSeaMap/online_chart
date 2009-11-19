@@ -31,8 +31,8 @@ DataModel.meta["shape_special_purpose"] = "barrel:pillar:spar";
 
 DataModel.light = new Array(); //Lights
 DataModel.light["light_safe_water"] = "Iso:Oc";
-DataModel.light["light_starboard"] = "Fl:Fl(2):Oc(2):Oc(3):Q:IQ";
-DataModel.light["light_port"] = "Fl:Fl(2):Oc(2):Oc(3):Q:IQ";
+DataModel.light["light_starboard"] = "Fl:Fl(2):Fl(3):Fl(4):Oc(2):Oc(3):Q:IQ";
+DataModel.light["light_port"] = "Fl:Fl(2):Fl(3):Fl(4):Oc(2):Oc(3):Q:IQ";
 DataModel.light["light_preferred_channel_starboard"] = "Fl(2+1)";
 DataModel.light["light_preferred_channel_port"] = "Fl(2+1)";
 DataModel.light["light_north"] = "Q:VQ";
