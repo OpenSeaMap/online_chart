@@ -703,6 +703,7 @@
 						}
 						document.getElementById("saving").style.visibility = "collapse";
 						_Saving = false;
+						showInfoDialog(true, "<?=$t->tr('helpSeamarkSaved')?>");
 						return "0";
 					},
 					onFailure: function() {
