@@ -1,35 +1,30 @@
-/*
- * Copyright 2008, 2009 Xavier Le Bourdon, Christoph Böhme, Mitja Kleider
- *
- * This file originates from the Openstreetbugs project and was modified 
- * by Matthias Hoffmann, Olaf Hannemann for the OpenSeaMap project.
- *
- *
- * This file is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This file is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this file.  If not, see <http://www.gnu.org/licenses/>.
- */
+/******************************************************************************
+ Copyright 2008, 2009 Xavier Le Bourdon, Christoph Böhme, Mitja Kleider
+ 
+ This file originates from the Openstreetbugs project and was modified
+ by Matthias Hoffmann and Olaf Hannemann for the OpenSeaMap project.
+ 
+ 
+ This file is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This file is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this file.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
+/******************************************************************************
+ This file implements the client-side of the harbour display. To use it in an
+ application simply add this file and call init_haefen with a map
+ object and the path of the server-side scripts.
+ ******************************************************************************/
 
-/*
- * This file implements the client-side of the harbour display. To use it in an 
- * application simply add this file and call init_haefen with a map
- * object and the path of the server-side scripts.
- */
-
-
-/* Map object to which openseamap/haefen has been added: 
- */
-var oseamh_map = null;
 
 /* The path on the server which contains the openseamap/haefen
  * server side scripts:
@@ -57,7 +52,7 @@ var oseamh_current_feature = null;
  */
 function init_haefen(map, server_path)
 {
-	oseamh_map = map;
+	//oseamh_map = map;
 	oseamh_server_path = server_path;
 	if (oseamh_server_path.charAt(oseamh_server_path.length-1) != "/")
 		oseamh_server_path += "/";
@@ -66,10 +61,8 @@ function init_haefen(map, server_path)
 	oseamh_layer = new OpenLayers.Layer.Markers("OpenSeaMap:Haefen");
 	oseamh_layer.setOpacity(0.7);
 
-	oseamh_map.addLayer(oseamh_layer);
+	map.addLayer(oseamh_layer);
 
-	oseamh_map.events.register('moveend', oseamh_map, refresh_oseamh);
-	
 	//load harbours in current view
 	refresh_oseamh();
 }
@@ -127,7 +120,7 @@ function refresh_oseamh()
 	else
 		++refresh_oseamh.call_count;
 	
-	bounds = oseamh_map.getExtent().toArray();
+	bounds = map.getExtent().toArray();
 	b = shorter_coord(y2lat(bounds[1]));
 	t = shorter_coord(y2lat(bounds[3]));
 	l = shorter_coord(x2lon(bounds[0]));
@@ -138,20 +131,15 @@ function refresh_oseamh()
 	make_request("./api/getHarbours.php", params);
 }
 
-/* shorten coordinate to 5 digits in decimal fraction */
-function shorter_coord(coord)
-{
-	return Math.round(coord*100000)/100000;
-}
-
 /* Check if a harbour has been downloaded already.
  */
 function harbour_exist(id,type)
 {
 	for (var i in oseamh_harbours)
 	{
-		if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) 
+		if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) {
 			return true;
+		}
 	}
 	return false;
 }
@@ -162,8 +150,9 @@ function get_harbour(id,type)
 {
 	for (var i in oseamh_harbours)
 	{
-	    if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) 
+		if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) {
 			return oseamh_harbours[i];
+		}
 	}
 	return '';
 }
@@ -202,23 +191,23 @@ function create_marker(feature)
 		if (oseamh_state == 0)	//no popup is open
 		{
 			this.createPopup();
-			oseamh_map.addPopup(this.popup);
+			map.addPopup(this.popup);
 			oseamh_state = 1;
 			oseamh_current_feature = this;
 		}
 		else if (oseamh_state == 1 && oseamh_current_feature == this)
 		{	
 			//click on the harbour to which belongs the open popup => remove popup
-			oseamh_map.removePopup(this.popup)
+			map.removePopup(this.popup)
 			oseamh_state = 0;
 			oseamh_current_feature = null;
 		}
 		else if (oseamh_state == 1 && oseamh_current_feature != this)
 		{
 			//click on another harbour => remove old popup and create a new one at this harbour
-			oseamh_map.removePopup(oseamh_current_feature.popup)
+			map.removePopup(oseamh_current_feature.popup)
 			this.createPopup();
-			oseamh_map.addPopup(this.popup);
+			map.addPopup(this.popup);
 			oseamh_state = 1;
 			oseamh_current_feature = this;
 		}
@@ -230,7 +219,7 @@ function create_marker(feature)
 		{
 			document.getElementById("map_OpenLayers_Container").style.cursor = "pointer";
 			this.createPopup();
-			oseamh_map.addPopup(this.popup)
+			map.addPopup(this.popup)
 		}
 		else //Mouse is over the harbour, which is currently popped-up => we do not need to create a popup
 			document.getElementById("map_OpenLayers_Container").style.cursor = "pointer";
@@ -242,7 +231,7 @@ function create_marker(feature)
 		if (this != oseamh_current_feature)
 		{
 			document.getElementById("map_OpenLayers_Container").style.cursor = "default";
-			oseamh_map.removePopup(this.popup);
+			map.removePopup(this.popup);
 		}
 		else	//Mouse was over the harbour, which is currently popped-up by been clicked on it
 			//	=> popup can only be removed by clicking

@@ -39,7 +39,7 @@
 				}
 				drawmap();
 				// Add harbour layer
-				//init_haefen(map, ".");
+				init_haefen(map, ".");
 			}
 			
 			// Set current language for internationalization
@@ -104,6 +104,8 @@
 			function mapEventZoom(event) {
 				var zoomLevel = map.getZoom();
 				setCookie("zoom", zoomLevel);
+				// Update harbour layer
+				refresh_oseamh;
 			}
 
 		</script>

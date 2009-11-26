@@ -2,7 +2,7 @@
  Javascript OpenLayers map_utils
  author Olaf Hannemann
  license GPL V3
- version 0.1.0
+ version 0.1.1
 
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -57,6 +57,12 @@ function lon2x(a) {
 function lonLatToMercator(ll) {
 	return new OpenLayers.LonLat(lon2x(ll.lon), lat2y(ll.lat));
 }
+
+// shorten coordinate to 5 digits in decimal fraction
+function shorter_coord(coord) {
+	return Math.round(coord*100000)/100000;
+}
+
 
 // Utilities-------------------------------------------------------------------
 function jumpTo(lon, lat, zoom) {
