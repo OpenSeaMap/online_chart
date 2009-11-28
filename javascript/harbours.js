@@ -50,8 +50,7 @@ var oseamh_current_feature = null;
  * second argument defines the path on the server which contains 
  * the openstreetbugs server side scripts.
  */
-function init_haefen(map, server_path)
-{
+function init_haefen(map, server_path) {
 	//oseamh_map = map;
 	oseamh_server_path = server_path;
 	if (oseamh_server_path.charAt(oseamh_server_path.length-1) != "/")
@@ -74,8 +73,7 @@ function init_haefen(map, server_path)
 
 /* Request harbours from the server.
  */
-function make_request(url, params)
-{
+function make_request(url, params) {
 	url = oseamh_server_path+url;
 	for (var name in params)
 	{
@@ -93,16 +91,21 @@ function make_request(url, params)
 /* This function is called from the scripts that are returned 
  * on make_request calls. 
  */
-function putAJAXMarker(id, lon, lat, text, type)
-{
-	
-	if (!harbour_exist(id,type))
-	{
-		var harbour = {id: id, text: text, lat: lat, lon: lon, type: type, feature: null};
-		
-		harbour.feature = create_feature(lon2x(lon), lat2y(lat), harbour.text, type);
-
- 		
+function putAJAXMarker(id, lon, lat, names, link, type) {
+	if (!harbour_exist(id,type)) {
+		var name = names.split("-");
+		var popupText = "<b>" + name[0] + "</b><br/>";
+		if (typeof name[1] != "undefined") {
+			popupText += name[1];
+		}
+		if (typeof name[2] != "undefined") {
+			popupText += "<br/><i>" + name[2] + "</i>";
+		}
+		if (link != '') {
+			popupText += "<br/><br/><a href='" + link + "' target='blank'>" + linkText + "</a>";
+		}
+		var harbour = {id: id, name: names, lat: lat, lon: lon, type: type, feature: null};
+		harbour.feature = create_feature(lon2x(lon), lat2y(lat), popupText, type);
 		oseamh_harbours.push(harbour);
 	}
 }
@@ -113,19 +116,17 @@ function putAJAXMarker(id, lon, lat, text, type)
 
 /* Downloads new harbours from the server.
  */
-function refresh_oseamh()
-{
-	if (refresh_oseamh.call_count == undefined)
+function refresh_oseamh() {
+	if (refresh_oseamh.call_count == undefined) {
 		refresh_oseamh.call_count = 0;
-	else
+	} else {
 		++refresh_oseamh.call_count;
-	
+	}
 	bounds = map.getExtent().toArray();
 	b = shorter_coord(y2lat(bounds[1]));
 	t = shorter_coord(y2lat(bounds[3]));
 	l = shorter_coord(x2lon(bounds[0]));
 	r = shorter_coord(x2lon(bounds[2]));
-
 
 	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count };
 	make_request("./api/getHarbours.php", params);
@@ -133,8 +134,7 @@ function refresh_oseamh()
 
 /* Check if a harbour has been downloaded already.
  */
-function harbour_exist(id,type)
-{
+function harbour_exist(id,type) {
 	for (var i in oseamh_harbours)
 	{
 		if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) {
@@ -148,8 +148,7 @@ function harbour_exist(id,type)
  */
 function get_harbour(id,type)
 {
-	for (var i in oseamh_harbours)
-	{
+	for (var i in oseamh_harbours) {
 		if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) {
 			return oseamh_harbours[i];
 		}
@@ -160,11 +159,8 @@ function get_harbour(id,type)
 /* This function creates a feature and adds a corresponding
  * marker to the map.
  */
-function create_feature(x, y, popup_content, type)
-{
-
- if(!create_feature.harbour_icon)
-	{
+function create_feature(x, y, popup_content, type) {
+	if(!create_feature.harbour_icon) {
 		var harbourIcon='./resources/places/harbour.png';
 		var marinaIcon='./resources/places/marina.png';
 		icon_size = new OpenLayers.Size(32, 32);
@@ -172,7 +168,6 @@ function create_feature(x, y, popup_content, type)
 		create_feature.harbour_icon = new OpenLayers.Icon(harbourIcon, icon_size, icon_offset);
 		create_feature.marina_icon = new OpenLayers.Icon(marinaIcon, icon_size, icon_offset);
 	}
-
 	var icon = !type ? create_feature.harbour_icon.clone() : create_feature.marina_icon.clone();
 	var feature = new OpenLayers.Feature(oseamh_layer, new OpenLayers.LonLat(x, y), {icon: icon});
 	feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
@@ -183,8 +178,7 @@ function create_feature(x, y, popup_content, type)
 	return feature;
 }
 
-function create_marker(feature)
-{
+function create_marker(feature) {
 	var marker = feature.createMarker();
 	var marker_click = function (ev)
 	{

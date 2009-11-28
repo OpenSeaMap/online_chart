@@ -25,6 +25,9 @@
 			var lon = 12.0915;
 			var lat = 54.1878;
 			var zoom = 15;
+
+			// Work around for acessing translations from harbour.js
+			var linkText = "<?=$t->tr('descrSkipperGuide')?>";
 			
 			function init() {
 				var buffZoom = parseInt(getCookie("zoom"));
