@@ -19,6 +19,7 @@ $p->setDefaultPage("harbour");
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>" />
+		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png"/>
 		<link rel="stylesheet" type="text/css" href="map-legend.css">
 	</head>
 

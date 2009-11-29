@@ -10,7 +10,7 @@
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>" />
-		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_32.png"/>
+		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png"/>
 		<link rel="stylesheet" type="text/css" href="map-full.css">
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
@@ -21,14 +21,15 @@
 
 			var map;
 
-			// Position and zoomlevel of the map  (will be overriden with permalink parameters)
+			// Position and zoomlevel of the map  (will be overriden with permalink parameters or cookies)
 			var lon = 12.0915;
 			var lat = 54.1878;
 			var zoom = 15;
 
-			// Work around for acessing translations from harbour.js
+			// Work around for accessing translations from harbour.js
 			var linkText = "<?=$t->tr('descrSkipperGuide')?>";
-			
+
+			// Load map for the first time
 			function init() {
 				var buffZoom = parseInt(getCookie("zoom"));
 				var buffLat = parseFloat(getCookie("lat"));
@@ -55,7 +56,6 @@
 			}
 
 			function drawmap() {
-
 				map = new OpenLayers.Map('map', {
 					projection: projMerc,
 					displayProjection: proj4326,
@@ -119,8 +119,14 @@
 		<div style="position:absolute; bottom:48px; left:12px; width:700px;">
 			<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 		</div>
-		<div id="map_key" onClick="showMapKey()" style="position:absolute; top:10px; left:60px;">
-			<?=$t->tr("Legende")?>
+		<div id="topmenu" style="position:absolute; top:10px; left:60px;">
+			<ul>
+				<li onClick="window.location.href='../index.php'"><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("Startseite")?></img></li>
+				<li>&nbsp;|&nbsp;</li>
+				<li onClick="window.location.href='./map_edit.php'"><IMG src="./resources/action/edit.png" width="24" height="24" align="center" border="0"><?=$t->tr("edit")?></img></li>
+				<li>&nbsp;|&nbsp;</li>
+				<li onClick="showMapKey()"><IMG src="./resources/action/info.png" width="24" height="24" align="center" border="0"><?=$t->tr("Legende")?></img></li>
+			</ul>
 		</div>
 	</body>
 </html>
