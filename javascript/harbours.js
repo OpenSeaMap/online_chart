@@ -26,15 +26,6 @@
  ******************************************************************************/
 
 
-/* The path on the server which contains the openseamap/haefen
- * server side scripts:
- */
-var oseamh_server_path = null;
-
-/* Feature layer for openseamap/haefen:
- */
-var oseamh_layer = null;
-
 /* List of downloaded harbours: 
  */
 var oseamh_harbours = new Array();
@@ -50,18 +41,7 @@ var oseamh_current_feature = null;
  * second argument defines the path on the server which contains 
  * the openstreetbugs server side scripts.
  */
-function init_haefen(map, server_path) {
-	//oseamh_map = map;
-	oseamh_server_path = server_path;
-	if (oseamh_server_path.charAt(oseamh_server_path.length-1) != "/")
-		oseamh_server_path += "/";
-
-
-	oseamh_layer = new OpenLayers.Layer.Markers("OpenSeaMap:Haefen");
-	oseamh_layer.setOpacity(0.7);
-
-	map.addLayer(oseamh_layer);
-
+function init_harbours() {
 	//load harbours in current view
 	refresh_oseamh();
 }
@@ -73,10 +53,9 @@ function init_haefen(map, server_path) {
 
 /* Request harbours from the server.
  */
-function make_request(url, params) {
-	url = oseamh_server_path+url;
-	for (var name in params)
-	{
+function make_request(params) {
+	var url = "http://harbor.openseamap.org/getHarbours.php";
+	for (var name in params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
@@ -85,7 +64,6 @@ function make_request(url, params) {
 	script.src = url;
 	script.type = "text/javascript";
 	document.body.appendChild(script);
-
 }
 
 /* This function is called from the scripts that are returned 
@@ -129,14 +107,13 @@ function refresh_oseamh() {
 	r = shorter_coord(x2lon(bounds[2]));
 
 	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count };
-	make_request("./api/getHarbours.php", params);
+	make_request(params);
 }
 
 /* Check if a harbour has been downloaded already.
  */
 function harbour_exist(id,type) {
-	for (var i in oseamh_harbours)
-	{
+	for (var i in oseamh_harbours) {
 		if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) {
 			return true;
 		}
@@ -146,8 +123,7 @@ function harbour_exist(id,type) {
 
 /* Return a harbour description from the list of downloaded harbours.
  */
-function get_harbour(id,type)
-{
+function get_harbour(id,type) {
 	for (var i in oseamh_harbours) {
 		if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) {
 			return oseamh_harbours[i];
@@ -169,7 +145,7 @@ function create_feature(x, y, popup_content, type) {
 		create_feature.marina_icon = new OpenLayers.Icon(marinaIcon, icon_size, icon_offset);
 	}
 	var icon = !type ? create_feature.harbour_icon.clone() : create_feature.marina_icon.clone();
-	var feature = new OpenLayers.Feature(oseamh_layer, new OpenLayers.LonLat(x, y), {icon: icon});
+	var feature = new OpenLayers.Feature(layer_harbours, new OpenLayers.LonLat(x, y), {icon: icon});
 	feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
 	feature.data.popupContentHTML = popup_content;
 
@@ -240,6 +216,6 @@ function create_marker(feature) {
 	marker.events.register("mouseover", feature, marker_mouseover);
 	marker.events.register("mouseout", feature, marker_mouseout);
 
-	oseamh_layer.addMarker(marker);
+	layer_harbours.addMarker(marker);
 }
 

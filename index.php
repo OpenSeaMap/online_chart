@@ -42,10 +42,8 @@
 					lon = buffLon;
 				}
 				drawmap();
-				// Add harbour layer
-				init_haefen(map, ".");
 			}
-			
+
 			// Set current language for internationalization
 			OpenLayers.Lang.setCode("<?= $t->getCurrentLanguage() ?>");
 
@@ -88,9 +86,13 @@
 				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
 				// Sport
 				var layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
+				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				// Harbours
+				layer_harbours = new OpenLayers.Layer.Markers("Harbours",
+				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayOutsideMaxExtent:true});
+				layer_harbours.setOpacity(0.8);
 
-				map.addLayers([layer_mapnik, layer_tah, layer_sport, layer_seamark]);
+				map.addLayers([layer_mapnik, layer_tah, layer_sport, layer_seamark, layer_harbours]);
 
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
@@ -101,14 +103,14 @@
 			function mapEventMove(event) {
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
 				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
+				// Update harbour layer
+				refresh_oseamh();
 			}
 
 			// Map event listener Zoomed
 			function mapEventZoom(event) {
 				var zoomLevel = map.getZoom();
 				setCookie("zoom", zoomLevel);
-				// Update harbour layer
-				refresh_oseamh;
 			}
 
 		</script>
