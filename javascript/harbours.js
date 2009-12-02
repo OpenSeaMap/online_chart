@@ -101,10 +101,10 @@ function refresh_oseamh() {
 		++refresh_oseamh.call_count;
 	}
 	bounds = map.getExtent().toArray();
-	b = shorter_coord(y2lat(bounds[1]));
-	t = shorter_coord(y2lat(bounds[3]));
-	l = shorter_coord(x2lon(bounds[0]));
-	r = shorter_coord(x2lon(bounds[2]));
+	b = y2lat(bounds[1]).toFixed(5);
+	t = y2lat(bounds[3]).toFixed(5);
+	l = x2lon(bounds[0]).toFixed(5);
+	r = x2lon(bounds[2]).toFixed(5);
 
 	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count };
 	make_request(params);
