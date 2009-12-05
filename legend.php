@@ -3,7 +3,7 @@ include("../classes/Pages.php");
 include("../classes/Translation.php");
 
 $p = new Pages($_GET['page']);
-$p->addPage("harbour",$t->tr("Hafen"),"harbour.php");
+$p->addPage("harbour",$t->tr("harbour"),"harbour.php");
 $p->addPage("seamark",$t->tr("Seezeichen"),"seamark.php");
 $p->addPage("light",$t->tr("Leuchtfeuer"),"light.php");
 $p->addPage("lock",$t->tr("BrückenSchleusen"),"lock.php");

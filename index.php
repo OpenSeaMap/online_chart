@@ -101,6 +101,7 @@
 
 			// Map event listener moved
 			function mapEventMove(event) {
+				// Set cookie for remembering lat lon values
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
 				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
 				// Update harbour layer
@@ -109,8 +110,8 @@
 
 			// Map event listener Zoomed
 			function mapEventZoom(event) {
-				var zoomLevel = map.getZoom();
-				setCookie("zoom", zoomLevel);
+				// Set cookie for remembering zoomlevel
+				setCookie("zoom", map.getZoom());
 			}
 
 		</script>

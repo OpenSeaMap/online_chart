@@ -88,30 +88,32 @@ function putAJAXMarker(id, lon, lat, names, link, type) {
 	}
 }
 
-/*
- * Harbour management
- */
 
-/* Downloads new harbours from the server.
- */
+// Harbour management----------------------------------------------------------------------------------------
+
+// Downloads new harbours from the server.
 function refresh_oseamh() {
-	if (refresh_oseamh.call_count == undefined) {
-		refresh_oseamh.call_count = 0;
+	var zoomLevel = map.getZoom();
+	if (zoomLevel <= 4) {
+		layer_harbours.clearMarkers();
 	} else {
-		++refresh_oseamh.call_count;
-	}
-	bounds = map.getExtent().toArray();
-	b = y2lat(bounds[1]).toFixed(5);
-	t = y2lat(bounds[3]).toFixed(5);
-	l = x2lon(bounds[0]).toFixed(5);
-	r = x2lon(bounds[2]).toFixed(5);
+		if (refresh_oseamh.call_count == undefined) {
+			refresh_oseamh.call_count = 0;
+		} else {
+			++refresh_oseamh.call_count;
+		}
+		bounds = map.getExtent().toArray();
+		b = y2lat(bounds[1]).toFixed(5);
+		t = y2lat(bounds[3]).toFixed(5);
+		l = x2lon(bounds[0]).toFixed(5);
+		r = x2lon(bounds[2]).toFixed(5);
 
-	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count };
-	make_request(params);
+		var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count };
+		make_request(params);
+	}
 }
 
-/* Check if a harbour has been downloaded already.
- */
+// Check if a harbour has been downloaded already.
 function harbour_exist(id,type) {
 	for (var i in oseamh_harbours) {
 		if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) {
@@ -121,8 +123,7 @@ function harbour_exist(id,type) {
 	return false;
 }
 
-/* Return a harbour description from the list of downloaded harbours.
- */
+// Return a harbour description from the list of downloaded harbours.
 function get_harbour(id,type) {
 	for (var i in oseamh_harbours) {
 		if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) {
@@ -132,15 +133,13 @@ function get_harbour(id,type) {
 	return '';
 }
 
-/* This function creates a feature and adds a corresponding
- * marker to the map.
- */
+// This function creates a feature and adds a corresponding marker to the map.
 function create_feature(x, y, popup_content, type) {
 	if(!create_feature.harbour_icon) {
-		var harbourIcon='./resources/places/harbour.png';
-		var marinaIcon='./resources/places/marina.png';
+		var harbourIcon='./resources/places/harbour_32.png';
+		var marinaIcon='./resources/places/marina_32.png';
 		icon_size = new OpenLayers.Size(32, 32);
-		icon_offset = new OpenLayers.Pixel(-icon_size.w/2, -icon_size.h/2);
+		icon_offset = new OpenLayers.Pixel(-16, -16);
 		create_feature.harbour_icon = new OpenLayers.Icon(harbourIcon, icon_size, icon_offset);
 		create_feature.marina_icon = new OpenLayers.Icon(marinaIcon, icon_size, icon_offset);
 	}
@@ -156,25 +155,20 @@ function create_feature(x, y, popup_content, type) {
 
 function create_marker(feature) {
 	var marker = feature.createMarker();
-	var marker_click = function (ev)
-	{
-		if (oseamh_state == 0)	//no popup is open
-		{
+	var marker_click = function (ev) {
+		if (oseamh_state == 0) {
+			// no popup is open
 			this.createPopup();
 			map.addPopup(this.popup);
 			oseamh_state = 1;
 			oseamh_current_feature = this;
-		}
-		else if (oseamh_state == 1 && oseamh_current_feature == this)
-		{	
-			//click on the harbour to which belongs the open popup => remove popup
+		} else if (oseamh_state == 1 && oseamh_current_feature == this)	{
+			// click on the harbour to which belongs the open popup => remove popup
 			map.removePopup(this.popup)
 			oseamh_state = 0;
 			oseamh_current_feature = null;
-		}
-		else if (oseamh_state == 1 && oseamh_current_feature != this)
-		{
-			//click on another harbour => remove old popup and create a new one at this harbour
+		} else if (oseamh_state == 1 && oseamh_current_feature != this) {
+			// click on another harbour => remove old popup and create a new one at this harbour
 			map.removePopup(oseamh_current_feature.popup)
 			this.createPopup();
 			map.addPopup(this.popup);
@@ -183,35 +177,23 @@ function create_marker(feature) {
 		}
 		OpenLayers.Event.stop(ev);
 	};
-	var marker_mouseover = function (ev)
-	{
-		if (this != oseamh_current_feature)
-		{
-			document.getElementById("map_OpenLayers_Container").style.cursor = "pointer";
+	var marker_mouseover = function (ev) {
+		if (this != oseamh_current_feature) {
 			this.createPopup();
 			map.addPopup(this.popup)
 		}
-		else //Mouse is over the harbour, which is currently popped-up => we do not need to create a popup
-			document.getElementById("map_OpenLayers_Container").style.cursor = "pointer";
-
+		map.div.style.cursor = "pointer";
 		OpenLayers.Event.stop(ev);
 	};
-	var marker_mouseout = function (ev)
-	{
-		if (this != oseamh_current_feature)
-		{
-			document.getElementById("map_OpenLayers_Container").style.cursor = "default";
+	var marker_mouseout = function (ev) {
+		if (this != oseamh_current_feature) {
 			map.removePopup(this.popup);
 		}
-		else	//Mouse was over the harbour, which is currently popped-up by been clicked on it
-			//	=> popup can only be removed by clicking
-			document.getElementById("map_OpenLayers_Container").style.cursor = "default";
+		map.div.style.cursor = "default";
 		OpenLayers.Event.stop(ev);
 	};
-	/* marker_click must be registered as click and not as mousedown!
-	 * Otherwise a click event will be propagated to the click control
-	 * of the map under certain conditions.
-	 */
+	// marker_click must be registered as click and not as mousedown! Otherwise a click event will be
+	// propagated to the click control of the map under certain conditions.
 	marker.events.register("click", feature, marker_click);
 	marker.events.register("mouseover", feature, marker_mouseover);
 	marker.events.register("mouseout", feature, marker_mouseout);
