@@ -136,7 +136,7 @@
 			}
 
 			function loadImages() {
-				document.getElementById("checkTopmark").disabled = false;
+				disableCheckboxes(false);
 				switch (_category) {
 					case "starboard":
 						_topmark_shape = "cone";
@@ -150,6 +150,7 @@
 							case "perch":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Perch_Starboard.png";
 								document.getElementById("fieldImageTop").src = "../resources/cardinal/Topmark_Clear.png";
+								disableCheckboxes(true);
 								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Green_Pillar.png";
@@ -174,6 +175,7 @@
 							case "perch":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Perch_Port.png";
 								document.getElementById("fieldImageTop").src = "../resources/cardinal/Topmark_Clear.png";
+								disableCheckboxes(true);
 								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Red_Pillar.png";
@@ -389,6 +391,23 @@
 				selectionElement.value = _buoy_shape;
 			}
 
+			function disableCheckboxes(disable) {
+				document.getElementById("checkTopmark").disabled = disable;
+				document.getElementById("checkRadar").disabled = disable;
+				document.getElementById("checkLight").disabled = disable;
+				document.getElementById("checkFogsignal").disabled = disable;
+				if (disable) {
+					document.getElementById("checkTopmark").checked = false;
+					document.getElementById("checkRadar").checked = false;
+					document.getElementById("checkLight").checked = false;
+					document.getElementById("checkFogsignal").checked = false;
+					onChangeTopmark();
+					onChangeLights();
+					onChangeFogSig();
+					onChangeRadarRefl();
+				}
+			}
+			
 			function moveDivUp(id, offset) {
 				var Y = parseInt(document.getElementById(id).style.top);
 				Y = Y - offset
@@ -464,6 +483,9 @@
 
 			function onChangeShape() {
 				_buoy_shape = document.getElementById("comboShape").value;
+				if (_buoy_shape == "perch") {
+					_seamark = "beacon_lateral";
+				}
 				setKey("seamark:" + _seamark + ":shape", _buoy_shape);
 				loadImages();
 			}
@@ -479,6 +501,8 @@
 				} else {
 					setKey("seamark:light:colour", "");
 					setKey("seamark:light:character", "");
+					setKey("seamark:light:group", "");
+					setKey("seamark:light:period", "");
 					document.getElementById("boxImageLight").style.visibility = "hidden";
 					showLightEdit(false);
 				}
@@ -817,9 +841,9 @@
 		<div style="position:absolute; bottom:105px; left:165px;">
 			<input type="text" id="inputName" align="left"/>
 		</div>
-		<div style="position:absolute; bottom:80px; left:7px;" ><?=$t->tr("note")?></div>
-		<div style="position:absolute; bottom:50px; left:165px;">
-			<textarea id="inputNotes" cols="60" rows="2"></textarea>
+		<div style="position:absolute; bottom:75px; left:7px;" ><?=$t->tr("note")?></div>
+		<div style="position:absolute; bottom:55px; left:165px;">
+			<textarea id="inputNotes" cols="60" rows="1"></textarea>
 		</div>
 		<div id="boxImageBuoy" style="position:absolute; top:70px; right:0px;">
 			<img id="fieldImageBuoy" src="../resources/lateral/Lateral_Green_Pillar.png" width="256" height="320" align="center" border="0" />
