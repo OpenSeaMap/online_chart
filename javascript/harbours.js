@@ -1,9 +1,8 @@
 /******************************************************************************
- Copyright 2008, 2009 Xavier Le Bourdon, Christoph Böhme, Mitja Kleider
+ Copyright 2008 - 2009 Xavier Le Bourdon, Christoph Böhme, Mitja Kleider
  
  This file originates from the Openstreetbugs project and was modified
  by Matthias Hoffmann and Olaf Hannemann for the OpenSeaMap project.
- 
  
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -21,17 +20,16 @@
 
 /******************************************************************************
  This file implements the client-side of the harbour display. To use it in an
- application simply add this file and call init_haefen with a map
+ application simply add this file and call init_harbours with a map
  object and the path of the server-side scripts.
  ******************************************************************************/
 
 
-/* List of downloaded harbours: 
- */
+// List of downloaded harbours:
 var oseamh_harbours = new Array();
 
-/* Current state of the user interface. This is used
- * to keep track which popups are displayed. */
+// Current state of the user interface. This is used
+// to keep track which popups are displayed.
 var oseamh_state = 0;
 var oseamh_current_feature = null;
 

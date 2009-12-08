@@ -53,7 +53,7 @@
 		$xmlOSM = "<?xml version='1.0' encoding='UTF-8'?>\n";
 		$xmlOSM .= "<osm> \n";
 		$xmlOSM .= "<changeset>\n";
-		$xmlOSM .= "<tag k=\"created_by\" v=\"OpenSeaMap-Editor-0.1.0\"/>\n";
+		$xmlOSM .= "<tag k=\"created_by\" v=\"OpenSeaMap-Editor-0.1.1\"/>\n";
 		$xmlOSM .= "<tag k=\"comment\" v=\"" .$comment ."\"/>";
 		$xmlOSM .= "\n</changeset>\n</osm>";
 

@@ -56,6 +56,10 @@
 					} else {
 						_seamark = buff;
 					}
+					buff = getKey("note");
+					if (buff != "-1") {
+						document.getElementById("inputNotes").value = buff;
+					}
 
 					switch (_mode) {
 						case "delete":
@@ -70,6 +74,7 @@
 							document.getElementById("boxRadar").style.visibility = "hidden";
 							document.getElementById("boxLight").style.visibility = "hidden";
 							document.getElementById("boxFogsignal").style.visibility = "hidden";
+							document.getElementById("inputNotes").cols = 24;
 							break
 						case "move":
 							document.getElementById("headerMove").style.visibility = "visible";
@@ -131,16 +136,20 @@
 			}
 
 			function loadImages() {
+				document.getElementById("checkTopmark").disabled = false;
 				switch (_category) {
 					case "starboard":
 						_topmark_shape = "cone";
 						_topmark_colour  = "green";
 						_light_colour = "green";
-						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
 							case "conical":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Green_Cone.png";
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Green_Conical_Low.png";
+								break;
+							case "perch":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Perch_Starboard.png";
+								document.getElementById("fieldImageTop").src = "../resources/cardinal/Topmark_Clear.png";
 								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Green_Pillar.png";
@@ -153,7 +162,6 @@
 						_topmark_shape = "cylinder";
 						_topmark_colour = "red";
 						_light_colour = "red";
-						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Red_Spar.png";
@@ -162,6 +170,10 @@
 							case "can":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Red_Can.png";
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical_Low.png";
+								break;
+							case "perch":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Perch_Port.png";
+								document.getElementById("fieldImageTop").src = "../resources/cardinal/Topmark_Clear.png";
 								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Red_Pillar.png";
@@ -174,7 +186,6 @@
 						_topmark_shape = "sphere";
 						_topmark_colour = "red";
 						_light_colour = "white";
-						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_SafeWater_Spar.png";
@@ -195,7 +206,6 @@
 						_topmark_shape = "cone";
 						_topmark_colour = "green";
 						_light_colour = "green";
-						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
 							case "conical":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Starboard_Cone.png";
@@ -212,7 +222,6 @@
 						_topmark_shape = "cylinder";
 						_topmark_colour = "red";
 						_light_colour = "red";
-						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Port_Spar.png";
@@ -324,7 +333,6 @@
 							document.getElementById("topColour").value = colour;
 							_light_colour = colour;
 						}
-						document.getElementById("checkTopmark").disabled = false;
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Spar.png";
@@ -368,6 +376,8 @@
 				translation["barrel"] = "<?=$t->tr("barrel")?>";
 				translation["pillar"] = "<?=$t->tr("pillar")?>";
 				translation["spar"] = "<?=$t->tr("spar")?>";
+				translation["stake"] = "<?=$t->tr("stake")?>";
+				translation["perch"] = "<?=$t->tr("perch")?>";
 				var selectionElement = document.getElementById("comboShape");
 				clearSelectOptions(selectionElement);
 				addSelectOption(selectionElement, "<?=$t->tr("comboUnknown")?>", "");
@@ -670,9 +680,10 @@
 			}
 
 			function save() {
-				opener.window.editSeamarkOk(createXML(), _mode);
-				_saving = true;
-				this.close();
+				//opener.window.editSeamarkOk(createXML(), _mode);
+				//_saving = true;
+				//this.close();
+				alert(createXML());
 			}
 
 			function cancel() {
@@ -694,6 +705,10 @@
 				var value = document.getElementById("inputName").value
 				if (value != null) {
 					setKey("seamark:name", value);
+				}
+				value = document.getElementById("inputNotes").value
+				if (value != null) {
+					setKey("note", value);
 				}
 				if(_tags != "") {
 					for(i = 0; i < _tags.length; i++) {
@@ -798,9 +813,13 @@
 		<div id="boxFogsignal" style="position:absolute; top:226px; left:165px;">
 			<input type="checkbox" id="checkFogsignal" onclick="onChangeFogSig()"/><?=$t->tr("fogsignal")?>
 		</div>
-		<div style="position:absolute; bottom:80px; left:7px;"><?=$t->tr("seamarkName")?>:</div>
-		<div style="position:absolute; bottom:80px; left:165px;">
+		<div style="position:absolute; bottom:108px; left:7px;"><?=$t->tr("seamarkName")?></div>
+		<div style="position:absolute; bottom:105px; left:165px;">
 			<input type="text" id="inputName" align="left"/>
+		</div>
+		<div style="position:absolute; bottom:80px; left:7px;" ><?=$t->tr("note")?></div>
+		<div style="position:absolute; bottom:50px; left:165px;">
+			<textarea id="inputNotes" cols="60" rows="2"></textarea>
 		</div>
 		<div id="boxImageBuoy" style="position:absolute; top:70px; right:0px;">
 			<img id="fieldImageBuoy" src="../resources/lateral/Lateral_Green_Pillar.png" width="256" height="320" align="center" border="0" />

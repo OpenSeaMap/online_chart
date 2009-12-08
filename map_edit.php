@@ -385,7 +385,7 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/circle_red.png');
-				editWindow = window.open('./dialogs/edit_seamark.php?mode=update&id=' + id + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>" , "Bearbeiten", "width=630, height=420, resizable=yes");
+				editWindow = window.open('./dialogs/edit_seamark.php?mode=update&id=' + id + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>" , "Bearbeiten", "width=630, height=450, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -425,7 +425,7 @@
 			}
 
 			function moveSeamarkSave() {
-				editWindow = window.open('./dialogs/edit_seamark.php?mode=move&id=' + _NodeId + "&version=" + _Version + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=420, resizable=yes");
+				editWindow = window.open('./dialogs/edit_seamark.php?mode=move&id=' + _NodeId + "&version=" + _Version + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=450, resizable=yes");
  				editWindow.focus();
 			}
 
@@ -439,7 +439,7 @@
 					arrayMarker[id].feature.popup.hide();
 				}
 				arrayMarker[id].setUrl('./resources/action/delete.png');
-				editWindow = window.open('./dialogs/edit_seamark.php?mode=delete&id=' + _NodeId + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>", "Löschen", "width=380, height=420, resizable=yes");
+				editWindow = window.open('./dialogs/edit_seamark.php?mode=delete&id=' + _NodeId + "&version=" + version + "&lang=<?=$t->getCurrentLanguage()?>", "Löschen", "width=380, height=450, resizable=yes");
  				editWindow.focus();
 			}
 
