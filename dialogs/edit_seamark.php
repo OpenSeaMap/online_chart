@@ -449,7 +449,7 @@
 				}
 				_category = document.getElementById("comboCategory").value;
 				database = new DataModel();
-				_seamark = database.get("meta", _category);
+				_seamark = "buoy_" + database.get("meta", _category);
 
 				if (old_seamark != _seamark) {
 					if(_tags != "") {
@@ -485,9 +485,11 @@
 				_buoy_shape = document.getElementById("comboShape").value;
 				if (_buoy_shape == "perch") {
 					_seamark = "beacon_lateral";
+					
 				}
 				setKey("seamark:" + _seamark + ":shape", _buoy_shape);
 				loadImages();
+				//seamarkChanged();
 			}
 			
 

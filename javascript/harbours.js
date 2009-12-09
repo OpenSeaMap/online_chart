@@ -45,14 +45,12 @@ function init_harbours() {
 }
 
 
-/*
- * AJAX functions
- */
 
-/* Request harbours from the server.
- */
+// AJAX functions--------------------------------------------------------------------------------------------
+
+// Request harbours from the server.
 function make_request(params) {
-	var url = "http://harbor.openseamap.org/getHarbours.php";
+	var url = "http://harbor.openseamap.org/getHarboursSkipperGuide.php";
 	for (var name in params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
@@ -64,9 +62,7 @@ function make_request(params) {
 	document.body.appendChild(script);
 }
 
-/* This function is called from the scripts that are returned 
- * on make_request calls. 
- */
+// This function is called from the scripts that are returned on make_request calls.
 function putAJAXMarker(id, lon, lat, names, link, type) {
 	if (!harbour_exist(id,type)) {
 		var name = names.split("-");
@@ -92,8 +88,8 @@ function putAJAXMarker(id, lon, lat, names, link, type) {
 // Downloads new harbours from the server.
 function refresh_oseamh() {
 	var zoomLevel = map.getZoom();
-	if (zoomLevel <= 4) {
-		layer_harbours.clearMarkers();
+	if (zoomLevel <= 10) {
+		harbour_clear();
 	} else {
 		if (refresh_oseamh.call_count == undefined) {
 			refresh_oseamh.call_count = 0;
@@ -118,7 +114,22 @@ function harbour_exist(id,type) {
 			return true;
 		}
 	}
+	
 	return false;
+}
+
+// Remove previously displayed harbours from layer
+function harbour_clear() {
+	// Remove Markers from layer
+	layer_harbours.clearMarkers();
+	// Reset all layer values
+	refresh_oseamh.call_count = null;
+	oseamh_current_feature = null;
+	oseamh_state = 0;
+	// Clear Array of previously downloaded harbours
+	for (var i=0;i<oseamh_harbours.length;i++) {
+		oseamh_harbours[i]="";
+	}
 }
 
 // Return a harbour description from the list of downloaded harbours.

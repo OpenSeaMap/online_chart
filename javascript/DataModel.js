@@ -6,17 +6,17 @@ function DataModel() {
 }
 
 DataModel.meta = new Array(); //Metadata
-DataModel.meta["safe_water"] = "buoy_safe_water";
-DataModel.meta["starboard"] = "buoy_lateral";
-DataModel.meta["port"] = "buoy_lateral";
-DataModel.meta["preferred_channel_starboard"] = "buoy_lateral";
-DataModel.meta["preferred_channel_port"] = "buoy_lateral";
-DataModel.meta["north"] = "buoy_cardinal";
-DataModel.meta["east"] = "buoy_cardinal";
-DataModel.meta["south"] = "buoy_cardinal";
-DataModel.meta["west"] = "buoy_cardinal";
-DataModel.meta["isolated_danger"] = "buoy_isolated_danger";
-DataModel.meta["special_purpose"] = "buoy_special_purpose";
+DataModel.meta["safe_water"] = "safe_water";
+DataModel.meta["starboard"] = "lateral";
+DataModel.meta["port"] = "lateral";
+DataModel.meta["preferred_channel_starboard"] = "lateral";
+DataModel.meta["preferred_channel_port"] = "lateral";
+DataModel.meta["north"] = "cardinal";
+DataModel.meta["east"] = "cardinal";
+DataModel.meta["south"] = "cardinal";
+DataModel.meta["west"] = "cardinal";
+DataModel.meta["isolated_danger"] = "isolated_danger";
+DataModel.meta["special_purpose"] = "special_purpose";
 DataModel.meta["shape_safe_water"] = "sphere:pillar:spar:stake";
 DataModel.meta["shape_starboard"] = "conical:pillar:stake:perch";
 DataModel.meta["shape_port"] = "can:pillar:spar:stake:perch";
