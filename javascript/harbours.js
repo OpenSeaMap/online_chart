@@ -24,14 +24,23 @@
  object and the path of the server-side scripts.
  ******************************************************************************/
 
-
 // List of downloaded harbours:
 var oseamh_harbours = new Array();
+
 
 // Current state of the user interface. This is used
 // to keep track which popups are displayed.
 var oseamh_state = 0;
 var oseamh_current_feature = null;
+
+//last zoomlevel of the map
+var oldZoom=0;
+
+const GROUP_HARBOURS=10;
+const DISPLAY_ALL=12;
+
+const UNCLASSIFIED_SKG=-1;
+const UNCLASSIFIED_WPI=0;
 
 
 /* Call this method to activate openstreetbugs on the map.
@@ -50,7 +59,8 @@ function init_harbours() {
 
 // Request harbours from the server.
 function make_request(params) {
-	var url = "http://harbor.openseamap.org/getHarboursSkipperGuide.php";
+	//var url = "http://harbor.openseamap.org/getHarboursSkipperGuide.php";
+	var url="http://localhost/~marlik/osm/haefen/getHarbours.php";
 	for (var name in params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
@@ -64,9 +74,13 @@ function make_request(params) {
 
 // This function is called from the scripts that are returned on make_request calls.
 function putAJAXMarker(id, lon, lat, names, link, type) {
+	//TODO A workaround as i cannont access the SQL-Script.
+	if(type==1) type=UNCLASSIFIED_SKG;
 	if (!harbour_exist(id,type)) {
 		var name = names.split("-");
-		var popupText = "<b>" + name[0] + "</b><br/>";
+		if(type==UNCLASSIFIED_SKG)
+		  type = determineType(name[0]);
+		var popupText = "<b>" + name[0] +"</b><br/>";
 		if (typeof name[1] != "undefined") {
 			popupText += name[1];
 		}
@@ -76,6 +90,7 @@ function putAJAXMarker(id, lon, lat, names, link, type) {
 		if (link != '') {
 			popupText += "<br/><br/><a href='" + link + "' target='blank'>" + linkText + "</a>";
 		}
+		
 		var harbour = {id: id, name: names, lat: lat, lon: lon, type: type, feature: null};
 		harbour.feature = create_feature(lon2x(lon), lat2y(lat), popupText, type);
 		oseamh_harbours.push(harbour);
@@ -87,8 +102,37 @@ function putAJAXMarker(id, lon, lat, names, link, type) {
 
 // Downloads new harbours from the server.
 function refresh_oseamh() {
+	
 	var zoomLevel = map.getZoom();
-	if (zoomLevel <= 10) {
+	/*
+	 * Decision Block to select which harbours' visibility has to be changed.
+	 * As there currently no appropriate data-structure, there is currently no 
+	 * use of that block but thats only a question of time until there is such
+	 * an data structure
+	
+	if(zoomLevel<oldZoom){//Area displayed on map gets less detailed
+	  if(oldZoom==DISPLAY_ALL){//clear all skg-harbours that are not the representant of a group
+	   //TODO 
+	  }
+	  else if(oldZoom==GROUP_HARBOURS){//clear all skg-harbours
+	    //TODO
+	  }
+	}
+	else if(zoomLevel>oldZoom){//Area displayed on map gets more detailled
+	  if(zoomLevel==GROUP_HARBOURS){//display all harbours that are a representant
+	   //TODO 
+	  }
+	  else if(zoomLevel==DISPLAY_ALL){//display all harbours
+	    //TODO
+	  }
+	}
+	*/
+	if(oldZoom!=zoomLevel){
+	  oldZoom=zoomLevel
+	 ensureVisibility(zoomLevel); 
+	}
+	oldZoom=zoomLevel
+	if (false) {
 		harbour_clear();
 	} else {
 		if (refresh_oseamh.call_count == undefined) {
@@ -110,12 +154,52 @@ function refresh_oseamh() {
 // Check if a harbour has been downloaded already.
 function harbour_exist(id,type) {
 	for (var i in oseamh_harbours) {
-		if (oseamh_harbours[i].id == id && oseamh_harbours[i].type == type) {
+		if (oseamh_harbours[i].id == id && (oseamh_harbours[i].type == type
+						    || type==UNCLASSIFIED_SKG && (oseamh_harbours[i].type==5
+										 ||oseamh_harbours[i].type==6 ))) {
 			return true;
 		}
 	}
 	
 	return false;
+}
+
+function isWPI(type) {
+  /*
+  1 = L
+  2 = M
+  3 = S
+  4 = V (Very small)
+  5 = representative skipperguide
+  6 = other skipperguide
+  */
+  if(type<=4)
+    return true;
+  return false;
+}
+
+function determineType(myName){
+  
+  for (var i in oseamh_harbours) {
+	var otherName = oseamh_harbours[i].name.split("-");
+	if(myName==otherName[0])
+	    return 6;
+  }
+  return 5;
+}
+
+function ensureVisibility(zoom){
+ harbour_clear();
+ var maxType=4;
+ if(zoom>=GROUP_HARBOURS)
+   maxType=5;
+ if(zoom>=DISPLAY_ALL)
+   maxType=6;
+ for (var i in oseamh_harbours) {
+		if (oseamh_harbours[i].type <= maxType) {
+			create_marker(oseamh_harbours[i].feature,oseamh_harbours[i].type);
+		}
+	}
 }
 
 // Remove previously displayed harbours from layer
@@ -126,10 +210,6 @@ function harbour_clear() {
 	refresh_oseamh.call_count = null;
 	oseamh_current_feature = null;
 	oseamh_state = 0;
-	// Clear Array of previously downloaded harbours
-	for (var i=0;i<oseamh_harbours.length;i++) {
-		oseamh_harbours[i]="";
-	}
 }
 
 // Return a harbour description from the list of downloaded harbours.
@@ -152,17 +232,17 @@ function create_feature(x, y, popup_content, type) {
 		create_feature.harbour_icon = new OpenLayers.Icon(harbourIcon, icon_size, icon_offset);
 		create_feature.marina_icon = new OpenLayers.Icon(marinaIcon, icon_size, icon_offset);
 	}
-	var icon = !type ? create_feature.harbour_icon.clone() : create_feature.marina_icon.clone();
+	var icon = isWPI(type) ? create_feature.harbour_icon.clone() : create_feature.marina_icon.clone();
 	var feature = new OpenLayers.Feature(layer_harbours, new OpenLayers.LonLat(x, y), {icon: icon});
 	feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
 	feature.data.popupContentHTML = popup_content;
 
-	create_marker(feature);
+	create_marker(feature,type);
 
 	return feature;
 }
 
-function create_marker(feature) {
+function create_marker(feature,type) {
 	var marker = feature.createMarker();
 	var marker_click = function (ev) {
 		if (oseamh_state == 0) {
@@ -207,6 +287,12 @@ function create_marker(feature) {
 	marker.events.register("mouseover", feature, marker_mouseover);
 	marker.events.register("mouseout", feature, marker_mouseout);
 
-	layer_harbours.addMarker(marker);
+	var maxType=4;
+	if(oldZoom>=GROUP_HARBOURS)
+	   maxType=5;
+	if(oldZoom>=DISPLAY_ALL)
+	  maxType=6;
+	if(type<=maxType)
+	  layer_harbours.addMarker(marker);
 }
 
