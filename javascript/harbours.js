@@ -59,8 +59,7 @@ function init_harbours() {
 
 // Request harbours from the server.
 function make_request(params) {
-	//var url = "http://harbor.openseamap.org/getHarboursSkipperGuide.php";
-	var url="http://localhost/~marlik/osm/haefen/getHarbours.php";
+	var url = "http://harbor.openseamap.org/getHarboursSkipperGuide.php";
 	for (var name in params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
