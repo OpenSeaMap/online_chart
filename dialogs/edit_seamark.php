@@ -738,7 +738,7 @@
 				}
 				if(_tags != "") {
 					for(i = 0; i < _tags.length; i++) {
-						var tag = _tags[i].split(",");
+						var tag = _tags[i].split("^");
 						if (tag[0] != "") {
 							tagXML += "<tag k=\"" + convert2Web(tag[0]) + "\" v=\"" +  convert2Web(tag[1]) + "\"/>" + "\n";
 						}
@@ -767,7 +767,7 @@
 			function getKey(key) {
 				if(_tags != "") {
 					for(i = 0; i < _tags.length; i++) {
-						var tag = _tags[i].split(",");
+						var tag = _tags[i].split("^");
 						if(tag[0] == key) {
 							return tag[1];
 						}
@@ -780,18 +780,18 @@
 			function setKey(key, value) {
 				if(_tags != "") {
 					for(i = 0; i < _tags.length; i++) {
-						var tag = _tags[i].split(",");
+						var tag = _tags[i].split("^");
 						if(tag[0] == key) {
 							if (value == "") {
 								_tags.splice(i, 1);
 							} else {
-								_tags[i] = key + "," + value;
+								_tags[i] = key + "^" + value;
 							}
 							return;
 						}
 					}
 					if (value != "") {
-						_tags.splice(0, 0, key + "," + value);
+						_tags.splice(0, 0, key + "^" + value);
 					}
 				}
 			}

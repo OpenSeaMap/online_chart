@@ -861,7 +861,7 @@
 								if (key == "seamark:name") {
 									name= val;
 								}
-								arrayNodes[id] += key + "," + val + "|";
+								arrayNodes[id] += key + "^" + val + "|";
 							}
 							if (show) {
 								var popupText = "<table border=\"0\" cellpadding=\"1\">"
