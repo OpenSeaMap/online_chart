@@ -26,20 +26,20 @@
 	$_west = $_GET['w'];
 	$_data = "bbox=" .$_west ."," .$_south ."," .$_east ."," .$_north;
 	// Variables
-	$_response = "error";					// Server response that will be send to client
+	$_response = "error";						// Server response that will be send to client
 	//$_url = "api06.dev.openstreetmap.org";	// Url of the OSM dev server
-	$_url = "www.openstreetmap.org";		// Url of the OSM server
+	$_url = "www.openstreetmap.org";			// Url of the OSM server
 	$_path = "/api/0.6/map?" .$_data;
 	
 	// Send to the OSM-Api
-	function sendOSM($url, $path, $data) {
+	function sendOSM($url, $path) {
 		$fp = @fsockopen($url, 80, $errno, $errstr);
 		if (!$fp) {
 			return "$errstr ($errno)\n";
 		} else {
 			fputs($fp, "GET " .$path ." HTTP/1.1\r\n");
 			fputs($fp, "Host: " .$url ."\r\n");
-			fputs($fp, "User-Agent: OpenSeaMap-Editor/0.1.0\r\n");
+			fputs($fp, "User-Agent: OpenSeaMap-Editor (0.1.0)\r\n");
 			fputs($fp, "Accept: text/html, *; q=.2, */*\r\n");
 			fputs($fp, "Connection: Keep-Alive\r\n\r\n");
 			$response = "";
@@ -59,7 +59,7 @@
 		return trim($response);
 	}
 
-	$_response = sendOSM($_url, $_path, $_data);
+	$_response = sendOSM($_url, $_path);
 	
 	echo $_response;
 
