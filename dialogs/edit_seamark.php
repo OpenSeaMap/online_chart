@@ -37,9 +37,9 @@
 					document.getElementById("headerAdd").style.visibility = "visible";
 					_category = getArgument("type")
 					_seamark = database.get("meta", _category);
-					_tags[0] = "seamark:type," + _seamark;
+					_tags[0] = "seamark:type^" + _seamark;
 					if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
-						_tags[1] = "seamark:" + _seamark + ":category," + _category;
+						_tags[1] = "seamark:" + _seamark + ":category^" + _category;
 					}
 				} else {
 					_id = getArgument("id");
@@ -454,13 +454,13 @@
 				if (old_seamark != _seamark) {
 					if(_tags != "") {
 						for(i = 0; i < _tags.length; i++) {
-							var tag = _tags[i].split(",");
+							var tag = _tags[i].split("^");
 							values = tag[0].split(":");
 							if(values[1] == old_seamark) {
 								if (_seamark == "buoy_safe_water" && values[2] == "category") {
 									setKey("seamark:" + old_seamark + ":category", "");
 								} else {
-									_tags[i] = "seamark:" + _seamark + ":" + values[2] + "," + tag[1];
+									_tags[i] = "seamark:" + _seamark + ":" + values[2] + "^" + tag[1];
 								}
 							}
 						}
