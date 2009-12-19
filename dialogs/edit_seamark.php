@@ -706,10 +706,10 @@
 			}
 
 			function save() {
-				//opener.window.editSeamarkOk(createXML(), _mode);
-				//_saving = true;
-				//this.close();
-				alert(createXML());
+				opener.window.editSeamarkOk(createXML(), _mode);
+				_saving = true;
+				this.close();
+				//alert(createXML());
 			}
 
 			function cancel() {

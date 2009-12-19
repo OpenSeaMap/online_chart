@@ -175,8 +175,11 @@
 
 			// Map event listener
 			function mapEventMove(event) {
-				if (map.getZoom() >= 16 &&  _Loaded) {
+				if (map.getZoom() >= 16) {
+					mapShowMarker();
 					updateSeamarks();
+				} else {
+					mapHideMarker();
 				}
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
 				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
@@ -185,22 +188,13 @@
 			// Map event listener
 			function mapEventZoom(event) {
 				var zoomLevel = map.getZoom();
-				if (zoomLevel <= 15) {
-					mapHideMarker();
-					document.getElementById("buttonReload").disabled = true;
-				} else {
-					document.getElementById("buttonReload").disabled = false;
-					mapShowMarker();
-				}
 				_ZoomOld = zoomLevel;
 				setCookie("zoom", zoomLevel);
 			}
 
 			function mapShowMarker() {
 				showInfoDialog(false);
-				if (_ZoomOld <= 15) {
-					updateSeamarks();
-				}
+				document.getElementById("buttonReload").disabled = false;
 			}
 
 			function mapHideMarker() {
@@ -209,6 +203,7 @@
 				_Loaded = false;
 				showInfoDialog(true, "<?=$t->tr('zoomToSmall')?>" + map.getZoom());
 				document.getElementById("selectLanguage").disabled = false;
+				document.getElementById("buttonReload").disabled = true;
 				document.getElementById("loading").style.visibility = 'hidden';
 				document.getElementById("action").style.visibility = 'hidden';
 			}
@@ -741,7 +736,6 @@
 						// Abort running requests
 						_Request.abort();
 					}
-					//alert("lade");
 					_Request = new Ajax.Request(url, {
 						method: 'get',
 						parameters: params,
@@ -749,20 +743,22 @@
 							var response = transport.responseText;
 							if (map.getZoom() > 15) {
 								_xmlOsm = response;
-								//layer_markers.clearMarkers();
 								if (readOsmXml() >= 0) {
 									document.getElementById("loading").style.visibility = 'hidden';
 									document.getElementById("action").style.visibility = 'visible';
 									showInfoDialog(false);
-									document.getElementById("selectLanguage").disabled = false;
-									document.getElementById("buttonReload").disabled = false;
 									if (_NodeId != "-1" && _NodeId != "1" && !_Moving) {
 										arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
 									}
 									_Loaded = true;
 								} else {
+									alert("<?=$t->tr('xmlLoadError')?>");
+									showInfoDialog(true, "<?=$t->tr('noData')?>");
 									_Loaded = false;
 								}
+								document.getElementById("loading").style.visibility = 'hidden';
+								document.getElementById("selectLanguage").disabled = false;
+								document.getElementById("buttonReload").disabled = false;
 							}
 							_Loading = false;
 							return 0;
@@ -823,7 +819,7 @@
 					var root = xmlObject.getElementsByTagName('osm')[0];
 					var items = root.getElementsByTagName("node");
 				} catch(e) {
-					//alert("Error (root): " + e);
+					//alert("Error (root): " + "<?=$t->tr('xmlLoadError')?>");
 					return -1;
 				}
 				if (map.getZoom() > 15) {
