@@ -59,22 +59,31 @@ function init_harbours() {
 
 // Request harbours from the server.
 function make_request(params) {
-	var url = "http://harbor.openseamap.org/getHarboursSkipperGuide.php";
+	var url = "";
 	for (var name in params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
-
+	var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
+	var skgUrl="http://harbor.openseamap.org/getHarboursWpi.php"+url;
+	
 	var script = document.createElement("script");
-	script.src = url;
+	script.src = skgUrl;
 	script.type = "text/javascript";
 	document.body.appendChild(script);
+	
+	var script2 = document.createElement("script2");
+	script2.src = wpiUrl;
+	script2.type = "text/javascript";
+	document.body.appendChild(script2);
+}
+
+putAJAXMarkerWpi(id, lon, lat, names, type){
+  putAJAXMarker(id, lon, lat, names, "", type);
 }
 
 // This function is called from the scripts that are returned on make_request calls.
 function putAJAXMarker(id, lon, lat, names, link, type) {
-	//TODO A workaround as i cannont access the SQL-Script.
-	if(type==1) type=UNCLASSIFIED_SKG;
 	if (!harbour_exist(id,type)) {
 		var name = names.split("-");
 		if(type==UNCLASSIFIED_SKG)
@@ -131,23 +140,21 @@ function refresh_oseamh() {
 	 ensureVisibility(zoomLevel); 
 	}
 	oldZoom=zoomLevel
-	if (false) {
-		harbour_clear();
+	
+	if (refresh_oseamh.call_count == undefined) {
+		refresh_oseamh.call_count = 0;
 	} else {
-		if (refresh_oseamh.call_count == undefined) {
-			refresh_oseamh.call_count = 0;
-		} else {
-			++refresh_oseamh.call_count;
-		}
-		bounds = map.getExtent().toArray();
-		b = y2lat(bounds[1]).toFixed(5);
-		t = y2lat(bounds[3]).toFixed(5);
-		l = x2lon(bounds[0]).toFixed(5);
-		r = x2lon(bounds[2]).toFixed(5);
-
-		var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count };
-		make_request(params);
+		++refresh_oseamh.call_count;
 	}
+	bounds = map.getExtent().toArray();
+	b = y2lat(bounds[1]).toFixed(5);
+	t = y2lat(bounds[3]).toFixed(5);
+	l = x2lon(bounds[0]).toFixed(5);
+	r = x2lon(bounds[2]).toFixed(5);
+
+	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count };
+	make_request(params);
+	
 }
 
 // Check if a harbour has been downloaded already.
