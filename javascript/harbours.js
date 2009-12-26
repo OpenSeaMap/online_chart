@@ -64,7 +64,7 @@ function make_request(params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
-	var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
+	//var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
 	var skgUrl="http://harbor.openseamap.org/getHarboursWpi.php"+url;
 	
 	var script = document.createElement("script");
@@ -72,14 +72,15 @@ function make_request(params) {
 	script.type = "text/javascript";
 	document.body.appendChild(script);
 	
-	var script2 = document.createElement("script2");
+	/*var script2 = document.createElement("script2");
 	script2.src = wpiUrl;
 	script2.type = "text/javascript";
-	document.body.appendChild(script2);
+	document.body.appendChild(script2);*/
 }
 
-putAJAXMarkerWpi(id, lon, lat, names, type){
-  putAJAXMarker(id, lon, lat, names, "", type);
+function putAJAXMarkerWpi(id, lon, lat, names, type) {
+	alert("hafen");
+	putAJAXMarker(id, lon, lat, names, "", type);
 }
 
 // This function is called from the scripts that are returned on make_request calls.
