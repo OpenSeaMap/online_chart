@@ -197,7 +197,9 @@ function determineType(myName){
 
 function ensureVisibility(zoom){
  harbour_clear();
- var maxType=4;
+ var maxType=3
+ if(zoom>=9)
+   maxType=4;
  if(zoom>=GROUP_HARBOURS)
    maxType=5;
  if(zoom>=DISPLAY_ALL)
