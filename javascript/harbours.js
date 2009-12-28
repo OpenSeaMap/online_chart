@@ -197,18 +197,27 @@ function determineType(myName){
 
 function ensureVisibility(zoom){
  harbour_clear();
- var maxType=3
+
+ var maxType=getVisibility(zoom);
+
+ for (var i in oseamh_harbours) {
+		if (oseamh_harbours[i].type <= maxType) {
+			create_marker(oseamh_harbours[i].feature,oseamh_harbours[i].type);
+		}
+	}
+}
+
+function getVisibility(zoom){
+ var maxType=2;
+ if(zoom>=8)
+   maxType=3;
  if(zoom>=9)
    maxType=4;
  if(zoom>=GROUP_HARBOURS)
    maxType=5;
  if(zoom>=DISPLAY_ALL)
    maxType=6;
- for (var i in oseamh_harbours) {
-		if (oseamh_harbours[i].type <= maxType) {
-			create_marker(oseamh_harbours[i].feature,oseamh_harbours[i].type);
-		}
-	}
+ return maxType;
 }
 
 // Remove previously displayed harbours from layer
@@ -296,11 +305,7 @@ function create_marker(feature,type) {
 	marker.events.register("mouseover", feature, marker_mouseover);
 	marker.events.register("mouseout", feature, marker_mouseout);
 
-	var maxType=4;
-	if(oldZoom>=GROUP_HARBOURS)
-	   maxType=5;
-	if(oldZoom>=DISPLAY_ALL)
-	  maxType=6;
+	var maxType=getVisibility(map.getZoom());
 	if(type<=maxType)
 	  layer_harbours.addMarker(marker);
 }
