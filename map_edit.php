@@ -957,7 +957,7 @@
 			<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
 		</div>
 		<div id="loggedInName" style="position:absolute; top:132px; left:10px; visibility:hidden;">- - -</div>
-		<div style="position:absolute; top:185px; left:11.5%;"><a href="http://sourceforge.net/apps/mediawiki/openseamap/index.php?title=De:Online-Editor" target="blank"><?=$t->tr("help")?></a></div>
+		<div style="position:absolute; top:185px; left:11.5%;"><a href="http://wiki.openseamap.org/index.php?title=De:Online-Editor" target="blank"><?=$t->tr("help")?></a></div>
 		<div id="data" class="sidebar" style="position:absolute; top:200px; left:0px;">
 			<hr>
 			<b><?=$t->tr("data")?></b>
@@ -967,7 +967,7 @@
 			</select>&nbsp; &nbsp;
 			<input type="button" id="buttonReload" value='<?=$t->tr("reload")?>' onclick="updateSeamarks()">
 		</div>
-		<div style="position:absolute; top:295px; left:11.5%;"><a href="http://sourceforge.net/apps/mediawiki/openseamap/index.php?title=De:Online-Editor" target="blank"><?=$t->tr("help")?></a></div>
+		<div style="position:absolute; top:295px; left:11.5%;"><a href="http://wiki.openseamap.org/index.php?title=De:Online-Editor" target="blank"><?=$t->tr("help")?></a></div>
 		<div class="sidebar" style="position:absolute; top:305px; left:0px;">
 			<hr>
 			<a><b><?=$t->tr("add")?></b></a><br/><br/>
@@ -1009,7 +1009,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td	onclick="window.open('http://sourceforge.net/apps/mediawiki/openseamap/index.php?title=De:Online-Editor/edit');"
+					<td	onclick="window.open('http://wiki.openseamap.org/index.php?title=De:Online-Editor/edit');"
 						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 						onmouseout="this.parentNode.style.backgroundColor = 'white';"
 						style="cursor:pointer"><?=$t->tr("help")?>

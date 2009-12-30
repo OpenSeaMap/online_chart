@@ -88,7 +88,7 @@
 				var layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
 				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 				// Harbours
-				layer_harbours = new OpenLayers.Layer.Markers("Harbours",
+				layer_harbours = new OpenLayers.Layer.Markers("<?=$t->tr("harbours")?>",
 				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayOutsideMaxExtent:true});
 				layer_harbours.setOpacity(0.8);
 

@@ -40,7 +40,7 @@ DataModel.light["light_east"] = "Q(3):VQ(3)";
 DataModel.light["light_south"] = "Q(6)+Lfl:VQ(6)+Lfl";
 DataModel.light["light_west"] = "Q(9):VQ(9)";
 DataModel.light["light_isolated_danger"] = "Fl(2)";
-DataModel.light["light_special_purpose"] = "Fl:Oc(2):Oc(3)";
+DataModel.light["light_special_purpose"] = "Fl:Fl(3):Fl(5):Oc(2):Oc(3)";
 
 DataModel.trans = new Array(); //ft2oseam
 DataModel.trans["safe_water"] = "buoy_safe_water";

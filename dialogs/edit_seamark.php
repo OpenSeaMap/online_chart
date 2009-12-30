@@ -329,11 +329,11 @@
 					case "special_purpose":
 						_topmark_shape = "x-shape";
 						_topmark_colour = "yellow";
-						_light_colour = "white";
+						_light_colour = "yellow";
 						var colour = getKey("seamark:topmark:colour")
 						if (colour != "-1") {
 							document.getElementById("topColour").value = colour;
-							_light_colour = colour;
+							_topmark_colour = colour;
 						}
 						switch (_buoy_shape) {
 							case "spar":
@@ -588,7 +588,7 @@
 					} else {
 						setKey("seamark:light:group", "");
 					}
-					if (period != "" && period != "unknown" && period != " - - - ") {
+					if (period != "-1" && period != "<?=$t->tr("unknown")?>" && period != " - - - ") {
 						setKey("seamark:light:period",period);
 					} else {
 						setKey("seamark:light:period", "");
@@ -620,6 +620,9 @@
 					switch (_light_colour) {
 						case "white":
 							val += " W";
+							break
+						case "yellow":
+							val += " Y";
 							break
 						case "red":
 							val += " R";
