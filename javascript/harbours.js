@@ -66,7 +66,7 @@ function make_request(params) {
 	}
 	//var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
 	var skgUrl="http://harbor.openseamap.org/getHarboursWpi.php"+url;
-	
+
 	var script = document.createElement("script");
 	script.src = skgUrl;
 	script.type = "text/javascript";
@@ -89,7 +89,7 @@ function putAJAXMarker(id, lon, lat, names, link, type) {
 		var name = names.split("-");
 		if(type==UNCLASSIFIED_SKG)
 		  type = determineType(name[0]);
-		var popupText = "<b>" + name[0] +"</b><br/>";
+		var popupText = "<b>" + name[0] +"</b> Type=" + type +"<br/>";
 		if (typeof name[1] != "undefined") {
 			popupText += name[1];
 		}
@@ -153,7 +153,11 @@ function refresh_oseamh() {
 	l = x2lon(bounds[0]).toFixed(5);
 	r = x2lon(bounds[2]).toFixed(5);
 
-	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count };
+	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count, "maxSize":getVisibility(zoomLevel) };
+	//keep the number of array elements reasonable
+	if(oseamh_harbours.length>1000)
+	  oseamh_harbours=new Array();
+
 	make_request(params);
 	
 }
@@ -198,6 +202,7 @@ function determineType(myName){
 function ensureVisibility(zoom){
  harbour_clear();
 
+  
  var maxType=getVisibility(zoom);
 
  for (var i in oseamh_harbours) {
@@ -208,7 +213,9 @@ function ensureVisibility(zoom){
 }
 
 function getVisibility(zoom){
- var maxType=2;
+ var maxType=1;
+ if(zoom>=7)
+   maxType=2;
  if(zoom>=8)
    maxType=3;
  if(zoom>=9)
