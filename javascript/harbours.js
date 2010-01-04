@@ -41,6 +41,7 @@ const DISPLAY_ALL=12;
 
 const UNCLASSIFIED_SKG=-1;
 const UNCLASSIFIED_WPI=0;
+var popuptime=0;
 
 
 /* Call this method to activate openstreetbugs on the map.
@@ -65,7 +66,8 @@ function make_request(params) {
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
 	//var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
-	var skgUrl="http://harbor.openseamap.org/getHarboursWpi.php"+url;
+	//var skgUrl="http://harbor.openseamap.org/getHarboursWpi.php"+url;
+	var skgUrl="http://localhost/~marlik/osm/getHarboursWpi.php"+url;
 
 	var script = document.createElement("script");
 	script.src = skgUrl;
@@ -153,10 +155,15 @@ function refresh_oseamh() {
 	l = x2lon(bounds[0]).toFixed(5);
 	r = x2lon(bounds[2]).toFixed(5);
 
-	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count, "maxSize":getVisibility(zoomLevel) };
+	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count, "maxSize":getVisibility(zoomLevel), "zoom":zoomLevel };
 	//keep the number of array elements reasonable
-	if(oseamh_harbours.length>1000)
-	  oseamh_harbours=new Array();
+// 	if(oseamh_harbours.length>1000){
+// 	  oseamh_harbours=new Array();
+// 	  arrayNeu=new Array();
+// 	  for(var i=0; i<oseamh_harbours.length; i+=2)
+// 	    arrayNeu.push(oseamh_harbours[i]);
+// 	  oseamh_harbours=arrayNeu;
+// 	}
 
 	make_request(params);
 	
@@ -207,6 +214,7 @@ function ensureVisibility(zoom){
 
  for (var i in oseamh_harbours) {
 		if (oseamh_harbours[i].type <= maxType) {
+		      if(zoom>=5 || (zoom<5 && Math.random() < (1*zoom/10)))
 			create_marker(oseamh_harbours[i].feature,oseamh_harbours[i].type);
 		}
 	}
@@ -230,9 +238,16 @@ function getVisibility(zoom){
 // Remove previously displayed harbours from layer
 function harbour_clear() {
 	// Remove Markers from layer
-	layer_harbours.clearMarkers();
+	var toBeDestroyed= layer_harbours.markers;
+	for(var i=layer_harbours.markers.length-1; i>=0;i--){
+		layer_harbours.removeMarker(toBeDestroyed[i]);
+	}
+	
+	
 	// Reset all layer values
-	refresh_oseamh.call_count = null;
+	//refresh_oseamh.call_count = null;
+ 	if(oseamh_current_feature != null)
+ 	  map.removePopup(oseamh_current_feature.popup);
 	oseamh_current_feature = null;
 	oseamh_state = 0;
 }
@@ -270,26 +285,36 @@ function create_feature(x, y, popup_content, type) {
 function create_marker(feature,type) {
 	var marker = feature.createMarker();
 	var marker_click = function (ev) {
+	  var d=new Date();
+	  var now=d.getTime();
+	  if((now-popuptime)<500){
+	    OpenLayers.Event.stop(ev);
+	    return;
+	  }
+		
 		if (oseamh_state == 0) {
 			// no popup is open
 			this.createPopup();
 			map.addPopup(this.popup);
 			oseamh_state = 1;
 			oseamh_current_feature = this;
+			popuptime=now;
 		} else if (oseamh_state == 1 && oseamh_current_feature == this)	{
 			// click on the harbour to which belongs the open popup => remove popup
 			map.removePopup(this.popup)
 			oseamh_state = 0;
 			oseamh_current_feature = null;
+			popuptime=now;
 		} else if (oseamh_state == 1 && oseamh_current_feature != this) {
 			// click on another harbour => remove old popup and create a new one at this harbour
-			map.removePopup(oseamh_current_feature.popup)
+			map.removePopup(oseamh_current_feature.popup);
 			this.createPopup();
 			map.addPopup(this.popup);
 			oseamh_state = 1;
 			oseamh_current_feature = this;
 		}
 		OpenLayers.Event.stop(ev);
+		
 	};
 	var marker_mouseover = function (ev) {
 		if (this != oseamh_current_feature) {
@@ -313,7 +338,9 @@ function create_marker(feature,type) {
 	marker.events.register("mouseout", feature, marker_mouseout);
 
 	var maxType=getVisibility(map.getZoom());
-	if(type<=maxType)
-	  layer_harbours.addMarker(marker);
+	if(type<=maxType){
+	  if(zoom>=5 ||refresh_oseamh.call_count>0 || (zoom<5 && Math.random() < (map.getZoom()/10)))
+	    layer_harbours.addMarker(marker);
+	}
 }
 
