@@ -348,7 +348,7 @@
 			}
 
 			function addSeamarkEdit() {
-				editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=420, resizable=yes");
+				editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=450, resizable=yes");
  				editWindow.focus();
 			}
 
