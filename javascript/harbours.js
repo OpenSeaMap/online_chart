@@ -66,8 +66,7 @@ function make_request(params) {
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
 	//var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
-	//var skgUrl="http://harbor.openseamap.org/getHarboursWpi.php"+url;
-	var skgUrl="http://localhost/~marlik/osm/getHarboursWpi.php"+url;
+	var skgUrl="http://harbor.openseamap.org/getHarboursWpi.php"+url;
 
 	var script = document.createElement("script");
 	script.src = skgUrl;
