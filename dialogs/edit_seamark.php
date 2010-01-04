@@ -36,7 +36,7 @@
 				if (_mode == "create") {
 					document.getElementById("headerAdd").style.visibility = "visible";
 					_category = getArgument("type")
-					_seamark = database.get("meta", _category);
+					_seamark = "buoy_" + database.get("meta", _category);
 					_tags[0] = "seamark:type^" + _seamark;
 					if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
 						_tags[1] = "seamark:" + _seamark + ":category^" + _category;
@@ -457,11 +457,7 @@
 							var tag = _tags[i].split("^");
 							values = tag[0].split(":");
 							if(values[1] == old_seamark) {
-								if (_seamark == "buoy_safe_water" && values[2] == "category") {
-									setKey("seamark:" + old_seamark + ":category", "");
-								} else {
-									_tags[i] = "seamark:" + _seamark + ":" + values[2] + "^" + tag[1];
-								}
+								_tags[i] = "seamark:" + _seamark + ":" + values[2] + "^" + tag[1];
 							}
 						}
 					}
@@ -469,6 +465,8 @@
 				setKey("seamark:type", _seamark);
 				if (_category != "safe_water" && _category != "isolated_danger" && _category != "special_purpose") {
 					setKey("seamark:" + _seamark + ":category", _category);
+				} else {
+					setKey("seamark:" + _seamark + ":category", "");
 				}
 				loadImages();
 				if (document.getElementById("checkTopmark").checked == true && _category == "special_purpose") {
@@ -521,6 +519,7 @@
 					}
 				} else {
 					setKey("seamark:topmark:shape", "");
+					setKey("seamark:topmark:colour", "");
 					document.getElementById("boxImageTop").style.visibility = "hidden";
 					if (_category == "special_purpose") {
 						showTopmarkColour(false);
@@ -709,10 +708,10 @@
 			}
 
 			function save() {
-				opener.window.editSeamarkOk(createXML(), _mode);
+				/*opener.window.editSeamarkOk(createXML(), _mode);
 				_saving = true;
-				this.close();
-				//alert(createXML());
+				this.close();*/
+				alert(createXML());
 			}
 
 			function cancel() {
@@ -747,7 +746,7 @@
 						}
 					}
 				}
-				//alert(tagXML);
+
 				return tagXML
 			}
 

@@ -1,12 +1,12 @@
 <h3><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="44" height="44" align="center" border="0"/>&nbsp;<?=$t->tr("online_editor")?></h3>
-(c) 2009, OpenSeaMap <br/><br/>
+(c) 2009 - 2010, OpenSeaMap <br/><br/>
 <table>
 	<tr>
 		<td valign="top">
 			<?=$t->tr("version")?>:&nbsp;
 		</td>
 		<td valign="top">
-			<a href="http://wiki.openseamap.org/index.php?title=Online_Editor/Release_Notes" target="blank">0.1.1</a>&nbsp;&nbsp;Release: 2
+			<a href="http://wiki.openseamap.org/index.php?title=Online_Editor/Release_Notes" target="blank">0.1.1</a>&nbsp;&nbsp;Release: 3
 		</td>
 	<tr>
 	</tr>
