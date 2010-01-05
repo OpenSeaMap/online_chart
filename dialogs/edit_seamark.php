@@ -21,14 +21,11 @@
 			var _tags = new Array();
 			var _seamark;
 			var _buoy_shape;
-			var _light_colour;
 			var _category;
 			var _version = 0;
 			var _id = 0;
 			var _mode;
 			var _saving = false;
-			var _topmark_shape;
-			var _topmark_colour;
 
 			function init() {
 				database = new DataModel();
@@ -106,8 +103,11 @@
 				fillShapeCombobox();
 				document.getElementById("comboCategory").value = _category;
 				document.getElementById("comboShape").value = _buoy_shape;
-
+				
+				// set buoy colour keys
+				setKey("seamark:" + _seamark + ":colour", database.get("meta", "colour_" + _category));
 				loadImages();
+				
 				if (getKey("seamark:topmark:shape") != "-1") {
 					document.getElementById("checkTopmark").checked = true;
 					document.getElementById("boxImageTop").style.visibility = "visible";
@@ -139,9 +139,6 @@
 				disableCheckboxes(false);
 				switch (_category) {
 					case "starboard":
-						_topmark_shape = "cone";
-						_topmark_colour  = "green";
-						_light_colour = "green";
 						switch (_buoy_shape) {
 							case "conical":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Green_Cone.png";
@@ -160,9 +157,6 @@
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_Green.png";
 						break;
 					case "port":
-						_topmark_shape = "cylinder";
-						_topmark_colour = "red";
-						_light_colour = "red";
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Red_Spar.png";
@@ -185,9 +179,6 @@
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_Red.png";
 						break;
 					case "safe_water":
-						_topmark_shape = "sphere";
-						_topmark_colour = "red";
-						_light_colour = "white";
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_SafeWater_Spar.png";
@@ -205,9 +196,6 @@
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png"
 						break;
 					case "preferred_channel_starboard":
-						_topmark_shape = "cone";
-						_topmark_colour = "green";
-						_light_colour = "green";
 						switch (_buoy_shape) {
 							case "conical":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Starboard_Cone.png";
@@ -221,9 +209,6 @@
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_Green.png";
 						break;
 					case "preferred_channel_port":
-						_topmark_shape = "cylinder";
-						_topmark_colour = "red";
-						_light_colour = "red";
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Port_Spar.png";
@@ -241,11 +226,9 @@
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_Red.png";
 						break;
 					case "north":
-						_topmark_shape = "2_cones_up";
-						_topmark_colour = "black";
-						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
+						onChangeTopmark();
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_North_Spar.png";
@@ -258,11 +241,9 @@
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 					case "east":
-						_topmark_shape = "2_cones_base_together";
-						_topmark_colour = "black";
-						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
+						onChangeTopmark();
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_East_Spar.png";
@@ -275,11 +256,9 @@
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 					case "south":
-						_topmark_shape = "2_cones_down";
-						_topmark_colour = "black";
-						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
+						onChangeTopmark();
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_South_Spar.png";
@@ -292,11 +271,9 @@
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 					case "west":
-						_topmark_shape = "2_cones_point_together";
-						_topmark_colour = "black";
-						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
+						onChangeTopmark();
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_West_Spar.png";
@@ -309,11 +286,9 @@
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 					case "isolated_danger":
-						_topmark_shape = "2_spheres";
-						_topmark_colour = "black";
-						_light_colour = "white";
 						document.getElementById("checkTopmark").checked = true;
 						document.getElementById("checkTopmark").disabled = true;
+						onChangeTopmark();
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_Single_Spar.png";
@@ -327,13 +302,9 @@
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 					case "special_purpose":
-						_topmark_shape = "x-shape";
-						_topmark_colour = "yellow";
-						_light_colour = "yellow";
 						var colour = getKey("seamark:topmark:colour")
 						if (colour != "-1") {
 							document.getElementById("topColour").value = colour;
-							_topmark_colour = colour;
 						}
 						switch (_buoy_shape) {
 							case "spar":
@@ -494,7 +465,8 @@
 			// Selection of the Light checkbox has changed
 			function onChangeLights() {
 				if (document.getElementById("checkLight").checked == true) {
-					setKey("seamark:light:colour", _light_colour);
+					database = new DataModel();
+					setKey("seamark:light:colour", database.get("light", "light_colour_" + _category));
 					document.getElementById("boxImageLight").style.visibility = "visible";
 					showLightEdit(true);
 					saveLight();
@@ -511,8 +483,9 @@
 			// Selection of the Topmark checkbox has changed
 			function onChangeTopmark() {
 				if (document.getElementById("checkTopmark").checked == true) {
-					setKey("seamark:topmark:shape", _topmark_shape);
-					setKey("seamark:topmark:colour", _topmark_colour);
+					database = new DataModel();
+					setKey("seamark:topmark:shape", database.get("meta", "topmark_shape_" + _category));
+					setKey("seamark:topmark:colour", database.get("meta", "topmark_colour_" + _category));
 					document.getElementById("boxImageTop").style.visibility = "visible";
 					if (_category == "special_purpose") {
 						showTopmarkColour(true);
@@ -598,6 +571,7 @@
 
 			//Display light character underneath the image and set values for edit dialog
 			function displayLight() {
+				var colour = getKey("seamark:light:colour");
 				var character = getKey("seamark:light:character");
 				var group = getKey("seamark:light:group");
 				var period = getKey("seamark:light:period");
@@ -616,7 +590,7 @@
 						val += "+Lfl";
 					}
 					document.getElementById("lightChar").value = val;
-					switch (_light_colour) {
+					switch (colour) {
 						case "white":
 							val += " W";
 							break
@@ -701,17 +675,16 @@
 				}
 				if (colour != "" && colour != "unknown") {
 					setKey("seamark:topmark:colour", colour);
-					_topmark_colour = colour;
 				} else {
 					setKey("seamark:topmark:colour", "");
 				}
 			}
 
 			function save() {
-				opener.window.editSeamarkOk(createXML(), _mode);
+				/*opener.window.editSeamarkOk(createXML(), _mode);
 				_saving = true;
-				this.close();
-				//alert(createXML());
+				this.close();*/
+				alert(createXML());
 			}
 
 			function cancel() {
