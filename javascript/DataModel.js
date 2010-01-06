@@ -41,6 +41,18 @@ DataModel.meta["colour_south"] = "yellow;black";
 DataModel.meta["colour_west"] = "yellow;black;yellow";
 DataModel.meta["colour_isolated_danger"] = "black;red;black";
 DataModel.meta["colour_special_purpose"] = "yellow";
+// Buoy colour pattern ----------------------------------------------------------------------------
+DataModel.meta["colour_pattern_safe_water"] = "vertical_stripes";
+DataModel.meta["colour_pattern_starboard"] = "unichrome";
+DataModel.meta["colour_pattern_port"] = "unichrome";
+DataModel.meta["colour_pattern_preferred_channel_starboard"] = "horizontal_stripes";
+DataModel.meta["colour_pattern_preferred_channel_port"] = "horizontal_stripes";
+DataModel.meta["colour_pattern_north"] = "horizontal_stripes";
+DataModel.meta["colour_pattern_east"] = "horizontal_stripes";
+DataModel.meta["colour_pattern_south"] = "horizontal_stripes";
+DataModel.meta["colour_pattern_west"] = "horizontal_stripes";
+DataModel.meta["colour_pattern_isolated_danger"] = "horizontal_stripes";
+DataModel.meta["colour_pattern_special_purpose"] = "unichrome";
 // Topmark shape ----------------------------------------------------------------------------------
 DataModel.meta["topmark_shape_safe_water"] = "sphere";
 DataModel.meta["topmark_shape_starboard"] = "cone";
