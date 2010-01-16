@@ -137,9 +137,9 @@ function refresh_oseamh() {
 	  }
 	}
 	*/
-	if(oldZoom!=zoomLevel){
-	  oldZoom=zoomLevel
-	 ensureVisibility(zoomLevel); 
+	if(oldZoom!=zoomLevel) {
+		oldZoom=zoomLevel
+		ensureVisibility(zoomLevel); 
 	}
 	oldZoom=zoomLevel
 	
@@ -190,31 +190,31 @@ function isWPI(type) {
   5 = representative skipperguide
   6 = other skipperguide
   */
-  if(type<=4)
-    return true;
-  return false;
+	if(type<=4) {
+		return true;
+	}
+	return false;
 }
 
 function determineType(myName){
-  
-  for (var i in oseamh_harbours) {
-	var otherName = oseamh_harbours[i].name.split("-");
-	if(myName==otherName[0])
-	    return 6;
-  }
-  return 5;
+	for (var i in oseamh_harbours) {
+		var otherName = oseamh_harbours[i].name.split("-");
+		if(myName==otherName[0]) {
+			return 6;
+		}
+	}
+	return 5;
 }
 
 function ensureVisibility(zoom){
- harbour_clear();
+	harbour_clear();
+	var maxType = getVisibility(zoom);
 
-  
- var maxType=getVisibility(zoom);
-
- for (var i in oseamh_harbours) {
+	for (var i in oseamh_harbours) {
 		if (oseamh_harbours[i].type <= maxType) {
-		      if(zoom>=5 || (zoom<5 && Math.random() < (1*zoom/10)))
-			create_marker(oseamh_harbours[i].feature,oseamh_harbours[i].type);
+			if(zoom>=5 /*|| (zoom<5 && Math.random() < (1*zoom/10))*/) {
+				create_marker(oseamh_harbours[i].feature,oseamh_harbours[i].type);
+			}
 		}
 	}
 }
@@ -238,15 +238,16 @@ function getVisibility(zoom){
 function harbour_clear() {
 	// Remove Markers from layer
 	var toBeDestroyed= layer_harbours.markers;
-	for(var i=layer_harbours.markers.length-1; i>=0;i--){
+	for(var i=layer_harbours.markers.length-1; i>=0;i--) {
 		layer_harbours.removeMarker(toBeDestroyed[i]);
 	}
 	
 	
 	// Reset all layer values
 	//refresh_oseamh.call_count = null;
- 	if(oseamh_current_feature != null)
- 	  map.removePopup(oseamh_current_feature.popup);
+	if(oseamh_current_feature != null) {
+		map.removePopup(oseamh_current_feature.popup);
+	 }
 	oseamh_current_feature = null;
 	oseamh_state = 0;
 }
@@ -284,12 +285,12 @@ function create_feature(x, y, popup_content, type) {
 function create_marker(feature,type) {
 	var marker = feature.createMarker();
 	var marker_click = function (ev) {
-	  var d=new Date();
-	  var now=d.getTime();
-	  if((now-popuptime)<500){
-	    OpenLayers.Event.stop(ev);
-	    return;
-	  }
+		var d=new Date();
+		var now=d.getTime();
+		if((now-popuptime)<500){
+			OpenLayers.Event.stop(ev);
+			return;
+		}
 		
 		if (oseamh_state == 0) {
 			// no popup is open
@@ -338,8 +339,9 @@ function create_marker(feature,type) {
 
 	var maxType=getVisibility(map.getZoom());
 	if(type<=maxType){
-	  if(zoom>=5 ||refresh_oseamh.call_count>0 || (zoom<5 && Math.random() < (map.getZoom()/10)))
-	    layer_harbours.addMarker(marker);
+		if(zoom>=5 ||refresh_oseamh.call_count>0 /*|| (zoom<5 && Math.random() < (map.getZoom()/10))*/) {
+			layer_harbours.addMarker(marker);
+		}
 	}
 }
 
