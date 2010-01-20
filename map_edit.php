@@ -1016,7 +1016,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td	onclick="window.location.href='../index.php'"
+					<td	onclick="window.location.href='http://openseamap.org/'"
 						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 						onmouseout="this.parentNode.style.backgroundColor = 'white';"
 						style="cursor:pointer"><?=$t->tr("Startseite")?>

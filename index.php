@@ -124,7 +124,7 @@
 		</div>
 		<div id="topmenu" style="position:absolute; top:10px; left:60px;">
 			<ul>
-				<li onClick="window.location.href='../index.php'"><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("Startseite")?></img></li>
+				<li onClick="window.location.href='http://openseamap.org/'"><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("Startseite")?></img></li>
 				<li>&nbsp;|&nbsp;</li>
 				<li onClick="window.location.href='./map_edit.php'"><IMG src="./resources/action/edit.png" width="24" height="24" align="center" border="0"><?=$t->tr("edit")?></img></li>
 				<li>&nbsp;|&nbsp;</li>

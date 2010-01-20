@@ -90,7 +90,7 @@ function putAJAXMarker(id, lon, lat, names, link, type) {
 		var name = names.split("-");
 		if(type==UNCLASSIFIED_SKG)
 		  type = determineType(name[0]);
-		var popupText = "<b>" + name[0] +"</b> Type=" + type +"<br/>";
+		var popupText = "<b>" + name[0] +"</b><br/>";
 		if (typeof name[1] != "undefined") {
 			popupText += name[1];
 		}
