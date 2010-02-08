@@ -6,7 +6,7 @@
 			<?=$t->tr("version")?>:&nbsp;
 		</td>
 		<td valign="top">
-			<a href="http://wiki.openseamap.org/index.php?title=Online_Editor/Release_Notes" target="blank">0.1.1</a>&nbsp;&nbsp;Release: 3
+			<a href="http://wiki.openseamap.org/index.php?title=Online_Editor/Release_Notes" target="blank">0.1.2</a>&nbsp;&nbsp;Release: 1
 		</td>
 	<tr>
 	</tr>

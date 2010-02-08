@@ -144,6 +144,10 @@
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Green_Cone.png";
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Green_Conical_Low.png";
 								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Green_Stake.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Green_Conical_Stake.png";
+								break;
 							case "perch":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Perch_Starboard.png";
 								document.getElementById("fieldImageTop").src = "../resources/cardinal/Topmark_Clear.png";
@@ -165,6 +169,10 @@
 							case "can":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Red_Can.png";
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical_Low.png";
+								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Red_Stake.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical_Stake.png";
 								break;
 							case "perch":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Perch_Port.png";
@@ -188,6 +196,10 @@
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_SafeWater_Sphere.png";
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Sphere_Low.png";
 								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_SafeWater_Stake.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Sphere_Stake.png";
+								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_SafeWater_Pillar.png";
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Sphere.png";
@@ -200,6 +212,10 @@
 							case "conical":
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Starboard_Cone.png";
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Green_Conical_Low.png";
+								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Starboard_Stake.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Green_Conical_Stake.png";
 								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Starboard_Pillar.png";
@@ -218,6 +234,10 @@
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Port_Can.png";
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical_Low.png";
 								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Port_Stake.png";
+								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical_Stake.png";
+								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/lateral/Lateral_Pref_Port_Pillar.png";
 								document.getElementById("fieldImageTop").src = "../resources/lateral/Topmark_Red_Cylindrical.png";
@@ -232,6 +252,9 @@
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_North_Spar.png";
+								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_North_Stake.png";
 								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_North_Pillar.png";
@@ -248,6 +271,9 @@
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_East_Spar.png";
 								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_East_Stake.png";
+								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_East_Pillar.png";
 								break;
@@ -262,6 +288,9 @@
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_South_Spar.png";
+								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_South_Stake.png";
 								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_South_Pillar.png";
@@ -278,6 +307,9 @@
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_West_Spar.png";
 								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_West_Stake.png";
+								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_West_Pillar.png";
 								break;
@@ -292,6 +324,9 @@
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_Single_Spar.png";
+								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_Single_Stake.png";
 								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/cardinal/Cardinal_Single_Pillar.png";
@@ -321,6 +356,14 @@
 									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Low.png";
 								} else {
 									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Low.png";
+								}
+								break;
+							case "stake":
+								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Stake.png";
+								if (colour == "red") {
+									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Stake.png";
+								} else {
+									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Stake.png";
 								}
 								break;
 							default:
@@ -411,6 +454,9 @@
 			// Selection of seamark category has changed
 			function seamarkChanged() {
 				old_seamark = _seamark;
+				// Remove old colour and shape values
+				setKey("seamark:" + _seamark + ":colour", "");
+				setKey("seamark:" + _seamark + ":shape", "");
 				// reset old dialog visibility
 				if (document.getElementById("boxEditLightCharacter").style.visibility == "visible") {
 					showLightEdit(false);
@@ -420,8 +466,8 @@
 				}
 				_category = document.getElementById("comboCategory").value;
 				database = new DataModel();
-				_seamark = "buoy_" + database.get("meta", _category);
-
+				_seamark = database.get("meta", "type_" + _buoy_shape) + database.get("meta", _category);
+				setKey("seamark:" + _seamark + ":colour", database.get("meta", "colour_" + _category));
 				if (old_seamark != _seamark) {
 					if(_tags != "") {
 						for(i = 0; i < _tags.length; i++) {
@@ -448,17 +494,35 @@
 				}
 				fillShapeCombobox();
 				onChangeTopmark();
+				onChangeShape();
 			}
 
 			function onChangeShape() {
+				database = new DataModel();
 				_buoy_shape = document.getElementById("comboShape").value;
-				if (_buoy_shape == "perch") {
-					_seamark = "beacon_lateral";
-					
+				var old_seamark = _seamark;
+				if (_buoy_shape != "<?=$t->tr("comboUnknown")?>") {
+					_seamark = database.get("meta", "type_" + _buoy_shape) + database.get("meta", _category);
+				} else {
+					_seamark = "buoy_" + database.get("meta", _category);
 				}
-				setKey("seamark:" + _seamark + ":shape", _buoy_shape);
+				if(_tags != "") {
+					for(i = 0; i < _tags.length; i++) {
+						var tag = _tags[i].split("^");
+						values = tag[0].split(":");
+						if(values[1] == old_seamark) {
+							_tags[i] = "seamark:" + _seamark + ":" + values[2] + "^" + tag[1];
+						}
+					}
+				}
+				if (_buoy_shape != "<?=$t->tr("comboUnknown")?>") {
+					setKey("seamark:" + _seamark + ":shape", _buoy_shape);
+				}
+				setKey("seamark:type", _seamark);
+				if (_buoy_shape == "perch") {
+					setKey("seamark:" + _seamark + ":colour","");
+				}
 				loadImages();
-				//seamarkChanged();
 			}
 			
 
@@ -531,13 +595,15 @@
 					}
 					document.getElementById("boxLightCharacter").style.visibility = "visible";
 				} else {
-					document.getElementById("boxEditLightCharacter").style.visibility = "hidden";
-					moveDivUp("boxFogsignal", 22);
-					if (_seamark != "buoy_cardinal") {
-						document.getElementById("boxEditLightSequence").style.visibility = "hidden";
-						moveDivUp("boxFogsignal", 25);
+					if (document.getElementById("boxEditLightCharacter").style.visibility == "visible") {
+						document.getElementById("boxEditLightCharacter").style.visibility = "hidden";
+						moveDivUp("boxFogsignal", 22);
+						if (_seamark != "buoy_cardinal") {
+							document.getElementById("boxEditLightSequence").style.visibility = "hidden";
+							moveDivUp("boxFogsignal", 25);
+						}
+						document.getElementById("boxLightCharacter").style.visibility = "hidden";
 					}
-					document.getElementById("boxLightCharacter").style.visibility = "hidden";
 				}
 			}
 
@@ -641,19 +707,23 @@
 			// Show topmark edit?
 			function showTopmarkColour(show) {
 				if (show) {
-					document.getElementById("boxEditTopmark").style.visibility = "visible";
-					moveDivDown("boxRadar", 22);
-					moveDivDown("boxLight", 22);
-					moveDivDown("boxFogsignal", 22);
-					moveDivDown("boxEditLightCharacter", 22);
-					moveDivDown("boxEditLightSequence", 22);
+					if (document.getElementById("boxEditTopmark").style.visibility == "hidden") {
+						document.getElementById("boxEditTopmark").style.visibility = "visible";
+						moveDivDown("boxRadar", 22);
+						moveDivDown("boxLight", 22);
+						moveDivDown("boxFogsignal", 22);
+						moveDivDown("boxEditLightCharacter", 22);
+						moveDivDown("boxEditLightSequence", 22);
+					}
 				} else {
-					document.getElementById("boxEditTopmark").style.visibility = "hidden";
-					moveDivUp("boxRadar", 22);
-					moveDivUp("boxLight", 22);
-					moveDivUp("boxFogsignal", 22);
-					moveDivUp("boxEditLightCharacter", 22);
-					moveDivUp("boxEditLightSequence", 22);
+					if (document.getElementById("boxEditTopmark").style.visibility == "visible") {
+						document.getElementById("boxEditTopmark").style.visibility = "hidden";
+						moveDivUp("boxRadar", 22);
+						moveDivUp("boxLight", 22);
+						moveDivUp("boxFogsignal", 22);
+						moveDivUp("boxEditLightCharacter", 22);
+						moveDivUp("boxEditLightSequence", 22);
+					}
 				}
 			}
 
@@ -663,12 +733,16 @@
 				if (colour == "red"){
 					if (_buoy_shape == "barrel") {
 						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Low.png";
+					} else if (_buoy_shape == "stake"){
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Stake.png";
 					} else {
 						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross.png";
 					}
 				} else {
 					if (_buoy_shape == "barrel") {
 						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Low.png";
+					} else if (_buoy_shape == "stake"){
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Stake.png";
 					} else {
 						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
 					}

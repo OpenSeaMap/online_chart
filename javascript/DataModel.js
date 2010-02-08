@@ -29,6 +29,15 @@ DataModel.meta["shape_south"] = "pillar:spar:stake";
 DataModel.meta["shape_west"] = "pillar:spar:stake";
 DataModel.meta["shape_isolated_danger"] = "pillar:spar:stake";
 DataModel.meta["shape_special_purpose"] = "barrel:pillar:spar:stake";
+// Seamark type -----------------------------------------------------------------------------------
+DataModel.meta["type_sphere"] = "buoy_";
+DataModel.meta["type_pillar"] = "buoy_";
+DataModel.meta["type_spar"] = "buoy_";
+DataModel.meta["type_can"] = "buoy_";
+DataModel.meta["type_conical"] = "buoy_";
+DataModel.meta["type_barrel"] = "buoy_";
+DataModel.meta["type_stake"] = "beacon_";
+DataModel.meta["type_perch"] = "beacon_";
 // Buoy colour ------------------------------------------------------------------------------------
 DataModel.meta["colour_safe_water"] = "white;red";
 DataModel.meta["colour_starboard"] = "green";

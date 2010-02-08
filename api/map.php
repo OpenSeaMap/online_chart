@@ -42,12 +42,28 @@
 		fputs($fp, "Connection: Keep-Alive\r\n\r\n");
 		$response = "";
 		$header = "not yet";
+		$xml = "not yet";
+		
 		while (!feof($fp)) {
-			$line = fgets($fp);
+		    $line = fgets($fp);
+
 			if( $line == "\r\n" && $header == "not yet" ) {
 				$header = "passed";
 			}
-			if( $header == "passed" ) {
+			$chr1 = substr(trim($line),0,1);
+		    if($header == "passed" && $chr1 != '<')
+		    {
+		    	$line = $lineold . fgets($fp);
+		    }
+			if( $xml == "not yet" && strlen(strstr($line, "<?xml")) > 1) {
+				$xml = "passed";
+			}
+			if($xml == "passed" && strpos($line, '>') === false)
+			{
+				$lineold = rtrim($line);
+			    continue;
+			}
+			if( $header == "passed" && $xml == "passed") {
 				$buff = trim($line);
 				if (substr($buff, 0, 4) == "<way") {
 					echo "</osm>" ."\r\n";
@@ -57,6 +73,7 @@
 					echo $buff ."\n";
 				}
 			}
+			//echo $line;
 		}
 	}
 	fclose($fp);
