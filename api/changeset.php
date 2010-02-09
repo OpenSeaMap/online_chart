@@ -5,7 +5,7 @@
  Required: PHP 5 
  author Olaf Hannemann
  license GPL V3
- version 0.1.1
+ version 0.1.2
  
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@
 		$xmlOSM = "<?xml version='1.0' encoding='UTF-8'?>\n";
 		$xmlOSM .= "<osm> \n";
 		$xmlOSM .= "<changeset>\n";
-		$xmlOSM .= "<tag k=\"created_by\" v=\"OpenSeaMap-Editor-0.1.1\"/>\n";
+		$xmlOSM .= "<tag k=\"created_by\" v=\"OpenSeaMap-Editor-0.1.2\"/>\n";
 		$xmlOSM .= "<tag k=\"comment\" v=\"" .$comment ."\"/>";
 		$xmlOSM .= "\n</changeset>\n</osm>";
 

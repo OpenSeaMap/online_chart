@@ -755,10 +755,10 @@
 			}
 
 			function save() {
-				/*opener.window.editSeamarkOk(createXML(), _mode);
+				opener.window.editSeamarkOk(createXML(), _mode);
 				_saving = true;
-				this.close();*/
-				alert(createXML());
+				this.close();
+				//alert(createXML());
 			}
 
 			function cancel() {
