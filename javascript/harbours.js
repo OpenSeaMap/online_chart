@@ -36,11 +36,13 @@ var oseamh_current_feature = null;
 //last zoomlevel of the map
 var oldZoom=0;
 
-const GROUP_HARBOURS=10;
-const DISPLAY_ALL=12;
+//Disabled due to issues with MS-IE
+//const GROUP_HARBOURS=10;
+//const DISPLAY_ALL=12;
 
-const UNCLASSIFIED_SKG=-1;
-const UNCLASSIFIED_WPI=0;
+//const UNCLASSIFIED_SKG=-1;
+//const UNCLASSIFIED_WPI=0;
+
 var popuptime=0;
 
 
@@ -88,7 +90,7 @@ function putAJAXMarkerWpi(id, lon, lat, names, type) {
 function putAJAXMarker(id, lon, lat, names, link, type) {
 	if (!harbour_exist(id,type)) {
 		var name = names.split("-");
-		if(type==UNCLASSIFIED_SKG)
+		if(type==-1)
 		  type = determineType(name[0]);
 		var popupText = "<b>" + name[0] +"</b><br/>";
 		if (typeof name[1] != "undefined") {
@@ -172,7 +174,7 @@ function refresh_oseamh() {
 function harbour_exist(id,type) {
 	for (var i in oseamh_harbours) {
 		if (oseamh_harbours[i].id == id && (oseamh_harbours[i].type == type
-						    || type==UNCLASSIFIED_SKG && (oseamh_harbours[i].type==5
+						    || type==-1 && (oseamh_harbours[i].type==5
 										 ||oseamh_harbours[i].type==6 ))) {
 			return true;
 		}
@@ -227,9 +229,9 @@ function getVisibility(zoom){
    maxType=3;
  if(zoom>=9)
    maxType=4;
- if(zoom>=GROUP_HARBOURS)
+ if(zoom>=10)
    maxType=5;
- if(zoom>=DISPLAY_ALL)
+ if(zoom>=12)
    maxType=6;
  return maxType;
 }
