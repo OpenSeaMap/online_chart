@@ -70,7 +70,7 @@
 		} else {
 			fputs($fp, "PUT " .$path ." HTTP/1.1\r\n");
 			fputs($fp, "Host: " .$url ."\r\n");
-			fputs($fp, "User-Agent: OpenSeaMap-Editor/0.1.1\r\n");
+			fputs($fp, "User-Agent: OpenSeaMap-Editor/0.1.2\r\n");
 			fputs($fp, "Authorization: Basic " .$login ."\r\n");
 			fputs($fp, "Content-type:  text/xml; charset=utf-8\r\n");
 			fputs($fp, "Content-length: ". strlen($data) ."\r\n");

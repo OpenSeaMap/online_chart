@@ -4,7 +4,7 @@
  Osm_Api_Service_Map
  Required: PHP 5 
  author Olaf Hannemann
- version 0.1.2
+ version 0.1.4
 
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -36,31 +36,27 @@
 	} else {
 		fputs($fp, "GET " .$_path ." HTTP/1.1\r\n");
 		fputs($fp, "Host: " .$_url ."\r\n");
-		fputs($fp, "User-Agent: OpenSeaMap-Editor (0.1.1)\r\n");
+		fputs($fp, "User-Agent: OpenSeaMap-Editor (0.1.2)\r\n");
 		fputs($fp, "Accept: text/html, *; q=.2, */*\r\n");
 		fputs($fp, "Keep-Alive:	timeout=15, max=99\r\n");
 		fputs($fp, "Connection: Keep-Alive\r\n\r\n");
 		$response = "";
 		$header = "not yet";
 		$xml = "not yet";
-		
 		while (!feof($fp)) {
-		    $line = fgets($fp);
-
+			$line = fgets($fp);
 			if( $line == "\r\n" && $header == "not yet" ) {
 				$header = "passed";
 			}
 			$chr1 = substr(trim($line),0,1);
-		    if($header == "passed" && $chr1 != '<')
-		    {
-		    	$line = $lineold . fgets($fp);
+		    if($header == "passed" && $chr1 != '<') {
+		    	$line = $lineold .fgets($fp);
 		    }
 			if( $xml == "not yet" && strlen(strstr($line, "<?xml")) > 1) {
 				$xml = "passed";
 			}
-			if($xml == "passed" && strpos($line, '>') === false)
-			{
-				$lineold = rtrim($line);
+			if($xml == "passed" && strpos($line, '>') === false) {
+				$lineold = str_replace("\r\n","",$line);
 			    continue;
 			}
 			if( $header == "passed" && $xml == "passed") {
@@ -73,7 +69,6 @@
 					echo $buff ."\n";
 				}
 			}
-			//echo $line;
 		}
 	}
 	fclose($fp);
