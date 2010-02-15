@@ -344,37 +344,18 @@
 						switch (_buoy_shape) {
 							case "spar":
 								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Spar.png";
-								if (colour == "red") {
-									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross.png";
-								} else {
-									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
-								}
 								break;
 							case "barrel":
 								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Barrel.png";
-								if (colour == "red") {
-									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Low.png";
-								} else {
-									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Low.png";
-								}
 								break;
 							case "stake":
 								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Stake.png";
-								if (colour == "red") {
-									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Stake.png";
-								} else {
-									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Stake.png";
-								}
 								break;
 							default:
 								document.getElementById("fieldImageBuoy").src = "../resources/special_purpose/Special_Purpose_Pillar.png";
-								if (colour == "red") {
-									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross.png";
-								} else {
-									document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
-								}
 								break;
 						}
+						displaySppTopmark(colour)
 						document.getElementById("fieldImageLight").src = "../resources/light/Light_White.png";
 						break;
 				}
@@ -382,6 +363,35 @@
 				displayLight();
 			}
 
+
+			function displaySppTopmark(colour) {
+				if (colour == "red") {
+					if (_buoy_shape == "barrel") {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Low.png";
+					} else if (_buoy_shape == "stake"){
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Stake.png";
+					} else {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross.png";
+					}
+				} else if (colour == "red;white;red") {
+					if (_buoy_shape == "barrel") {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_RedWhiteRed_Cylindrical_Low.png";
+					} else if (_buoy_shape == "stake"){
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_RedWhiteRed_Cylindrical_Stake.png";
+					} else {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_RedWhiteRed_Cylindrical.png";
+					}
+				} else {
+					if (_buoy_shape == "barrel") {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Low.png";
+					} else if (_buoy_shape == "stake"){
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Stake.png";
+					} else {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
+					}
+				}
+			}
+			
 			function fillShapeCombobox() {
 				database = new DataModel();
 				// workaround for getting translation until database works
@@ -730,35 +740,24 @@
 			// Write keys for Topmark
 			function saveTopmark() {
 				var colour = document.getElementById("topColour").value;
-				if (colour == "red"){
-					if (_buoy_shape == "barrel") {
-						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Low.png";
-					} else if (_buoy_shape == "stake"){
-						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross_Stake.png";
-					} else {
-						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Red_Cross.png";
-					}
-				} else {
-					if (_buoy_shape == "barrel") {
-						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Low.png";
-					} else if (_buoy_shape == "stake"){
-						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Stake.png";
-					} else {
-						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
-					}
-				}
+				displaySppTopmark(colour)
 				if (colour != "" && colour != "unknown") {
 					setKey("seamark:topmark:colour", colour);
+					if (colour == "red;white;red") {
+						setKey("seamark:topmark:shape", "cylinder");
+					} else {
+						setKey("seamark:topmark:shape", "x-shape");
+					}
 				} else {
 					setKey("seamark:topmark:colour", "");
 				}
 			}
 
 			function save() {
-				opener.window.editSeamarkOk(createXML(), _mode);
+				/*opener.window.editSeamarkOk(createXML(), _mode);
 				_saving = true;
-				this.close();
-				//alert(createXML());
+				this.close();*/
+				alert(createXML());
 			}
 
 			function cancel() {
@@ -926,8 +925,9 @@
 					<td align="right">
 						<select id="topColour" onChange="saveTopmark()">
 							<option value="unknown"/><?=$t->tr("unknown")?>
-							<option value="red"/><?=$t->tr("red")?>
 							<option value="yellow"/><?=$t->tr("yellow")?>
+							<option value="red"/><?=$t->tr("red")?>
+							<option value="red;white;red"/><?=$t->tr("red_white")?>
 						</select>
 					</td>
 				</tr>

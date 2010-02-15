@@ -742,7 +742,7 @@
 						onSuccess: function(transport) {
 							var response = transport.responseText;
 							if (map.getZoom() > 15) {
-								_xmlOsm = response;
+								_xmlOsm = trim(response);
 								if (readOsmXml() >= 0) {
 									document.getElementById("loading").style.visibility = 'hidden';
 									document.getElementById("action").style.visibility = 'visible';
@@ -816,10 +816,10 @@
 					}
 				}
 				try {
-					var root = xmlObject.getElementsByTagName('osm')[0];
+					var root = xmlObject.getElementsByTagName("osm")[0];
 					var items = root.getElementsByTagName("node");
 				} catch(e) {
-					//alert("Error (root): " + "<?=$t->tr('xmlLoadError')?>");
+					//alert("Error (root): "+ e);
 					return -1;
 				}
 				if (map.getZoom() > 15) {
