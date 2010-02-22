@@ -381,13 +381,21 @@
 					} else {
 						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_RedWhiteRed_Cylindrical.png";
 					}
-				} else {
+				} else if (colour == "yellow") {
 					if (_buoy_shape == "barrel") {
 						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Low.png";
 					} else if (_buoy_shape == "stake"){
 						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross_Stake.png";
 					} else {
 						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_Cross.png";
+					}
+				} else {
+					if (_buoy_shape == "barrel") {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_UnDef_Low.png";
+					} else if (_buoy_shape == "stake"){
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_UnDef_Stake.png";
+					} else {
+						document.getElementById("fieldImageTop").src = "../resources/special_purpose/Topmark_Yellow_UnDef.png";
 					}
 				}
 			}
@@ -500,7 +508,7 @@
 					showTopmarkColour(true);
 				}
 				if (document.getElementById("checkLight").checked == true) {
-					showLightEdit(true);
+					onChangeLights();
 				}
 				fillShapeCombobox();
 				onChangeTopmark();
@@ -558,12 +566,13 @@
 			function onChangeTopmark() {
 				if (document.getElementById("checkTopmark").checked == true) {
 					database = new DataModel();
-					setKey("seamark:topmark:shape", database.get("meta", "topmark_shape_" + _category));
-					setKey("seamark:topmark:colour", database.get("meta", "topmark_colour_" + _category));
-					document.getElementById("boxImageTop").style.visibility = "visible";
-					if (_category == "special_purpose") {
+					if (_category != "special_purpose") {
+						setKey("seamark:topmark:shape", database.get("meta", "topmark_shape_" + _category));
+						setKey("seamark:topmark:colour", database.get("meta", "topmark_colour_" + _category));
+					} else {
 						showTopmarkColour(true);
 					}
+					document.getElementById("boxImageTop").style.visibility = "visible";
 				} else {
 					setKey("seamark:topmark:shape", "");
 					setKey("seamark:topmark:colour", "");
@@ -742,7 +751,9 @@
 				var colour = document.getElementById("topColour").value;
 				displaySppTopmark(colour)
 				if (colour != "" && colour != "unknown") {
-					setKey("seamark:topmark:colour", colour);
+					if (getKey("seamark:topmark:colour") != "red:white:red") {
+						setKey("seamark:topmark:colour", colour);
+					}
 					if (colour == "red;white;red") {
 						setKey("seamark:topmark:shape", "cylinder");
 					} else {
@@ -754,10 +765,10 @@
 			}
 
 			function save() {
-				/*opener.window.editSeamarkOk(createXML(), _mode);
+				opener.window.editSeamarkOk(createXML(), _mode);
 				_saving = true;
-				this.close();*/
-				alert(createXML());
+				this.close();
+				//alert(createXML());
 			}
 
 			function cancel() {
@@ -792,7 +803,6 @@
 						}
 					}
 				}
-
 				return tagXML
 			}
 
