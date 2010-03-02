@@ -22,9 +22,9 @@
 			var map;
 
 			// Position and zoomlevel of the map  (will be overriden with permalink parameters or cookies)
-			var lon = 12.0915;
-			var lat = 54.1878;
-			var zoom = 15;
+			var lon = 11.6540;
+			var lat = 54.1530;
+			var zoom = 10;
 
 			// Work around for accessing translations from harbour.js
 			var linkText = "<?=$t->tr('descrSkipperGuide')?>";
