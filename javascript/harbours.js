@@ -267,8 +267,8 @@ function get_harbour(id,type) {
 // This function creates a feature and adds a corresponding marker to the map.
 function create_feature(x, y, popup_content, type) {
 	if(!create_feature.harbour_icon) {
-		var harbourIcon='./resources/places/harbour_32.png';
-		var marinaIcon='./resources/places/marina_32.png';
+		var harbourIcon='http://map.openseamap.org/map/resources/places/harbour_32.png';
+		var marinaIcon='http://map.openseamap.org/map/resources/places/marina_32.png';
 		icon_size = new OpenLayers.Size(32, 32);
 		icon_offset = new OpenLayers.Pixel(-16, -16);
 		create_feature.harbour_icon = new OpenLayers.Icon(harbourIcon, icon_size, icon_offset);
