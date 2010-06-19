@@ -27,7 +27,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td><IMG src="./resources/places/crane.gif" width="32" height="32" align="center" border="0"/></td>
+		<td><IMG src="./resources/places/crane.png" width="32" height="32" align="center" border="0"/></td>
 		<td><?=$t->tr("crane")?></td>
 	</tr>
 	<tr>

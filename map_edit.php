@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
 		<script type="text/javascript" src="./javascript/prototype.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
+		<script type="text/javascript" src="./javascript/map_edit_utils.js"></script>
 		<script type="text/javascript" src="./javascript/utilities.js"></script>
 		<script type="text/javascript">
 
@@ -179,7 +180,7 @@
 					mapShowMarker();
 					updateSeamarks();
 				} else {
-					mapHideMarker();
+					//mapHideMarker();
 				}
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
 				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
@@ -323,12 +324,13 @@
 			}
 
 			function addSeamark(seamark) {
+				// remember what we are doing
 				_ToDo = "add";
+				
 				showPositionDialog();
 				document.getElementById("add_seamark_dialog").style.visibility = "collapse";
 				// set the seamark type
 				seamarkType = seamark;
-				// remember what we are doing
 			}
 
 			function addSeamarkPosOk(latValue, lonValue) {
@@ -536,7 +538,7 @@
 				if (visible && map.getZoom()>= 16) {
 					document.getElementById('add_seamark_dialog').style.visibility = 'visible';
 					document.getElementById('add_landmark_dialog').style.visibility = 'hidden';
-					document.getElementById('add_harbour_dialog').style.visibility = 'hidden';
+					document.getElementById('add_harbour_poi_dialog').style.visibility = 'hidden';
 				} else {
 					document.getElementById('add_seamark_dialog').style.visibility = 'hidden';
 				}
@@ -546,19 +548,19 @@
 				if (visible) {
 					document.getElementById('add_landmark_dialog').style.visibility = 'visible';
 					document.getElementById('add_seamark_dialog').style.visibility = 'hidden';
-					document.getElementById('add_harbour_dialog').style.visibility = 'hidden';
+					document.getElementById('add_harbour_poi_dialog').style.visibility = 'hidden';
 				} else {
 					document.getElementById('add_landmark_dialog').style.visibility = 'hidden';
 				}
 			}
 
-			function showHarbourAdd(visible) {
+			function showHarbourPoiAdd(visible) {
 				if (visible) {
-					document.getElementById('add_harbour_dialog').style.visibility = 'visible';
+					document.getElementById('add_harbour_poi_dialog').style.visibility = 'visible';
 					document.getElementById('add_seamark_dialog').style.visibility = 'hidden';
 					document.getElementById('add_landmark_dialog').style.visibility = 'hidden';
 				} else {
-					document.getElementById('add_harbour_dialog').style.visibility = 'hidden';
+					document.getElementById('add_harbour_poi_dialog').style.visibility = 'hidden';
 				}
 			}
 
@@ -980,6 +982,14 @@
 						<IMG src="resources/action/go-next-disabled.png" width="16" height="16" align="right" border="0"/>
 					</td>
 				</tr>
+				<tr>
+					<td style="color: grey;">
+						<?=$t->tr("harbour")?>
+					</td>
+					<td>
+						<IMG src="resources/action/go-next-disabled.png" width="16" height="16" align="right" border="0"/>
+					</td>
+				</tr>
 			</table>
 		</div>
 		<div id="action" class="sidebar" style="position:absolute; top:305px; left:0px;">
@@ -996,9 +1006,19 @@
 						<IMG src="resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
 					</td>
 				</tr>
+				<tr>
+					<td	onclick="showHarbourPoiAdd(true)"
+						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
+						onmouseout="this.parentNode.style.backgroundColor = 'white';"
+						style="cursor:pointer"><?=$t->tr("harbour")?>
+					</td>
+					<td>
+						<IMG src="resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
+					</td>
+				</tr>
 			</table>
 		</div>
-		<div id="data" class="sidebar" style="position:absolute; top:400px; left:0px;">
+		<div id="data" class="sidebar" style="position:absolute; top:420px; left:0px;">
 			<hr>
 			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
 				<tr>
@@ -1039,9 +1059,9 @@
 		<div id="add_landmark_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:300px">
 			<?php include ("./dialogs/add_light.php"); ?>
 		</div>
-		<!--Add Harbour-Data-Dialog-->
-		<div id="add_harbour_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:300px;">
-			<?php include ("./dialogs/add_harbour.php"); ?>
+		<!--Add Harbour-Poi-Data-Dialog-->
+		<div id="add_harbour_poi_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:365px;">
+			<?php include ("./dialogs/add_harbour_Poi.php"); ?>
 		</div>
 		<!--Pop up dialogs  ********************************************************************************************************** -->
 		<!--Position-Dialog-->
