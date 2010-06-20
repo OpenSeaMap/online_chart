@@ -22,10 +22,16 @@
 		<script type="text/javascript">
 
 			//global variables
+			// openLayers
 			var map;
 			var layer_mapnik;
 			var layer_tah;
 			var layer_markers;
+			var controls;					//OpenLayer-Controls
+			var click;						//click-event
+			var arrayMarker = new Array();	//Array of displayed Markers
+			var arrayNodes = new Array();	//Array of available Nodes
+			// Editor
 			var _Request;					//AJAX requests
 			var _ZoomOld = "1";				//Previus zoom level
 			var _Loaded = false;			//Map data is initially loaded
@@ -39,13 +45,10 @@
 			var _xmlNode = null;			//XML-Data for node creation
 			var _userName = null;			//OSM-Username of the user
 			var _userPassword = null;		//OSM-Password of the user
-			var controls;					//OpenLayer-Controls
 			var _ToDo = null;				//actually selected action
 			var _Moving = false;			//needed for cursor and first fixing
-			var click;						//click-event
 			var seamarkType;				//seamarks
-			var arrayMarker = new Array();	//Array of displayed Markers
-			var arrayNodes = new Array();	//Array of available Nodes
+
 
 			// position and zoomlevel (will be overriden with permalink parameters)
 			var lon = 12.0915;
@@ -308,13 +311,15 @@
 				// disable click event
 				map.div.style.cursor="default";
 				click.deactivate();
-				_Moving = false;
+				if (_Moving) {
+					_Moving = false;
+					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
+				}
 				_ToDo = null;
 				// remove existing temp marker
 				if (arrayMarker["2"] != null) {
 					layer_markers.removeMarker(arrayMarker["2"]);
 				}
-				arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
 			}
 
 			function onEditDialogCancel(id) {
@@ -323,17 +328,22 @@
 				_ToDo = null;
 			}
 
-			function addSeamark(seamark) {
+			function addElement(element, type) {
 				// remember what we are doing
 				_ToDo = "add";
 				
 				showPositionDialog();
-				document.getElementById("add_seamark_dialog").style.visibility = "collapse";
-				// set the seamark type
-				seamarkType = seamark;
+				if (element == "seamark") {
+					showSeamarkAdd(false);
+					// set the seamark type
+					seamarkType = type;
+				} else if (element == "harbour") {
+					showHarbourAdd(false);
+					seamarkType = "harbour";
+				}
 			}
 
-			function addSeamarkPosOk(latValue, lonValue) {
+			function addElementPosOk(latValue, lonValue) {
 				lon = parseFloat(lonValue);
 				lat = parseFloat(latValue);
 				if (_NodeId != "-1") {
@@ -346,12 +356,17 @@
 				_NodeId = "1";
 				addMarker(_NodeId, "");
 				arrayMarker[_NodeId].setUrl('./resources/action/circle_red.png');
-				addSeamarkEdit();
+				addElementEdit();
 			}
 
-			function addSeamarkEdit() {
-				editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=450, resizable=yes");
- 				editWindow.focus();
+			function addElementEdit() {
+				if (seamarkType == "harbour") {
+					editWindow = window.open("./dialogs/edit_harbour.php" + "?mode=create&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=450, resizable=yes");
+ 					editWindow.focus();
+				} else {
+					editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=450, resizable=yes");
+ 					editWindow.focus();
+ 				}
 			}
 
 			// Editing of the Seamark finished with OK
@@ -367,6 +382,11 @@
 					document.getElementById('send_dialog').style.visibility = 'visible';
 					document.getElementById('sendComment').focus();
 				}
+			}
+
+			// Editing of the Seamark finished with OK
+			function editHarbourOk() {
+					alert("Add your code here!");
 			}
 
 			function editSeamarkEdit(id, version, pos_lat, pos_lon) {
@@ -452,7 +472,7 @@
 				}
 				switch (_ToDo) {
 					case "add":
-						addSeamarkPosOk(latValue, lonValue);
+						addElementPosOk(latValue, lonValue);
 						break;
 					case "move":
 						moveSeamarkOk(latValue, lonValue);
@@ -538,7 +558,7 @@
 				if (visible && map.getZoom()>= 16) {
 					document.getElementById('add_seamark_dialog').style.visibility = 'visible';
 					document.getElementById('add_landmark_dialog').style.visibility = 'hidden';
-					document.getElementById('add_harbour_poi_dialog').style.visibility = 'hidden';
+					document.getElementById('add_harbour_dialog').style.visibility = 'hidden';
 				} else {
 					document.getElementById('add_seamark_dialog').style.visibility = 'hidden';
 				}
@@ -548,19 +568,19 @@
 				if (visible) {
 					document.getElementById('add_landmark_dialog').style.visibility = 'visible';
 					document.getElementById('add_seamark_dialog').style.visibility = 'hidden';
-					document.getElementById('add_harbour_poi_dialog').style.visibility = 'hidden';
+					document.getElementById('add_harbour_dialog').style.visibility = 'hidden';
 				} else {
 					document.getElementById('add_landmark_dialog').style.visibility = 'hidden';
 				}
 			}
 
-			function showHarbourPoiAdd(visible) {
+			function showHarbourAdd(visible) {
 				if (visible) {
-					document.getElementById('add_harbour_poi_dialog').style.visibility = 'visible';
+					document.getElementById('add_harbour_dialog').style.visibility = 'visible';
 					document.getElementById('add_seamark_dialog').style.visibility = 'hidden';
 					document.getElementById('add_landmark_dialog').style.visibility = 'hidden';
 				} else {
-					document.getElementById('add_harbour_poi_dialog').style.visibility = 'hidden';
+					document.getElementById('add_harbour_dialog').style.visibility = 'hidden';
 				}
 			}
 
@@ -862,7 +882,7 @@
 								arrayNodes[id] += key + "^" + val + "|";
 							}
 							if (show) {
-								var popupText = "<table border=\"0\" cellpadding=\"1\">"
+								var popupText = "<table border=\"0\" cellpadding=\"1\">";
 								popupText += "<tr><td>Name</td><td> = <t/d><td>" + name + "</td></tr>";
 								popupText += "<tr><td>ID</td><td> = <t/d><td>" + id + "</td></tr>";
 								popupText += "<tr><td>Version</td><td> = <t/d><td>" + version + "</td></tr>";
@@ -1007,7 +1027,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td	onclick="showHarbourPoiAdd(true)"
+					<td	onclick="showHarbourAdd(true)"
 						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 						onmouseout="this.parentNode.style.backgroundColor = 'white';"
 						style="cursor:pointer"><?=$t->tr("harbour")?>
@@ -1059,8 +1079,8 @@
 		<div id="add_landmark_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:300px">
 			<?php include ("./dialogs/add_light.php"); ?>
 		</div>
-		<!--Add Harbour-Poi-Data-Dialog-->
-		<div id="add_harbour_poi_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:365px;">
+		<!--Add Harbour-Data-Dialog-->
+		<div id="add_harbour_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:365px;">
 			<?php include ("./dialogs/add_harbour_Poi.php"); ?>
 		</div>
 		<!--Pop up dialogs  ********************************************************************************************************** -->

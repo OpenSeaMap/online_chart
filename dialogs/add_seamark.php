@@ -3,7 +3,7 @@
 		<td>
 			<IMG src="resources/lateral/Lateral_SafeWater.png" width="30" height="36" align="center" border="0"/>
 		</td>
-		<td	onclick="addSeamark('safe_water')"
+		<td	onclick="addElement('seamark', 'safe_water')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("safe_water")?>
@@ -13,7 +13,7 @@
 		<td>
 			<IMG src="resources/lateral/Lateral_Green.png" width="30" height="36" align="center" border="0"/>
 		</td>
-		<td	onclick="addSeamark('starboard')"
+		<td	onclick="addElement('seamark', 'starboard')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("lateral_starboard")?></td>
@@ -23,7 +23,7 @@
 		<td>
 			<IMG src="resources/lateral/Lateral_Red.png" width="30" height="36" align="center" border="0"/>
 		</td>
-		<td	onclick="addSeamark('port')"
+		<td	onclick="addElement('seamark', 'port')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("lateral_port")?></td>
@@ -43,7 +43,7 @@
 		<td>
 			<IMG src="resources/lateral/Lateral_Pref_Port.png" width="30" height="36" align="center" border="0"/>
 		</td>
-		<td	onclick="addSeamark('preferred_channel_port')"
+		<td	onclick="addElement('seamark', 'preferred_channel_port')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("lateral_pref_port")?></td>
@@ -58,7 +58,7 @@
 		<td>
 			<IMG src="./resources/cardinal/Cardinal_North.png" width="30" height="36" align="center" border="0"/>
 		</td>
-		<td	onclick="addSeamark('north')"
+		<td	onclick="addElement('seamark', 'north')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("cardinal_north")?>
@@ -68,7 +68,7 @@
 		<td>
 			<IMG src="./resources/cardinal/Cardinal_East.png" width="30" height="36" align="center" border="0"/>
 		</td>
-		<td	onclick="addSeamark('east')"
+		<td	onclick="addElement('seamark', 'east')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("cardinal_east")?>
@@ -88,7 +88,7 @@
 		<td>
 			<IMG src="./resources/cardinal/Cardinal_West.png" width="30" height="36" align="center" border="0"/>
 		</td>
-		<td	onclick="addSeamark('west')"
+		<td	onclick="addElement('seamark', 'west')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("cardinal_west")?></td>
@@ -98,7 +98,7 @@
 		<td>
 			<IMG src="./resources/cardinal/Cardinal_Single.png" width="30" height="36" align="center" border="0"/>
 		</td>
-		<td	onclick="addSeamark('isolated_danger')"
+		<td	onclick="addElement('seamark', 'isolated_danger')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("isolated_danger")?>
@@ -113,7 +113,7 @@
 		<td>
 			<IMG src="./resources/special_purpose/Special_Purpose.png" width="30" height="36" align="center" border="0"/>
 		</td>
-		<td	onclick="addSeamark('special_purpose')"
+		<td	onclick="addElement('seamark', 'special_purpose')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("special_purpose")?>

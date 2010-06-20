@@ -3,7 +3,7 @@
 		<td>
 			<IMG src="./resources/places/harbour.png" width="32" height="32" align="center" border="0"/>
 		</td>
-		<td onclick="addSeamark('safe_water')"
+		<td onclick="addElement('harbour', 'void')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("harbour")?>
