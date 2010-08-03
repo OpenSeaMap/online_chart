@@ -18,7 +18,7 @@
 		<td>
 			<IMG src="./resources/places/harbour_master.png" width="28" height="32" align="center" border="0"/>
 		</td>
-		<td onclick="addSeamark('safe_water')"
+		<td onclick="addElement('poi', 'harbour_master')"
 			onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
 			onmouseout="this.parentNode.style.backgroundColor = 'white';"
 			style="cursor:pointer"><?=$t->tr("harbour_master")?>
@@ -78,7 +78,7 @@
 		<td>
 		</td>
 		<td align="right" valign="bottom" >
-			<input type="button" value='<?=$t->tr("close")?>' onclick="showHarbourPoiAdd(false)" >
+			<input type="button" value='<?=$t->tr("close")?>' onclick="showHarbourAdd(false)" >
 		</td>
 	</tr>
 </table>

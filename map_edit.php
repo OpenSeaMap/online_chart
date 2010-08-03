@@ -331,12 +331,15 @@
 			function addElement(element, type) {
 				// remember what we are doing
 				_ToDo = "add";
-				
+
 				showPositionDialog();
 				if (element == "seamark") {
 					showSeamarkAdd(false);
 					// set the seamark type
 					seamarkType = type;
+				} else if (element == "poi") {
+					showHarbourAdd(false);
+					seamarkType = "poi";
 				} else if (element == "harbour") {
 					showHarbourAdd(false);
 					seamarkType = "harbour";
@@ -362,6 +365,9 @@
 			function addElementEdit() {
 				if (seamarkType == "harbour") {
 					editWindow = window.open("./dialogs/edit_harbour.php" + "?mode=create&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=430, height=250, resizable=yes");
+ 					editWindow.focus();
+				} else if (seamarkType == "poi") {
+					editWindow = window.open("./dialogs/edit_poi.php" + "?mode=create&type=" + seamarkType + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=450, resizable=yes");
  					editWindow.focus();
 				} else {
 					editWindow = window.open("./dialogs/edit_seamark.php" + "?mode=create&type=" + seamarkType + "&lang=<?=$t->getCurrentLanguage()?>", "Bearbeiten", "width=630, height=450, resizable=yes");
