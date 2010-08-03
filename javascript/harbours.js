@@ -67,27 +67,17 @@ function make_request(params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
-	//var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
-	var skgUrl="http://harbor.openseamap.org/getHarboursWpi.php"+url;
+	var skgUrl="http://harbor.openseamap.org/getHarboursTest.php"+url;
 
 	var script = document.createElement("script");
 	script.src = skgUrl;
 	script.type = "text/javascript";
 	document.body.appendChild(script);
-	
-	/*var script2 = document.createElement("script2");
-	script2.src = wpiUrl;
-	script2.type = "text/javascript";
-	document.body.appendChild(script2);*/
-}
-
-function putAJAXMarkerWpi(id, lon, lat, names, type) {
-	alert("hafen");
-	putAJAXMarker(id, lon, lat, names, "", type);
 }
 
 // This function is called from the scripts that are returned on make_request calls.
 function putAJAXMarker(id, lon, lat, names, link, type) {
+	//alert(type);
 	if (!harbour_exist(id,type)) {
 		var name = names.split("-");
 		if(type==-1)
@@ -243,13 +233,12 @@ function harbour_clear() {
 	for(var i=layer_harbours.markers.length-1; i>=0;i--) {
 		layer_harbours.removeMarker(toBeDestroyed[i]);
 	}
-	
-	
+
 	// Reset all layer values
 	//refresh_oseamh.call_count = null;
 	if(oseamh_current_feature != null) {
 		map.removePopup(oseamh_current_feature.popup);
-	 }
+	}
 	oseamh_current_feature = null;
 	oseamh_state = 0;
 }
@@ -316,7 +305,6 @@ function create_marker(feature,type) {
 			oseamh_current_feature = this;
 		}
 		OpenLayers.Event.stop(ev);
-		
 	};
 	var marker_mouseover = function (ev) {
 		if (this != oseamh_current_feature) {
