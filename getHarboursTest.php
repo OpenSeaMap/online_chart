@@ -6,10 +6,10 @@
 	$r=$_REQUEST["r"];
 	$maxSize=$_REQUEST["maxSize"];
 
-	$db_pw = "afhq7itgq26";
+	$db_pw = "password";
 	$db_host = "127.0.0.1";
-	$db_user = "osm";
-	$db_db = "openseamap";
+	$db_user = "user";
+	$db_db = "database";
   
 	$mysql = mysql_connect($db_host, $db_user, $db_pw);
 	mysql_select_db($db_db, $mysql);
