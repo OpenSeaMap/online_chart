@@ -2,7 +2,7 @@
  Javascript Utilities
  author Olaf Hannemann
  license GPL V3
- version 0.1.0
+ version 0.1.1
 
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -30,15 +30,16 @@ function getCookie(argument) {
 			return trim(a[1]);
 		}
 	}
+
 	return "-1";
 }
 
 function checkKeyReturn(e) {
 	if (e.keyCode == 13) {
 		return true;
-	} else {
-		return false;
 	}
+
+	return false;
 }
 
 function trim(buffer) {
@@ -51,6 +52,18 @@ function convert2Web(buffer) {
 	buffer = buffer.replace('>', '&gt;');
 	buffer = buffer.replace('\'', '&apos;');
 	buffer = buffer.replace('\"', '&quot;');
-	
+
 	return buffer
 }
+
+function loadXMLDoc(name) {
+	if (window.XMLHttpRequest) {
+		xhttp=new XMLHttpRequest();
+	} else {
+		xhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xhttp.open("GET",name,false);
+	xhttp.send();
+
+	return xhttp.responseXML;
+} 

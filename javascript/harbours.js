@@ -67,7 +67,7 @@ function make_request(params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
-	var skgUrl="http://harbor.openseamap.org/getHarboursTest.php"+url;
+	var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
 
 	var script = document.createElement("script");
 	script.src = skgUrl;
