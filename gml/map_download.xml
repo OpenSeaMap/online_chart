@@ -1,0 +1,29 @@
+<maps>
+	<map>
+		<name>RostockHafen16</name>
+		<LatLonBox>
+			<north>54.2170730662912</north>
+			<south>54.088395486699</south>
+			<east>12.1728515625</east>
+			<west>12.06298828125</west>
+		</LatLonBox>
+	</map>
+	<map>
+		<name>BoddenZingst14</name>
+		<LatLonBox>
+			<north>54.5083265002907</north>
+			<south>54.2010102397389</south>
+			<east>13.095703125</east>
+			<west>12.3046875</west>
+		</LatLonBox>
+	</map>
+	<map>
+		<name>StralsundHaven</name>
+		<LatLonBox>
+			<north>54.3213292610791</north>
+			<south>54.2956906620322</south>
+			<east>13.1341552734375</east>
+			<west>13.0902099609375</west>
+		</LatLonBox>
+	</map>
+</maps>
