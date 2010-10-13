@@ -54,3 +54,11 @@ img {
 	padding: 0 5px 0 5px;
 	color: #000;
 }
+
+#downloadmenu {
+	margin-bottom: 5px;
+	border: 3px solid #000080;
+	-moz-border-radius: 8px;
+	background-color: #FFF;
+	padding: 5px;
+}
