@@ -1,6 +1,63 @@
 <maps>
 	<map>
+		<name>DaenischeSuedsee</name>
+		<link>Europe/Baltic Sea</link>
+		<category>3</category>
+		<LatLonBox>
+			<north>55.1160845398768</north>
+			<south>54.7119288484062</south>
+			<east>10.7666015625</east>
+			<west>9.8876953125</west>
+		</LatLonBox>
+	</map>
+	<map>
+		<name>SuedlicheOstsee</name>
+		<link>Europe/Baltic Sea</link>
+		<category>2</category>
+		<LatLonBox>
+			<north>56.7527228720574</north>
+			<south>53.5403073915002</south>
+			<east>21.796875</east>
+			<west>9.140625</west>
+		</LatLonBox>
+	</map>
+	<map>
+		<name>FlensburgFoerde</name>
+		<link>Europe/Baltic Sea</link>
+		<category>5</category>
+		<LatLonBox>
+			<north>54.9145140076653</north>
+			<south>54.7119288484062</south>
+			<east>10.08544921875</east>
+			<west>9.38232421875</west>
+		</LatLonBox>
+	</map>
+	<map>
+		<name>Helsinki14</name>
+		<link>Europe/Baltic Sea</link>
+		<category>5</category>
+		<LatLonBox>
+			<north>60.2507159415048</north>
+			<south>59.9879976312122</south>
+			<east>25.37841796875</east>
+			<west>24.67529296875</west>
+		</LatLonBox>
+	</map>
+	<map>
+		<name>ApenradeFjord</name>
+		<link>Europe/Baltic Sea</link>
+		<category>5</category>
+		<LatLonBox>
+			<north>55.0783672320151</north>
+			<south>55.0028258097933</south>
+			<east>9.6514892578125</east>
+			<west>9.4097900390625</west>
+		</LatLonBox>
+	</map>
+	<map>
 		<name>RostockHafen16</name>
+		<link>Europe/Baltic Sea/Harbour</link>
+		<category>6</category>
 		<LatLonBox>
 			<north>54.2170730662912</north>
 			<south>54.088395486699</south>
@@ -10,6 +67,8 @@
 	</map>
 	<map>
 		<name>BoddenZingst14</name>
+		<link>Europe/Baltic Sea</link>
+		<category>5</category>
 		<LatLonBox>
 			<north>54.5083265002907</north>
 			<south>54.2010102397389</south>
@@ -19,11 +78,35 @@
 	</map>
 	<map>
 		<name>StralsundHaven</name>
+		<link>Europe/Baltic Sea/Harbour</link>
+		<category>6</category>
 		<LatLonBox>
 			<north>54.3213292610791</north>
 			<south>54.2956906620322</south>
 			<east>13.1341552734375</east>
 			<west>13.0902099609375</west>
+		</LatLonBox>
+	</map>
+	<map>
+		<name>StettinerHaftOder14</name>
+		<link>Europe/Baltic Sea</link>
+		<category>5</category>
+		<LatLonBox>
+			<north>53.9172810154762</north>
+			<south>53.605544099238</south>
+			<east>14.677734375</east>
+			<west>13.798828125</west>
+		</LatLonBox>
+	</map>
+	<map>
+		<name>Wolgast</name>
+		<link>Europe/Baltic Sea/Harbour</link>
+		<category>6</category>
+		<LatLonBox>
+			<north>54.0658357716128</north>
+			<south>54.0464891133558</south>
+			<east>13.8015747070312</east>
+			<west>13.7686157226562</west>
 		</LatLonBox>
 	</map>
 </maps>

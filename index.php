@@ -27,6 +27,10 @@
 			var lat = 54.1530;
 			var zoom = 10;
 
+			var downloadName;
+			var downloadLink;
+			var downloadLoaded = false;
+
 			// Work around for accessing translations from harbour.js
 			var linkText = "<?=$t->tr('descrSkipperGuide')?>";
 
@@ -58,24 +62,36 @@
 
 			// Show Download section
 			function showMapDownload() {
-				//alert("Download");
+				if (!downloadLoaded) {
+					addMapDownload();
+				} else {
+					closeMapDownload()
+				}
+			}
+
+			function addMapDownload() {
+				addDownloadlayer();
+
 				layer_download.setVisibility(true);
 				document.getElementById("downloadmenu").style.visibility = 'visible';
+				downloadLoaded = true;
 			}
 
 			function closeMapDownload() {
 				layer_download.setVisibility(false);
+				layer_download.removeAllFeatures();
 				document.getElementById("downloadmenu").style.visibility = 'hidden';
+				downloadLoaded = false;
 			}
 
 			function downloadMap() {
-				var name = document.getElementById('info_dialog').innerHTML;
-				var format = _buoy_shape = document.getElementById("mapFormat").value;
+				var format = document.getElementById("mapFormat").value;
+
 				if (format == "unknown") {
 					alert("Bitte wählen sie ein Format.");
 					return;
 				}
-				var url = "http://sourceforge.net/projects/openseamap/files/Maps/Europe/Baltic%20Sea/Harbour/"+ name + "/OSeaM-" + name + "." + format + "/download";
+				var url = "http://sourceforge.net/projects/openseamap/files/Maps/" + downloadLink + "/"+ downloadName + "/OSeaM-" + downloadName + "." + format + "/download";
 				
 				downloadWindow = window.open(url);
 				//http://sourceforge.net/projects/openseamap/files/Maps/Europe/Baltic%20Sea/Harbour/StralsundHaven/OSeaM-StralsundHaven.WCI/download
@@ -83,9 +99,15 @@
 
 			function selectedMap (evt) {
 				var selectedMap = evt.feature.id.split(".");
-				var mapName = arrayMaps[selectedMap[2].split("_")[1]];
-				//alert(mapName);
+				var buff = arrayMaps[selectedMap[2].split("_")[1]].split(":");
+
+				downloadName = buff[0];
+				downloadLink = buff[1];
+
+				var mapName =downloadName;
+
 				document.getElementById('info_dialog').innerHTML=""+ mapName +"";
+				document.getElementById('buttonMapDownload').disabled=false;
 			}
 
 			function drawmap() {
@@ -129,8 +151,6 @@
 				// Map download
 				layer_download = new OpenLayers.Layer.Vector("Map Download", {visibility: false});
 
-				addDownloadlayer();
-
 				map.addLayers([layer_mapnik, layer_tah, layer_seamark, layer_harbours, layer_download, layer_sport]);
 
 				if (!map.getCenter()) {
@@ -153,8 +173,13 @@
 
 			// Map event listener Zoomed
 			function mapEventZoom(event) {
+				zoom = map.getZoom();
 				// Set cookie for remembering zoomlevel
-				setCookie("zoom", map.getZoom());
+				setCookie("zoom",zoom);
+				if (downloadLoaded) {
+					closeMapDownload();
+					addMapDownload();
+				}
 			}
 
 			function addDownloadlayer() {
@@ -170,6 +195,16 @@
 				for (var i=0; i < items.length; ++i) {
 					//alert(i);
 					var item = items[i];
+					var load = false;
+					var category =item.getElementsByTagName("category")[0].childNodes[0].nodeValue;
+
+					if (zoom <= 7 && category >= 2) {
+						load = true;
+					} else if (zoom <= 17 && category >= 3) {
+						load = true;
+					}
+
+					if (load) {
 					try {
 						var n = item.getElementsByTagName("north")[0].childNodes[0].nodeValue;
 						var s = item.getElementsByTagName("south")[0].childNodes[0].nodeValue;
@@ -184,7 +219,11 @@
 					OpenLayers.Projection("EPSG:900913"));
 					var box = new OpenLayers.Feature.Vector(bounds.toGeometry());
 					layer_download.addFeatures(box);
-					arrayMaps[box.id.split("_")[1]] = item.getElementsByTagName("name")[0].childNodes[0].nodeValue;
+					var name = item.getElementsByTagName("name")[0].childNodes[0].nodeValue;
+					var link = item.getElementsByTagName("link")[0].childNodes[0].nodeValue;
+					arrayMaps[box.id.split("_")[1]] = name + ":" + link;
+					//alert(link);
+					}
 				}
 			}
 
@@ -235,7 +274,7 @@
 				<tr>
 					<td>
 						<br/>
-						<input type="button" id="buttonMapDownload" value="Herunterladen" onclick="downloadMap()">
+						<input type="button" id="buttonMapDownload" value="Herunterladen" onclick="downloadMap()" disabled="true">
 					</td>
 					<td align="right">
 						<br/>
