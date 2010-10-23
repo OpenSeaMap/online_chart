@@ -91,7 +91,7 @@
 					alert("Bitte wählen sie ein Format.");
 					return;
 				}
-				var url = "http://sourceforge.net/projects/openseamap/files/Maps/" + downloadLink + "/"+ downloadName + "/OSeaM-" + downloadName + "." + format + "/download";
+				var url = "http://sourceforge.net/projects/openseamap/files/Maps" + downloadLink + "OSeaM-" + downloadName + "." + format + "/download";
 				
 				downloadWindow = window.open(url);
 				//http://sourceforge.net/projects/openseamap/files/Maps/Europe/Baltic%20Sea/Harbour/StralsundHaven/OSeaM-StralsundHaven.WCI/download
@@ -200,7 +200,11 @@
 
 					if (zoom <= 7 && category >= 2) {
 						load = true;
-					} else if (zoom <= 17 && category >= 3) {
+					} else if (zoom <= 10 && category >= 4) {
+						load = true;
+					} else if (zoom <= 13 && category >= 6) {
+						load = true;
+					} else if (zoom <= 17 && category >= 7) {
 						load = true;
 					}
 
@@ -219,8 +223,8 @@
 					OpenLayers.Projection("EPSG:900913"));
 					var box = new OpenLayers.Feature.Vector(bounds.toGeometry());
 					layer_download.addFeatures(box);
-					var name = item.getElementsByTagName("name")[0].childNodes[0].nodeValue;
-					var link = item.getElementsByTagName("link")[0].childNodes[0].nodeValue;
+					var name = item.getElementsByTagName("name")[0].childNodes[0].nodeValue.trim();
+					var link = item.getElementsByTagName("link")[0].childNodes[0].nodeValue.trim();
 					arrayMaps[box.id.split("_")[1]] = name + ":" + link;
 					//alert(link);
 					}
@@ -243,18 +247,18 @@
 				<li>&nbsp;|&nbsp;</li>
 				<li onClick="showMapKey()"><IMG src="./resources/action/info.png" width="24" height="24" align="center" border="0"><?=$t->tr("Legende")?></img></li>
 				<li>&nbsp;|&nbsp;</li>
-				<li onClick="showMapDownload()"><IMG src="./resources/action/download.png" width="24" height="24" align="center" border="0">Karte Herunterladen</img></li>
+				<li onClick="showMapDownload()"><IMG src="./resources/action/download.png" width="24" height="24" align="center" border="0"><?=$t->tr("downloadChart")?></img></li>
 			</ul>
 		</div>
 		<div id="downloadmenu" style="position:absolute; top:50px; left:60px; visibility:hidden;">
-			<b>Karte Herunterladen</b><br/><br/>
+			<b><?=$t->tr("downloadChart")?></b><br/><br/>
 			<table border="0" width="100%">
 				<tr>
 					<td>
 						Name:
 					</td>
 					<td>
-						<div id="info_dialog">&nbsp;Bitte Wählen<br/></div>
+						<div id="info_dialog">&nbsp;<?=$t->tr("pleaseSelect")?><br/></div>
 					</td>
 				</tr>
 				<tr>
@@ -274,11 +278,11 @@
 				<tr>
 					<td>
 						<br/>
-						<input type="button" id="buttonMapDownload" value="Herunterladen" onclick="downloadMap()" disabled="true">
+						<input type="button" id="buttonMapDownload" value="<?=$t->tr("download")?>" onclick="downloadMap()" disabled="true">
 					</td>
 					<td align="right">
 						<br/>
-						<input type="button" id="buttonMapClose" value="Schließen" onclick="closeMapDownload()">
+						<input type="button" id="buttonMapClose" value="<?=$t->tr("close")?>" onclick="closeMapDownload()">
 					</td>
 				</tr>
 			</table>
