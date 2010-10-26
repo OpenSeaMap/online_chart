@@ -175,7 +175,7 @@
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
 				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
 				// Update harbour layer
-				refresh_oseamh();
+				refresh_harbours();
 			}
 
 			// Map event listener Zoomed
@@ -185,7 +185,7 @@
 				setCookie("zoom",zoom);
 
 				if(oldZoom!=zoom) {
-					ensureVisibility(zoom);
+					ensureHarbourVisibility(zoom);
 					oldZoom=zoom
 				}
 				if (downloadLoaded) {
