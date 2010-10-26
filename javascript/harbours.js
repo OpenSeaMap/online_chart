@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright 2008 - 2009 Xavier Le Bourdon, Christoph Böhme, Mitja Kleider
+ Copyright 2008 - 2010 Xavier Le Bourdon, Christoph Böhme, Mitja Kleider
  
  This file originates from the Openstreetbugs project and was modified
  by Matthias Hoffmann and Olaf Hannemann for the OpenSeaMap project.
@@ -33,29 +33,7 @@ var oseamh_harbours = new Array();
 var oseamh_state = 0;
 var oseamh_current_feature = null;
 
-//last zoomlevel of the map
-var oldZoom=0;
-
-//Disabled due to issues with MS-IE
-//const GROUP_HARBOURS=10;
-//const DISPLAY_ALL=12;
-
-//const UNCLASSIFIED_SKG=-1;
-//const UNCLASSIFIED_WPI=0;
-
 var popuptime=0;
-
-
-/* Call this method to activate openstreetbugs on the map.
- * The argument map must refer to an Openlayers.Map object. The
- * second argument defines the path on the server which contains 
- * the openstreetbugs server side scripts.
- */
-function init_harbours() {
-	//load harbours in current view
-	refresh_oseamh();
-}
-
 
 
 // AJAX functions--------------------------------------------------------------------------------------------
@@ -67,8 +45,9 @@ function make_request(params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
-	var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
-
+	//var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
+	var skgUrl="http://harbor.openseamap.org/getHarboursWpi.php"+url;
+	
 	var script = document.createElement("script");
 	script.src = skgUrl;
 	script.type = "text/javascript";
@@ -105,7 +84,6 @@ function putAJAXMarker(id, lon, lat, names, link, type) {
 // Downloads new harbours from the server.
 function refresh_oseamh() {
 	
-	var zoomLevel = map.getZoom();
 	/*
 	 * Decision Block to select which harbours' visibility has to be changed.
 	 * As there currently no appropriate data-structure, there is currently no 
@@ -129,11 +107,6 @@ function refresh_oseamh() {
 	  }
 	}
 	*/
-	if(oldZoom!=zoomLevel) {
-		oldZoom=zoomLevel
-		ensureVisibility(zoomLevel); 
-	}
-	oldZoom=zoomLevel
 	
 	if (refresh_oseamh.call_count == undefined) {
 		refresh_oseamh.call_count = 0;
@@ -146,7 +119,7 @@ function refresh_oseamh() {
 	l = x2lon(bounds[0]).toFixed(5);
 	r = x2lon(bounds[2]).toFixed(5);
 
-	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count, "maxSize":getVisibility(zoomLevel), "zoom":zoomLevel };
+	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_oseamh.call_count, "maxSize":getVisibility(zoom), "zoom":zoom};
 	//keep the number of array elements reasonable
 // 	if(oseamh_harbours.length>1000){
 // 	  oseamh_harbours=new Array();
@@ -204,7 +177,7 @@ function ensureVisibility(zoom){
 
 	for (var i in oseamh_harbours) {
 		if (oseamh_harbours[i].type <= maxType) {
-			if(zoom>=5 /*|| (zoom<5 && Math.random() < (1*zoom/10))*/) {
+			if(zoom>=5) {
 				create_marker(oseamh_harbours[i].feature,oseamh_harbours[i].type);
 			}
 		}
@@ -256,8 +229,8 @@ function get_harbour(id,type) {
 // This function creates a feature and adds a corresponding marker to the map.
 function create_feature(x, y, popup_content, type) {
 	if(!create_feature.harbour_icon) {
-		var harbourIcon='http://map.openseamap.org/map/resources/places/harbour_32.png';
-		var marinaIcon='http://map.openseamap.org/map/resources/places/marina_32.png';
+		var harbourIcon='./resources/places/harbour_32.png';
+		var marinaIcon='./resources/places/marina_32.png';
 		icon_size = new OpenLayers.Size(32, 32);
 		icon_offset = new OpenLayers.Pixel(-16, -16);
 		create_feature.harbour_icon = new OpenLayers.Icon(harbourIcon, icon_size, icon_offset);
@@ -329,7 +302,7 @@ function create_marker(feature,type) {
 
 	var maxType=getVisibility(map.getZoom());
 	if(type<=maxType){
-		if(zoom>=5 ||refresh_oseamh.call_count>0 /*|| (zoom<5 && Math.random() < (map.getZoom()/10))*/) {
+		if(zoom>=5 ||refresh_oseamh.call_count>0) {
 			layer_harbours.addMarker(marker);
 		}
 	}

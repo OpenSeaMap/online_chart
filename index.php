@@ -27,6 +27,9 @@
 			var lat = 54.1530;
 			var zoom = 10;
 
+			//last zoomlevel of the map
+			var oldZoom=0;
+
 			var downloadName;
 			var downloadLink;
 			var downloadLoaded = false;
@@ -90,8 +93,12 @@
 				if (format == "unknown") {
 					alert("Bitte wählen sie ein Format.");
 					return;
+				} else if (format == "cal") {
+					format = "_png." + format
+				} else {
+					format = "." + format
 				}
-				var url = "http://sourceforge.net/projects/openseamap/files/Maps" + downloadLink + "OSeaM-" + downloadName + "." + format + "/download";
+				var url = "http://sourceforge.net/projects/openseamap/files/Maps" + downloadLink + "OSeaM-" + downloadName + format + "/download";
 				
 				downloadWindow = window.open(url);
 				//http://sourceforge.net/projects/openseamap/files/Maps/Europe/Baltic%20Sea/Harbour/StralsundHaven/OSeaM-StralsundHaven.WCI/download
@@ -176,6 +183,11 @@
 				zoom = map.getZoom();
 				// Set cookie for remembering zoomlevel
 				setCookie("zoom",zoom);
+
+				if(oldZoom!=zoom) {
+					ensureVisibility(zoom);
+					oldZoom=zoom
+				}
 				if (downloadLoaded) {
 					closeMapDownload();
 					addMapDownload();
@@ -268,6 +280,7 @@
 						<select id="mapFormat">
 							<option value="unknown"/><?=$t->tr("unknown")?>
 							<option value="png"/>png
+							<option value="cal"/>cal
 							<option value="kap"/>kap
 							<option value="WCI"/>WCI
 							<option value="kmz"/>kmz

@@ -1,10 +1,10 @@
 <maps>
 	<map>
 		<name>FinnischeSee10</name>
-		<link> /Europe/Baltic Sea/FinnischeSee10/ </link> 
-			<category>2</category>
+		<link>/Europe/Baltic Sea/FinnischeSee10/</link>
+		<category>2</category>
 		<latlon>
-						<north>60.9304322029234</north>
+			<north>60.9304322029234</north>
 			<south>58.8137417157078</south>
 			<east>30.5859375</east>
 			<west>19.3359375</west>
@@ -44,7 +44,18 @@
 		</latlon> 
 	</map>
 	<map>
-		<name>oestlMittelmeer9</name>
+		<name>BayofBiscay10</name>
+		<link>/Europe/France/BayofBiscay10/</link>
+		<category>2</category>
+		<latlon>
+			<north>48.6909603909255</north>
+			<south>42.8115217450979</south>
+			<east>0.703125</east>
+			<west>-10.546875</west>
+		</latlon>
+	</map>
+	<map>
+		<name>EastMediterraneanSea9</name>
 		<link>/Europe/Mediterranean Sea/eastMediterranean Sea9/</link>
 		<category>2</category>
 		<latlon>
@@ -55,7 +66,7 @@
 		</latlon> 
 	</map>
 	<map>
-		<name>westlMittelmeer9</name>
+		<name>WestMediterraneanSea9</name>
 		<link>/Europe/Mediterranean Sea/westMediterranean Sea9/</link>
 		<category>2</category>
 		<latlon>
@@ -66,9 +77,75 @@
 		</latlon> 
 	</map>
 	<map>
+		<name>Helsinki14</name>
+		<link> /Europe/Baltic Sea/Helsinki14/ </link>
+		<category>4</category>
+		<latlon>
+			<north>60.2507159415048</north>
+			<south>59.9879976312122</south>
+			<east>25.37841796875</east>
+			<west>24.67529296875</west>
+		</latlon>
+	</map>
+	<map>
+		<name>ApenradeFjord16</name>
+		<link>/Europe/Baltic Sea/ApenradeFjord16/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.0783672320151</north>
+			<south>55.0028258097933</south>
+			<east>9.6514892578125</east>
+			<west>9.4097900390625</west>
+		</latlon>
+	</map>
+	<map>
+		<name>Bornholm14</name>
+		<link>/Europe/Baltic Sea/Bornholm14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.3416418301333</north>
+			<south>54.9397657586589</south>
+			<east>15.2490234375</east>
+			<west>14.6337890625</west>
+		</latlon>
+	</map>
+	<map>
+		<name>DaenischeSuedsee</name>
+		<link> /Europe/Baltic Sea/DaenischeSuedsee/ </link>
+		<category>4</category>
+		<latlon>
+			<north>55.1160845398768</north>
+			<south>54.7119288484062</south>
+			<east>10.7666015625</east>
+			<west>9.8876953125</west>
+		</latlon>
+	</map>
+	<map>
+		<name>KielerBucht14</name>
+		<link>/Europe/Baltic Sea/KielerBucht14/</link>
+		<category>4</category>
+		<latlon>
+			<north>54.7119288484062</north>
+			<south>54.3037044398981</south>
+			<east>10.87646484375</east>
+			<west>9.82177734375</west>
+		</latlon>
+	</map>
+	<map>
+		<name>Fehmarn-Sund14</name>
+		<link>/Europe/Baltic Sea/Fehmarn-Sund14</link>
+		<category>4</category>
+		<latlon>
+			<north>54.7119288484062</north>
+			<south>54.3037044398981</south>
+			<east>11.513671875</east>
+			<west>10.72265625</west>
+		</latlon>
+	</map>
+	<map>
 		<name>FlensburgFoerde14</name>
 		<link>/Europe/Baltic Sea/FlensburgFoerde14/</link>
-		<category>5</category>
+		<category>4</category>
 		<latlon>
 			<north>54.9145140076653</north>
 			<south>54.7119288484062</south>
@@ -77,8 +154,19 @@
 		</latlon> 
 	</map>
 	<map>
+		<name>GreifswalderBodden14</name>
+		<link> /Europe/Baltic Sea/GreifswalderBodden14/ </link>
+		<category>4</category>
+		<latlon>
+			<north>54.3805573686307</north>
+			<south>54.0722826556039</south>
+			<east>13.9306640625</east>
+			<west>13.2275390625</west>
+		</latlon>
+	</map>
+	<map>
 		<name>LuebeckerBucht</name>
-		<link> /Europe/Baltic Sea/LuebeckerBucht/ </link> 
+		<link>/Europe/Baltic Sea/LuebeckerBucht/</link>
 		<category>4</category>
 		<latlon>
 			<north>54.2652240786057</north>
@@ -86,6 +174,28 @@
 			<east>11.337890625</east>
 			<west>10.72265625</west>
 		</latlon> 
+	</map>
+	<map>
+		<name>PeeneStromAchterwasser14</name>
+		<link>/Europe/Baltic Sea/PeeneStromAchterwasser14/</link>
+		<category>4</category>
+		<latlon>
+			<north>54.2395505315618</north>
+			<south>53.8265967429941</south>
+			<east>14.21630859375</east>
+			<west>13.68896484375</west>
+		</latlon>
+	</map>
+	<map>
+		<name>Ruegen14</name>
+		<link>/Europe/Baltic Sea/Ruegen14/</link>
+		<category>4</category>
+		<latlon>
+			<north>54.7119288484062</north>
+			<south>54.2010102397389</south>
+			<east>13.77685546875</east>
+			<west>12.98583984375</west>
+		</latlon>
 	</map>
 	<map>
 		<name>StettinerHaftOder14</name>
@@ -209,8 +319,19 @@
 		</latlon> 
 	</map>
 	<map>
+		<name>MarstalHafen17</name>
+		<link>/Europe/Baltic Sea/Harbour/MarstalHafen17/</link>
+		<category>6</category>
+		<latlon>
+			<north>54.8623821967325</north>
+			<south>54.8402452857557</south>
+			<east>10.5523681640625</east>
+			<west>10.5111694335938</west>
+		</latlon>
+	</map>
+	<map>
 		<name>NykoebingFalster17</name>
-		<link> /Europe/Baltic Sea/Harbour/NykoebingFalster17/ </link> 
+		<link>/Europe/Baltic Sea/Harbour/NykoebingFalster17/</link>
 		<category>6</category>
 		<latlon>
 			<north>54.7753458593645</north>
@@ -218,6 +339,17 @@
 			<east>11.88720703125</east>
 			<west>11.84326171875</west>
 		</latlon> 
+	</map>
+	<map>
+		<name>RhoenneHafen17</name>
+		<link>/Europe/Baltic Sea/Harbour/RhoenneHafen17/</link>
+		<category>6</category>
+		<latlon>
+			<north>55.1098007931438</north>
+			<south>55.0862279393846</south>
+			<east>14.7052001953125</east>
+			<west>14.677734375</west>
+		</latlon>
 	</map>
 	<map>
 		<name>RostockHafen16</name>
@@ -242,15 +374,15 @@
 		</latlon> 
 	</map>
 	<map>
-		<name>Wolgast</name>
-		<link> /Europe/Baltic Sea/Harbour/Wolgast/ </link> 
+		<name>Wolgast17</name>
+		<link>/Europe/Baltic Sea/Wolgast17/</link>
 		<category>6</category>
 		<latlon>
 			<north>54.0658357716128</north>
 			<south>54.0464891133558</south>
 			<east>13.8015747070312</east>
 			<west>13.7686157226562</west>
-		</latlon> 
+		</latlon>
 	</map>
 	<map>
 		<name>RostockHoheDuene</name>
