@@ -11,17 +11,6 @@
 		</latlon> 
 </map>
 <map>
-		<name>KielerBucht14</name>
-		<link>/Europe/Baltic Sea/KielerBucht14/</link>
-		<category>2</category>
-		<latlon>
-			<north>54.7119288484062</north>
-			<south>54.3037044398981</south>
-			<east>10.87646484375</east>
-			<west>9.82177734375</west>
-		</latlon> 
-</map>
-<map>
 		<name>NorthEastBalticSea10</name>
 		<link>/Europe/Baltic Sea/NorthEastBalticSea10/</link>
 		<category>2</category>
@@ -55,6 +44,28 @@
 		</latlon> 
 </map>
 <map>
+		<name>BlackSea9</name>
+		<link>/Europe/BlackSea9/</link>
+		<category>2</category>
+		<latlon>
+			<north>47.5172006978394</north>
+			<south>39.3682791491601</south>
+			<east>42.890625</east>
+			<west>26.015625</west>
+		</latlon> 
+</map>
+<map>
+		<name>EnglishChannel10</name>
+		<link>/Europe/EnglishChannel10/</link>
+		<category>2</category>
+		<latlon>
+			<north>53.1204052831066</north>
+			<south>47.75409797968</south>
+			<east>4.921875</east>
+			<west>-6.328125</west>
+		</latlon> 
+</map>
+<map>
 		<name>BayofBiscay10</name>
 		<link>/Europe/France/BayofBiscay10/</link>
 		<category>2</category>
@@ -85,6 +96,50 @@
 			<south>33.1375511923462</south>
 			<east>21.09375</east>
 			<west>-7.03125</west>
+		</latlon> 
+</map>
+<map>
+		<name>Nordsee10</name>
+		<link>/Europe/Nordsee10/</link>
+		<category>2</category>
+		<latlon>
+			<north>59.5343180010956</north>
+			<south>52.4827802220782</south>
+			<east>9.140625</east>
+			<west>-4.921875</west>
+		</latlon> 
+</map>
+<map>
+		<name>NorwaySouthCoast10</name>
+		<link>/Europe/NorwaySouthCoast10/</link>
+		<category>2</category>
+		<latlon>
+			<north>62.9152330394761</north>
+			<south>57.3265212252171</south>
+			<east>9.140625</east>
+			<west>3.515625</west>
+		</latlon> 
+</map>
+<map>
+		<name>SkagerakKattegat10</name>
+		<link>/Europe/SkagerakKattegat10/</link>
+		<category>2</category>
+		<latlon>
+			<north>60.2398111699989</north>
+			<south>55.7765730186677</south>
+			<east>13.359375</east>
+			<west>7.734375</west>
+		</latlon> 
+</map>
+<map>
+		<name>MoenBornholm12</name>
+		<link>/Europe/Baltic Sea/MoenBornholm12/</link>
+		<category>3</category>
+		<latlon>
+			<north>55.4788534633104</north>
+			<south>53.8525266004495</south>
+			<east>15.380859375</east>
+			<west>11.865234375</west>
 		</latlon> 
 </map>
 <map>
@@ -154,6 +209,28 @@
 		</latlon> 
 </map>
 <map>
+		<name>GedserDierhagen14</name>
+		<link>/Europe/Baltic Sea/GedserDierhagen14/</link>
+		<category>4</category>
+		<latlon>
+			<north>54.6484125023167</north>
+			<south>54.1881554810715</south>
+			<east>12.28271484375</east>
+			<west>11.49169921875</west>
+		</latlon> 
+</map>
+<map>
+		<name>GedserRuegen14</name>
+		<link>/Europe/Baltic Sea/GedserRuegen14/</link>
+		<category>4</category>
+		<latlon>
+			<north>54.8513152596861</north>
+			<south>54.4955675218741</south>
+			<east>13.07373046875</east>
+			<west>11.93115234375</west>
+		</latlon> 
+</map>
+<map>
 		<name>GreifswalderBodden14</name>
 		<link>/Europe/Baltic Sea/GreifswalderBodden14/</link>
 		<category>4</category>
@@ -162,6 +239,17 @@
 			<south>54.0722826556039</south>
 			<east>13.9306640625</east>
 			<west>13.2275390625</west>
+		</latlon> 
+</map>
+<map>
+		<name>GrosserBelt14</name>
+		<link>/Europe/Baltic Sea/GrosserBelt14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.7642131648377</north>
+			<south>55.1663189412509</south>
+			<east>11.2939453125</east>
+			<west>10.5908203125</west>
 		</latlon> 
 </map>
 <map>
@@ -176,6 +264,28 @@
 		</latlon> 
 </map>
 <map>
+		<name>KielerBucht14</name>
+		<link>/Europe/Baltic Sea/KielerBucht14/</link>
+		<category>4</category>
+		<latlon>
+			<north>54.7119288484062</north>
+			<south>54.3037044398981</south>
+			<east>10.87646484375</east>
+			<west>9.82177734375</west>
+		</latlon> 
+</map>
+<map>
+		<name>KoegeMalmoe14</name>
+		<link>/Europe/Baltic Sea/KoegeMalmoe14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.6651931844361</north>
+			<south>55.2665981523119</south>
+			<east>13.0078125</east>
+			<west>12.12890625</west>
+		</latlon> 
+</map>
+<map>
 		<name>LuebeckerBucht14</name>
 		<link>/Europe/Baltic Sea/LuebeckerBucht14/</link>
 		<category>4</category>
@@ -184,6 +294,17 @@
 			<south>53.8913912857529</south>
 			<east>11.513671875</east>
 			<west>10.72265625</west>
+		</latlon> 
+</map>
+<map>
+		<name>Moen14</name>
+		<link>/Europe/Baltic Sea/Moen14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.2791152920156</north>
+			<south>54.826007999095</south>
+			<east>12.81005859375</east>
+			<west>11.93115234375</west>
 		</latlon> 
 </map>
 <map>
@@ -209,6 +330,17 @@
 		</latlon> 
 </map>
 <map>
+		<name>Smalandsfarwndet14</name>
+		<link>/Europe/Baltic Sea/Smalandsfarwndet14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.203953257859</north>
+			<south>54.8006848673224</south>
+			<east>11.865234375</east>
+			<west>10.810546875</west>
+		</latlon> 
+</map>
+<map>
 		<name>StettinerHaftOder14</name>
 		<link>/Europe/Baltic Sea/StettinerHaftOder14/</link>
 		<category>4</category>
@@ -217,6 +349,17 @@
 			<south>53.605544099238</south>
 			<east>14.677734375</east>
 			<west>13.798828125</west>
+		</latlon> 
+</map>
+<map>
+		<name>Sund14</name>
+		<link>/Europe/Baltic Sea/Sund14/</link>
+		<category>4</category>
+		<latlon>
+			<north>56.1700229829321</north>
+			<south>55.6279959542672</south>
+			<east>13.095703125</east>
+			<west>12.392578125</west>
 		</latlon> 
 </map>
 <map>
@@ -248,8 +391,8 @@
 		<latlon>
 			<north>54.0464891133558</north>
 			<south>53.7876718443503</south>
-			<east>14.853515625</east>
-			<west>14.23828125</west>
+			<east>14.87548828125</east>
+			<west>14.17236328125</west>
 		</latlon> 
 </map>
 <map>
@@ -261,6 +404,17 @@
 			<south>54.5656926191119</south>
 			<east>11.942138671875</east>
 			<west>11.678466796875</west>
+		</latlon> 
+</map>
+<map>
+		<name>Falsterbokanalen16</name>
+		<link>/Europe/Baltic Sea/Falsterbokanalen16/</link>
+		<category>6</category>
+		<latlon>
+			<north>55.4508262058656</north>
+			<south>55.3510123096855</south>
+			<east>13.0133056640625</east>
+			<west>12.7935791015625</west>
 		</latlon> 
 </map>
 <map>
