@@ -52,6 +52,9 @@
 					lon = buffLon;
 				}
 				drawmap();
+				if (layer_download.visibility) {
+					addMapDownload();
+				}
 			}
 
 			// Set current language for internationalization
@@ -101,7 +104,6 @@
 				var url = "http://sourceforge.net/projects/openseamap/files/Maps" + downloadLink + "OSeaM-" + downloadName + format + "/download";
 				
 				downloadWindow = window.open(url);
-				//http://sourceforge.net/projects/openseamap/files/Maps/Europe/Baltic%20Sea/Harbour/StralsundHaven/OSeaM-StralsundHaven.WCI/download
 			}
 
 			function selectedMap (evt) {

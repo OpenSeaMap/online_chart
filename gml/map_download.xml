@@ -143,14 +143,36 @@
 		</latlon> 
 </map>
 <map>
+		<name>Ahus14</name>
+		<link>/Europe/Baltic Sea/Ahus14/</link>
+		<category>4</category>
+		<latlon>
+			<north>56.2189231891667</north>
+			<south>55.727110085046</south>
+			<east>14.91943359375</east>
+			<west>14.12841796875</west>
+		</latlon> 
+</map>
+<map>
 		<name>ApenradeFjord16</name>
 		<link>/Europe/Baltic Sea/ApenradeFjord16/</link>
 		<category>4</category>
 		<latlon>
 			<north>55.0783672320151</north>
 			<south>55.0028258097933</south>
-			<east>9.6514892578125</east>
-			<west>9.4097900390625</west>
+			<east>9.656982421875</east>
+			<west>9.415283203125</west>
+		</latlon> 
+</map>
+<map>
+		<name>BaringVig14</name>
+		<link>/Europe/Baltic Sea/BaringVig14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.7765730186677</north>
+			<south>55.4788534633104</south>
+			<east>10.61279296875</east>
+			<west>9.47021484375</west>
 		</latlon> 
 </map>
 <map>
@@ -176,14 +198,14 @@
 		</latlon> 
 </map>
 <map>
-		<name>DaenischeSuedsee</name>
-		<link>/Europe/Baltic Sea/DaenischeSuedsee/</link>
+		<name>DaenischeSuedsee14</name>
+		<link>/Europe/Baltic Sea/DaenischeSuedsee14/</link>
 		<category>4</category>
 		<latlon>
 			<north>55.1160845398768</north>
 			<south>54.7119288484062</south>
-			<east>10.7666015625</east>
-			<west>9.8876953125</west>
+			<east>10.72265625</east>
+			<west>9.66796875</west>
 		</latlon> 
 </map>
 <map>
@@ -253,6 +275,17 @@
 		</latlon> 
 </map>
 <map>
+		<name>GrosserBeltsouth14</name>
+		<link>/Europe/Baltic Sea/GrosserBeltsouth14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.2791152920156</north>
+			<south>54.6738309659312</south>
+			<east>11.2939453125</east>
+			<west>10.6787109375</west>
+		</latlon> 
+</map>
+<map>
 		<name>Helsinki14</name>
 		<link>/Europe/Baltic Sea/Helsinki14/</link>
 		<category>4</category>
@@ -261,6 +294,17 @@
 			<south>59.9879976312122</south>
 			<east>25.37841796875</east>
 			<west>24.67529296875</west>
+		</latlon> 
+</map>
+<map>
+		<name>Karlskrona14</name>
+		<link>/Europe/Baltic Sea/Karlskrona14/</link>
+		<category>4</category>
+		<latlon>
+			<north>56.2433499241053</north>
+			<south>55.8506498743372</south>
+			<east>15.8642578125</east>
+			<west>14.8974609375</west>
 		</latlon> 
 </map>
 <map>
@@ -286,6 +330,17 @@
 		</latlon> 
 </map>
 <map>
+		<name>Lillebaelt14</name>
+		<link>/Europe/Baltic Sea/Lillebaelt14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.5161921571789</north>
+			<south>55.0657868865917</south>
+			<east>10.17333984375</east>
+			<west>9.47021484375</west>
+		</latlon> 
+</map>
+<map>
 		<name>LuebeckerBucht14</name>
 		<link>/Europe/Baltic Sea/LuebeckerBucht14/</link>
 		<category>4</category>
@@ -303,8 +358,8 @@
 		<latlon>
 			<north>55.2791152920156</north>
 			<south>54.826007999095</south>
-			<east>12.81005859375</east>
-			<west>11.93115234375</west>
+			<east>12.76611328125</east>
+			<west>11.88720703125</west>
 		</latlon> 
 </map>
 <map>
@@ -330,14 +385,25 @@
 		</latlon> 
 </map>
 <map>
-		<name>Smalandsfarwndet14</name>
-		<link>/Europe/Baltic Sea/Smalandsfarwndet14/</link>
+		<name>Simrishamm14</name>
+		<link>/Europe/Baltic Sea/Simrishamm14/</link>
 		<category>4</category>
 		<latlon>
-			<north>55.203953257859</north>
-			<south>54.8006848673224</south>
-			<east>11.865234375</east>
-			<west>10.810546875</west>
+			<north>55.7642131648377</north>
+			<south>55.2665981523119</south>
+			<east>14.91943359375</east>
+			<west>14.12841796875</west>
+		</latlon> 
+</map>
+<map>
+		<name>Smalandsfarwandet14</name>
+		<link>/Europe/Baltic Sea/Smalandsfarwandet14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.2415520356525</north>
+			<south>54.7880173481789</south>
+			<east>11.88720703125</east>
+			<west>11.00830078125</west>
 		</latlon> 
 </map>
 <map>
@@ -360,6 +426,17 @@
 			<south>55.6279959542672</south>
 			<east>13.095703125</east>
 			<west>12.392578125</west>
+		</latlon> 
+</map>
+<map>
+		<name>Trelleborg14</name>
+		<link>/Europe/Baltic Sea/Trelleborg14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.4539413294331</north>
+			<south>55.0028258097933</south>
+			<east>13.623046875</east>
+			<west>12.744140625</west>
 		</latlon> 
 </map>
 <map>
@@ -393,6 +470,17 @@
 			<south>53.7876718443503</south>
 			<east>14.87548828125</east>
 			<west>14.17236328125</west>
+		</latlon> 
+</map>
+<map>
+		<name>Ysted14</name>
+		<link>/Europe/Baltic Sea/Ysted14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.4663993639382</north>
+			<south>55.015425940563</south>
+			<east>14.4580078125</east>
+			<west>13.5791015625</west>
 		</latlon> 
 </map>
 <map>
