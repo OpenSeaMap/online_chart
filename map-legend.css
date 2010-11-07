@@ -1,57 +1,58 @@
-#header li {
-	float: left;
-	border: 1px solid #bbb;
-	border-bottom-width: 0;
+html, body {
 	margin: 0;
-
+	padding: 0;
+	height:100%;
+	width: 100%;
+	font-family: Arial, sans-serif;
 }
 
-#header li a {
-	padding: 0 1em;
+#menu {
+	float:left;
+	width: 200px;
+	height: 100%;
+	background-color: #EEE;
 }
 
-#header a {
-	text-decoration: none;
-	display: block;
-	background: #eee;
-	padding: 0.24em 1em;
-	color: black;
-	width: 11em;
+#menu h2 {
+	margin: 0;
+	padding: 4px;
+	font-size: 16px;
+	color: #27408B;
+	background-color: #c0c0ff;
 	text-align: center;
 }
 
-#header a:hover {
-	background: #ddf;
-}
-
-#header ul {
+#menu ul {
 	list-style: none;
-	padding:0;
-	margin:0;
+	margin: 0;
+	padding:  10px 0 0px 0px;
 }
 
-#header #selected {
-	border-color: black;
+#menu ul li {
+	margin: 0;
+	padding: 0;
 }
 
-#header #selected a {
-	position: relative;
-	top: 1px;
-	background: white;
-	color: black;
-	font-weight: bold;
+#menu ul li a {
+	color: #000;
+	display: block;
+	margin: 0 0 0 0;
+	padding: 4px 0 4px 12px;
+	text-decoration: none;
+}
+
+#menu a:hover {
+	background-color: #AAA;
 }
 
 #content {
-	border: 1px solid;
+	position:absolute;
+	top:2px;
+	left:200px;
 	clear: both;
-	padding: 0 1em;
+	padding: 0px 0 0px 20px;
 }
 
-h1 {
-	margin: 0;
-	padding: 0 0 1em 0;
-} 
 
 
 

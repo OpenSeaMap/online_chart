@@ -24,7 +24,7 @@ $p->setDefaultPage("harbour");
 	</head>
 
 	<body>
-		<div id="header">
+		<div id="menu">
 			<?=$p->makePageLinks("legend.php?lang=".$t->getCurrentLanguage()."&amp;")?>
 		</div>
 		<div id="content">
