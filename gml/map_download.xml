@@ -209,6 +209,17 @@
 		</latlon> 
 </map>
 <map>
+		<name>DarlowkoRowi14</name>
+		<link>/Europe/Baltic Sea/DarlowkoRowi14/</link>
+		<category>4</category>
+		<latlon>
+			<north>54.8006848673224</north>
+			<south>54.3933522238459</south>
+			<east>17.38037109375</east>
+			<west>16.32568359375</west>
+		</latlon> 
+</map>
+<map>
 		<name>Fehmarn-Sund14</name>
 		<link>/Europe/Baltic Sea/Fehmarn-Sund14/</link>
 		<category>4</category>
@@ -330,6 +341,17 @@
 		</latlon> 
 </map>
 <map>
+		<name>KolbergDarlowko14</name>
+		<link>/Europe/Baltic Sea/KolbergDarlowko14/</link>
+		<category>4</category>
+		<latlon>
+			<north>54.4572666809339</north>
+			<south>54.1495672125405</south>
+			<east>16.435546875</east>
+			<west>15.46875</west>
+		</latlon> 
+</map>
+<map>
 		<name>Lillebaelt14</name>
 		<link>/Europe/Baltic Sea/Lillebaelt14/</link>
 		<category>4</category>
@@ -371,6 +393,17 @@
 			<south>53.8265967429941</south>
 			<east>14.21630859375</east>
 			<west>13.68896484375</west>
+		</latlon> 
+</map>
+<map>
+		<name>RowiWladystawono14</name>
+		<link>/Europe/Baltic Sea/RowiWladystawono14/</link>
+		<category>4</category>
+		<latlon>
+			<north>55.0028258097933</north>
+			<south>54.6992335284814</south>
+			<east>18.544921875</east>
+			<west>17.314453125</west>
 		</latlon> 
 </map>
 <map>
@@ -628,7 +661,7 @@
 </map>
 <map>
 		<name>Wolgast17</name>
-		<link>/Europe/Baltic Sea/Wolgast17/</link>
+		<link>/Europe/Baltic Sea/Harbour/Wolgast17/</link>
 		<category>6</category>
 		<latlon>
 			<north>54.0658357716128</north>
