@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="./javascript/utilities.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
 		<script type="text/javascript" src="./javascript/harbours.js"></script>
+		<script type="text/javascript" src="./javascript/tidal_scale.js"></script>
 		<script type="text/javascript">
 
 			var map;
@@ -157,10 +158,14 @@
 				layer_harbours = new OpenLayers.Layer.Markers("<?=$t->tr("harbours")?>",
 				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayOutsideMaxExtent:true});
 				layer_harbours.setOpacity(0.8);
+				// Tidal Scales
+				layer_tidal_scale = new OpenLayers.Layer.Markers("Pegel",
+				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayOutsideMaxExtent:true});
+				layer_harbours.setOpacity(0.8);
 				// Map download
 				layer_download = new OpenLayers.Layer.Vector("Map Download", {visibility: false});
 
-				map.addLayers([layer_mapnik, layer_tah, layer_seamark, layer_harbours, layer_download, layer_sport]);
+				map.addLayers([layer_mapnik, layer_tah, layer_seamark, layer_harbours, layer_tidal_scale, layer_download, layer_sport]);
 
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
@@ -177,7 +182,8 @@
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
 				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
 				// Update harbour layer
-				refresh_harbours();
+				refreshTidalScales();
+				refreshHarbours();
 			}
 
 			// Map event listener Zoomed
@@ -187,7 +193,8 @@
 				setCookie("zoom",zoom);
 
 				if(oldZoom!=zoom) {
-					ensureHarbourVisibility(zoom);
+					ensureHarbourVisibility(zoom)
+					ensureTidalScaleVisibility(zoom);
 					oldZoom=zoom
 				}
 				if (downloadLoaded) {

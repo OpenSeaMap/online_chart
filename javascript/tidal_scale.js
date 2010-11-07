@@ -17,6 +17,7 @@
 
  ******************************************************************************
  This file implements the client-side of the TidalScale display.
+ Version 0.0.1  07.11.2010
  ******************************************************************************/
 
 // List of downloaded scales:
@@ -27,7 +28,6 @@ var arrayTidalScales = new Array();
 // to keep track which popups are displayed.
 var TidalScaleState = 0;
 var TidalScaleCurrentFeature = null;
-
 var TidalScalePopupTime = 0;
 
 
@@ -40,73 +40,35 @@ function makeTidalScaleRequest(params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
-	//var skgUrl="http://harbor.openseamap.org/getHarboursSkipperGuide.php"+url;
-	var skgUrl="http://harbor.openseamap.org/getTidalScaleTest.php"+url;
+	var TidalScaleUrl="http://harbor.openseamap.org/getTidalScaleTest.php"+url;
 	
 	var script = document.createElement("script");
-	script.src = skgUrl;
+	script.src = TidalScaleUrl;
 	script.type = "text/javascript";
 	document.body.appendChild(script);
 }
 
-// This function is called from the scripts that are returned on make_harbour_request calls.
-function putTidalScaleMarker(lon, lat) {
-	alert("send");
-	if (!harbour_exist(id,type)) {
-		var name = names.split("-");
-		if(type==-1)
-			type = determineHarbourType(name[0]);
-		var popupText = "<b>" + name[0] +"</b><br/>";
-		if (typeof name[1] != "undefined") {
-			popupText += name[1];
-		}
-		if (typeof name[2] != "undefined") {
-			popupText += "<br/><i>" + name[2] + "</i>";
-		}
-		if (link != '') {
-			popupText += "<br/><br/><a href='" + link + "' target='blank'>" + linkText + "</a>";
-		}
-		
-		var harbour = {id: id, name: names, lat: lat, lon: lon, type: type, feature: null};
-		harbour.feature = createTidalScaleFeature(lon2x(lon), lat2y(lat), popupText, type);
-		arrayTidalScales.push(harbour);
+// This function is called from the scripts that are returned on makeTidalScaleRequest calls.
+function putTidalScaleMarker(id, lon, lat, tidal_name, pnp) {
+	//alert("recive :" + tidal_name + pnp + " : " + id + " : " + pnp);
+	if (!tidal_scale_exist(id)) {
+		var popupText = "<b>" + tidal_name +"</b>";
+		var TidalScale = {id: id, name: tidal_name, lat: lat, lon: lon, feature: null};
+		TidalScale.feature = createTidalScaleFeature(lon2x(lon), lat2y(lat), popupText, 1);
+		arrayTidalScales.push(TidalScale);
 	}
 }
 
 
-// Harbour management----------------------------------------------------------------------------------------
+// TidalScale management----------------------------------------------------------------------------------------
 
-// Downloads new harbours from the server.
-function refresh_harbours() {
-	
-	/*
-	 * Decision Block to select which harbours' visibility has to be changed.
-	 * As there currently no appropriate data-structure, there is currently no 
-	 * use of that block but thats only a question of time until there is such
-	 * an data structure
-	
-	if(zoomLevel<oldZoom){//Area displayed on map gets less detailed
-	  if(oldZoom==DISPLAY_ALL){//clear all skg-harbours that are not the representant of a group
-	   //TODO 
-	  }
-	  else if(oldZoom==GROUP_HARBOURS){//clear all skg-harbours
-	    //TODO
-	  }
-	}
-	else if(zoomLevel>oldZoom){//Area displayed on map gets more detailled
-	  if(zoomLevel==GROUP_HARBOURS){//display all harbours that are a representant
-	   //TODO 
-	  }
-	  else if(zoomLevel==DISPLAY_ALL){//display all harbours
-	    //TODO
-	  }
-	}
-	*/
-	
-	if (refresh_harbours.call_count == undefined) {
-		refresh_harbours.call_count = 0;
+// Downloads new TidalScales from the server.
+function refreshTidalScales() {
+
+	if (refreshTidalScales.call_count == undefined) {
+		refreshTidalScales.call_count = 0;
 	} else {
-		++refresh_harbours.call_count;
+		++refreshTidalScales.call_count;
 	}
 	bounds = map.getExtent().toArray();
 	b = y2lat(bounds[1]).toFixed(5);
@@ -114,87 +76,40 @@ function refresh_harbours() {
 	l = x2lon(bounds[0]).toFixed(5);
 	r = x2lon(bounds[2]).toFixed(5);
 
-	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_harbours.call_count, "maxSize":getHarbourVisibility(zoom), "zoom":zoom};
+	var params = { "b": b, "t": t, "l": l, "r": r};
 	makeTidalScaleRequest(params);
 	
 }
 
-// Check if a harbour has been downloaded already.
-function harbour_exist(id,type) {
+// Check if a tidal_scale has been downloaded already.
+function tidal_scale_exist(id) {
 	for (var i in arrayTidalScales) {
-		if (arrayTidalScales[i].id == id && (arrayTidalScales[i].type == type
-			|| type==-1 && (arrayTidalScales[i].type==5
-			||arrayTidalScales[i].type==6 ))) {
+		if (arrayTidalScales[i].id == id) {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
-function isWPI(type) {
-  /*
-  1 = L
-  2 = M
-  3 = S
-  4 = V (Very small)
-  5 = representative skipperguide
-  6 = other skipperguide
-  */
-	if(type<=4) {
-		return true;
-	}
-	return false;
-}
-
-function determineHarbourType(myName){
-	for (var i in arrayTidalScales) {
-		var otherName = arrayTidalScales[i].name.split("-");
-		if(myName==otherName[0]) {
-			return 6;
-		}
-	}
-	return 5;
-}
-
-function ensureHarbourVisibility(zoom){
+function ensureTidalScaleVisibility(zoom){
 	clearTidalScales();
-	var maxType = getHarbourVisibility(zoom);
-
 	for (var i in arrayTidalScales) {
-		if (arrayTidalScales[i].type <= maxType) {
-			if(zoom>=5) {
-				createTidalScaleMarker(arrayTidalScales[i].feature,arrayTidalScales[i].type);
-			}
+		if(zoom>=5) {
+			createTidalScaleMarker(arrayTidalScales[i].feature,arrayTidalScales[i].type);
 		}
 	}
-}
-
-function getHarbourVisibility(zoom){
- var maxType=1;
- if(zoom>=7)
-   maxType=2;
- if(zoom>=8)
-   maxType=3;
- if(zoom>=9)
-   maxType=4;
- if(zoom>=10)
-   maxType=5;
- if(zoom>=12)
-   maxType=6;
- return maxType;
 }
 
 // Remove previously displayed tidal scales from layer
 function clearTidalScales() {
 	// Remove Markers from layer
-	var toBeDestroyed= layer_harbours.markers;
-	for(var i=layer_harbours.markers.length-1; i>=0;i--) {
-		layer_harbours.removeMarker(toBeDestroyed[i]);
+	var toBeDestroyed= layer_tidal_scale.markers;
+	for(var i=layer_tidal_scale.markers.length-1; i>=0;i--) {
+		layer_tidal_scale.removeMarker(toBeDestroyed[i]);
 	}
 
 	// Reset all layer values
-	//refresh_harbours.call_count = null;
 	if(TidalScaleCurrentFeature != null) {
 		map.removePopup(TidalScaleCurrentFeature.popup);
 	}
@@ -202,28 +117,16 @@ function clearTidalScales() {
 	TidalScaleState = 0;
 }
 
-// Return a harbour description from the list of downloaded harbours.
-function get_harbour(id,type) {
-	for (var i in arrayTidalScales) {
-		if (arrayTidalScales[i].id == id && arrayTidalScales[i].type == type) {
-			return arrayTidalScales[i];
-		}
-	}
-	return '';
-}
-
 // This function creates a feature and adds a corresponding marker to the map.
 function createTidalScaleFeature(x, y, popup_content, type) {
-	if(!createTidalScaleFeature.harbour_icon) {
-		var harbourIcon='./resources/places/harbour_32.png';
-		var marinaIcon='./resources/places/marina_32.png';
+	if(!createTidalScaleFeature.TidalScale_icon) {
+		var TidalScaleIcon='./resources/places/tidal_scale_32.png';
 		icon_size = new OpenLayers.Size(32, 32);
 		icon_offset = new OpenLayers.Pixel(-16, -16);
-		createTidalScaleFeature.harbour_icon = new OpenLayers.Icon(harbourIcon, icon_size, icon_offset);
-		createTidalScaleFeature.marina_icon = new OpenLayers.Icon(marinaIcon, icon_size, icon_offset);
+		createTidalScaleFeature.TidalScale_icon = new OpenLayers.Icon(TidalScaleIcon, icon_size, icon_offset);
 	}
-	var icon = isWPI(type) ? createTidalScaleFeature.harbour_icon.clone() : createTidalScaleFeature.marina_icon.clone();
-	var feature = new OpenLayers.Feature(layer_harbours, new OpenLayers.LonLat(x, y), {icon: icon});
+	var icon = createTidalScaleFeature.TidalScale_icon.clone();
+	var feature = new OpenLayers.Feature(layer_tidal_scale, new OpenLayers.LonLat(x, y), {icon: icon});
 	feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
 	feature.data.popupContentHTML = popup_content;
 
@@ -241,7 +144,6 @@ function createTidalScaleMarker(feature,type) {
 			OpenLayers.Event.stop(ev);
 			return;
 		}
-		
 		if (TidalScaleState == 0) {
 			// no popup is open
 			this.createPopup();
@@ -250,7 +152,7 @@ function createTidalScaleMarker(feature,type) {
 			TidalScaleCurrentFeature = this;
 			TidalScalePopupTime=now;
 		} else if (TidalScaleState == 1 && TidalScaleCurrentFeature == this)	{
-			// click on the harbour to which belongs the open popup => remove popup
+			// click on the tidal scale to which belongs the open popup => remove popup
 			map.removePopup(this.popup)
 			TidalScaleState = 0;
 			TidalScaleCurrentFeature = null;
@@ -286,11 +188,8 @@ function createTidalScaleMarker(feature,type) {
 	TidalScale_marker.events.register("mouseover", feature, TidalScale_marker_mouseover);
 	TidalScale_marker.events.register("mouseout", feature,  TidalScale_marker_mouseout);
 
-	var maxType=getHarbourVisibility(map.getZoom());
-	if(type<=maxType){
-		if(zoom>=5 ||refresh_harbours.call_count>0) {
-			layer_harbours.addMarker(TidalScale_marker);
-		}
+	if(zoom>=5 ||refreshTidalScales.call_count>0) {
+		layer_tidal_scale.addMarker(TidalScale_marker);
 	}
 }
 

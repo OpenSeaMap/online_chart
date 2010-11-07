@@ -20,6 +20,7 @@
 
 /******************************************************************************
  This file implements the client-side of the harbour display.
+ Version 0.1.3  07.11.2010
  ******************************************************************************/
 
 // List of downloaded harbours:
@@ -30,7 +31,6 @@ var harbours = new Array();
 // to keep track which popups are displayed.
 var harbour_state = 0;
 var harbour_current_feature = null;
-
 var popuptime=0;
 
 
@@ -80,7 +80,7 @@ function putHarbourMarker(id, lon, lat, names, link, type) {
 // Harbour management----------------------------------------------------------------------------------------
 
 // Downloads new harbours from the server.
-function refresh_harbours() {
+function refreshHarbours() {
 	
 	/*
 	 * Decision Block to select which harbours' visibility has to be changed.
@@ -106,10 +106,10 @@ function refresh_harbours() {
 	}
 	*/
 	
-	if (refresh_harbours.call_count == undefined) {
-		refresh_harbours.call_count = 0;
+	if (refreshHarbours.call_count == undefined) {
+		refreshHarbours.call_count = 0;
 	} else {
-		++refresh_harbours.call_count;
+		++refreshHarbours.call_count;
 	}
 	bounds = map.getExtent().toArray();
 	b = y2lat(bounds[1]).toFixed(5);
@@ -117,7 +117,7 @@ function refresh_harbours() {
 	l = x2lon(bounds[0]).toFixed(5);
 	r = x2lon(bounds[2]).toFixed(5);
 
-	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refresh_harbours.call_count, "maxSize":getHarbourVisibility(zoom), "zoom":zoom};
+	var params = { "b": b, "t": t, "l": l, "r": r, "ucid": refreshHarbours.call_count, "maxSize":getHarbourVisibility(zoom), "zoom":zoom};
 	make_harbour_request(params);
 	
 }
@@ -197,7 +197,6 @@ function harbour_clear() {
 	}
 
 	// Reset all layer values
-	//refresh_harbours.call_count = null;
 	if(harbour_current_feature != null) {
 		map.removePopup(harbour_current_feature.popup);
 	}
@@ -291,7 +290,7 @@ function create_harbour_marker(feature,type) {
 
 	var maxType=getHarbourVisibility(zoom);
 	if(type<=maxType){
-		if(zoom>=5 ||refresh_harbours.call_count>0) {
+		if(zoom>=5 ||refreshHarbours.call_count>0) {
 			layer_harbours.addMarker(harbour_marker);
 		}
 	}
