@@ -67,8 +67,9 @@ function putHarbourMarker(id, lon, lat, names, link, type) {
 			popupText += "<br/><i>" + name[2] + "</i>";
 		}
 		if (link != '') {
-			popupText += "<br/><br/><a href='" + link + "' target='blank'>" + linkText + "</a>";
+			popupText += "<br/><br/><a href='" + link + "' target='blank'>" + linkTextSkipperGuide + "</a>";
 		}
+		popupText += "<br/><br/><a href='http://openportguide.org/cgi-bin/weather/weather.pl/weather.png?var=meteogram&nx=614&ny=750&lat=" + lat + "&lon=" + lon + "&lang=" + language + "&unit=metric&label=" + convert2Locode(name[0]) + "' target='blank'>" + linkTextWeatherHarbour + "</a>";
 		
 		var harbour = {id: id, name: names, lat: lat, lon: lon, type: type, feature: null};
 		harbour.feature = create_harbour_feature(lon2x(lon), lat2y(lat), popupText, type);

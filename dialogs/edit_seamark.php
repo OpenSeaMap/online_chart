@@ -678,16 +678,16 @@
 					switch (colour) {
 						case "white":
 							val += " W";
-							break
+							break;
 						case "yellow":
 							val += " Y";
-							break
+							break;
 						case "red":
 							val += " R";
-							break
+							break;
 						case "green":
 							val += " G";
-							break
+							break;
 					}
 					if (period != "-1" && period != "<?=$t->tr("unknown")?>" && period != " - - - ") {
 						document.getElementById("lightPeriod").value = period;

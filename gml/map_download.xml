@@ -55,17 +55,6 @@
 		</latlon> 
 </map>
 <map>
-		<name>EnglishChannel10</name>
-		<link>/Europe/EnglishChannel10/</link>
-		<category>2</category>
-		<latlon>
-			<north>53.1204052831066</north>
-			<south>47.75409797968</south>
-			<east>4.921875</east>
-			<west>-6.328125</west>
-		</latlon> 
-</map>
-<map>
 		<name>BayofBiscay10</name>
 		<link>/Europe/France/BayofBiscay10/</link>
 		<category>2</category>
@@ -74,6 +63,17 @@
 			<south>42.8115217450979</south>
 			<east>0.703125</east>
 			<west>-10.546875</west>
+		</latlon> 
+</map>
+<map>
+		<name>EnglishChannel10</name>
+		<link>/Europe/Greate Britain/EnglishChannel10/</link>
+		<category>2</category>
+		<latlon>
+			<north>53.1204052831066</north>
+			<south>47.75409797968</south>
+			<east>4.921875</east>
+			<west>-6.328125</west>
 		</latlon> 
 </map>
 <map>
@@ -396,8 +396,8 @@
 		</latlon> 
 </map>
 <map>
-		<name>RowiWladystawono14</name>
-		<link>/Europe/Baltic Sea/RowiWladystawono14/</link>
+		<name>RowiPuck14</name>
+		<link>/Europe/Baltic Sea/RowiPuck14/</link>
 		<category>4</category>
 		<latlon>
 			<north>55.0028258097933</north>
@@ -514,6 +514,17 @@
 			<south>55.015425940563</south>
 			<east>14.4580078125</east>
 			<west>13.5791015625</west>
+		</latlon> 
+</map>
+<map>
+		<name>Solent1_16</name>
+		<link>/Europe/Greate Britain/Solent1_16/</link>
+		<category>4</category>
+		<latlon>
+			<north>50.8094059975038</north>
+			<south>50.6981973660455</south>
+			<east>-1.25244140625</east>
+			<west>-1.58203125</west>
 		</latlon> 
 </map>
 <map>
@@ -679,6 +690,17 @@
 			<south>54.1688658459635</south>
 			<east>12.1124267578125</east>
 			<west>12.0794677734375</west>
+		</latlon> 
+</map>
+<map>
+		<name>LoireMuendung14</name>
+		<link>/Europe/France/LoireMuendung14/</link>
+		<category>undefined</category>
+		<latlon>
+			<north>47.338822694822</north>
+			<south>47.1000446940252</south>
+			<east>-1.58203125</east>
+			<west>-2.373046875</west>
 		</latlon> 
 </map>
 </maps>

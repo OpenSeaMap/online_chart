@@ -17,7 +17,7 @@
 		<script type="text/javascript" src="./javascript/utilities.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
 		<script type="text/javascript" src="./javascript/harbours.js"></script>
-		<script type="text/javascript" src="./javascript/tidal_scale.js"></script>
+		<!--<script type="text/javascript" src="./javascript/tidal_scale.js"></script>-->
 		<script type="text/javascript">
 
 			var map;
@@ -36,7 +36,11 @@
 			var downloadLoaded = false;
 
 			// Work around for accessing translations from harbour.js
-			var linkText = "<?=$t->tr('descrSkipperGuide')?>";
+			var linkTextSkipperGuide = "<?=$t->tr('descrSkipperGuide')?>";
+			var linkTextWeatherHarbour = "<?=$t->tr('descrOpenPortGuide')?>";
+
+			// Set language
+			var language = "<?=$t->getCurrentLanguage()?>";
 
 			var layer_download
 
@@ -59,11 +63,11 @@
 			}
 
 			// Set current language for internationalization
-			OpenLayers.Lang.setCode("<?= $t->getCurrentLanguage() ?>");
+			OpenLayers.Lang.setCode(language);
 
 			// Show popup window with the map key
 			function showMapKey() {
-				legendWindow = window.open("legend.php?lang=<?= $t->getCurrentLanguage() ?>", "MapKey", "width=880, height=680, status=no, scrollbars=yes, resizable=yes");
+				legendWindow = window.open("legend.php?lang=<?= $t->getCurrentLanguage() ?>", "MapKey", "width=680, height=680, status=no, scrollbars=yes, resizable=yes");
  				legendWindow.focus();
 			}
 
@@ -159,13 +163,13 @@
 				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayOutsideMaxExtent:true});
 				layer_harbours.setOpacity(0.8);
 				// Tidal Scales
-				layer_tidal_scale = new OpenLayers.Layer.Markers("Pegel",
+				/*layer_tidal_scale = new OpenLayers.Layer.Markers("Pegel",
 				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayOutsideMaxExtent:true});
-				layer_harbours.setOpacity(0.8);
+				layer_harbours.setOpacity(0.8);*/
 				// Map download
 				layer_download = new OpenLayers.Layer.Vector("Map Download", {visibility: false});
 
-				map.addLayers([layer_mapnik, layer_tah, layer_seamark, layer_harbours, layer_tidal_scale, layer_download, layer_sport]);
+				map.addLayers([layer_mapnik, layer_tah, layer_seamark, layer_harbours, layer_download, layer_sport]);
 
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
@@ -182,7 +186,7 @@
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
 				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
 				// Update harbour layer
-				refreshTidalScales();
+				//refreshTidalScales();
 				refreshHarbours();
 			}
 
@@ -194,7 +198,7 @@
 
 				if(oldZoom!=zoom) {
 					ensureHarbourVisibility(zoom)
-					ensureTidalScaleVisibility(zoom);
+					//ensureTidalScaleVisibility(zoom);
 					oldZoom=zoom
 				}
 				if (downloadLoaded) {

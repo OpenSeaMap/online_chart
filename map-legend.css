@@ -41,6 +41,10 @@ html, body {
 	text-decoration: none;
 }
 
+#menu #selected a {
+	background-color: #CCCCCC;
+}
+
 #menu a:hover {
 	background-color: #AAA;
 }

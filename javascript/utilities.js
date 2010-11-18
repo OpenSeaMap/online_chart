@@ -2,7 +2,7 @@
  Javascript Utilities
  author Olaf Hannemann
  license GPL V3
- version 0.1.1
+ version 0.1.2
 
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -53,6 +53,26 @@ function convert2Web(buffer) {
 	buffer = buffer.replace('\'', '&apos;');
 	buffer = buffer.replace('\"', '&quot;');
 
+	return buffer
+}
+
+function convert2Ascii(buffer) {
+	buffer = buffer.replace('ü', 'ue');
+	buffer = buffer.replace('ö', 'oe');
+	buffer = buffer.replace('ä', 'ae');
+	buffer = buffer.replace('ß', 'ss');
+	buffer = buffer.replace('ø', 'oe');
+
+	return buffer
+}
+
+function convert2Locode(buffer) {
+	buffer = buffer.replace('ü', 'u');
+	buffer = buffer.replace('ö', 'o');
+	buffer = buffer.replace('ä', 'a');
+	buffer = buffer.replace('ß', 'ss');
+	buffer = buffer.replace('ø', 'o');
+	
 	return buffer
 }
 
