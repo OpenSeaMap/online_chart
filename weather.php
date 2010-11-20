@@ -22,6 +22,7 @@
 			var map;
 			var arrayMaps = new Array();
 
+			// Weather layers
 			var layer_weather_wind1;
 			var layer_weather_wind2;
 			var layer_weather_wind3;
@@ -72,7 +73,7 @@
 					controls: [
 						new OpenLayers.Control.Permalink(),
 						new OpenLayers.Control.OverviewMap(),
-						new OpenLayers.Control.Navigation()],
+						new OpenLayers.Control.Navigation({zoomWheelEnabled: false})],
 						maxExtent:
 						new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
 					numZoomLevels: 3,
@@ -106,6 +107,7 @@
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
 				}
+				//map.Control.Navigation.zoomWheelEnabled  = false;
 			}
 
 			// Map event listener moved
@@ -118,10 +120,28 @@
 			// Map event listener Zoomed
 			function mapEventZoom(event) {
 				zoom = map.getZoom();
+				if (zoom >= 8) {
+					map.zoomTo(7)
+				} else if (zoom <= 4) {
+					map.zoomTo(5)
+				}
 				// Set cookie for remembering #zoomlevel
 				setCookie("weather_zoom",zoom);
 			}
 
+			function zoomIn() {
+				if (zoom <= 6) {
+					map.zoomIn();
+				}
+			}
+
+			function zoomOut() {
+    			if (zoom >= 6) {
+					map.zoomOut();
+				}
+			}
+
+			// Read time files from server and create the menu
 			function fillTimeDiv() {
 				var arrayTimeValues = new Array();
 
@@ -135,7 +155,7 @@
 				arrayTimeValues[7] = "<?=$utc->getWeatherUtc('27')?>";
 
 				var oldDate = "00";
-				var html = "<b>Zeit (UTC)</b><br/><br/>";
+				var html = "<b><?=$t->tr("time")?> (UTC)</b><br/><br/>";
 
 				for(i = 0; i < arrayTimeValues.length; i++) {
 					var values = arrayTimeValues[i].split(" ");
@@ -152,7 +172,7 @@
 					}
 					html += "<li onClick='setWindLayerVisible(" + layer + ")'>" + time + "</li>";
 				}
-				html += "<ul>";
+				html += "</ul>";
 				document.getElementById('timemenu').innerHTML=""+ html +"";
 			}
 
@@ -206,13 +226,16 @@
 		</div>
 		<div id="topmenu" style="position:absolute; top:10px; left:12px;">
 			<ul>
-				<li onClick="window.location.href='./index.php'"><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("Seekarte")?></img></li>
+				<li onClick="window.location.href='./index.php?lang=<?=$t->getCurrentLanguage()?>'"><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("Seekarte")?></img></li>
+				<li>&nbsp;|&nbsp;</li>
 				<li><IMG src="./resources/map/WindIcon.jpg" width="24" height="24" align="center" border="0">Wind</img></li>
+				<li>&nbsp;|&nbsp;</li>
+				<li onClick="zoomIn()"><IMG src="./resources/map/zoom-in.png" width="24" height="24" align="center" border="0">Zoom +</img></li>
+				<li onClick="zoomOut()"><IMG src="./resources/map/zoom-out.png" width="24" height="24" align="center" border="0">Zoom -</img></li>
 			</ul>
 		</div>
-		<div id="timemenu" style="position:absolute; top:95px; left:12px;">
-			<h4>Zeit (UTC)</h4>
-
+		<div id="timemenu" style="position:absolute; top:55px; left:12px;">
+			<h4>Time (UTC)</h4>
 		</div>
 		<div id="comment" style="position:absolute; top:10px; right:12px;">
 			<img src="./resources/map/WindScale.png"/>

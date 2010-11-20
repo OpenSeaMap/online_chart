@@ -67,7 +67,7 @@
 
 			// Show popup window with the map key
 			function showMapKey() {
-				legendWindow = window.open("legend.php?lang=<?= $t->getCurrentLanguage() ?>", "MapKey", "width=680, height=680, status=no, scrollbars=yes, resizable=yes");
+				legendWindow = window.open("legend.php?lang=" + language, "MapKey", "width=680, height=680, status=no, scrollbars=yes, resizable=yes");
  				legendWindow.focus();
 			}
 
@@ -269,6 +269,8 @@
 				<li onClick="window.location.href='http://openseamap.org/'"><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("Startseite")?></img></li>
 				<li>&nbsp;|&nbsp;</li>
 				<li onClick="window.location.href='./map_edit.php'"><IMG src="./resources/action/edit.png" width="24" height="24" align="center" border="0"><?=$t->tr("edit")?></img></li>
+				<li>&nbsp;|&nbsp;</li>
+				<li onClick="window.location.href='./weather.php?lang=<?=$t->getCurrentLanguage()?>'"><IMG src="./resources/map/weather.png" width="24" height="24" align="center" border="0"><?=$t->tr("weather")?></img></li>
 				<li>&nbsp;|&nbsp;</li>
 				<li onClick="showMapKey()"><IMG src="./resources/action/info.png" width="24" height="24" align="center" border="0"><?=$t->tr("Legende")?></img></li>
 				<li>&nbsp;|&nbsp;</li>

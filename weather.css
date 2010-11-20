@@ -49,6 +49,7 @@ img {
 #topmenu ul li {
 	list-style: none;
 	display: block;
+	float: left;
 }
 
 #topmenu ul li:hover {
