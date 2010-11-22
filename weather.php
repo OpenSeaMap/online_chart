@@ -31,6 +31,20 @@
 			var layer_weather_wind6;
 			var layer_weather_wind7;
 			var layer_weather_wind8;
+			// Air pressure layers
+			var layer_weather_pressure1;
+			var layer_weather_pressure2;
+			var layer_weather_pressure3;
+			var layer_weather_pressure4;
+			var layer_weather_pressure5;
+			var layer_weather_pressure6;
+			var layer_weather_pressure7;
+			var layer_weather_pressure8;
+
+			var layerNumber = 1;
+
+			var showWindLayer = false;
+			var showPressureLayer = false;
 
 			// Position and zoomlevel of the map  (will be overriden with permalink parameters or cookies)
 			var lon = 11.6540;
@@ -51,6 +65,9 @@
 				}
 				fillTimeDiv();
 				drawmap();
+				showWind();
+				document.getElementById("timeLayer1").style.background = "#ADD8E6";
+				document.getElementById("checkPressure").checked = false;
 			}
 
 			// Set current language for internationalization
@@ -86,28 +103,44 @@
 				var layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
 				// Wind layers
 				layer_weather_wind1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/wind_vector/5/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: true, displayOutsideMaxExtent:true});
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 				layer_weather_wind2 = new OpenLayers.Layer.TMS("Wind18", "http://www.openportguide.org/tiles/actual/wind_vector/7/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 				layer_weather_wind3 = new OpenLayers.Layer.TMS("Wind24", "http://www.openportguide.org/tiles/actual/wind_vector/9/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 				layer_weather_wind4 = new OpenLayers.Layer.TMS("Wind30", "http://www.openportguide.org/tiles/actual/wind_vector/11/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 				layer_weather_wind5 = new OpenLayers.Layer.TMS("Wind42", "http://www.openportguide.org/tiles/actual/wind_vector/15/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 				layer_weather_wind6 = new OpenLayers.Layer.TMS("Wind54", "http://www.openportguide.org/tiles/actual/wind_vector/19/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 				layer_weather_wind7 = new OpenLayers.Layer.TMS("Wind66", "http://www.openportguide.org/tiles/actual/wind_vector/23/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 				layer_weather_wind8 = new OpenLayers.Layer.TMS("Wind78", "http://www.openportguide.org/tiles/actual/wind_vector/27/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				// Air pressure layers
+				layer_weather_pressure1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/surface_pressure/5/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_pressure2 = new OpenLayers.Layer.TMS("Wind18", "http://www.openportguide.org/tiles/actual/surface_pressure/7/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_pressure3 = new OpenLayers.Layer.TMS("Wind24", "http://www.openportguide.org/tiles/actual/surface_pressure/9/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_pressure4 = new OpenLayers.Layer.TMS("Wind30", "http://www.openportguide.org/tiles/actual/surface_pressure/11/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_pressure5 = new OpenLayers.Layer.TMS("Wind42", "http://www.openportguide.org/tiles/actual/surface_pressure/15/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_pressure6 = new OpenLayers.Layer.TMS("Wind54", "http://www.openportguide.org/tiles/actual/surface_pressure/19/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_pressure7 = new OpenLayers.Layer.TMS("Wind66", "http://www.openportguide.org/tiles/actual/surface_pressure/23/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_pressure8 = new OpenLayers.Layer.TMS("Wind78", "http://www.openportguide.org/tiles/actual/surface_pressure/27/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 
-				map.addLayers([layer_mapnik, layer_weather_wind1, layer_weather_wind2, layer_weather_wind3, layer_weather_wind4, layer_weather_wind5, layer_weather_wind6, layer_weather_wind7, layer_weather_wind8]);
+				map.addLayers([layer_mapnik, layer_weather_wind1, layer_weather_wind2, layer_weather_wind3, layer_weather_wind4, layer_weather_wind5, layer_weather_wind6, layer_weather_wind7, layer_weather_wind8, layer_weather_pressure1, layer_weather_pressure2, layer_weather_pressure3, layer_weather_pressure4, layer_weather_pressure5, layer_weather_pressure6, layer_weather_pressure7, layer_weather_pressure8]);
 
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
 				}
-				//map.Control.Navigation.zoomWheelEnabled  = false;
 			}
 
 			// Map event listener moved
@@ -141,6 +174,34 @@
 				}
 			}
 
+			function showWind() {
+				if (!showWindLayer) {
+					document.getElementById("checkWind").checked = true;
+					document.getElementById("comment").style.visibility = "visible";
+					document.getElementById("buttonWind").style.background = "#ADD8E6";
+					setWindLayerVisible();
+					showWindLayer = true;
+				} else {
+					document.getElementById("checkWind").checked = false;
+					document.getElementById("comment").style.visibility = "hidden";
+					clearWindLayerVisibility();
+					showWindLayer = false;
+				}
+			}
+
+			function showPressure() {
+				if (!showPressureLayer) {
+					document.getElementById("checkPressure").checked = true;
+					document.getElementById("buttonPressure").style.background = "#ADD8E6";
+					setPressureLayerVisible();
+					showPressureLayer = true;
+				} else {
+					document.getElementById("checkPressure").checked = false;
+					clearPressureLayerVisibility();
+					showPressureLayer = false;
+				}
+			}
+
 			// Read time files from server and create the menu
 			function fillTimeDiv() {
 				var arrayTimeValues = new Array();
@@ -156,12 +217,13 @@
 
 				var oldDate = "00";
 				var html = "<b><?=$t->tr("time")?> (UTC)</b><br/><br/>";
+				var layer = 1;
 
 				for(i = 0; i < arrayTimeValues.length; i++) {
 					var values = arrayTimeValues[i].split(" ");
-					var layer = i + 1;
 					var date = values[0];
 					var time = values[1];
+					layer = i + 1;
 					if (oldDate != date) {
 						if (oldDate != "00") {
 							html += "</ul>";
@@ -170,15 +232,27 @@
 						html += "<ul>";
 						oldDate = date;
 					}
-					html += "<li onClick='setWindLayerVisible(" + layer + ")'>" + time + "</li>";
+					html += "<li id = timeLayer" + layer + " onClick='setLayerVisible(" + layer + ")' onMouseover=\"this.style.background='#ADD8E6'\" onMouseout=\"if(layerNumber !=" + layer + ") {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}\">" + time + "</li>";
 				}
 				html += "</ul>";
-				document.getElementById('timemenu').innerHTML=""+ html +"";
+				document.getElementById('timemenu').innerHTML = html;
 			}
 
-			function setWindLayerVisible(number) {
+			function setLayerVisible(number) {
+				document.getElementById("timeLayer" + layerNumber).style.background = "#FFFFFF";
+				layerNumber = number;
+				document.getElementById("timeLayer" + layerNumber).style.background = "#ADD8E6";
+				if (showWindLayer) {
+					setWindLayerVisible();
+				}
+				if (showPressureLayer) {
+					setPressureLayerVisible();
+				}
+			}
+
+			function setWindLayerVisible() {
 				clearWindLayerVisibility();
-				switch (number) {
+				switch (layerNumber) {
 					case 1:
 						layer_weather_wind1.setVisibility(true);
 						break;
@@ -206,6 +280,36 @@
 				}
 			}
 
+			function setPressureLayerVisible() {
+				clearPressureLayerVisibility();
+				switch (layerNumber) {
+					case 1:
+						layer_weather_pressure1.setVisibility(true);
+						break;
+					case 2:
+						layer_weather_pressure2.setVisibility(true);
+						break;
+					case 3:
+						layer_weather_pressure3.setVisibility(true);
+						break;
+					case 4:
+						layer_weather_pressure4.setVisibility(true);
+						break;
+					case 5:
+						layer_weather_pressure5.setVisibility(true);
+						break;
+					case 6:
+						layer_weather_pressure6.setVisibility(true);
+						break;
+					case 7:
+						layer_weather_pressure7.setVisibility(true);
+						break;
+					case 8:
+						layer_weather_pressure8.setVisibility(true);
+						break;
+				}
+			}
+
 			function clearWindLayerVisibility() {
 				layer_weather_wind1.setVisibility(false);
 				layer_weather_wind2.setVisibility(false);
@@ -215,6 +319,17 @@
 				layer_weather_wind6.setVisibility(false);
 				layer_weather_wind7.setVisibility(false);
 				layer_weather_wind8.setVisibility(false);
+			}
+
+			function clearPressureLayerVisibility() {
+				layer_weather_pressure1.setVisibility(false);
+				layer_weather_pressure2.setVisibility(false);
+				layer_weather_pressure3.setVisibility(false);
+				layer_weather_pressure4.setVisibility(false);
+				layer_weather_pressure5.setVisibility(false);
+				layer_weather_pressure6.setVisibility(false);
+				layer_weather_pressure7.setVisibility(false);
+				layer_weather_pressure8.setVisibility(false);
 			}
 
 		</script>
@@ -228,7 +343,9 @@
 			<ul>
 				<li onClick="window.location.href='./index.php?lang=<?=$t->getCurrentLanguage()?>'"><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("Seekarte")?></img></li>
 				<li>&nbsp;|&nbsp;</li>
-				<li><IMG src="./resources/map/WindIcon.jpg" width="24" height="24" align="center" border="0">Wind</img></li>
+				<li id="buttonWind" onClick="showWind()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showWindLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkWind"/><IMG src="./resources/map/WindIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("wind")?>&nbsp;</img></li>
+				<li>&nbsp;&nbsp;</li>
+				<li id="buttonPressure" onClick="showPressure()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showPressureLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkPressure"/><IMG src="./resources/map/AirPressureIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("AirPressure")?>&nbsp;</img></li>
 				<li>&nbsp;|&nbsp;</li>
 				<li onClick="zoomIn()"><IMG src="./resources/map/zoom-in.png" width="24" height="24" align="center" border="0">Zoom +</img></li>
 				<li onClick="zoomOut()"><IMG src="./resources/map/zoom-out.png" width="24" height="24" align="center" border="0">Zoom -</img></li>
@@ -237,7 +354,7 @@
 		<div id="timemenu" style="position:absolute; top:55px; left:12px;">
 			<h4>Time (UTC)</h4>
 		</div>
-		<div id="comment" style="position:absolute; top:10px; right:12px;">
+		<div id="comment" style="position:absolute; top:10px; right:12px;  visibility:hidden;">
 			<img src="./resources/map/WindScale.png"/>
 		</div>
 	</body>
