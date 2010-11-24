@@ -22,7 +22,7 @@
 			var map;
 			var arrayMaps = new Array();
 
-			// Weather layers
+			// Wind layers
 			var layer_weather_wind1;
 			var layer_weather_wind2;
 			var layer_weather_wind3;
@@ -40,11 +40,21 @@
 			var layer_weather_pressure6;
 			var layer_weather_pressure7;
 			var layer_weather_pressure8;
+			// Temperature layers
+			var layer_weather_air_temperature1;
+			var layer_weather_air_temperature2;
+			var layer_weather_air_temperature3;
+			var layer_weather_air_temperature4;
+			var layer_weather_air_temperature5;
+			var layer_weather_air_temperature6;
+			var layer_weather_air_temperature7;
+			var layer_weather_air_temperature8;
 
 			var layerNumber = 1;
 
 			var showWindLayer = false;
 			var showPressureLayer = false;
+			var showAirTemperatureLayer = false;
 
 			// Position and zoomlevel of the map  (will be overriden with permalink parameters or cookies)
 			var lon = 11.6540;
@@ -68,6 +78,7 @@
 				showWind();
 				document.getElementById("timeLayer1").style.background = "#ADD8E6";
 				document.getElementById("checkPressure").checked = false;
+				document.getElementById("checkAirTemperature").checked = false;
 			}
 
 			// Set current language for internationalization
@@ -135,8 +146,24 @@
 				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 				layer_weather_pressure8 = new OpenLayers.Layer.TMS("Wind78", "http://www.openportguide.org/tiles/actual/surface_pressure/27/",
 				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-
-				map.addLayers([layer_mapnik, layer_weather_wind1, layer_weather_wind2, layer_weather_wind3, layer_weather_wind4, layer_weather_wind5, layer_weather_wind6, layer_weather_wind7, layer_weather_wind8, layer_weather_pressure1, layer_weather_pressure2, layer_weather_pressure3, layer_weather_pressure4, layer_weather_pressure5, layer_weather_pressure6, layer_weather_pressure7, layer_weather_pressure8]);
+				// Temperature layers
+				layer_weather_air_temperature1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/air_temperature/5/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_air_temperature2 = new OpenLayers.Layer.TMS("Wind18", "http://www.openportguide.org/tiles/actual/air_temperature/7/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_air_temperature3 = new OpenLayers.Layer.TMS("Wind24", "http://www.openportguide.org/tiles/actual/air_temperature/9/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_air_temperature4 = new OpenLayers.Layer.TMS("Wind30", "http://www.openportguide.org/tiles/actual/air_temperature/11/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_air_temperature5 = new OpenLayers.Layer.TMS("Wind42", "http://www.openportguide.org/tiles/actual/air_temperature/15/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_air_temperature6 = new OpenLayers.Layer.TMS("Wind54", "http://www.openportguide.org/tiles/actual/air_temperature/19/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_air_temperature7 = new OpenLayers.Layer.TMS("Wind66", "http://www.openportguide.org/tiles/actual/air_temperature/23/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				layer_weather_air_temperature8 = new OpenLayers.Layer.TMS("Wind78", "http://www.openportguide.org/tiles/actual/air_temperature/27/",
+				{ type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				map.addLayers([layer_mapnik, layer_weather_wind1, layer_weather_wind2, layer_weather_wind3, layer_weather_wind4, layer_weather_wind5, layer_weather_wind6, layer_weather_wind7, layer_weather_wind8, layer_weather_pressure1, layer_weather_pressure2, layer_weather_pressure3, layer_weather_pressure4, layer_weather_pressure5, layer_weather_pressure6, layer_weather_pressure7, layer_weather_pressure8, layer_weather_air_temperature1, layer_weather_air_temperature2, layer_weather_air_temperature3, layer_weather_air_temperature4, layer_weather_air_temperature5, layer_weather_air_temperature6, layer_weather_air_temperature7, layer_weather_air_temperature8]);
 
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
@@ -155,8 +182,8 @@
 				zoom = map.getZoom();
 				if (zoom >= 8) {
 					map.zoomTo(7)
-				} else if (zoom <= 4) {
-					map.zoomTo(5)
+				} else if (zoom <= 3) {
+					map.zoomTo(4)
 				}
 				// Set cookie for remembering #zoomlevel
 				setCookie("weather_zoom",zoom);
@@ -169,7 +196,7 @@
 			}
 
 			function zoomOut() {
-    			if (zoom >= 6) {
+    			if (zoom >= 5) {
 					map.zoomOut();
 				}
 			}
@@ -201,6 +228,20 @@
 					showPressureLayer = false;
 				}
 			}
+
+			function showAirTemperature() {
+				if (!showAirTemperatureLayer) {
+					document.getElementById("checkAirTemperature").checked = true;
+					document.getElementById("buttonAirTemperature").style.background = "#ADD8E6";
+					setAirTemperatureLayerVisible();
+					showAirTemperatureLayer = true;
+				} else {
+					document.getElementById("checkAirTemperature").checked = false;
+					clearAirTemperatureLayerVisibility();
+					showAirTemperatureLayer = false;
+				}
+			}
+
 
 			// Read time files from server and create the menu
 			function fillTimeDiv() {
@@ -247,6 +288,9 @@
 				}
 				if (showPressureLayer) {
 					setPressureLayerVisible();
+				}
+				if (showAirTemperatureLayer) {
+					setAirTemperatureLayerVisible();
 				}
 			}
 
@@ -310,6 +354,36 @@
 				}
 			}
 
+			function setAirTemperatureLayerVisible() {
+				clearAirTemperatureLayerVisibility();
+				switch (layerNumber) {
+					case 1:
+						layer_weather_air_temperature1.setVisibility(true);
+						break;
+					case 2:
+						layer_weather_air_temperature2.setVisibility(true);
+						break;
+					case 3:
+						layer_weather_air_temperature3.setVisibility(true);
+						break;
+					case 4:
+						layer_weather_air_temperature4.setVisibility(true);
+						break;
+					case 5:
+						layer_weather_air_temperature5.setVisibility(true);
+						break;
+					case 6:
+						layer_weather_air_temperature6.setVisibility(true);
+						break;
+					case 7:
+						layer_weather_air_temperature7.setVisibility(true);
+						break;
+					case 8:
+						layer_weather_air_temperature8.setVisibility(true);
+						break;
+				}
+			}
+
 			function clearWindLayerVisibility() {
 				layer_weather_wind1.setVisibility(false);
 				layer_weather_wind2.setVisibility(false);
@@ -332,6 +406,17 @@
 				layer_weather_pressure8.setVisibility(false);
 			}
 
+			function clearAirTemperatureLayerVisibility() {
+				layer_weather_air_temperature1.setVisibility(false);
+				layer_weather_air_temperature2.setVisibility(false);
+				layer_weather_air_temperature3.setVisibility(false);
+				layer_weather_air_temperature4.setVisibility(false);
+				layer_weather_air_temperature5.setVisibility(false);
+				layer_weather_air_temperature6.setVisibility(false);
+				layer_weather_air_temperature7.setVisibility(false);
+				layer_weather_air_temperature8.setVisibility(false);
+			}
+
 		</script>
 	</head>
 	<body onload=init();>
@@ -346,6 +431,8 @@
 				<li id="buttonWind" onClick="showWind()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showWindLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkWind"/><IMG src="./resources/map/WindIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("wind")?>&nbsp;</img></li>
 				<li>&nbsp;&nbsp;</li>
 				<li id="buttonPressure" onClick="showPressure()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showPressureLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkPressure"/><IMG src="./resources/map/AirPressureIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("AirPressure")?>&nbsp;</img></li>
+				<li>&nbsp;|&nbsp;</li>
+				<li id="buttonAirTemperature" onClick="showAirTemperature()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showAirTemperatureLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkAirTemperature"/><IMG src="./resources/map/AirTemperatureIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("AirTemperature")?>&nbsp;</img></li>
 				<li>&nbsp;|&nbsp;</li>
 				<li onClick="zoomIn()"><IMG src="./resources/map/zoom-in.png" width="24" height="24" align="center" border="0">Zoom +</img></li>
 				<li onClick="zoomOut()"><IMG src="./resources/map/zoom-out.png" width="24" height="24" align="center" border="0">Zoom -</img></li>
