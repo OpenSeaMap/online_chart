@@ -183,7 +183,7 @@
 					mapShowMarker();
 					updateSeamarks();
 				} else {
-					//mapHideMarker();
+					mapHideMarker();
 				}
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
 				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
