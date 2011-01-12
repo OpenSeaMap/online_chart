@@ -149,7 +149,7 @@
 						new OpenLayers.Control.MousePosition(),
 						new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: '40'}),
 						new OpenLayers.Control.OverviewMap(),
-						new OpenLayers.Control.PanZoomBar()],
+						new OpenLayers.Control.PanZoomBar({position: new OpenLayers.Pixel(95,25)})],
 						maxExtent:
 						new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
 					numZoomLevels: 18,
@@ -209,7 +209,9 @@
 				document.getElementById("selectLanguage").disabled = false;
 				document.getElementById("buttonReload").disabled = true;
 				document.getElementById("loading").style.visibility = 'hidden';
-				document.getElementById("action").style.visibility = 'hidden';
+				document.getElementById("seamarkadd").src = 'resources/action/go-next-disabled.png';
+				document.getElementById("harbouradd").src = 'resources/action/go-next-disabled.png';
+				
 			}
 			
 			// add a marker on the map
@@ -773,7 +775,8 @@
 								_xmlOsm = trim(response);
 								if (readOsmXml() >= 0) {
 									document.getElementById("loading").style.visibility = 'hidden';
-									document.getElementById("action").style.visibility = 'visible';
+									document.getElementById("seamarkadd").src = 'resources/action/go-next.png';
+									document.getElementById("harbouradd").src = 'resources/action/go-next.png';
 									showInfoDialog(false);
 									if (_NodeId != "-1" && _NodeId != "1" && !_Moving) {
 										arrayMarker[_NodeId].setUrl('./resources/action/circle_green.png');
@@ -962,136 +965,87 @@
 		</script>
 	</head>
 	<body onload=init(); onUnload=closing();>
-		<!--Sidebar ****************************************************************************************************************** -->
-		<div id="head" class="sidebar" style="position:absolute; top:2px; left:0px;">
-			<a><b><?=$t->tr("online_editor")?></b></a>
-		</div>
-		<div id="language" class="sidebar" style="position:absolute; top:30px; left:0px;">
-			<hr>
-			<?=$t->tr("language")?>:&nbsp;
-			<select id="selectLanguage" onChange="onLanguageChanged()">
-				<option value="en"/>English
-				<option value="de"/>Deutsch
-			</select>
-		</div>
-		<div id="login" class="sidebar" style="position:absolute; top:70px; left:0px;">
-			<hr>
-			<p><?=$t->tr("logged_out")?></p>
+		<!-- Login/Logout*************************************************************************** -->
+		<div id="login" class="infobox" style="position:absolute; top:180px; right:10px; z-index:2; width:120px;">
+			<?=$t->tr("logged_out")?><br>
 			<input type="button" value='<?=$t->tr("login")?>' onclick="loginUser()">
 		</div>
-		<div id="logout" class="sidebar" style="position:absolute; top:70px; left:0px; visibility:hidden;" >
-			<hr>
-			<p><?=$t->tr("logged_in")?></p><br/><br/>
+		<div id="logout" class="infobox hidden" style="position:absolute; top:180px; right:10px; z-index:2;" >
+			<?=$t->tr("logged_in")?>
+			<div id="loggedInName" style="visibility:hidden; ">- - -</div>
 			<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
 		</div>
-		<div id="loggedInName" style="position:absolute; top:132px; left:10px; visibility:hidden;">- - -</div>
-		<div style="position:absolute; top:185px; left:11.5%;"><a href="http://wiki.openseamap.org/index.php?title=De:Online-Editor" target="blank"><?=$t->tr("help")?></a></div>
-		<div id="data" class="sidebar" style="position:absolute; top:200px; left:0px;">
-			<hr>
-			<b><?=$t->tr("data")?></b>
-			<br/><br/>
+		<!--Title ******************************************************************************** -->
+		<div id="head" class="infobox" style="width: 200px;margin:10px;z-index:2;position:absolute;text-align:center;">
+		<b><?=$t->tr("online_editor")?></b>
+		</div>
+		<!--Sidebar ******************************************************************************** -->
+		<ul class="sidebar">
+		<li id="language">
+			<?=$t->tr("language")?>:<br>
+			<select id="selectLanguage" onChange="onLanguageChanged()">
+				<option value="en">English</option>
+				<option value="de">Deutsch</option>
+			</select>
+		</li>
+		<li id="data">
+			<b><?=$t->tr("data")?></b><br>
 			<select id="pos-iala">
 				<option selected value="A" disabled = "true"/>IALA - A
-			</select>&nbsp; &nbsp;
+			</select><br>
 			<input type="button" id="buttonReload" value='<?=$t->tr("reload")?>' onclick="updateSeamarks()">
-		</div>
-		<div style="position:absolute; top:295px; left:11.5%;"><a href="http://wiki.openseamap.org/index.php?title=De:Online-Editor" target="blank"><?=$t->tr("help")?></a></div>
-		<div class="sidebar" style="position:absolute; top:305px; left:0px;">
-			<hr>
-			<a><b><?=$t->tr("add")?></b></a><br/><br/>
-			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
-				<tr>
-					<td style="color: grey;">
-						<?=$t->tr("Seezeichen")?>
-					</td>
-					<td>
-						<IMG src="resources/action/go-next-disabled.png" width="16" height="16" align="right" border="0"/>
-					</td>
-				</tr>
-				<tr>
-					<td style="color: grey;">
-						<?=$t->tr("harbour")?>
-					</td>
-					<td>
-						<IMG src="resources/action/go-next-disabled.png" width="16" height="16" align="right" border="0"/>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<div id="action" class="sidebar" style="position:absolute; top:305px; left:0px;">
-			<hr>
-			<a><b><?=$t->tr("add")?></b></a><br/><br/>
-			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
-				<tr>
-					<td	onclick="showSeamarkAdd(true)"
-						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
-						onmouseout="this.parentNode.style.backgroundColor = 'white';"
-						style="cursor:pointer"><?=$t->tr("Seezeichen")?>
-					</td>
-					<td>
-						<IMG src="resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
-					</td>
-				</tr>
-				<tr>
-					<td	onclick="showHarbourAdd(true)"
-						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
-						onmouseout="this.parentNode.style.backgroundColor = 'white';"
-						style="cursor:pointer"><?=$t->tr("harbour")?>
-					</td>
-					<td>
-						<IMG src="resources/action/go-next.png" width="16" height="16" align="right" border="0"/>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<div id="data" class="sidebar" style="position:absolute; top:420px; left:0px;">
-			<hr>
-			<table width="100%" border="0" cellspacing="0" cellpadding="5" valign="top">
-				<tr>
-					<td	onclick="showAboutDialog(true)"
-						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
-						onmouseout="this.parentNode.style.backgroundColor = 'white';"
-						style="cursor:pointer"><?=$t->tr("about_editor")?>
-					</td>
-				</tr>
-				<tr>
-					<td	onclick="window.open('http://wiki.openseamap.org/index.php?title=De:Online-Editor/edit');"
-						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
-						onmouseout="this.parentNode.style.backgroundColor = 'white';"
-						style="cursor:pointer"><?=$t->tr("help")?>
-					</td>
-				</tr>
-				<tr>
-					<td	onclick="window.location.href='http://openseamap.org/'"
-						onmouseover="this.parentNode.style.backgroundColor = 'gainsboro';"
-						onmouseout="this.parentNode.style.backgroundColor = 'white';"
-						style="cursor:pointer"><?=$t->tr("Startseite")?>
-					</td>
-				</tr>
-			</table>
-			<hr>
-		</div>
+		</li>
+		<li class="menugroup"><?=$t->tr("add")?></li>
+		<li>	
+			<a onclick="showSeamarkAdd(true)">
+			<?=$t->tr("Seezeichen")?>
+			<img id="seamarkadd" src="resources/action/go-next-disabled.png" width="16" height="16" border="0"/>
+			</a>
+		</li>	
+		<li>
+			<a onclick="showHarbourAdd(true)">
+			<?=$t->tr("harbour")?>
+			<img id="harbouradd" src="resources/action/go-next-disabled.png" width="16" height="16" border="0"/>
+			</a>
+		</li>
+		<li>&nbsp;</li>
+		<li>
+			<a onclick="showAboutDialog(true)">
+			<?=$t->tr("about_editor")?>
+			</a>
+		</li>
+		<li>
+			<a href="http://wiki.openseamap.org/index.php?title=De:Online-Editor" target="blank">
+			<?=$t->tr("help")?>
+			</a>
+		</li>
+		<li>
+			<a onclick="window.location.href='http://openseamap.org/'">
+			<?=$t->tr("Startseite")?>
+			</a>
+		</li>
+		</ul>
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
-		<div style="position:absolute; bottom:10px; left:4%;">
+		<div style="position:absolute; bottom:50px; left:10px;">
 			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 		</div>
 		<!--Sidebar dialogs ********************************************************************************************************** -->
 		<!--Add Seamark-Data-Dialog-->
-		<div id="add_seamark_dialog" class="dialog" style="position:absolute; top:50px; left:15%;">
+		<div id="add_seamark_dialog" class="dialog" style="position:absolute; top:20px; left:20%;">
 			<?php include ("./dialogs/add_seamark.php"); ?>
 		</div>
 		<!--Add Landmark-Data-Dialog-->
-		<div id="add_landmark_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:300px">
+		<div id="add_landmark_dialog" class="dialog" style="position:absolute; top:100px; left:20%; width:300px; height:300px">
 			<?php include ("./dialogs/add_light.php"); ?>
 		</div>
 		<!--Add Harbour-Data-Dialog-->
-		<div id="add_harbour_dialog" class="dialog" style="position:absolute; top:150px; left:15%; width:300px; height:365px;">
+		<div id="add_harbour_dialog" class="dialog" style="position:absolute; top:100px; left:20%; width:300px; height:365px;">
 			<?php include ("./dialogs/add_harbour_Poi.php"); ?>
 		</div>
 		<!--Pop up dialogs  ********************************************************************************************************** -->
 		<!--Position-Dialog-->
-		<div id="position_dialog" class="dialog" style="position:absolute; top:25px; left:20%;">
+		<div id="position_dialog" class="dialog" style="position:absolute; top:25px; left:25%;">
 			<?php include ("./dialogs/new_position.php"); ?>
 		</div>
 		<div id="login_dialog" class="dialog" style="position:absolute; top:40%; left:40%;">
@@ -1108,19 +1062,19 @@
 		</div>
 		<!--Status dialogs *********************************************************************************************************** -->
 		<!--Load Data Wait-Dialog-->
-		<div id="loading" class="infobox" style="position:absolute; top:50%; left:50%;">
+		<div id="loading" class="infobox hidden position_center" >
 			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("dataLoad")?>
 		</div>
 		<!--Create Changeset Wait-Dialog-->
-		<div id="creating" class="infobox" style="position:absolute; top:50%; left:50%;">
+		<div id="creating" class="infobox hidden position_center" >
 			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("changesetCreate")?>
 		</div>
 		<!--Close Changeset Wait-Dialog-->
-		<div id="closing" class="infobox" style="position:absolute; top:50%; left:50%;">
+		<div id="closing" class="infobox hidden position_center" >
 			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("changesetClose")?>
 		</div>
 		<!--Save Data Wait-Dialog-->
-		<div id="saving" class="infobox" style="position:absolute; top:50%; left:50%;">
+		<div id="saving" class="infobox hidden position_center" >
 			<img src="resources/action/wait.gif" width="22" height="22" /> &nbsp;&nbsp;<?=$t->tr("dataSave")?>
 		</div>
 	</body>

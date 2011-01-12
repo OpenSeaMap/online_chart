@@ -12,25 +12,89 @@ img {
 }
 
 .sidebar {
-	width: 14%;
 	padding: 0;
 	margin: 10px;
+	z-index:2;  /* on top of the map */
+	position:absolute; 
+	top:40px;   
+}
+
+.sidebar li {
+	list-style: none;
+}
+
+.sidebar a { 
+	text-decoration:none;
+	cursor:pointer;
+	display:block; 
+	margin-bottom:5px; 
+	width:170px;
+	padding:2px; 
+	-moz-border-radius: 6px; /* still needed for mozilla */
+	border-radius: 6px;      /* css3 */
+	border-style:solid; 
+	border-width:2px;
+	border-color:#000080;
+	color:black;
+	background-color:white; 
+	text-align:center;
+	/* opacity */
+	filter:alpha(opacity=60);
+	moz-opacity:0.6;
+	khtml-opacity: 0.6;
+	opacity: 0.6;
+}
+
+.sidebar a:hover   { 
+	filter:alpha(opacity=100);
+	-moz-opacity:1;
+	-khtml-opacity: 1;
+	opacity: 1;
+}
+
+/*
+.sidebar a:link    { color:#00f; background-color:transparent; }
+.sidebar a:visited { color:#00f; background-color:transparent; }
+.sidebar a:active  { color:white; background-color:transparent; }
+*/
+
+.position_center {
+	position:absolute; 
+	top:50%; 
+	left:50%;
+}
+
+.menugroup {
+	margin-bottom: 5px;
+	border: 2px solid #000080;
+	-moz-border-radius: 6px; /* still needed for mozilla */
+	border-radius: 6px;      /* css3 */
+	background-color: #FFF;
+	font-size: 18px;
+	padding: 5px;
+	margin-top:10px;
+	text-align:center;
 }
 
 .infobox {
 	margin-bottom: 5px;
 	border: 2px solid #000080;
-	-moz-border-radius: 6px;
+	-moz-border-radius: 6px; /* still needed for mozilla */
+	border-radius: 6px;      /* css3 */
 	background-color: #FFF;
 	font-size: 18px;
 	padding: 5px;
+}
+
+.hidden {
 	visibility:hidden;
 }
 
 .dialog {
 	margin-bottom: 5px;
 	border: 2px solid #000080;
-	-moz-border-radius: 6px;
+	-moz-border-radius: 6px; /* still needed for mozilla */
+	border-radius: 6px;      /* css3 */
 	background-color: #FFF;
 	padding: 5px;
 	visibility:hidden;
@@ -38,7 +102,7 @@ img {
 
 #map {
 	height: 100%;
-	width: 85%;
+	width: 100%;
 	padding: 0;
 	margin: 0;
 }
