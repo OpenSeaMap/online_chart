@@ -12,11 +12,20 @@
 		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>" />
 		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png"/>
 		<link rel="stylesheet" type="text/css" href="map-full.css">
+		<link rel="stylesheet" type="text/css" href="topmenu.css">
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
 		<script type="text/javascript" src="./javascript/utilities.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
 		<script type="text/javascript" src="./javascript/harbours.js"></script>
+<!--
+		<script type="text/javascript" src="./javascript/jquery-1.5.2.min.js"></script>
+		<script type="text/javascript">
+			jQuery.noConflict();
+		</script>
+		<script type="text/javascript" src="./javascript/jquery.dropdownPlain.js"></script>
+/-->
+		<script type="text/javascript" src="./javascript/nominatim.js"></script>
 		<!--<script type="text/javascript" src="./javascript/tidal_scale.js"></script>-->
 		<script type="text/javascript">
 
@@ -197,9 +206,10 @@
 				setCookie("zoom",zoom);
 
 				if(oldZoom!=zoom) {
-					ensureHarbourVisibility(zoom)
+					document.getElementById('zoomlevel').innerHTML="Zoom: "+ zoom +"";
+					ensureHarbourVisibility(zoom);
 					//ensureTidalScaleVisibility(zoom);
-					oldZoom=zoom
+					oldZoom=zoom;
 				}
 				if (downloadLoaded) {
 					closeMapDownload();
@@ -261,22 +271,12 @@
 	<body onload=init();>
 		<div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
 		<div id="layerswitcher"></div>
+		<div id="zoomlevel" style="position:absolute; bottom:0px; right:130px; z-index:2;">Zoom: 15</div>
 		<div style="position:absolute; bottom:48px; left:12px; width:700px;">
 			<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 		</div>
-		<div id="topmenu" style="position:absolute; top:10px; left:60px;">
-			<ul>
-				<li onClick="window.location.href='http://openseamap.org/'"><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("Startseite")?></img></li>
-				<li>&nbsp;|&nbsp;</li>
-				<li onClick="window.location.href='./map_edit.php'"><IMG src="./resources/action/edit.png" width="24" height="24" align="center" border="0"><?=$t->tr("edit")?></img></li>
-				<li>&nbsp;|&nbsp;</li>
-				<li onClick="window.location.href='./weather.php?lang=<?=$t->getCurrentLanguage()?>'"><IMG src="./resources/map/weather.png" width="24" height="24" align="center" border="0"><?=$t->tr("weather")?></img></li>
-				<li>&nbsp;|&nbsp;</li>
-				<li onClick="showMapKey()"><IMG src="./resources/action/info.png" width="24" height="24" align="center" border="0"><?=$t->tr("Legende")?></img></li>
-				<li>&nbsp;|&nbsp;</li>
-				<li onClick="showMapDownload()"><IMG src="./resources/action/download.png" width="24" height="24" align="center" border="0"><?=$t->tr("downloadChart")?></img></li>
-			</ul>
-		</div>
+<? include('topmenu.php'); ?>
+
 		<div id="downloadmenu" style="position:absolute; top:50px; left:60px; visibility:hidden;">
 			<b><?=$t->tr("downloadChart")?></b><br/><br/>
 			<table border="0" width="100%">

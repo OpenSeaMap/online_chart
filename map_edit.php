@@ -13,9 +13,19 @@
 		<meta http-equiv="content-language" content="<?=$t->getCurrentLanguage()?>" />
 		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png"/>
 		<link rel="stylesheet" type="text/css" href="map-edit.css">
+		<link rel="stylesheet" type="text/css" href="topmenu.css">
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
 		<script type="text/javascript" src="./javascript/prototype.js"></script>
+<!--
+		<script type="text/javascript" src="./javascript/jquery-1.5.2.min.js"></script>
+		<script type="text/javascript">
+			// directly after prototype.js!
+			jQuery.noConflict();
+		</script>
+		<script type="text/javascript" src="./javascript/jquery.dropdownPlain.js"></script>
+/-->
+		<script type="text/javascript" src="./javascript/nominatim.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
 		<script type="text/javascript" src="./javascript/map_edit_utils.js"></script>
 		<script type="text/javascript" src="./javascript/utilities.js"></script>
@@ -976,9 +986,11 @@
 			<input type="button" value='<?=$t->tr("logout")?>' onclick="logoutUser()" >
 		</div>
 		<!--Title ******************************************************************************** -->
+		<!--
 		<div id="head" class="infobox" style="width: 200px;margin:10px;z-index:2;position:absolute;text-align:center;">
 		<b><?=$t->tr("online_editor")?></b>
 		</div>
+		-->
 		<!--Sidebar ******************************************************************************** -->
 		<ul class="sidebar">
 		<li id="language">
@@ -1014,17 +1026,8 @@
 			<?=$t->tr("about_editor")?>
 			</a>
 		</li>
-		<li>
-			<a href="http://wiki.openseamap.org/index.php?title=De:Online-Editor" target="blank">
-			<?=$t->tr("help")?>
-			</a>
-		</li>
-		<li>
-			<a onclick="window.location.href='http://openseamap.org/'">
-			<?=$t->tr("Startseite")?>
-			</a>
-		</li>
 		</ul>
+<?php include('topmenu.php'); ?>
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:10px;">

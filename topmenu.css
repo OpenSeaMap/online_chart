@@ -1,0 +1,80 @@
+#topmenu2 {
+	margin-bottom: 5px;
+	border: 3px solid #000080;
+	-moz-border-radius: 8px;
+	background-color: #FFF;
+	padding: 2px;
+	z-index:2;  /* on top of the map */
+}
+
+#topmenu2 ul {
+	margin: 0 10px 0 0;
+	padding: 0;
+	float:right;
+}
+
+#topmenu2 ul li {
+	list-style: none;
+	display: block;
+	float: left;
+}
+
+#topmenu2 ul li:hover {
+	background-color: #ADD8E6;
+	cursor:pointer
+}
+
+#topmenu2 img {
+	text-decoration: none;
+	padding: 0 5px 0 5px;
+	color: #000;
+}
+
+
+/*
+body								{ font: 14px Helvetica, Sans-Serif; } 
+p                                   { margin: 15px 0; }
+*/
+* 									{ margin: 0; padding: 0; }
+ul									{ list-style: none; }
+a									{ text-decoration: none; }
+ul.dropdown { font-family: Arial, sans-serif; }
+/* 
+	LEVEL ONE
+*/
+ul.dropdown                         { 
+	position: relative; 
+	background-color: #FFF;
+}
+ul.dropdown img {
+	text-decoration: none;
+/*	padding: 0 5px 0 5px;*/
+	color: #000;
+}
+
+ul.dropdown li                      { font-weight: bold; float: left; zoom: 1; background: #fff; color: black;}
+ul.dropdown a:hover		            { color: black;  cursor:pointer; background-color: #ADD8E6; }
+ul.dropdown a:active                { color: black; }
+ul.dropdown li a                    { display: block; padding: 5px 10px; border-right: 1px solid #333;
+	 								  color: black; }
+ul.dropdown li:last-child a         { border-right: none; } /* Doesn't work in IE */
+ul.dropdown li.hover,
+ul.dropdown li:hover                { background: #F3D673; color: black; position: relative; }
+ul.dropdown li.hover a              { color: black; }
+
+
+/* 
+	LEVEL TWO
+*/
+ul.dropdown ul 						{ width: 240px; visibility: hidden; position: absolute; top: 100%; left: 0; }
+ul.dropdown ul li 					{ font-weight: normal; background: #f6f6f6; color: #000; 
+									  border-bottom: 1px solid #ccc; float: none; }
+									  
+                                    /* IE 6 & 7 Needs Inline Block */
+ul.dropdown ul li a					{ border-right: none; width: 220px; display: inline-block; } 
+
+/* 
+	LEVEL THREE
+*/
+ul.dropdown ul ul 					{ left: 100%; top: 0; }
+ul.dropdown li:hover > ul 			{ visibility: visible; }

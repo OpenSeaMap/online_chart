@@ -80,7 +80,7 @@
 								return "0";
 							} else {
 								document.getElementById(dialog).style.visibility = "collapse";
-								alert("<?=$t->tr('send401')?>");
+								alert("<?=$t->tr(send401)?>");
 								loginUser_cancel();
 								setChangeSetId("-1");
 								readOsmXml();
@@ -131,7 +131,7 @@
 						}
 						document.getElementById("saving").style.visibility = "collapse";
 						_Saving = false;
-						showInfoDialog(true, "<?=$t->tr('helpSeamarkSaved')?>");
+						showInfoDialog(true, "<?=$t->tr(helpSeamarkSaved)?>");
 						return "0";
 					},
 					onFailure: function() {
@@ -151,7 +151,7 @@
 			function updateSeamarks() {
 				if (map.getZoom() > 15) {
 					if (_Loaded) {
-						showInfoDialog(true, "<img src=\"resources/action/wait.gif\" width=\"22\" height=\"22\" /> &nbsp;&nbsp;<?=$t->tr('loading')?>");
+						showInfoDialog(true, "<img src=\"resources/action/wait.gif\" width=\"22\" height=\"22\" /> &nbsp;&nbsp;<?=$t->tr(loading)?>");
 					} else {
 						document.getElementById("loading").style.visibility = "visible";
 					}
@@ -185,8 +185,8 @@
 									}
 									_Loaded = true;
 								} else {
-									alert("<?=$t->tr('xmlLoadError')?>");
-									showInfoDialog(true, "<?=$t->tr('noData')?>");
+									alert("<?=$t->tr(xmlLoadError)?>");
+									showInfoDialog(true, "<?=$t->tr(noData)?>");
 									_Loaded = false;
 								}
 								document.getElementById("loading").style.visibility = 'hidden';
@@ -300,12 +300,12 @@
 								popupText += "<tr><td>Lat</td><td> = <t/d><td>" + lat.toFixed(5) + "</td></tr>";
 								popupText += "<tr><td>Lon</td><td> = <t/d><td>" + lon.toFixed(5) + "</td></tr></table>";
 								popupText += "<br/><br/>";
-								popupText += "<a href='http://www.openstreetmap.org/browse/node/" + id + "/history' target='blank'><?=$t->tr("historyNode")?></a>";
+								popupText += "<a href='http://www.openstreetmap.org/browse/node/" + id + "/history' target='blank'><?=$t->tr(historyNode)?></a>";
 								popupText += "<br/>";
 								popupText += "<br/> <br/>";
-								popupText += "<input type=\"button\" value=\"<?=$t->tr("edit")?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
-								popupText += "<input type=\"button\" value=\"<?=$t->tr("move")?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
-								popupText += "<input type=\"button\" value=\"<?=$t->tr("delete")?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
+								popupText += "<input type=\"button\" value=\"<?=$t->tr(edit)?>\" onclick=\"editSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
+								popupText += "<input type=\"button\" value=\"<?=$t->tr(move)?>\"onclick=\"moveSeamarkEdit(" + id + "," + version + "," + lat + "," + lon + ")\">&nbsp;&nbsp;";
+								popupText += "<input type=\"button\" value=\"<?=$t->tr(delete)?>\"onclick=\"deleteSeamarkEdit(" + id + "," + version + ")\">";
 								addMarker(id, popupText);
 								show = false;
 							}
