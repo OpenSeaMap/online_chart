@@ -239,7 +239,7 @@
 						load = true;
 					} else if (zoom <= 13 && category >= 6) {
 						load = true;
-					} else if (zoom <= 17 && category >= 7) {
+					} else if (zoom <= 18 && category >= 7) {
 						load = true;
 					}
 
