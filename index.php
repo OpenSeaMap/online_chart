@@ -12,34 +12,18 @@
 		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>" />
 		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png"/>
 		<link rel="stylesheet" type="text/css" href="map-full.css">
-<<<<<<< .mine
 		<link rel="stylesheet" type="text/css" href="topmenu.css">
 		<link rel="stylesheet" type="text/css" href="./javascript/route/NauticalRoute.css" />
-=======
-		<link rel="stylesheet" type="text/css" href="topmenu.css">
->>>>>>> .r427
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
 		<script type="text/javascript" src="./javascript/utilities.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
 		<script type="text/javascript" src="./javascript/harbours.js"></script>
-<<<<<<< .mine
 		<script type="text/javascript" src="./javascript/nominatim.js"></script>
 		<script type="text/javascript" src="./javascript/tidal_scale.js"></script>
 		<script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script>
 		<script type="text/javascript" src="./javascript/mouseposition_dm.js"></script>
 		<script type="text/javascript" src="./javascript/grid_wgs.js"></script>
-=======
-<!--
-		<script type="text/javascript" src="./javascript/jquery-1.5.2.min.js"></script>
-		<script type="text/javascript">
-			jQuery.noConflict();
-		</script>
-		<script type="text/javascript" src="./javascript/jquery.dropdownPlain.js"></script>
-/-->
-		<script type="text/javascript" src="./javascript/nominatim.js"></script>
-		<!--<script type="text/javascript" src="./javascript/tidal_scale.js"></script>-->
->>>>>>> .r427
 		<script type="text/javascript">
 
 			var map;
@@ -460,12 +444,7 @@
 			<img src="../resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>" onClick="showMapKey('license')"/>
 			<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="showMapKey('license')"/>
 		</div>
-<<<<<<< .mine
 		<? include('../classes/topmenu.php'); ?>
-=======
-<? include('topmenu.php'); ?>
-
->>>>>>> .r427
 		<div id="downloadmenu" style="position:absolute; top:50px; left:60px; visibility:hidden;">
 			<b><?=$t->tr("downloadChart")?></b><br/><br/>
 			<table border="0" width="100%">
