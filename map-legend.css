@@ -6,6 +6,10 @@ html, body {
 	font-family: Arial, sans-serif;
 }
 
+img {
+	vertical-align: middle;
+}
+
 #menu {
 	float:left;
 	width: 200px;
