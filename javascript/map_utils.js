@@ -19,6 +19,30 @@
 var projMerc = new OpenLayers.Projection("EPSG:900913");
 var proj4326 = new OpenLayers.Projection("EPSG:4326");
 
+// Zoom------------------------------------------------------------------------
+var zoomUnits= [
+	30*3600,	// zoom=0
+	30*3600,
+	15*3600,
+	10*3600,
+	5*3600,
+	5*3600,
+	2*3600,
+	1*3600,
+	30*60,
+	20*60,
+	10*60,		// zoom=10
+	5*60,
+	2*60,
+	1*60,
+	30,
+	30,
+	12,
+	6,
+	6,
+	3			// zoom=19
+];
+
 // Transformations-------------------------------------------------------------
 function Lon2Merc(value) {
 	return 20037508.34 * value / 180;
@@ -87,5 +111,36 @@ function getTileURL(bounds) {
 			url = this.selectUrl(path, url);
 		}
 		return url+path;
+	}
+}
+
+function addMarker(layer, buffLon, buffLat, popupContentHTML) {
+
+	var pos = new OpenLayers.LonLat(buffLon, buffLat);
+	pos.transform(proj4326, projMerc);
+	var mFeature = new OpenLayers.Feature(layer, pos);
+	mFeature.closeBox = true;
+	mFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {minSize: new OpenLayers.Size(260, 100) } );
+	mFeature.data.popupContentHTML = popupContentHTML;
+
+	var marker = new OpenLayers.Marker(pos);
+	marker.feature = mFeature;
+
+	var markerClick = function(evt) {
+		if (this.popup == null) {
+			this.popup = this.createPopup(this.closeBox);
+			map.addPopup(this.popup);
+			this.popup.show();
+		} else {
+			this.popup.toggle();
+		}
+		OpenLayers.Event.stop(evt);
+	};
+
+
+	layer.addMarker(marker);
+	if (popupContentHTML != -1) {
+		marker.events.register("mousedown", mFeature, markerClick);
+		map.addPopup(mFeature.createPopup(mFeature.closeBox));
 	}
 }

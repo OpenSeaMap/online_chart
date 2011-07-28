@@ -17,8 +17,15 @@
 
  ******************************************************************************
  This file implements the client-side of the TidalScale display.
- Version 0.0.1  07.11.2010
+ Version 0.0.2  02.07.2011
  ******************************************************************************/
+ 
+/*
+angepasst von Tim Reinartz im Rahmen der Bachelor-Thesis
+letzte Änderung 24.05.11 12:02 Uhr
+Aufgabe der Datei:
+Stellt die Marker auf OSM dar.
+*/
 
 // List of downloaded scales:
 var arrayTidalScales = new Array();
@@ -40,25 +47,36 @@ function makeTidalScaleRequest(params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
-	var TidalScaleUrl="http://harbor.openseamap.org/getTidalScaleTest.php"+url;
-	
+	var TidalScaleUrl="http://osm.soft-gmbh.de/web/getTidalTest.php"+url;
 	var script = document.createElement("script");
 	script.src = TidalScaleUrl;
 	script.type = "text/javascript";
 	document.body.appendChild(script);
 }
 
-// This function is called from the scripts that are returned on makeTidalScaleRequest calls.
-function putTidalScaleMarker(id, lon, lat, tidal_name, pnp) {
+function putTidalScaleMarker(id, lon, lat, tidal_name, name, namegebiet, messwert, tendenz, pnp, datum, uhrzeit, daten_fehler) {
 	//alert("recive :" + tidal_name + pnp + " : " + id + " : " + pnp);
 	if (!tidal_scale_exist(id)) {
-		var popupText = "<b>" + tidal_name +"</b>";
+		var popupText = "<table><tr><td colspan='3'><b>" + tidal_name +"</b></td></tr>";
+			popupText += "<tr><td colspan='3' nowrap>" + name + ", " + namegebiet + "</td></tr>";
+			popupText += "<tr><td colspan='3'></td></tr>";
+			popupText += "<tr><td>" + linkTextMeasuringValue + "</td><td>"+ linkTextTendency + "</td><td>PnP</td></tr><tr><td>" + messwert + "</td><td>" + tendenz + "</td><td>" + pnp + "</td></tr>";
+			popupText += "<tr><td colspan='3'></td></tr>";
+			popupText += "<tr><td colspan='3'>" + datum + " - " + uhrzeit + "</td></tr>";
+			popupText += "<tr><td colspan='3'></td></tr>";	
+			popupText += "<tr><td colspan='3'>" + daten_fehler + "</td></tr>";
+			popupText += "<tr><td colspan='3'></td></tr>";
+			popupText += "<tr><td colspan='3'><a href='http://www.pegelonline.wsv.de/gast/stammdaten?pegelnr=" + id + "' target='blank'>" + linkTextHydrographCurve + "</a></td></tr>";
+			popupText += "<tr><td colspan='3'></td></tr>";
+			popupText += "<tr><td colspan='3'><a href='http://wiki.openseamap.org/wiki/De:Pegel' target='blank'>" + linkTextWikiHelp + "</a></td></tr>";
+			popupText += "<tr><td colspan='3'></td></tr>";
+			popupText += "<tr><td colspan='3'></td></tr>";
+			popupText += "<tr><td colspan='3'><a href='http://openportguide.org/cgi-bin/weather/weather.pl/weather.png?var=meteogram&nx=614&ny=750&lat=" + lat + "&lon=" + lon + "&lang=de&unit=metric&label=" + tidal_name + "' target='blank'>" + linkTextWeatherHarbour + "</a></td></tr></table>";
 		var TidalScale = {id: id, name: tidal_name, lat: lat, lon: lon, feature: null};
 		TidalScale.feature = createTidalScaleFeature(lon2x(lon), lat2y(lat), popupText, 1);
 		arrayTidalScales.push(TidalScale);
 	}
 }
-
 
 // TidalScale management----------------------------------------------------------------------------------------
 
@@ -120,9 +138,12 @@ function clearTidalScales() {
 // This function creates a feature and adds a corresponding marker to the map.
 function createTidalScaleFeature(x, y, popup_content, type) {
 	if(!createTidalScaleFeature.TidalScale_icon) {
-		var TidalScaleIcon='./resources/places/tidal_scale_32.png';
-		icon_size = new OpenLayers.Size(32, 32);
-		icon_offset = new OpenLayers.Pixel(-16, -16);
+		//var TidalScaleIcon='./resources/places/tidal_scale_32.png';
+		//icon_size = new OpenLayers.Size(32, 32);
+		//icon_offset = new OpenLayers.Pixel(-16, -16);
+		var TidalScaleIcon='./resources/places/tidal_scale_24.png';
+		icon_size = new OpenLayers.Size(24, 24);
+		icon_offset = new OpenLayers.Pixel(-12, -12);
 		createTidalScaleFeature.TidalScale_icon = new OpenLayers.Icon(TidalScaleIcon, icon_size, icon_offset);
 	}
 	var icon = createTidalScaleFeature.TidalScale_icon.clone();

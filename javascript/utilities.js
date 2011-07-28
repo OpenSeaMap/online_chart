@@ -2,7 +2,8 @@
  Javascript Utilities
  author Olaf Hannemann
  license GPL V3
- version 0.1.2
+ version 0.1.3
+ date 07.07.2011
 
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -31,6 +32,22 @@ function getCookie(argument) {
 		}
 	}
 
+	return "-1";
+}
+
+function getArgument(argument) {
+	if(window.location.search != "") {
+		// We have parameters
+		var undef = document.URL.split("?");
+		var args = undef[1].split("&");
+		for(i = 0; i < args.length; i++) {
+			var a = args[i].split("=");
+			if(a[0] == argument) {
+				return a[1];
+			}
+		}
+		return "-1";
+	}
 	return "-1";
 }
 
@@ -73,6 +90,12 @@ function convert2Locode(buffer) {
 	buffer = buffer.replace('ß', 'ss');
 	buffer = buffer.replace('ø', 'o');
 	
+	return buffer
+}
+
+function convert2Text(buffer) {
+	buffer = buffer.replace(/%20/g, ' ');
+
 	return buffer
 }
 
