@@ -58,17 +58,15 @@ function nominatim(searchtext) {
 
 
 function nominatim_callback(xmlhttp, infotext) {
-	//alert('"'+xmlhttp.responseXML.getElementsByTagName('place')[0].getAttribute('display_name')+' not found.');
+	//alert('"'+xmlhttp.responseXML.getElementsByTagName('place')[0].getAttribute('display_name'));
 	if ( xmlhttp.status == 0 ) {
 		alert('"'+infotext+' not found.');
 	}
-	
 	if ( xmlhttp.status == 200 ) {
 		if ( xmlhttp.responseXML.getElementsByTagName('place')[0] ) {   // is one place returned?
-			var lat = xmlhttp.responseXML.getElementsByTagName('place')[0].getAttribute('lat');
-			var lon = xmlhttp.responseXML.getElementsByTagName('place')[0].getAttribute('lon');
-			//alert(lat + ' / ' + lon);
-			jumpTo(lon, lat, 13);
+			lat = xmlhttp.responseXML.getElementsByTagName('place')[0].getAttribute('lat');
+			lon = xmlhttp.responseXML.getElementsByTagName('place')[0].getAttribute('lon');
+			jumpTo(lon, lat, zoom);
 		} else {
 			alert('"'+infotext+'" not found.');
 		}
