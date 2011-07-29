@@ -101,9 +101,6 @@
 				} else {
 					document.getElementById("checkLayerHarbour").checked = true;
 				}
-				if (layer_download.visibility) {
-					addMapDownload();
-				}
 				if (getCookie("TidalScaleLayerVisible") == "true") {
 					layer_tidal_scale.setVisibility(true);
 					document.getElementById("checkLayerTidalScale").checked = true;
@@ -116,6 +113,11 @@
 				if (getCookie("GridWGSLayerVisible") == "true") {
 					layer_grid.setVisibility(true);
 					document.getElementById("checkLayerGridWGS").checked = true;
+				}
+				if (getCookie("GebcoDepthLayerVisible") == "true") {
+					layer_gebco_deepshade.setVisibility(true);
+					layer_gebco_deeps_gwc.setVisibility(true);
+					document.getElementById("checkLayerGebcoDepth").checked = true;
 				}
 			}
 
@@ -203,16 +205,14 @@
 			function showGebcoDepth() {
 				if (layer_gebco_deepshade.visibility) {
 					layer_gebco_deepshade.setVisibility(false);
-					/*layer_gebco_contours.setVisibility(false);
-					layer_gebco_deeps_wms.setVisibility(false);
-					layer_gebco_deeps_gwc.setVisibility(false);*/
+					layer_gebco_deeps_gwc.setVisibility(false);
 					document.getElementById("checkLayerGebcoDepth").checked = false;
+					setCookie("GebcoDepthLayerVisible", "false");
 				} else {
 					layer_gebco_deepshade.setVisibility(true);
-					/*layer_gebco_contours.setVisibility(true);
-					layer_gebco_deeps_wms.setVisibility(true);
-					layer_gebco_deeps_gwc.setVisibility(true);*/
+					layer_gebco_deeps_gwc.setVisibility(true);
 					document.getElementById("checkLayerGebcoDepth").checked = true;
+					setCookie("GebcoDepthLayerVisible", "true");
 				}
 			}
 
@@ -301,42 +301,31 @@
 				var layer_tah = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
 				// Seamark
 				layer_seamark = new OpenLayers.Layer.TMS("<?=$t->tr("Seezeichen")?>", "http://tiles.openseamap.org/seamark/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
+					{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
 				// Sport
 				layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
-				{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-				layer_gebco_deepshade = new OpenLayers.Layer.WMS("deepshade",
-					"http://osm.franken.de:8080/geoserver/gwc/demo/gebco_new?",
+					{ numZoomLevels: 18, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+				//GebcoDepth
+				layer_gebco_deepshade = new OpenLayers.Layer.WMS("deepshade", "http:///osm.franken.de:8080/geoserver/wms",
 					{layers: "gebco:deepshade", projection: new OpenLayers.Projection("EPSG:900913"), type: 'png', transparent: true},
 					{isBaseLayer: false, visibility: false, opacity: 0.2, minResolution: 38.22});
-				/*layer_gebco_contours = new OpenLayers.Layer.WMS("contours",
-					"http:///osm.franken.de:8080/geoserver/wms",
-					{layers: "gebco:contour", projection: new OpenLayers.Projection("EPSG:900913"), type: 'png', transparent: true},
-					{isBaseLayer: false, visibility: false, maxResolution: 76.44});
-				layer_gebco_deeps_wms = new OpenLayers.Layer.WMS(
-					"deeps_wms",
-					"http://osm.franken.de:8080/geoserver/gwc/service/wms",
-					{'layers': 'gebco:deeps', 'format':'image/jpeg', 'transparent':'true'},
-					{'opacity': 0.4, 'isBaseLayer': false, 'visibility': false, maxResolution: 76.44});
-				layer_gebco_deepshade = new OpenLayers.Layer.WMS(
-					"deeps_gwc",
-					"http://osm.franken.de:8080/geoserver/gwc/demo/gebco_new?",
-					{'layers': 'gebco:deeps', 'format':'image/jpeg'},
-					{'opacity': 0.4, 'isBaseLayer': false, 'visibility': false, numZoomLevels: 11});*/
+				layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("deeps_gwc", "http://osm.franken.de:8080/geoserver/gwc/service/wms",
+					{layers: "gebco_new", format:"image/jpeg"},
+					{isBaseLayer: false, visibility: false, opacity: 0.4});
 				// Harbours
 				layer_harbours = new OpenLayers.Layer.Markers("<?=$t->tr("harbours")?>",
-				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayOutsideMaxExtent:true});
+					{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: true, displayOutsideMaxExtent:true});
 				layer_harbours.setOpacity(0.8);
 				// Tidal Scales
 				layer_tidal_scale = new OpenLayers.Layer.Markers("Pegel",
-				{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: false, displayOutsideMaxExtent:true});
+					{ projection: new OpenLayers.Projection("EPSG:4326"), visibility: false, displayOutsideMaxExtent:true});
 				layer_tidal_scale.setOpacity(0.8);
 				// Map download
 				layer_download = new OpenLayers.Layer.Vector("Map Download", {visibility: false});
 				// Grid WGS
 				layer_grid = new OpenLayers.Layer.GridWGS("<?=$t->tr("coordinateGrid")?>", {visibility: false, zoomUnits: zoomUnits})
 
-				map.addLayers([layer_mapnik, layer_tah, layer_seamark, layer_gebco_deepshade, layer_grid, layer_harbours, layer_tidal_scale, layer_download, layer_sport]);
+				map.addLayers([layer_mapnik, layer_tah, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_harbours, layer_tidal_scale, layer_download, layer_sport]);
 
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
@@ -375,7 +364,6 @@
 				setCookie("zoom",zoom);
 
 				if(oldZoom!=zoom) {
-					document.getElementById('zoomlevel').innerHTML="Zoom: "+ zoom +"";
 					ensureHarbourVisibility(zoom);
 					oldZoom=zoom;
 				}
@@ -439,7 +427,6 @@
 	<body onload=init();>
 		<div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
 		<div id="layerswitcher"></div>
-		<div id="zoomlevel" style="position:absolute; bottom:0px; right:130px; z-index:2;">Zoom: 15</div>
 		<div style="position:absolute; bottom:48px; left:12px; width:700px;">
 			<img src="../resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>" onClick="showMapKey('license')"/>
 			<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="showMapKey('license')"/>
