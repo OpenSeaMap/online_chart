@@ -31,6 +31,17 @@ img {
 	padding: 1px;
 }
 
+#messages {
+	position:absolute; 
+	top:50px; 
+	left:60px; 
+	visibility:hidden;
+	border: 2px solid #000080;
+	-moz-border-radius: 6px;
+	background-color: #FFF;
+	padding: 5px;
+}
+
 .olControlMousePositionDM {
 	bottom: 0.5em;
 	right: 0.5em;

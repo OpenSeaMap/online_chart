@@ -227,6 +227,17 @@
 				}
 			}
 
+			// Show dialog window
+			function showDialog(htmlText) {
+				document.getElementById("messages").style.visibility = 'visible';
+				document.getElementById("messages").innerHTML=""+ htmlText +"";
+			}
+
+			// Hide dialog window
+			function closeDialog() {
+				document.getElementById("messages").style.visibility = 'hidden';
+			}
+
 			function addMapDownload() {
 				addDownloadlayer();
 
@@ -269,6 +280,26 @@
 
 				document.getElementById('info_dialog').innerHTML=""+ mapName +"";
 				document.getElementById('buttonMapDownload').disabled=false;
+			}
+
+			function addSearchResults(xmlHttp) {
+				var items = xmlHttp.responseXML.getElementsByTagName("place");
+				var placeName, description, placeLat, placeLon;
+				var buff, pos;
+				var htmlText = "<div style=\"position:absolute; top:5px; right:5px;\"><img src=\"./resources/action/close.gif\" onClick=\"closeDialog();\"/></div>";
+				htmlText += "<h3><?=$t->tr("searchResults")?>:</h3><br/>"
+				htmlText += "<table border=\"0\" width=\"370px\">"
+				for(i = 0; i < items.length; i++) {
+					buff = xmlHttp.responseXML.getElementsByTagName('place')[i].getAttribute('display_name');
+					placeLat = xmlHttp.responseXML.getElementsByTagName('place')[i].getAttribute('lat');
+					placeLon = xmlHttp.responseXML.getElementsByTagName('place')[i].getAttribute('lon');
+					pos = buff.indexOf(",");
+					placeName = buff.substring(0, pos);
+					description = buff.substring(pos +1).trim();
+					htmlText += "<tr style=\"cursor:pointer;\" onmouseover=\"this.style.backgroundColor = '#ADD8E6';\"onmouseout=\"this.style.backgroundColor = '#FFF';\" onclick=\"jumpTo(" + placeLon + ", " + placeLat + ", " + zoom + ");\"><td  valign=\"top\"><b>" + placeName + "</b></td><td>" + description + "</td></tr>";
+				}
+				htmlText += "<tr><td>&nbsp;</td><td align=\"right\"><br/><input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeDialog();\"></table>";
+				showDialog(htmlText);
 			}
 
 			function drawmap() {
@@ -374,7 +405,6 @@
 			}
 
 			function addDownloadlayer() {
-
 				var xmlDoc=loadXMLDoc("./gml/map_download.xml");
 				try {
 					var root = xmlDoc.getElementsByTagName("maps")[0];
@@ -406,7 +436,7 @@
 							var e = item.getElementsByTagName("east")[0].childNodes[0].nodeValue;
 							var w = item.getElementsByTagName("west")[0].childNodes[0].nodeValue;
 						} catch(e) {
-							alert("Error (load): "+ e);
+							alert("Error (load): " + e);
 							return -1;
 						}
 						var bounds = new OpenLayers.Bounds(w, s, e, n);
@@ -427,11 +457,11 @@
 	<body onload=init();>
 		<div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
 		<div id="layerswitcher"></div>
-		<div style="position:absolute; bottom:48px; left:12px; width:700px;">
+		<div style="position:absolute; bottom:48px; left:12px; cursor:pointer;">
 			<img src="../resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>" onClick="showMapKey('license')"/>
 			<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="showMapKey('license')"/>
 		</div>
-		<? include('../classes/topmenu.php'); ?>
+
 		<div id="downloadmenu" style="position:absolute; top:50px; left:60px; visibility:hidden;">
 			<b><?=$t->tr("downloadChart")?></b><br/><br/>
 			<table border="0" width="100%">
@@ -470,5 +500,9 @@
 				</tr>
 			</table>
 		</div>
+		<div id="messages">
+			<br/>&nbsp;not found&nbsp;<br/>&nbsp;
+		</div>
+		<? include('../classes/topmenu.php'); ?>
 	</body>
 </html>

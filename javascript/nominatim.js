@@ -3,8 +3,7 @@
 // Gerit Wissing
 
 function GetXmlHttpObject() {
-	try
-	{
+	try {
 		// Firefox. Opera, Sarafi
 		try {  // get firefox to do cross domain ajax 
 			netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
@@ -13,24 +12,17 @@ function GetXmlHttpObject() {
 			//alert("Error initializing XMLHttpRequest.\n"+err); // show error
 		}
 		xmlHttp = new XMLHttpRequest(); // instantiate it regardless of security
-
 	}
-	catch(err)
-	{
+	catch(err) {
 		// Internet Explorer
-		try
-		{
+		try {
 			xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
-		}
-		catch(err)
-		{
+		} catch(err) {
 			xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
 		}
 	}
 	return xmlHttp;
 }
-
-
 
 function ajax(url, callback, infotext) {
 	var xmlhttp = GetXmlHttpObject();
@@ -42,7 +34,6 @@ function ajax(url, callback, infotext) {
 			//alert('readyState = ' + xmlhttp.readyState + ' / status = ' + xmlhttp.status);
 			if ( xmlhttp.readyState == 4  ) {
 				//alert(xmlhttp.responseText);
-				//callback(xmlhttp.responseXML, infotext);
 				callback(xmlhttp, infotext);
 			}
 		}
@@ -50,29 +41,22 @@ function ajax(url, callback, infotext) {
 	}
 }
 
-
 function nominatim(searchtext) {
 	var url='./api/nominatim.php?q='+searchtext;
 	ajax(url, nominatim_callback, infotext=searchtext);
 }
 
-
-function nominatim_callback(xmlhttp, infotext) {
-	//alert('"'+xmlhttp.responseXML.getElementsByTagName('place')[0].getAttribute('display_name'));
-	if ( xmlhttp.status == 0 ) {
+function nominatim_callback(xmlHttp, infotext) {
+	if ( xmlHttp.status == 0 ) {
 		alert('"'+infotext+' not found.');
-	}
-	if ( xmlhttp.status == 200 ) {
-		if ( xmlhttp.responseXML.getElementsByTagName('place')[0] ) {   // is one place returned?
-			lat = xmlhttp.responseXML.getElementsByTagName('place')[0].getAttribute('lat');
-			lon = xmlhttp.responseXML.getElementsByTagName('place')[0].getAttribute('lon');
-			jumpTo(lon, lat, zoom);
+	} else if ( xmlHttp.status == 200 ) {
+		if ( xmlHttp.responseXML.getElementsByTagName('place')[0] ) {   // is one place returned?
+			addSearchResults(xmlHttp);
 		} else {
 			alert('"'+infotext+'" not found.');
 		}
 	}
 }
-
 
 
 // in addition to the CC-BY-SA of the wiki feel free to use the following source for any purpose without restrictions (PD)
