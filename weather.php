@@ -10,10 +10,10 @@
 		<title>OpenSeaMap - <?php echo $t->tr("weather")?></title>
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>" />
+		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
 		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png"/>
 		<link rel="stylesheet" type="text/css" href="weather.css">
-		<link rel="stylesheet" type="text/css" href="topmenu.css">
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
 		<script type="text/javascript" src="./javascript/utilities.js"></script>
@@ -590,17 +590,14 @@
 		</script>
 	</head>
 	<body onload=init();>
-<? include('topmenu.php'); ?>
 		<div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
 		<div style="position:absolute; bottom:10px; left:12px; width:700px;">
 			<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 		</div>
-		<div id="topmenu" style="position:absolute; bottom:4px; left:120px;">
+		<div id="topmenu" style="position:absolute; top:10px; left:12px;">
 			<ul>
-<!--
 				<li onClick="window.location.href='./index.php?lang=<?=$t->getCurrentLanguage()?>'"><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("Seekarte")?></img></li>
 				<li>&nbsp;|&nbsp;</li>
-/-->
 				<li id="buttonWind" onClick="showWind()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showWindLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkWind"/><IMG src="./resources/map/WindIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("wind")?>&nbsp;</img></li>
 				<li>&nbsp;&nbsp;</li>
 				<li id="buttonPressure" onClick="showPressure()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showPressureLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkPressure"/><IMG src="./resources/map/AirPressureIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("AirPressure")?>&nbsp;</img></li>

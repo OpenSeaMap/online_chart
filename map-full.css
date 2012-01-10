@@ -24,22 +24,24 @@ img {
 	margin-bottom: 20px;
 }
 
-#downloadmenu {
-	border: 2px solid #000080;
-	-moz-border-radius: 6px;
-	background-color: #FFF;
-	padding: 1px;
-}
-
-#messages {
+#actionDialog {
 	position:absolute; 
 	top:50px; 
 	left:60px; 
 	visibility:hidden;
 	border: 2px solid #000080;
 	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px 6px 6px 6px;
 	background-color: #FFF;
 	padding: 5px;
+}
+
+#routeEditPanel {
+	float: left;
+	display:block;
+	position: relative;
+	width: 102px;
 }
 
 .olControlMousePositionDM {
@@ -47,6 +49,8 @@ img {
 	right: 0.5em;
 	border: 1px solid #000080;
 	-moz-border-radius: 4px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px 6px 6px 6px;
 	background-color: #FFF;
 	margin: 0; 
 	padding: 1px;

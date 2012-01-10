@@ -362,7 +362,7 @@
 				lon = parseFloat(lonValue);
 				lat = parseFloat(latValue);
 				if (_NodeId != "-1") {
-					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
+					//arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
 				}
 				// remove existing temp marker
 				if (arrayMarker["2"] != 'undefined') {
@@ -404,12 +404,27 @@
 
 			// Editing of the Seamark finished with OK
 			function editHarbourOk() {
-					alert("Add your code here!");
+				alert("Add your code here!");
+				seamarkType = "Harbour";
+				switch (seamarkType) {
+					case "Marina":
+						arrayMarker[_NodeId].setUrl('./resources/places/marina.png');
+						break;
+					case "Harbour":
+						arrayMarker[_NodeId].setUrl('./resources/places/harbour.png');
+						break;
+					case "Anchorage":
+						arrayMarker[_NodeId].setUrl('./resources/places/anchorage.png');
+						break;
+					default:
+						alert("Unknown Type!");
+						break;
+				}
 			}
 
 			function editSeamarkEdit(id, version, pos_lat, pos_lon) {
 				if (_NodeId != "-1") {
-					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
+					//arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
 				}
 				_Version = version;
 				_NodeId = id;
@@ -428,7 +443,7 @@
 				lat = pos_lat;
 				lon = pos_lon;
 				if (_NodeId != "-1") {
-					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
+					//arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
 				}
 				_NodeId = id;
 				_Version = version;
@@ -466,7 +481,7 @@
 
 			function deleteSeamarkEdit(id, version) {
 				if (_NodeId != "-1") {
-					arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
+					//arrayMarker[_NodeId].setUrl('./resources/action/circle_blue.png');
 				}
 				_NodeId = id;
 				_Version = version;

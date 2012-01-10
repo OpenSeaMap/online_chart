@@ -12,6 +12,7 @@ $p->addPage("divider2", "<b>".$t->tr("help")."</b>------------------------------
 $p->addPage("help-online-editor", $t->tr("help-oe"),"./map_key_pages/help-online-editor_".$t->tr("langCode").".php");
 $p->addPage("help-josm",$t->tr("help-josm"),"./map_key_pages/help-josm_".$t->tr("langCode").".php");
 $p->addPage("help-tidal-scale",$t->tr("help-tidal-scale"),"./map_key_pages/help-tidal-scale_".$t->tr("langCode").".php");
+$p->addPage("help-trip-planner",$t->tr("tripPlanner"),"./map_key_pages/help-trip-planner_".$t->tr("langCode").".php");
 $p->addPage("help-website",$t->tr("help-website-int"),"./map_key_pages/help-web-integr_".$t->tr("langCode").".php");
 $p->addPage("divider3", "------------------------------------","");
 $p->addPage("license",$t->tr("license"),"./map_key_pages/license_".$t->tr("langCode").".php");

@@ -26,8 +26,10 @@ img {
 
 #topmenu {
 	margin-bottom: 5px;
-	border: 3px solid #000080;
-	-moz-border-radius: 8px;
+	border: 2px solid #000080;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px 6px 6px 6px;
 	background-color: #FFF;
 	padding: 2px;
 }
@@ -65,8 +67,10 @@ img {
 
 #timemenu {
 	margin-bottom: 5px;
-	border: 3px solid #000080;
-	-moz-border-radius: 8px;
+	border: 2px solid #000080;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px 6px 6px 6px;
 	background-color: #FFF;
 	padding: 2px;
 }
@@ -100,18 +104,12 @@ img {
 	color: #000;
 }
 
-#downloadmenu {
-	margin-bottom: 5px;
-	border: 3px solid #000080;
-	-moz-border-radius: 8px;
-	background-color: #FFF;
-	padding: 5px;
-}
-
 #comment {
 	margin-bottom: 5px;
-	border: 3px solid #000080;
-	-moz-border-radius: 8px;
+	border: 2px solid #000080;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px 6px 6px 6px;
 	background-color: #FFF;
 	padding: 2px;
 }
