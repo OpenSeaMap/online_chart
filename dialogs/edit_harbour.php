@@ -35,7 +35,7 @@
 			function onClosing() {
 				if (_mode == "create" || _mode == "move") {
 					opener.window.clearMoving();
-					opener.window.readOsmXml();
+					//opener.window.readOsmXml();
 				} else {
 					opener.window.onEditDialogCancel(_id);
 				}
