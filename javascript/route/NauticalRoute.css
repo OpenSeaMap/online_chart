@@ -1,66 +1,25 @@
-div.olControlNauticalRoute {
-    background-color: #ffffff;
-    border: 1px solid #00008b;
+#routeAddLine {
+	cursor:pointer;
 }
-div.olControlNauticalRouteCloseBox {
-    position: absolute;
-    top: 1px;
-    right: 1px;
-    background-repeat: no-repeat;
-    cursor: pointer;
+
+#routeAddLine:hover {
+	background-color: #ADD8E6;
 }
-div.olControlNauticalRouteTitleBar {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    left: 0px;
-    cursor: move;
-    background-color: #00008b;
-    color: #ffffff;
-    font-family: sans-serif;
-    font-size: small;
+
+#routeEditLine {
+	cursor:pointer;
 }
-div.olControlNauticalRoutePrefs {
-    font-size: x-small;
+
+#routeEditLine:hover {
+	background-color: #ADD8E6;
 }
-div.olControlNauticalRouteControl {
-    text-align: center;
+
+#routeNavigate {
+	cursor:pointer;
 }
-div.olControlNauticalRouteExport {
-    font-size: x-small;
+
+#routeNavigate:hover {
+	background-color: #ADD8E6;
 }
-div.olControlNauticalRouteExport button {
-    margin: auto;
-}
-div.olControlNauticalRoute table {
-    border-collapse: collapse;
-    width: 98%;
-    margin: 1%;
-}
-div.olControlNauticalRoute th {
-    background-color: #eeeeff;
-    padding: 0.2em;
-    font-size: x-small;
-    font-weight: normal;
-}
-div.olControlNauticalRoute th, div.olControlNauticalRoute td {
-    border: 1px solid #00008b;
-    padding: 0.2em;
-    font-size: x-small;
-}
-div.olWindowToggleSection {
-    background-image: url(img/toggle-section-closed.png);
-    background-repeat: no-repeat;
-    background-position: center left;
-    background-color: #00008b;
-    border: 1px solid #fff;
-    color: #fff;
-    font-family: sans-serif;
-    font-size: x-small;
-    cursor: pointer;
-    padding: 2px;
-    padding-left: 18px;
-}
-div.olWindowToggleSectionOpened {
-    background-image: url(img/toggle-section-opened.png);
-}
+
+
