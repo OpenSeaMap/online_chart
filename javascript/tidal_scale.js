@@ -1,5 +1,5 @@
 /******************************************************************************
- Copyright 2010 Olaf Hannemann
+ Copyright 2009 - 2011 Olaf Hannemann
  
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -17,19 +17,15 @@
 
  ******************************************************************************
  This file implements the client-side of the TidalScale display.
- Version 0.0.2  02.07.2011
+ Version 0.1.1  03.10.2011
  ******************************************************************************/
  
 /*
 angepasst von Tim Reinartz im Rahmen der Bachelor-Thesis
-letzte Änderung 24.05.11 12:02 Uhr
-Aufgabe der Datei:
-Stellt die Marker auf OSM dar.
 */
 
 // List of downloaded scales:
 var arrayTidalScales = new Array();
-
 
 // Current state of the user interface. This is used
 // to keep track which popups are displayed.
@@ -47,7 +43,7 @@ function makeTidalScaleRequest(params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
-	var TidalScaleUrl="http://osm.soft-gmbh.de/web/getTidalTest.php"+url;
+	var TidalScaleUrl="http://osm.chaosdwarfs.de/web/getTidalTest.php"+url;
 	var script = document.createElement("script");
 	script.src = TidalScaleUrl;
 	script.type = "text/javascript";
@@ -55,25 +51,25 @@ function makeTidalScaleRequest(params) {
 }
 
 function putTidalScaleMarker(id, lon, lat, tidal_name, name, namegebiet, messwert, tendenz, pnp, datum, uhrzeit, daten_fehler) {
-	//alert("recive :" + tidal_name + pnp + " : " + id + " : " + pnp);
 	if (!tidal_scale_exist(id)) {
-		var popupText = "<table><tr><td colspan='3'><b>" + tidal_name +"</b></td></tr>";
-			popupText += "<tr><td colspan='3' nowrap>" + name + ", " + namegebiet + "</td></tr>";
-			popupText += "<tr><td colspan='3'></td></tr>";
-			popupText += "<tr><td>" + linkTextMeasuringValue + "</td><td>"+ linkTextTendency + "</td><td>PnP</td></tr><tr><td>" + messwert + "</td><td>" + tendenz + "</td><td>" + pnp + "</td></tr>";
-			popupText += "<tr><td colspan='3'></td></tr>";
-			popupText += "<tr><td colspan='3'>" + datum + " - " + uhrzeit + "</td></tr>";
-			popupText += "<tr><td colspan='3'></td></tr>";	
-			popupText += "<tr><td colspan='3'>" + daten_fehler + "</td></tr>";
-			popupText += "<tr><td colspan='3'></td></tr>";
-			popupText += "<tr><td colspan='3'><a href='http://www.pegelonline.wsv.de/gast/stammdaten?pegelnr=" + id + "' target='blank'>" + linkTextHydrographCurve + "</a></td></tr>";
-			popupText += "<tr><td colspan='3'></td></tr>";
-			popupText += "<tr><td colspan='3'><a href='http://wiki.openseamap.org/wiki/De:Pegel' target='blank'>" + linkTextWikiHelp + "</a></td></tr>";
-			popupText += "<tr><td colspan='3'></td></tr>";
-			popupText += "<tr><td colspan='3'></td></tr>";
-			popupText += "<tr><td colspan='3'><a href='http://openportguide.org/cgi-bin/weather/weather.pl/weather.png?var=meteogram&nx=614&ny=750&lat=" + lat + "&lon=" + lon + "&lang=de&unit=metric&label=" + tidal_name + "' target='blank'>" + linkTextWeatherHarbour + "</a></td></tr></table>";
+		var popupText = "<div style=\"position:absolute; top:4.5px; right:5px; cursor:pointer;\">";
+		popupText += "<img src=\"./resources/action/info.png\"  width=\"17\" height=\"17\" onClick=\"showMapKey('help-tidal-scale');\"/></div>";
+		popupText += "<table><tr><td colspan='3'><b>" + tidal_name +"</b></td></tr>";
+		popupText += "<tr><td colspan='3' nowrap>" + name + ", " + namegebiet + "</td></tr>";
+		popupText += "<tr><td colspan='3'></td></tr>";
+		popupText += "<tr><td>" + linkTextMeasuringValue + "</td><td>"+ linkTextTendency + "</td><td>PnP</td></tr><tr><td>" + messwert + "</td><td>" + tendenz + "</td><td>" + pnp + "</td></tr>";
+		popupText += "<tr><td colspan='3'></td></tr>";
+		popupText += "<tr><td colspan='3'>" + datum + " - " + uhrzeit + "</td></tr>";
+		popupText += "<tr><td colspan='3'></td></tr>";	
+		popupText += "<tr><td colspan='3'>" + daten_fehler + "</td></tr>";
+		popupText += "<tr><td colspan='3'></td></tr>";
+		popupText += "<tr><td colspan='3'><a href='http://www.pegelonline.wsv.de/gast/stammdaten?pegelnr=" + id + "' target='blank'>" + linkTextHydrographCurve + "</a></td></tr>";
+		popupText += "<tr><td colspan='3'></td></tr>";
+		popupText += "<tr><td colspan='3'></td></tr>";
+		popupText += "<tr><td colspan='3'><a href='http://openportguide.org/cgi-bin/weather/weather.pl/weather.png?var=meteogram&nx=614&ny=750&lat=" + lat + "&lon=" + lon + "&lang=de&unit=metric&label=" + tidal_name + "' target='blank'>" + linkTextWeatherHarbour + "</a></td></tr></table>";
+		createTidalScaleMarker(lon2x(lon), lat2y(lat), popupText);
+	
 		var TidalScale = {id: id, name: tidal_name, lat: lat, lon: lon, feature: null};
-		TidalScale.feature = createTidalScaleFeature(lon2x(lon), lat2y(lat), popupText, 1);
 		arrayTidalScales.push(TidalScale);
 	}
 }
@@ -110,107 +106,19 @@ function tidal_scale_exist(id) {
 	return false;
 }
 
-function ensureTidalScaleVisibility(zoom){
-	clearTidalScales();
-	for (var i in arrayTidalScales) {
-		if(zoom>=5) {
-			createTidalScaleMarker(arrayTidalScales[i].feature,arrayTidalScales[i].type);
-		}
-	}
-}
-
-// Remove previously displayed tidal scales from layer
-function clearTidalScales() {
-	// Remove Markers from layer
-	var toBeDestroyed= layer_tidal_scale.markers;
-	for(var i=layer_tidal_scale.markers.length-1; i>=0;i--) {
-		layer_tidal_scale.removeMarker(toBeDestroyed[i]);
-	}
-
-	// Reset all layer values
-	if(TidalScaleCurrentFeature != null) {
-		map.removePopup(TidalScaleCurrentFeature.popup);
-	}
-	TidalScaleCurrentFeature = null;
-	TidalScaleState = 0;
-}
-
-// This function creates a feature and adds a corresponding marker to the map.
-function createTidalScaleFeature(x, y, popup_content, type) {
-	if(!createTidalScaleFeature.TidalScale_icon) {
-		//var TidalScaleIcon='./resources/places/tidal_scale_32.png';
-		//icon_size = new OpenLayers.Size(32, 32);
-		//icon_offset = new OpenLayers.Pixel(-16, -16);
-		var TidalScaleIcon='./resources/places/tidal_scale_24.png';
-		icon_size = new OpenLayers.Size(24, 24);
-		icon_offset = new OpenLayers.Pixel(-12, -12);
-		createTidalScaleFeature.TidalScale_icon = new OpenLayers.Icon(TidalScaleIcon, icon_size, icon_offset);
-	}
-	var icon = createTidalScaleFeature.TidalScale_icon.clone();
-	var feature = new OpenLayers.Feature(layer_tidal_scale, new OpenLayers.LonLat(x, y), {icon: icon});
-	feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
-	feature.data.popupContentHTML = popup_content;
-
-	createTidalScaleMarker(feature,type);
-
-	return feature;
-}
-
-function createTidalScaleMarker(feature,type) {
-	var TidalScale_marker = feature.createMarker();
-	var TidalScale_marker_click = function (ev) {
-		var d=new Date();
-		var now=d.getTime();
-		if((now-TidalScalePopupTime)<500){
-			OpenLayers.Event.stop(ev);
-			return;
-		}
-		if (TidalScaleState == 0) {
-			// no popup is open
-			this.createPopup();
-			map.addPopup(this.popup);
-			TidalScaleState = 1;
-			TidalScaleCurrentFeature = this;
-			TidalScalePopupTime=now;
-		} else if (TidalScaleState == 1 && TidalScaleCurrentFeature == this)	{
-			// click on the tidal scale to which belongs the open popup => remove popup
-			map.removePopup(this.popup)
-			TidalScaleState = 0;
-			TidalScaleCurrentFeature = null;
-			TidalScalePopupTime=now;
-		} else if (TidalScaleState == 1 && TidalScaleCurrentFeature != this) {
-			// click on another tidal scale => remove old popup and create a new one
-			map.removePopup(TidalScaleCurrentFeature.popup);
-			this.createPopup();
-			map.addPopup(this.popup);
-			TidalScaleState = 1;
-			TidalScaleCurrentFeature = this;
-		}
-		OpenLayers.Event.stop(ev);
-	};
-	var TidalScale_marker_mouseover = function (ev) {
-		if (this != TidalScaleCurrentFeature) {
-			this.createPopup();
-			map.addPopup(this.popup)
-		}
-		map.div.style.cursor = "pointer";
-		OpenLayers.Event.stop(ev);
-	};
-	var  TidalScale_marker_mouseout = function (ev) {
-		if (this != TidalScaleCurrentFeature) {
-			map.removePopup(this.popup);
-		}
-		map.div.style.cursor = "default";
-		OpenLayers.Event.stop(ev);
-	};
-	// marker_click must be registered as click and not as mousedown! Otherwise a click event will be
-	// propagated to the click control of the map under certain conditions.
-	TidalScale_marker.events.register("click", feature, TidalScale_marker_click);
-	TidalScale_marker.events.register("mouseover", feature, TidalScale_marker_mouseover);
-	TidalScale_marker.events.register("mouseout", feature,  TidalScale_marker_mouseout);
-
-	if(zoom>=5 ||refreshTidalScales.call_count>0) {
-		layer_tidal_scale.addMarker(TidalScale_marker);
+function createTidalScaleMarker(x, y, popupText) {
+	var layer_poi_icon_style = OpenLayers.Util.extend({});
+	var TidalScale_marker = new OpenLayers.Geometry.Point(x, y);
+	
+	layer_poi_icon_style.externalGraphic = './resources/places/tidal_scale_24.png';
+	layer_poi_icon_style.graphicWidth = 24;
+	layer_poi_icon_style.graphicHeight = 24;
+	
+	if(zoom >= 5 ||refreshTidalScales.call_count > 0) {
+		var pointFeature = new OpenLayers.Feature.Vector(TidalScale_marker, null, layer_poi_icon_style);
+		pointFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
+		pointFeature.data.popupContentHTML = popupText;
+		layer_pois.addFeatures([pointFeature]);
 	}
 }
 

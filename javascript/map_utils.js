@@ -2,7 +2,8 @@
  Javascript OpenLayers map_utils
  author Olaf Hannemann
  license GPL V3
- version 0.1.1
+ version 0.1.3
+ date 11.09.2011
 
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -14,6 +15,9 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License (http://www.gnu.org/licenses/) for more details.
  ******************************************************************************/
+
+// Constants-------------------------------------------------------------------
+var earthRadius = 6371.221; //Km
 
 // Projections-----------------------------------------------------------------
 var projMerc = new OpenLayers.Projection("EPSG:900913");
@@ -78,6 +82,24 @@ function lon2x(a) {
 	return plusfacteur(a);
 }
 
+function lat2DegreeMinute(buffLat) {
+	var ns = buffLat >= 0 ? 'N' : 'S';
+	var lat_m = Math.abs(buffLat*60).toFixed(3);	
+	var lat_d = Math.floor (lat_m/60);
+	lat_m -= lat_d*60;
+
+	return ns + lat_d + "°" + format2FixedLenght(lat_m, 6, 3) + "'";
+}
+
+function lon2DegreeMinute(buffLon) {
+	var we = buffLon >= 0 ? 'E' : 'W';
+	var lon_m = Math.abs(buffLon*60).toFixed(3);
+	var lon_d = Math.floor (lon_m/60);
+	lon_m -= lon_d*60;
+
+	return we + lon_d + "°" + format2FixedLenght(lon_m, 6, 3) + "'";
+}
+
 function lonLatToMercator(ll) {
 	return new OpenLayers.LonLat(lon2x(ll.lon), lat2y(ll.lat));
 }
@@ -88,7 +110,7 @@ function shorter_coord(coord) {
 }
 
 
-// Utilities-------------------------------------------------------------------
+// Common utilities------------------------------------------------------------
 function jumpTo(lon, lat, zoom) {
 	var lonlat = new OpenLayers.LonLat(lon, lat);
 	lonlat.transform(proj4326, projMerc);
@@ -143,4 +165,54 @@ function addMarker(layer, buffLon, buffLat, popupContentHTML) {
 		marker.events.register("mousedown", mFeature, markerClick);
 		map.addPopup(mFeature.createPopup(mFeature.closeBox));
 	}
+}
+
+// Vector layer utilities------------------------------------------------------
+function getLineSegments(line) {	
+	var numSegments = line.components.length - 1;
+	var segments = new Array(numSegments), point1, point2;
+	for(var i = 0; i < numSegments; ++i) {
+		point1 = line.components[i];
+		point2 = line.components[i + 1];
+		segments[i] = {
+			x1: point1.x,
+			y1: point1.y,
+			x2: point2.x,
+			y2: point2.y
+		};
+	}
+
+	return segments;
+}
+
+function getLineSegmentLength(segment) {
+	return Math.sqrt( Math.pow((segment.x2 -segment.x1),2) + Math.pow((segment.y2 -segment.y1),2) );
+}
+
+function getDistance(latA, latB, lonA, lonB) {
+	var dLat = OpenLayers.Util.rad(latB - latA);
+	var dLon = OpenLayers.Util.rad(lonB - lonA);
+	var lat1 = OpenLayers.Util.rad(latA);
+	var lat2 = OpenLayers.Util.rad(latB);
+
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+			Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	var d = earthRadius * c / 1.1;
+	
+	return d;
+}
+
+function getBearing(latA, latB, lonA, lonB) {
+	var dLat = OpenLayers.Util.rad(latB-latA);
+	var dLon = OpenLayers.Util.rad(lonB-lonA);
+	var lat1 = OpenLayers.Util.rad(latA);
+	var lat2 = OpenLayers.Util.rad(latB);
+	
+	var y = Math.sin(dLon) * Math.cos(lat2);
+	var x = Math.cos(lat1)*Math.sin(lat2) -
+		Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
+	var brng = OpenLayers.Util.deg(Math.atan2(y, x));
+	
+	return (brng + 360) % 360;
 }

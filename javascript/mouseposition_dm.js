@@ -9,12 +9,6 @@
 
 OpenLayers.Control.MousePositionDM = OpenLayers.Class (OpenLayers.Control.MousePosition, {
 
-	format_f: function (number, length, fraclength) {
-		var text = number.toFixed(fraclength);
-		while (text.length < length) text = "0"+text;
-		return text;
-	},
-
 	formatOutput: function (lonLat) {
 		var ns = lonLat.lat >= 0 ? 'N' : 'S';
 		var we = lonLat.lon >= 0 ? 'E' : 'W';
@@ -25,8 +19,8 @@ OpenLayers.Control.MousePositionDM = OpenLayers.Class (OpenLayers.Control.MouseP
 		lon_m -= lon_d*60;
 		lat_m -= lat_d*60;
 
-		return	"Zoom:" + zoom + " " + ns + lat_d + "&#176;" + this.format_f(lat_m,6,3) + "'" + "&#160;" +
-			we + lon_d + "&#176;" + this.format_f(lon_m,6,3) + "'" ;
+		return	"Zoom:" + zoom + " " + ns + lat_d + "&#176;" + format2FixedLenght(lat_m,6,3) + "'" + "&#160;" +
+			we + lon_d + "&#176;" + format2FixedLenght(lon_m,6,3) + "'" ;
        	},
 
 	CLASS_NAME:"OpenLayers.Control.MousePositionDM"

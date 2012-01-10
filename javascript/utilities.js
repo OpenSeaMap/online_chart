@@ -2,8 +2,8 @@
  Javascript Utilities
  author Olaf Hannemann
  license GPL V3
- version 0.1.3
- date 07.07.2011
+ version 0.1.4
+ date 13.08.2011
 
  This file is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -95,8 +95,15 @@ function convert2Locode(buffer) {
 
 function convert2Text(buffer) {
 	buffer = buffer.replace(/%20/g, ' ');
+	buffer = buffer.replace(/&#176;/g, '°');
 
 	return buffer
+}
+
+function format2FixedLenght(number, length, fraclength) {
+	var text = number.toFixed(fraclength);
+	while (text.length < length) text = "0"+text;
+	return text;
 }
 
 function loadXMLDoc(name) {
