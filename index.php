@@ -103,12 +103,6 @@
 					lat = buffLat;
 					lon = buffLon;
 				}
-				if (getCookie("HarbourLayerVisible") == "false") {
-					HarboursVisible = false;
-				}
-				if (getCookie("TidalScaleLayerVisible") == "true") {
-					TidalScalesVisible = true;
-				}
 				drawmap();
 				// Create Marker, if arguments are given
 				if (mlat != -1 && mlon != -1) {
@@ -118,57 +112,60 @@
 					map.addLayer(layer_marker);
 					addMarker(layer_marker, mlon, mlat, convert2Text(getArgument("mtext")));
 				}
-				// Dirty fix for Firefox cache problem
-				clearCheckBoxes();
-				// Set Layer visibility from cookie
-				if (getCookie("SeamarkLayerVisible") == "false") {
-					layer_seamark.setVisibility(false);
-				} else {
-					document.getElementById("checkLayerSeamark").checked = true;
-				}
-				if (!HarboursVisible) {
-					layer_pois.setVisibility(false);
-				} else {
-					document.getElementById("checkLayerHarbour").checked = true;
-				}
-				if (TidalScalesVisible) {
-					layer_pois.setVisibility(true);
-					document.getElementById("checkLayerTidalScale").checked = true;
-				}
-				if (getCookie("SportLayerVisible") == "true") {
-					layer_sport.setVisibility(true);
-					document.getElementById("checkLayerSport").checked = true;
-				}
-				if (getCookie("GridWGSLayerVisible") == "true") {
-					layer_grid.setVisibility(true);
-					document.getElementById("checkLayerGridWGS").checked = true;
-				}
-				if (getCookie("GebcoDepthLayerVisible") == "true") {
-					layer_gebco_deepshade.setVisibility(true);
-					layer_gebco_deeps_gwc.setVisibility(true);
-					document.getElementById("checkLayerGebcoDepth").checked = true;
-				}
-				if (getCookie("WikipediaLayerVisible") == "true") {
-					showWikipediaLinks(true, false);
-					document.getElementById("checkLayerWikipedia").checked = true;
-					document.getElementById("checkLayerWikipediaMarker").checked = true;
-				}
+				readLayerCookies();
+				resetLayerCheckboxes();
 				// Set current language for internationalization
 				OpenLayers.Lang.setCode(language);
 			}
 
-			function clearCheckBoxes() {
-				document.getElementById("checkLayerSeamark").checked = false;
-				document.getElementById("checkLayerHarbour").checked = false;
-				document.getElementById("checkLayerTidalScale").checked = false;
-				document.getElementById("checkLayerSport").checked = false;
-				document.getElementById("checkLayerGridWGS").checked = false;
-				document.getElementById("checkLayerGebcoDepth").checked = false;
-				document.getElementById("checkDownload").checked = false;
-				document.getElementById("checkNauticalRoute").checked = false;
-				document.getElementById("checkLayerWikipedia").checked = false;
-				document.getElementById("checkLayerWikipediaMarker").checked =false;
-				document.getElementById("checkLayerWikipediaThumbnails").checked =false;
+			function readLayerCookies() {
+				if (getArgument('layers') != -1) {
+					// There is a 'layers' url param -> ignore cookies
+					return;
+				}
+				// Set Layer visibility from cookie
+				if (getCookie("SeamarkLayerVisible") == "false") {
+					layer_seamark.setVisibility(false);
+				}
+				if (getCookie("HarbourLayerVisible") == "false") {
+					HarboursVisible = false;
+					layer_pois.setVisibility(false);
+				}
+				if (getCookie("TidalScaleLayerVisible") == "true") {
+					TidalScalesVisible = true;
+					layer_pois.setVisibility(true);
+				}
+				if (getCookie("SportLayerVisible") == "true") {
+					layer_sport.setVisibility(true);
+				}
+				if (getCookie("GridWGSLayerVisible") == "true") {
+					layer_grid.setVisibility(true);
+				}
+				if (getCookie("GebcoDepthLayerVisible") == "true") {
+					layer_gebco_deepshade.setVisibility(true);
+					layer_gebco_deeps_gwc.setVisibility(true);
+				}
+				if (getCookie("WikipediaLayerVisible") == "true") {
+					showWikipediaLinks(true, false);
+				}
+			}
+
+			function resetLayerCheckboxes()
+			{
+				// This method is separated from readLayerCookies because
+				// the permalink control also will set the visibility of
+				// layers.
+				document.getElementById("checkLayerSeamark").checked              = (layer_seamark.getVisibility() === true);
+				document.getElementById("checkLayerHarbour").checked              = (HarboursVisible === true);
+				document.getElementById("checkLayerTidalScale").checked           = (TidalScalesVisible === true);
+				document.getElementById("checkLayerSport").checked                = (layer_sport.getVisibility() === true);
+				document.getElementById("checkLayerGridWGS").checked              = (layer_grid.getVisibility() === true);
+				document.getElementById("checkLayerGebcoDepth").checked           = (layer_gebco_deepshade.getVisibility() === true || layer_gebco_deeps_gwc.getVisibility() === true);
+				document.getElementById("checkDownload").checked                  = (layer_download.getVisibility() === true);
+				document.getElementById("checkNauticalRoute").checked             = (layer_nautical_route.getVisibility() === true);
+				document.getElementById("checkLayerWikipedia").checked            = (layer_wikipedia.getVisibility() === true);
+				document.getElementById("checkLayerWikipediaMarker").checked      = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === false);
+				document.getElementById("checkLayerWikipediaThumbnails").checked  = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
 			}
 
 			// Show popup window for help
@@ -180,11 +177,9 @@
 			function showSeamarks() {
 				if (layer_seamark.visibility) {
 					layer_seamark.setVisibility(false);
-					document.getElementById("checkLayerSeamark").checked = false;
 					setCookie("SeamarkLayerVisible", "false");
 				} else {
 					layer_seamark.setVisibility(true);
-					document.getElementById("checkLayerSeamark").checked = true;
 					setCookie("SeamarkLayerVisible", "true");
 				}
 			}
@@ -198,15 +193,14 @@
 						refreshTidalScales();
 					}
 					HarboursVisible = false;
-					document.getElementById("checkLayerHarbour").checked = false;
 					setCookie("HarbourLayerVisible", "false");
 				} else {
-					layer_pois.setVisibility(true);
 					HarboursVisible = true;
-					document.getElementById("checkLayerHarbour").checked = true;
+					layer_pois.setVisibility(true);
 					setCookie("HarbourLayerVisible", "true");
 					refreshHarbours();
 				}
+				resetLayerCheckboxes();
 			}
 
 			function showTidalScale() {
@@ -218,15 +212,14 @@
 						refreshHarbours();
 					}
 					TidalScalesVisible = false;
-					document.getElementById("checkLayerTidalScale").checked = false;
 					setCookie("TidalScaleLayerVisible", "false");
 				} else {
-					layer_pois.setVisibility(true);
 					TidalScalesVisible = true;
-					document.getElementById("checkLayerTidalScale").checked = true;
+					layer_pois.setVisibility(true);
 					setCookie("TidalScaleLayerVisible", "true");
 					refreshTidalScales();
 				}
+				resetLayerCheckboxes();
 			}
 
 			// Show route section
@@ -241,11 +234,9 @@
 			function showSport() {
 				if (layer_sport.visibility) {
 					layer_sport.setVisibility(false);
-					document.getElementById("checkLayerSport").checked = false;
 					setCookie("SportLayerVisible", "false");
 				} else {
 					layer_sport.setVisibility(true);
-					document.getElementById("checkLayerSport").checked = true;
 					setCookie("SportLayerVisible", "true");
 				}
 			}
@@ -253,11 +244,9 @@
 			function showGridWGS() {
 				if (layer_grid.visibility) {
 					layer_grid.setVisibility(false);
-					document.getElementById("checkLayerGridWGS").checked = false;
 					setCookie("GridWGSLayerVisible", "false");
 				} else {
 					layer_grid.setVisibility(true);
-					document.getElementById("checkLayerGridWGS").checked = true;
 					setCookie("GridWGSLayerVisible", "true");
 				}
 			}
@@ -266,12 +255,10 @@
 				if (layer_gebco_deepshade.visibility) {
 					layer_gebco_deepshade.setVisibility(false);
 					layer_gebco_deeps_gwc.setVisibility(false);
-					document.getElementById("checkLayerGebcoDepth").checked = false;
 					setCookie("GebcoDepthLayerVisible", "false");
 				} else {
 					layer_gebco_deepshade.setVisibility(true);
 					layer_gebco_deeps_gwc.setVisibility(true);
-					document.getElementById("checkLayerGebcoDepth").checked = true;
 					setCookie("GebcoDepthLayerVisible", "true");
 				}
 			}
@@ -280,7 +267,6 @@
 			function showMapDownload() {
 				if (!downloadLoaded) {
 					addMapDownload();
-					document.getElementById("checkDownload").checked = true;
 					if (popup) {
 						map.removePopup(popup);
 					}
@@ -299,15 +285,14 @@
 						var displayThumbs = 'no';
 						setCookie("WikipediaLayerThumbs", "false");
 					}
-					wikipediaThumbs = thumbs;
-					if(document.getElementById("checkLayerWikipediaMarker").checked && thumbs) {
-						document.getElementById("checkLayerWikipediaMarker").checked =false;
-						document.getElementById("checkLayerWikipediaThumbnails").checked =true;
+					if (wikipediaThumbs === false && thumbs === true) {
+						wikipediaThumbs = true;
 						layer_wikipedia.setVisibility(false);
-					} else if (document.getElementById("checkLayerWikipediaThumbnails").checked && !thumbs) {
-						document.getElementById("checkLayerWikipediaMarker").checked =true;
-						document.getElementById("checkLayerWikipediaThumbnails").checked =false;
+					} else if (wikipediaThumbs === true && thumbs === false) {
+						wikipediaThumbs = false;
 						layer_wikipedia.setVisibility(false);
+					} else {
+						wikipediaThumbs = thumbs;
 					}
 					var iconsProtocol = new OpenLayers.Protocol.HTTP({
 						url: 'http://toolserver.org/~kolossos/geoworld/marks.php?',
@@ -322,26 +307,14 @@
 					});
 					layer_wikipedia.protocol = iconsProtocol;
 				} else {
-					if (layer_wikipedia.visibility) {
+					if (layer_wikipedia.getVisibility() === true) {
 						layer_wikipedia.setVisibility(false);
 						if (popup) {
 							map.removePopup(popup);
 						}
-						//layer_wikipedia.destroyFeatures();
-						document.getElementById("checkLayerWikipedia").checked = false;
-						document.getElementById("checkLayerWikipediaMarker").checked =false;
-						document.getElementById("checkLayerWikipediaThumbnails").checked =false;
 						setCookie("WikipediaLayerVisible", "false");
 					} else {
 						layer_wikipedia.setVisibility(true);
-						document.getElementById("checkLayerWikipedia").checked = true;
-						if (wikipediaThumbs) {
-							document.getElementById("checkLayerWikipediaThumbnails").checked =true;
-							document.getElementById("checkLayerWikipediaMarker").checked =false;
-						} else {
-							document.getElementById("checkLayerWikipediaMarker").checked =true;
-							document.getElementById("checkLayerWikipediaThumbnails").checked =false;
-						}
 						setCookie("WikipediaLayerVisible", "true");
 					}
 				}
@@ -379,7 +352,6 @@
 				layer_download.removeAllFeatures();
 				closeActionDialog();
 				downloadLoaded = false;
-				document.getElementById("checkDownload").checked = false;
 				selectDownload.deactivate();
 				selectControlPois.activate();
 			}
@@ -426,7 +398,6 @@
 				htmlText += "<tr><td><?=$t->tr("format")?></td><td><select id=\"routeFormat\"><option value=\"CSV\"/>CSV<option value=\"GML\"/>GML<option value=\"KML\"/>KML</select></td></tr>";
 				htmlText += "<tr><td id=\"routePoints\" colspan = 2> </td></tr>";
 				htmlText += "<tr><td><br/><input type=\"button\" id=\"buttonRouteDownloadTrack\" value=\"<?=$t->tr("download")?>\" onclick=\"NauticalRoute_DownloadTrack();\" disabled=\"true\"></td><td align=\"right\"><br/><input type=\"button\" id=\"buttonNauticalRouteClear\" value=\"Clear\" onclick=\"closeNauticalRoute();addNauticalRoute();\">&nbsp;<input type=\"button\" id=\"buttonActionDialogClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeNauticalRoute();\"></td></tr></table>";
-				document.getElementById("checkNauticalRoute").checked = true;
 				showActionDialog(htmlText);
 				NauticalRoute_startEditMode();
 			}
@@ -435,7 +406,6 @@
 				layer_nautical_route.setVisibility(false);
 				closeActionDialog();
 				NauticalRoute_stopEditMode();
-				document.getElementById("checkNauticalRoute").checked = false;
 			}
 
 			function addSearchResults(xmlHttp) {
@@ -465,7 +435,8 @@
 					eventListeners: {
 						moveend: mapEventMove,
 						zoomend: mapEventZoom,
-						click: mapEventClick
+						click: mapEventClick,
+						changelayer: mapChangeLayer
 					},
 
 					controls: [
@@ -638,6 +609,11 @@ function test_mouseout() {
 				if (popup) {
 					map.removePopup(popup);
 				}
+			}
+
+			// Map event listener changelayer
+			function mapChangeLayer(event) {
+				resetLayerCheckboxes();
 			}
 
 			function addDownloadlayer(xmlMaps) {
