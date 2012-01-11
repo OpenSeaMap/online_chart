@@ -26,6 +26,8 @@
 		<script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script>
 		<script type="text/javascript" src="./javascript/mouseposition_dm.js"></script>
 		<script type="text/javascript" src="./javascript/grid_wgs.js"></script>
+		<!-- Actual bing class from devel tree (can be removed on next OpenLayers release) -->
+		<script type="text/javascript" src="./javascript/bing.js"></script>
 		<script type="text/javascript">
 
 			var map;
@@ -76,6 +78,7 @@
 			var layer_nautical_route;  // 9
 			var layer_grid;            // 10
 			var layer_wikipedia;       // 11
+			var layer_bing_aerial;     // 12
 
 			// Select controls
 			var selectDownload;
@@ -148,6 +151,9 @@
 				if (getCookie("WikipediaLayerVisible") == "true") {
 					showWikipediaLinks(true, false);
 				}
+				if (getCookie("BingAerialLayerVisible") == "true") {
+					map.setBaseLayer(layer_bing_aerial);
+				}
 			}
 
 			function resetLayerCheckboxes()
@@ -166,6 +172,7 @@
 				document.getElementById("checkLayerWikipedia").checked            = (layer_wikipedia.getVisibility() === true);
 				document.getElementById("checkLayerWikipediaMarker").checked      = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === false);
 				document.getElementById("checkLayerWikipediaThumbnails").checked  = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
+				document.getElementById("checkLayerBingAerial").checked           = (map.baseLayer == layer_bing_aerial);
 			}
 
 			// Show popup window for help
@@ -260,6 +267,26 @@
 					layer_gebco_deepshade.setVisibility(true);
 					layer_gebco_deeps_gwc.setVisibility(true);
 					setCookie("GebcoDepthLayerVisible", "true");
+				}
+			}
+
+			function showBingAerial() {
+				if (map.baseLayer == layer_bing_aerial) {
+					map.setBaseLayer(layer_mapnik);
+					setCookie("BingAerialLayerVisible", "false");
+				} else {
+					map.setBaseLayer(layer_bing_aerial);
+					setCookie("BingAerialLayerVisible", "true");
+				}
+				correctBingVisibility();
+			}
+
+			function correctBingVisibility() {
+				if (map.baseLayer == layer_bing_aerial) {
+					document.getElementById("license_bing").style.display = 'inline';
+					layer_bing_aerial.redraw();
+				} else {
+					document.getElementById("license_bing").style.display = 'none';
 				}
 			}
 
@@ -500,6 +527,15 @@
 					projection: proj4326, 
 					displayOutsideMaxExtent:true
 				});
+				// Bing
+				layer_bing_aerial = new OpenLayers.Layer.Bing({
+					layerId: 12,
+					name: 'Aerial photo',
+					key: 'AuA1b41REXrEohfokJjbHgCSp1EmwTcW8PEx_miJUvZERC0kbRnpotPTzGsPjGqa',
+					type: 'Aerial',
+					isBaseLayer: true,
+					displayOutsideMaxExtent: true
+				});
 				// Map download
 				layer_download = new OpenLayers.Layer.Vector("Map Download", {
 					layerId: 8,
@@ -521,7 +557,14 @@
 					strategies: [bboxStrategyWikipedia],
 					protocol: poiLayerWikipediaHttp
 				});
-				map.addLayers([layer_mapnik, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_download]);
+				map.addLayers([layer_mapnik, layer_bing_aerial, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_download]);
+
+				layer_mapnik.events.register("loadend", null, function(evt) {
+					// The Bing layer will only be displayed correctly after the
+					// base layer is loaded.
+					window.setTimeout(correctBingVisibility, 10);
+				});
+
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
 				}
@@ -670,6 +713,7 @@ function test_mouseout() {
 		<div style="position:absolute; bottom:48px; left:12px; cursor:pointer;">
 			<img src="../resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>" onClick="showMapKey('license')"/>
 			<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="showMapKey('license')"/>
+			<a id="license_bing" href="http://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none"><img src="../resources/icons/bing.png" height="29px"/></a>
 		</div>
 		<div id="actionDialog">
 			<br/>&nbsp;not found&nbsp;<br/>&nbsp;
