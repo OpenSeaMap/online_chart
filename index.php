@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="./javascript/prototype.js"></script>
 		<script type="text/javascript" src="./javascript/permalink.js"></script>
 		<script type="text/javascript" src="./javascript/utilities.js"></script>
+		<script type="text/javascript" src="./javascript/countries.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
 		<script type="text/javascript" src="./javascript/harbours.js"></script>
 		<script type="text/javascript" src="./javascript/nominatim.js"></script>
