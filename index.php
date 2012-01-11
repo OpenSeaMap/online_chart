@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
 		<script type="text/javascript" src="./javascript/prototype.js"></script>
+		<script type="text/javascript" src="./javascript/permalink.js"></script>
 		<script type="text/javascript" src="./javascript/utilities.js"></script>
 		<script type="text/javascript" src="./javascript/map_utils.js"></script>
 		<script type="text/javascript" src="./javascript/harbours.js"></script>
@@ -64,14 +65,17 @@
 			var language = "<?=$t->getCurrentLanguage()?>";
 
 			// Layers
-			var layer_seamark;
-			var layer_download;
-			var layer_nautical_route;
-			var layer_sport;
-			var layer_pois;
-			var layer_wikipedia;
-			var layer_gebco_deepshade
-			var layer_gebco_deeps_gwc
+			var layer_mapnik;          // 1
+			var layer_marker;          // 2
+			var layer_seamark;         // 3
+			var layer_sport;           // 4
+			var layer_gebco_deepshade; // 5
+			var layer_gebco_deeps_gwc; // 6
+			var layer_pois;            // 7
+			var layer_download;        // 8
+			var layer_nautical_route;  // 9
+			var layer_grid;            // 10
+			var layer_wikipedia;       // 11
 
 			// Select controls
 			var selectDownload;
@@ -108,7 +112,9 @@
 				drawmap();
 				// Create Marker, if arguments are given
 				if (mlat != -1 && mlon != -1) {
-					var layer_marker = new OpenLayers.Layer.Markers("Marker");
+					layer_marker = new OpenLayers.Layer.Markers("Marker",{
+						layerId: 2
+					});
 					map.addLayer(layer_marker);
 					addMarker(layer_marker, mlon, mlat, convert2Text(getArgument("mtext")));
 				}
@@ -463,7 +469,7 @@
 					},
 
 					controls: [
-						new OpenLayers.Control.Permalink(),
+						new OpenSeaMap.Control.Permalink(),
 						new OpenLayers.Control.Navigation(),
 						//new OpenLayers.Control.LayerSwitcher(), //only for debugging
 						new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: '40'}),
@@ -500,38 +506,45 @@
 
 				// Add Layers to map-------------------------------------------------------------------------------------------------------
 				// Mapnik (Base map)
-				var layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+				layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik", {
+					layerId: 1
+				});
 				// Seamark
 				layer_seamark = new OpenLayers.Layer.TMS("seamarks", "http://tiles.openseamap.org/seamark/",
-					{ numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
+					{ layerId: 3, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
 				// Sport
 				layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
-					{ numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+					{ layerId: 4, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
 				//GebcoDepth
 				layer_gebco_deepshade = new OpenLayers.Layer.WMS("deepshade", "http:///osm.franken.de:8080/geoserver/wms",
 					{layers: "gebco:deepshade", projection: new OpenLayers.Projection("EPSG:900913"), type: 'png', transparent: true},
-					{isBaseLayer: false, visibility: false, opacity: 0.2, minResolution: 38.22});
+					{ layerId: 5, isBaseLayer: false, visibility: false, opacity: 0.2, minResolution: 38.22});
 				layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("deeps_gwc", "http://osm.franken.de:8080/geoserver/gwc/service/wms",
 					{layers: "gebco_new", format:"image/jpeg"},
-					{isBaseLayer: false, visibility: false, opacity: 0.4});
+					{ layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.4});
 				// POI-Layer for harbours and tidal scales
 				layer_pois = new OpenLayers.Layer.Vector("pois", { 
+					layerId: 7,
 					visibility: true,
 					projection: proj4326, 
 					displayOutsideMaxExtent:true
 				});
+				// Map download
 				layer_download = new OpenLayers.Layer.Vector("Map Download", {
+					layerId: 8,
 					visibility: false
 				});
 				// Trip planner
 				layer_nautical_route = new OpenLayers.Layer.Vector("Trip Planner", 
-					{styleMap: routeStyle, visibility: false, eventListeners: {"featuresadded": NauticalRoute_routeAdded, "featuremodified": NauticalRoute_routeModified}});
+					{ layerId: 9, styleMap: routeStyle, visibility: false, eventListeners: {"featuresadded": NauticalRoute_routeAdded, "featuremodified": NauticalRoute_routeModified}});
 				// Grid WGS
 				layer_grid = new OpenLayers.Layer.GridWGS("coordinateGrid", {
+					layerId: 10,
 					visibility: false, 
 					zoomUnits: zoomUnits
 				});
 				layer_wikipedia = new OpenLayers.Layer.Vector("Wikipedia World", {
+					layerId: 11,
 					visibility: false,
 					projection: proj4326,
 					strategies: [bboxStrategyWikipedia],
