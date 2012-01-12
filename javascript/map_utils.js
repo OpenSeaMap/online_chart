@@ -82,6 +82,10 @@ function lon2x(a) {
 	return plusfacteur(a);
 }
 
+function km2nm(a) {
+	return a * 0.540;
+}
+
 function lat2DegreeMinute(buffLat) {
 	var ns = buffLat >= 0 ? 'N' : 'S';
 	var lat_m = Math.abs(buffLat*60).toFixed(3);	
@@ -195,10 +199,10 @@ function getDistance(latA, latB, lonA, lonB) {
 	var lat1 = OpenLayers.Util.rad(latA);
 	var lat2 = OpenLayers.Util.rad(latB);
 
-	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-			Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-	var d = earthRadius * c / 1.1;
+	var a = Math.PI/2-lat2;
+	var b = Math.PI/2-lat1;
+	var c = Math.acos(Math.cos(a)*Math.cos(b)+Math.sin(a)*Math.sin(b)*Math.cos(dLon));
+	var d = km2nm(earthRadius * c);
 	
 	return d;
 }
