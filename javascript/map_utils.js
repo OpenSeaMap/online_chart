@@ -141,7 +141,6 @@ function getTileURL(bounds) {
 }
 
 function addMarker(layer, buffLon, buffLat, popupContentHTML) {
-
 	var pos = new OpenLayers.LonLat(buffLon, buffLat);
 	pos.transform(proj4326, projMerc);
 	var mFeature = new OpenLayers.Feature(layer, pos);
@@ -149,7 +148,11 @@ function addMarker(layer, buffLon, buffLat, popupContentHTML) {
 	mFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {minSize: new OpenLayers.Size(260, 100) } );
 	mFeature.data.popupContentHTML = popupContentHTML;
 
-	var marker = new OpenLayers.Marker(pos);
+	var size = new OpenLayers.Size(32,32);
+	var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+	var icon = new OpenLayers.Icon('../resources/icons/Needle_Red_32.png', size, offset);
+
+	var marker = new OpenLayers.Marker(pos, icon);
 	marker.feature = mFeature;
 
 	var markerClick = function(evt) {
