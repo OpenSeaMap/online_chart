@@ -161,15 +161,15 @@ SatPro = OpenLayers.Class(Object,{
         var content = '<div class="satpro">';
         content += '<h2>' + feature.attributes.name + ' (' + feature.attributes.terminal + ')</h2>';
         content += '<table>';
-        content += '<tr><td>Datum</td><td>' + this.formatAttribute(feature.attributes.datum, '') + '</td></tr>';
-        content += '<tr><td>Uhrzeit</td><td>' + this.formatAttribute(feature.attributes.uhrzeit, '') + '</td></tr>';
-        content += '<tr><td>Breite</td><td>' + this.formatAttribute(feature.attributes.breite, '') + '</td></tr>';
-        content += '<tr><td>Länge</td><td>' + this.formatAttribute(feature.attributes.laenge, '') + '</td></tr>';
-        content += '<tr><td>Höhe</td><td>' + this.formatAttribute(feature.attributes.hoehe, '') + '</td></tr>';
-        content += '<tr><td>Temperatur</td><td>' + this.formatAttribute(feature.attributes.temperatur, '') + '</td></tr>';
-        content += '<tr><td>Batterie</td><td>' + this.formatAttribute(feature.attributes.batterie, '') + '</td></tr>';
-        content += '<tr><td>Geschwindigkeit</td><td>' + this.formatAttributeRound(feature.attributes.geschwindigkeit, ' kn', 1) + '</td></tr>';
-        content += '<tr><td>Richtung</td><td>' + this.formatAttributeRound(feature.attributes.richtung, ' °', 0) + '</td></tr>';
+        content += '<tr><td>' + tr.date + '</td><td>' + this.formatAttribute(feature.attributes.datum, '') + '</td></tr>';
+        content += '<tr><td>' + tr.time + '</td><td>' + this.formatAttribute(feature.attributes.uhrzeit, '') + '</td></tr>';
+        content += '<tr><td>' + tr.latitude + '</td><td>' + this.formatLat(feature.attributes.breite) + '</td></tr>';
+        content += '<tr><td>' + tr.longitude + '</td><td>' + this.formatLon(feature.attributes.laenge) + '</td></tr>';
+        content += '<tr><td>' + tr.altitude + '</td><td>' + this.formatAttribute(feature.attributes.hoehe, '') + '</td></tr>';
+        content += '<tr><td>' + tr.temperature + '</td><td>' + this.formatAttribute(feature.attributes.temperatur, '') + '</td></tr>';
+        content += '<tr><td>' + tr.battery + '</td><td>' + this.formatAttribute(feature.attributes.batterie, '') + '</td></tr>';
+        content += '<tr><td>' + tr.speed + '</td><td>' + this.formatAttributeRound(feature.attributes.geschwindigkeit, ' kn', 1) + '</td></tr>';
+        content += '<tr><td>' + tr.course + '</td><td>' + this.formatAttributeRound(feature.attributes.richtung, ' °', 0) + '</td></tr>';
         content += '</table>';
         content += '</div>';
         popup = new OpenLayers.Popup.FramedCloud('satpro',
@@ -197,5 +197,17 @@ SatPro = OpenLayers.Class(Object,{
         } else {
             return '--';
         }
+    },
+    formatLat:function(value){
+        if (!value || value == '#') {
+            return '--';
+        }
+        return lat2DegreeMinute(value);
+    },
+    formatLon:function(value){
+        if (!value || value == '#') {
+            return '--';
+        }
+        return lon2DegreeMinute(value);
     }
 });

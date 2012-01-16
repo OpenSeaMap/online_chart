@@ -1,4 +1,5 @@
 tr = {
+    altitude:'Altitude',
     andMore:'and more',
     aisType1:'Navigations Aids',
     aisType3:'Tug, Pilot',
@@ -7,11 +8,17 @@ tr = {
     aisType7:'Cargo Vessel',
     aisType8:'Tanker',
     aisType9:'Yacht & Other',
+    battery:'Battery',
     course:'Course',
+    date:'Date',
+    latitude:'Latitude',
     length:'Length',
+    longitude:'Longitude',
     minBefore:'{0} min before',
     speed:'Speed',
     submitted:'Submitted',
+    temperature:'Temperature',
+    time:'Time',
     type:'Type',
     unknown:'unknown',
     vessels:'vessels'
