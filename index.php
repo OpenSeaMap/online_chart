@@ -31,6 +31,7 @@
 		<!-- Actual bing class from devel tree (can be removed on next OpenLayers release) -->
 		<script type="text/javascript" src="./javascript/bing.js"></script>
 		<script type="text/javascript" src="./javascript/ais.js"></script>
+		<script type="text/javascript" src="./javascript/satpro.js"></script>
 		<script type="text/javascript">
 
 			var map;
@@ -82,6 +83,7 @@
 			var layer_wikipedia;       // 11
 			var layer_bing_aerial;     // 12
 			var layer_ais;             // 13
+			var layer_satpro;          // 14
 
 			// Select controls
 			var selectControl;
@@ -159,6 +161,9 @@
 				if (getCookie("AisLayerVisible") == "true") {
 					layer_ais.setVisibility(true);
 				}
+				if (getCookie("SatProLayerVisible") == "true") {
+					layer_satpro.setVisibility(true);
+				}
 			}
 
 			function resetLayerCheckboxes()
@@ -179,6 +184,7 @@
 				document.getElementById("checkLayerWikipediaThumbnails").checked  = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
 				document.getElementById("checkLayerBingAerial").checked           = (map.baseLayer == layer_bing_aerial);
 				document.getElementById("checkLayerAis").checked                  = (layer_ais.getVisibility() === true);
+				document.getElementById("checkLayerSatPro").checked               = (layer_satpro.getVisibility() === true);
 			}
 
 			// Show popup window for help
@@ -305,6 +311,18 @@
 					layer_ais.setVisibility(true);
 					document.getElementById("checkLayerAis").checked = true;
 					setCookie("AisLayerVisible", "true");
+				}
+			}
+
+			function showSatPro() {
+				if (layer_satpro.visibility) {
+					layer_satpro.setVisibility(false);
+					document.getElementById("checkLayerSatPro").checked = false;
+					setCookie("SatProLayerVisible", "false");
+				} else {
+					layer_satpro.setVisibility(true);
+					document.getElementById("checkLayerSatPro").checked = true;
+					setCookie("SatProLayerVisible", "true");
 				}
 			}
 
@@ -597,7 +615,12 @@
 					layerId: 13
 				});
 				layer_ais = ais.getLayer();
-				map.addLayers([layer_mapnik, layer_bing_aerial, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_ais, layer_download]);
+				// SatPro
+				satPro = new SatPro(map, selectControl, {
+					layerId: 14
+				});
+				layer_satpro = satPro.getLayer();
+				map.addLayers([layer_mapnik, layer_bing_aerial, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_ais, layer_satpro, layer_download]);
 
 				layer_mapnik.events.register("loadend", null, function(evt) {
 					// The Bing layer will only be displayed correctly after the

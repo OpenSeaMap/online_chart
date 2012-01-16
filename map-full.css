@@ -111,3 +111,33 @@ img {
     border:1px solid #484848;
     padding:1px;
 }
+
+
+/**
+ * -----------------------------------------------------------------------------
+ * SatPro layer
+ * -----------------------------------------------------------------------------
+ */
+
+.satpro h2 {
+    font-size:16px;
+    border-bottom:1px solid #484848;
+}
+
+.satpro td:first-child {
+    font-size:14px;
+    font-weight:normal;
+    /*text-align:right;*/
+    color:#808080;
+    padding-right:10px;
+}
+
+.satpro td {
+    font-size:14px;
+    font-weight:bold;
+    color:#484848;
+}
+
+.satpro table {
+    margin-top:13px;
+}
