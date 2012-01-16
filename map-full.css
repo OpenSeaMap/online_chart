@@ -60,3 +60,54 @@ img {
 .olControlPermalink {
 	padding: 10px;
 }
+
+
+/**
+ * -----------------------------------------------------------------------------
+ * AIS layer
+ * -----------------------------------------------------------------------------
+ */
+
+.ais h2 {
+    font-size:16px;
+    border-bottom:1px solid #484848;
+}
+
+.ais div {
+    padding:2px;
+    font-size:13px;
+}
+
+.ais td:first-child {
+    font-size:14px;
+    font-weight:normal;
+    /*text-align:right;*/
+    color:#808080;
+    padding-right:10px;
+}
+
+.ais td {
+    font-size:14px;
+    font-weight:bold;
+    color:#484848;
+    height:18px;
+}
+
+.ais ul {
+    padding:2px;
+    font-size:14px;
+    list-style-type:disc;
+    list-style-position:inside;
+    margin-top:13px;
+}
+
+.ais table {
+    margin-top:13px;
+}
+
+.ais img {
+    margin-right:6px;
+    margin-bottom:2px;
+    border:1px solid #484848;
+    padding:1px;
+}

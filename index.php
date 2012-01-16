@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
 		<script type="text/javascript" src="./javascript/prototype.js"></script>
+		<script type="text/javascript" src="./javascript/translation-<?=$t->getCurrentLanguageSafe()?>.js"></script>
 		<script type="text/javascript" src="./javascript/permalink.js"></script>
 		<script type="text/javascript" src="./javascript/utilities.js"></script>
 		<script type="text/javascript" src="./javascript/countries.js"></script>
@@ -29,10 +30,10 @@
 		<script type="text/javascript" src="./javascript/grid_wgs.js"></script>
 		<!-- Actual bing class from devel tree (can be removed on next OpenLayers release) -->
 		<script type="text/javascript" src="./javascript/bing.js"></script>
+		<script type="text/javascript" src="./javascript/ais.js"></script>
 		<script type="text/javascript">
 
 			var map;
-			var popup;
 			var arrayMaps = new Array();
 
 			// Position and zoomlevel of the map  (will be overriden with permalink parameters or cookies)
@@ -80,10 +81,10 @@
 			var layer_grid;            // 10
 			var layer_wikipedia;       // 11
 			var layer_bing_aerial;     // 12
+			var layer_ais;             // 13
 
 			// Select controls
-			var selectDownload;
-			var selectControlPois;
+			var selectControl;
 
 			// Controls
 			var ZoomBar = new OpenLayers.Control.PanZoomBar();
@@ -155,6 +156,9 @@
 				if (getCookie("BingAerialLayerVisible") == "true") {
 					map.setBaseLayer(layer_bing_aerial);
 				}
+				if (getCookie("AisLayerVisible") == "true") {
+					layer_ais.setVisibility(true);
+				}
 			}
 
 			function resetLayerCheckboxes()
@@ -174,6 +178,7 @@
 				document.getElementById("checkLayerWikipediaMarker").checked      = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === false);
 				document.getElementById("checkLayerWikipediaThumbnails").checked  = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
 				document.getElementById("checkLayerBingAerial").checked           = (map.baseLayer == layer_bing_aerial);
+				document.getElementById("checkLayerAis").checked                  = (layer_ais.getVisibility() === true);
 			}
 
 			// Show popup window for help
@@ -291,13 +296,23 @@
 				}
 			}
 
+			function showAis() {
+				if (layer_ais.visibility) {
+					layer_ais.setVisibility(false);
+					document.getElementById("checkLayerAis").checked = false;
+					setCookie("AisLayerVisible", "false");
+				} else {
+					layer_ais.setVisibility(true);
+					document.getElementById("checkLayerAis").checked = true;
+					setCookie("AisLayerVisible", "true");
+				}
+			}
+
 			// Show Download section
 			function showMapDownload() {
 				if (!downloadLoaded) {
 					addMapDownload();
-					if (popup) {
-						map.removePopup(popup);
-					}
+					selectControl.removePopup();
 				} else {
 					closeMapDownload();
 				}
@@ -337,9 +352,7 @@
 				} else {
 					if (layer_wikipedia.getVisibility() === true) {
 						layer_wikipedia.setVisibility(false);
-						if (popup) {
-							map.removePopup(popup);
-						}
+						selectControl.removePopup();
 						setCookie("WikipediaLayerVisible", "false");
 					} else {
 						layer_wikipedia.setVisibility(true);
@@ -371,8 +384,6 @@
 				htmlText += "</table>";
 				showActionDialog(htmlText);
 				downloadLoaded = true;
-				selectDownload.activate();
-				selectControlPois.deactivate();
 			}
 
 			function closeMapDownload() {
@@ -380,8 +391,6 @@
 				layer_download.removeAllFeatures();
 				closeActionDialog();
 				downloadLoaded = false;
-				selectDownload.deactivate();
-				selectControlPois.activate();
 			}
 
 			function downloadMap() {
@@ -503,6 +512,31 @@
 					})
 				});
 
+				// Select feature ---------------------------------------------------------------------------------------------------------
+				// (only one SelectFeature per map is allowed)
+				selectControl = new OpenLayers.Control.SelectFeature([],{
+					hover:true,
+					popup:null,
+					addLayer:function(layer){
+						var layers = this.layers;
+						if (layers) {
+							layers.push(layer);
+						} else {
+							layers = [
+								layer
+							];
+						}
+						this.setLayer(layers);
+					},
+					removePopup:function(){
+						if (this.popup) {
+							this.map.removePopup(this.popup);
+							this.popup.destroy();
+							this.popup = null;
+						}
+					}
+				});
+
 				// Add Layers to map-------------------------------------------------------------------------------------------------------
 				// Mapnik (Base map)
 				layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik", {
@@ -558,7 +592,12 @@
 					strategies: [bboxStrategyWikipedia],
 					protocol: poiLayerWikipediaHttp
 				});
-				map.addLayers([layer_mapnik, layer_bing_aerial, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_download]);
+				// AIS (from zoom level 8 upwards)
+				ais = new Ais(map, selectControl, {
+					layerId: 13
+				});
+				layer_ais = ais.getLayer();
+				map.addLayers([layer_mapnik, layer_bing_aerial, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_ais, layer_download]);
 
 				layer_mapnik.events.register("loadend", null, function(evt) {
 					// The Bing layer will only be displayed correctly after the
@@ -569,14 +608,19 @@
 				if (!map.getCenter()) {
 					jumpTo(lon, lat, zoom);
 				}
-				// Add download tool
-				selectDownload = new OpenLayers.Control.SelectFeature(layer_download, {onSelect: selectedMap});
-				map.addControl(selectDownload);
-
-				// Add select tool for poi layers
-				selectControlPois = new OpenLayers.Control.SelectFeature([layer_nautical_route, layer_pois, layer_wikipedia], {onSelect: onFeatureSelectPoiLayers, hover: true});
-				map.addControl(selectControlPois);
-				selectControlPois.activate();
+				// Register featureselect for download tool
+				selectControl.addLayer(layer_download);
+				layer_download.events.register("featureselected", layer_download, selectedMap);
+				// Register featureselect for poi layers
+				selectControl.addLayer(layer_nautical_route);
+				layer_nautical_route.events.register("featureselected", layer_nautical_route, onFeatureSelectPoiLayers);
+				selectControl.addLayer(layer_pois);
+				layer_pois.events.register("featureselected", layer_pois, onFeatureSelectPoiLayers);
+				selectControl.addLayer(layer_wikipedia);
+				layer_wikipedia.events.register("featureselected", layer_wikipedia, onFeatureSelectPoiLayers);
+				// Activate select control
+				map.addControl(selectControl);
+				selectControl.activate();
 
 //testZoom.divEvents.register("mouseover", '', test_mouseover);
 //OpenLayers.Control.PanZoomBar.divEvents.register("mouseout", feature,  test_mouseout);
@@ -595,13 +639,12 @@ function test_mouseout() {
 				layer_pois.removeAllFeatures();
 			}
 
-			function onFeatureSelectPoiLayers(feature) {
+			function onFeatureSelectPoiLayers(event) {
+				feature = event.feature;
 				if (feature.layer == layer_nautical_route) {
 					feature.style = style_edit;
 				} else {
-					if (popup) {
-						map.removePopup(popup);
-					}
+					selectControl.removePopup();
 					if (feature.data.popupContentHTML) {
 						var buff = feature.data.popupContentHTML;
 					} else { 
@@ -614,6 +657,7 @@ function test_mouseout() {
 						null, 
 						true
 					);
+					selectControl.popup = popup;
 					map.addPopup(popup);
 				}
 			}
@@ -650,9 +694,7 @@ function test_mouseout() {
 			}
 
 			function mapEventClick(event) {
-				if (popup) {
-					map.removePopup(popup);
-				}
+				selectControl.removePopup();
 			}
 
 			// Map event listener changelayer
