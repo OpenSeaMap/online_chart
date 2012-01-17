@@ -55,7 +55,16 @@
 // -----------------------------------------------------------------------------
 
 
+// -----------------------------------------------------------------------------
+// Write XML header
+// -----------------------------------------------------------------------------
+
 header('Content-Type: text/xml; charset=utf-8');
+
+
+// -----------------------------------------------------------------------------
+// Parse parameters
+// -----------------------------------------------------------------------------
 
 $bbox = explode(',', $_REQUEST['bbox']);
 
@@ -69,22 +78,42 @@ $swY = round($bbox[1] * 10000) / 10000;
 $neX = round($bbox[2] * 10000) / 10000;
 $neY = round($bbox[3] * 10000) / 10000;
 
-$url  = 'http://www.marinetraffic.com/ais/getxml_i.aspx';
+
+// -----------------------------------------------------------------------------
+// Fetch data
+// -----------------------------------------------------------------------------
+
+$host = 'www.marinetraffic.com';
+$url  = '/ais/getxml_i.aspx';
 $url .= '?sw_x=' . $swX;
 $url .= '&sw_y=' . $swY;
 $url .= '&ne_x=' . $neX;
 $url .= '&ne_y=' . $neY;
 $url .= '&zoom=18';
 
-$ch = curl_init($url);
+$fp = fsockopen($host, 80, $errno, $errstr, 10);
 
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_HEADER, true);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+if (!$fp) {
+    print '<POSITIONS></POSITIONS>';
+    return;
+}
 
-list($header, $contents) = preg_split( '/([\r\n][\r\n])\\1/', curl_exec($ch), 2);
+$contents = '';
 
-curl_close($ch);
+$out  = 'GET ' . $url . ' HTTP/1.1' . "\r\n";
+$out .= 'Host: ' . $host . "\r\n";
+$out .= 'Connection: Close' . "\r\n\r\n";
+fwrite($fp, $out);
+while (!feof($fp)) {
+    $contents .= fgets($fp, 128);
+}
+fclose($fp);
 
-// only allow known tags
+list($header, $contents) = preg_split( '/([\r\n][\r\n])\\1/', $contents, 2);
+
+
+// -----------------------------------------------------------------------------
+// Output data
+// -----------------------------------------------------------------------------
+
 print strip_tags($contents, '<POSITIONS><V_POS>');
