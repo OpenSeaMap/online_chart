@@ -32,6 +32,7 @@
 		<script type="text/javascript" src="./javascript/bing.js"></script>
 		<script type="text/javascript" src="./javascript/ais.js"></script>
 		<script type="text/javascript" src="./javascript/satpro.js"></script>
+		<script type="text/javascript" src="./javascript/disaster.js"></script>
 		<script type="text/javascript">
 
 			var map;
@@ -84,6 +85,7 @@
 			var layer_bing_aerial;     // 12
 			var layer_ais;             // 13
 			var layer_satpro;          // 14
+			var layer_disaster;        // 15
 
 			// Select controls
 			var selectControl;
@@ -164,6 +166,9 @@
 				if (getCookie("SatProLayerVisible") == "true") {
 					layer_satpro.setVisibility(true);
 				}
+				if (getCookie("DisasterLayerVisible") == "true") {
+					layer_disaster.setVisibility(true);
+				}
 			}
 
 			function resetLayerCheckboxes()
@@ -185,6 +190,7 @@
 				document.getElementById("checkLayerBingAerial").checked           = (map.baseLayer == layer_bing_aerial);
 				document.getElementById("checkLayerAis").checked                  = (layer_ais.getVisibility() === true);
 				document.getElementById("checkLayerSatPro").checked               = (layer_satpro.getVisibility() === true);
+				document.getElementById("checkLayerDisaster").checked             = (layer_disaster.getVisibility() === true);
 			}
 
 			// Show popup window for help
@@ -305,11 +311,9 @@
 			function showAis() {
 				if (layer_ais.visibility) {
 					layer_ais.setVisibility(false);
-					document.getElementById("checkLayerAis").checked = false;
 					setCookie("AisLayerVisible", "false");
 				} else {
 					layer_ais.setVisibility(true);
-					document.getElementById("checkLayerAis").checked = true;
 					setCookie("AisLayerVisible", "true");
 				}
 			}
@@ -317,12 +321,20 @@
 			function showSatPro() {
 				if (layer_satpro.visibility) {
 					layer_satpro.setVisibility(false);
-					document.getElementById("checkLayerSatPro").checked = false;
 					setCookie("SatProLayerVisible", "false");
 				} else {
 					layer_satpro.setVisibility(true);
-					document.getElementById("checkLayerSatPro").checked = true;
 					setCookie("SatProLayerVisible", "true");
+				}
+			}
+
+			function showDisaster() {
+				if (layer_disaster.visibility) {
+					layer_disaster.setVisibility(false);
+					setCookie("DisasterLayerVisible", "false");
+				} else {
+					layer_disaster.setVisibility(true);
+					setCookie("DisasterLayerVisible", "true");
 				}
 			}
 
@@ -620,7 +632,12 @@
 					layerId: 14
 				});
 				layer_satpro = satPro.getLayer();
-				map.addLayers([layer_mapnik, layer_bing_aerial, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_ais, layer_satpro, layer_download]);
+				// Disaster
+				disaster = new Disaster(map, selectControl, {
+					layerId: 15
+				});
+				layer_disaster = disaster.getLayer();
+				map.addLayers([layer_mapnik, layer_bing_aerial, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_ais, layer_satpro, layer_disaster, layer_download]);
 
 				layer_mapnik.events.register("loadend", null, function(evt) {
 					// The Bing layer will only be displayed correctly after the

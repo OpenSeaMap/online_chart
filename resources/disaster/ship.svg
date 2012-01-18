@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="ship.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="31.678384"
+     inkscape:cx="151.47902"
+     inkscape:cy="541.8542"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="false"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1145"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1">
+    <sodipodi:guide
+       orientation="1,0"
+       position="150,885"
+       id="guide2990" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="212.85714,690.71429"
+       id="guide2992" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="312.14286,530"
+       id="guide2994" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="250,866.42857"
+       id="guide2996" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="200,817.85714"
+       id="guide2998" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#a05a2c;stroke:#784421;stroke-width:0.95223283999999997;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 148.9188,499.78806 c -3.2957,0 -4.07177,5.09416 -4.92049,8.10324 -1.35765,4.8135 0,14.94453 0,14.94453 l 0.17471,0 9.66626,0 c 0,0 1.35765,-10.13103 0,-14.94453 -0.8487,-3.00908 -1.62479,-8.10324 -4.92048,-8.10324 z"
+       id="path2988"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="aacccaa"
+       inkscape:export-filename="/home/d.faessler/openseamap.git/ship.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+</svg>

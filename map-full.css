@@ -141,3 +141,32 @@ img {
 .satpro table {
     margin-top:13px;
 }
+
+
+/**
+ * -----------------------------------------------------------------------------
+ * Disaster layer
+ * -----------------------------------------------------------------------------
+ */
+
+.disaster h2 {
+    font-size:16px;
+    border-bottom:1px solid #484848;
+}
+
+.disaster td:first-child {
+    font-size:14px;
+    font-weight:normal;
+    color:#808080;
+    padding-right:10px;
+}
+
+.disaster td {
+    font-size:14px;
+    font-weight:bold;
+    color:#484848;
+}
+
+.disaster table {
+    margin-top:13px;
+}
