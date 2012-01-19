@@ -108,8 +108,8 @@ Disaster = OpenLayers.Class(Object,{
         );
     },
     style:new OpenLayers.Style({
-        strokeWidth:1,
-        strokeColor:'gray',
+        strokeWidth:3,
+        strokeColor:'red',
     },{
         rules:[
             new OpenLayers.Rule({
@@ -132,6 +132,7 @@ Disaster = OpenLayers.Class(Object,{
                 }),
                 symbolizer:{
                     fillColor:'lightgray',
+                    strokeWidth:1,
                     pointRadius:4
                 }
             }),
