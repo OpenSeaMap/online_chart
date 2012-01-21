@@ -403,6 +403,7 @@
 			}
 
 			function addMapDownload() {
+				selectControl.hover = false;
 				addDownloadlayer();
 				layer_download.setVisibility(true);
 				var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\"><img src=\"./resources/action/close.gif\" onClick=\"closeMapDownload();\"/></div>";
@@ -417,6 +418,7 @@
 			}
 
 			function closeMapDownload() {
+				selectControl.hover = true;
 				layer_download.setVisibility(false);
 				layer_download.removeAllFeatures();
 				closeActionDialog();
@@ -439,7 +441,8 @@
 				downloadWindow = window.open(url);
 			}
 
-			function selectedMap (feature) {
+			function selectedMap (event) {
+				var feature = event.feature;
 				var selectedMap = feature.id.split(".");
 				var buff = arrayMaps[selectedMap[2].split("_")[1]].split(":");
 
