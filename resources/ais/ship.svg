@@ -25,38 +25,30 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="16.232431"
-     inkscape:cx="169.98096"
-     inkscape:cy="537.99924"
+     inkscape:cx="156.45865"
+     inkscape:cy="554.54986"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     showguides="false"
+     showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-width="1920"
      inkscape:window-height="1145"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1">
-    <sodipodi:guide
-       orientation="1,0"
-       position="150,885"
-       id="guide2990" />
+     inkscape:window-maximized="1"
+     inkscape:snap-global="true">
     <sodipodi:guide
        orientation="0,1"
        position="212.85714,690.71429"
        id="guide2992" />
     <sodipodi:guide
-       orientation="0,1"
-       position="312.14286,530"
-       id="guide2994" />
-    <sodipodi:guide
        orientation="1,0"
        position="250,866.42857"
        id="guide2996" />
-    <sodipodi:guide
-       orientation="1,0"
-       position="200,817.85714"
-       id="guide2998" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid3087" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -66,7 +58,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -75,23 +67,96 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:#5aa02c;stroke:#447821;stroke-width:0.95223284;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 148.9188,499.78806 c -3.2957,0 -4.07177,5.09416 -4.92049,8.10324 -1.35765,4.8135 0,14.94453 0,14.94453 l 0.17471,0 9.66626,0 c 0,0 1.35765,-10.13103 0,-14.94453 -0.8487,-3.00908 -1.62479,-8.10324 -4.92048,-8.10324 z"
+       style="fill:#5aa02c;stroke:#447821;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 148.89491,499.83584 c -3.28144,0 -4.05416,5.08359 -4.89921,8.08644 -1.35178,4.80352 0,14.91356 0,14.91356 l 0.17396,0 9.62446,0 c 0,0 1.35178,-10.11004 0,-14.91356 -0.84503,-3.00285 -1.61777,-8.08644 -4.89921,-8.08644 z"
        id="path2988"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="aacccaa"
-       inkscape:export-filename="/home/d.faessler/openseamap.git/ship.png"
+       inkscape:export-filename="/home/d.faessler/openseamap_svn.git/website/map/resources/ais/ship.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <path
        sodipodi:type="arc"
-       style="fill:#5aa02c;stroke:#447821;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1;stroke-opacity:1"
+       style="fill:#5aa02c;fill-opacity:1;stroke:#447821;stroke-width:1.13270783;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="path3045"
        sodipodi:cx="169.83189"
        sodipodi:cy="512.12"
        sodipodi:rx="9.6280165"
        sodipodi:ry="9.6280165"
        d="m 179.45991,512.12 a 9.6280165,9.6280165 0 1 1 -19.25603,0 9.6280165,9.6280165 0 1 1 19.25603,0 z"
-       transform="matrix(1.1848322,0,0,1.1848322,-29.136177,-95.415717)" />
+       transform="matrix(0.8828402,0,0,0.8828402,22.55813,61.852628)"
+       inkscape:export-filename="/home/d.faessler/openseamap_svn.git/website/map/resources/ais/cluster.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g3946"
+       inkscape:export-filename="/home/d.faessler/openseamap_svn.git/website/map/resources/ais/unknown.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="matrix(0.87499995,0,0,0.87499995,17.798113,61.914237)">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/d.faessler/openseamap_svn.git/website/map/resources/ais/unknown.png"
+         y="479.81369"
+         x="142.88484"
+         height="15.000001"
+         width="15.000001"
+         id="rect3089"
+         style="fill:#5aa02c;fill-opacity:1;stroke:#447821;stroke-width:1.14285719;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <text
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/d.faessler/openseamap_svn.git/website/map/resources/ais/unknown.png"
+         sodipodi:linespacing="125%"
+         id="text3091"
+         y="491.81485"
+         x="146.85439"
+         style="font-size:12.27272797px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#447821;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="491.81485"
+           x="146.85439"
+           id="tspan3093"
+           sodipodi:role="line">?</tspan></text>
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:#447821;stroke-width:2.40700412;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path3045-2"
+       sodipodi:cx="169.83189"
+       sodipodi:cy="512.12"
+       sodipodi:rx="9.6280165"
+       sodipodi:ry="9.6280165"
+       d="m 179.45991,512.12 a 9.6280165,9.6280165 0 1 1 -19.25603,0 9.6280165,9.6280165 0 1 1 19.25603,0 z"
+       transform="matrix(0.83090843,0,0,0.83090843,31.016966,61.172484)"
+       inkscape:export-filename="/home/d.faessler/openseamap_svn.git/website/map/resources/ais/navigationaids.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:#447821;stroke-width:3.78243518;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path3045-2-5"
+       sodipodi:cx="169.83189"
+       sodipodi:cy="512.12"
+       sodipodi:rx="9.6280165"
+       sodipodi:ry="9.6280165"
+       d="m 179.45991,512.12 a 9.6280165,9.6280165 0 1 1 -19.25603,0 9.6280165,9.6280165 0 1 1 19.25603,0 z"
+       transform="matrix(0.52875991,0,0,0.52875991,82.331415,215.90878)"
+       inkscape:export-filename="/home/d.faessler/openseamap_svn.git/website/map/resources/ais/navigationaids.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#5aa02c;fill-opacity:1;stroke:#447821;stroke-width:8.82568169;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path3045-2-5-1"
+       sodipodi:cx="169.83189"
+       sodipodi:cy="512.12"
+       sodipodi:rx="9.6280165"
+       sodipodi:ry="9.6280165"
+       d="m 179.45991,512.12 a 9.6280165,9.6280165 0 1 1 -19.25603,0 9.6280165,9.6280165 0 1 1 19.25603,0 z"
+       transform="matrix(0.22661139,0,0,0.22661139,133.64587,370.64508)"
+       inkscape:export-filename="/home/d.faessler/openseamap_svn.git/website/map/resources/ais/navigationaids.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>

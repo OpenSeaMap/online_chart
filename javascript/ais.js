@@ -76,7 +76,7 @@ Ais = OpenLayers.Class(Object,{
                 styleMap:new OpenLayers.StyleMap({
                     'default':new OpenLayers.Style({
                         externalGraphic:'${graphic}',
-                        graphicHeight:24,
+                        graphicHeight:'${graphicSize}',
                         rotation:'${heading}'
                     },{
                         context:{
@@ -84,7 +84,26 @@ Ais = OpenLayers.Class(Object,{
                                 if (feature.cluster) {
                                     return 'resources/ais/cluster.png';
                                 } else {
-                                    return 'resources/ais/ship.png';
+                                    if (feature.attributes.type == 1) {
+                                        return 'resources/ais/navigationaids.png';
+                                    } else if (feature.attributes.type > 1 || feature.attributes.speed > 0) {
+                                        return 'resources/ais/ship.png';
+                                    } else {
+                                        return 'resources/ais/unknown.png';
+                                    }
+                                }
+                            },
+                            graphicSize:function(feature){
+                                if (feature.cluster) {
+                                    return 18;
+                                } else {
+                                    if (feature.attributes.type == 1) {
+                                        return 18;
+                                    } else if (feature.attributes.type > 1 || feature.attributes.speed > 0) {
+                                        return 24;
+                                    } else {
+                                        return 16;
+                                    }
                                 }
                             }
                         }
