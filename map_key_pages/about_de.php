@@ -1,30 +1,28 @@
-<h3><IMG src="../resources/icons/logo.png" height="32" align="center" border="0"/>&nbsp;&nbsp;OpenSource Werkstatt - <?=$t->tr("nautical_chart")?></h3>
-(c) 2010 - 2011 Olaf Hannemann<br/><br/>
+<h3><IMG src="../resources/icons/OpenSeaMapLogo_88.png" height="44" align="center" border="0"/>&nbsp;&nbsp;OpenSeaMap - Onlinekarte</h3>
+
 <table>
 	<tr>
 		<td valign="top">
-			<?=$t->tr("version")?>:&nbsp;
+			Version:&nbsp;
 		</td>
 		<td valign="top">
-			0.0.49&nbsp;&nbsp;Release: 1
+			0.1.23
+		</td>
+	<tr>
+	<tr>
+		<td valign="top">
+			Datum:&nbsp;
+		</td>
+		<td valign="top">
+			18.10.2012
 		</td>
 	<tr>
 	</tr>
 		<td valign="top">
-			<?=$t->tr("author")?>:&nbsp;
+			Autor:&nbsp;
 		</td>
 		<td valign="top">
 			Olaf Hannemann
 		</td>
 	</tr>
 </table>
-<h3>Dank an:</h3>
-<ul>
-	<li><b>Rolf Meyerhof</b><br/>Offlinekarten</li>
-	<li><b>Peter Schrey</b><br/>SkipperGuide, Hafendatenbank</li>
-	<li><b>Chastine Tanta</b><br/>Hafendatenbank, Hafeneditor</li>
-	<li><b>Reinhard Möller</b><br/>Hafendatenbank, Pegel</li>
-	<li><b>Thomas Krüger</b><br/>Wetter</li>
-	<li><b>Gilles Bassière</b><br/>Routing</li>
-	<li><b>Satya Ferdinand</b><br/>Alles drumherum</li>
-</ul>
