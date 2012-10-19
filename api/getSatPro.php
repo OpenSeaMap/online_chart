@@ -37,10 +37,10 @@ class SatPro
     public function fetchData()
     {
         $this->_data = Array();
-        if (file_exists('/tmp/satpro.dat') === false) {
+        if (file_exists('./satpro.dat') === false) {
             return;
         }
-        $fh = fopen('/tmp/satpro.dat', 'r');
+        $fh = fopen('./satpro.dat', 'r');
         $line = fgets($fh, 1024);
         while ($line !== false) {
             $line = trim(strip_tags($line));
