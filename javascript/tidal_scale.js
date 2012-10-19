@@ -43,18 +43,25 @@ function makeTidalScaleRequest(params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
-	var TidalScaleUrl="http://osm.chaosdwarfs.de/web/getTidalTest.php"+url;
-	var script = document.createElement("script");
-	script.src = TidalScaleUrl;
-	script.type = "text/javascript";
-	document.body.appendChild(script);
+	// Get tidal scales for Germany
+	var TidalScaleDeUrl="http://osm.chaosdwarfs.de/web/getTidalTest.php";
+	var scriptDe = document.createElement("script");
+	scriptDe.src = TidalScaleDeUrl + url;
+	scriptDe.type = "text/javascript";
+	document.body.appendChild(scriptDe);
+	// Get tidal scales for Switzerland
+	var TidalScaleChUrl="http://osmch.chaosdwarfs.de/web/getTidalTest.php";
+	var scriptCh = document.createElement("script");
+	scriptCh.src = TidalScaleChUrl + url;
+	scriptCh.type = "text/javascript";
+	document.body.appendChild(scriptCh);
 }
 
 function putTidalScaleMarker(id, lon, lat, tidal_name, name, namegebiet, messwert, tendenz, pnp, datum, uhrzeit, daten_fehler) {
 	if (!tidal_scale_exist(id)) {
 		var popupText = "<div style=\"position:absolute; top:4.5px; right:5px; cursor:pointer;\">";
 		popupText += "<img src=\"./resources/action/info.png\"  width=\"17\" height=\"17\" onClick=\"showMapKey('help-tidal-scale');\"/></div>";
-		popupText += "<table><tr><td colspan='3'><b>" + tidal_name +"</b></td></tr>";
+		popupText += "<table><tr><td colspan='2'><b>" + tidal_name +"</b></td><td></td></tr>";
 		popupText += "<tr><td colspan='3' nowrap>" + name + ", " + namegebiet + "</td></tr>";
 		popupText += "<tr><td colspan='3'></td></tr>";
 		popupText += "<tr><td>" + linkTextMeasuringValue + "</td><td>"+ linkTextTendency + "</td><td>PnP</td></tr><tr><td>" + messwert + "</td><td>" + tendenz + "</td><td>" + pnp + "</td></tr>";
@@ -92,7 +99,6 @@ function refreshTidalScales() {
 
 	var params = { "b": b, "t": t, "l": l, "r": r};
 	makeTidalScaleRequest(params);
-	
 }
 
 // Check if a tidal_scale has been downloaded already.

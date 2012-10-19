@@ -44,7 +44,8 @@ function make_harbour_request(params) {
 		url += (url.indexOf("?") > -1) ? "&" : "?";
 		url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
 	}
-	var skgUrl="http://harbor.openseamap.org/getHarbours.php"+url;
+	var skgUrl="http://dev.openseamap.org/website/map/api/getHarbours.php"+url;
+	//http://dev.openseamap.org/website/map/api/getHarbours.php?b=43.16098&t=43.46375&l=16.23863&r=17.39219&ucid=0&maxSize=5&zoom=11
 	
 	var script = document.createElement("script");
 	script.src = skgUrl;
@@ -113,14 +114,15 @@ function harbour_exist(id,type) {
 }
 
 function isWPI(type) {
-  /*
-  1 = L
-  2 = M
-  3 = S
-  4 = V (Very small)
-  5 = representative skipperguide
-  6 = other skipperguide
-  */
+	/**********************************
+	1 = L
+	2 = M
+	3 = S
+	4 = V (Very small)
+	5 = Marina (representative skipperguide)
+	6 = Anchorage (representative skipperguide)
+	7 = other descr. skipperguide
+	***********************************/
 	if(type<=4) {
 		return true;
 	}
@@ -138,17 +140,20 @@ function determineHarbourType(myName){
 }
 
 function getHarbourVisibility(zoom){
- var maxType=1;
- if(zoom>=7)
-   maxType=2;
- if(zoom>=8)
-   maxType=3;
- if(zoom>=9)
-   maxType=4;
- if(zoom>=10)
-   maxType=5;
- if(zoom>=12)
-   maxType=6;
+	var maxType=1;
+	if(zoom>=7) {
+		maxType=2;
+	}
+	if(zoom>=8) {
+		maxType=3;
+	}
+	if(zoom>=9) {
+		maxType=4;
+	}
+	if(zoom>=10) {
+		maxType=6;
+	}
+
  return maxType;
 }
 
@@ -168,15 +173,19 @@ function create_harbour_marker(x, y, popupText, type) {
 	var harbour_marker = new OpenLayers.Geometry.Point(x, y);
 	var maxType = getHarbourVisibility(zoom);
 	
-	if (isWPI(type)) {
-		layer_poi_icon_style.externalGraphic = './resources/places/harbour_32.png';
-	} else {
-		layer_poi_icon_style.externalGraphic = './resources/places/marina_32.png';
-	}
-	layer_poi_icon_style.graphicWidth = 24;
-	layer_poi_icon_style.graphicHeight = 24;
-
 	if(type <= maxType){
+		if (isWPI(type)) {
+			layer_poi_icon_style.externalGraphic = './resources/places/harbour_32.png';
+		} else {
+			if (type == 6) {
+				layer_poi_icon_style.externalGraphic = './resources/places/anchorage_32.png';
+			} else {
+				layer_poi_icon_style.externalGraphic = './resources/places/marina_32.png';
+			}
+		}
+		layer_poi_icon_style.graphicWidth = 24;
+		layer_poi_icon_style.graphicHeight = 24;
+
 		if(zoom>=5 ||refreshHarbours.call_count>0) {
 			var pointFeature = new OpenLayers.Feature.Vector(harbour_marker, null, layer_poi_icon_style);
 			pointFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
