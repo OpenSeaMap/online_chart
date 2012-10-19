@@ -9,8 +9,9 @@
 		<title>OpenSeaMap - <?php echo $t->tr("dieFreieSeekarte")?></title>
 		<meta name="AUTHOR" content="Olaf Hannemann">
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
-		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>">
+		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage()?>">
 		<meta http-equiv="X-UA-Compatible" content="IE=9">
+		<meta name="date" content="2012-06-02">
 		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png">
 		<link rel="stylesheet" type="text/css" href="map-full.css">
 		<link rel="stylesheet" type="text/css" href="topmenu.css">
@@ -32,7 +33,6 @@
 		<script type="text/javascript" src="./javascript/bing.js"></script>
 		<script type="text/javascript" src="./javascript/ais.js"></script>
 		<script type="text/javascript" src="./javascript/satpro.js"></script>
-		<script type="text/javascript" src="./javascript/disaster.js"></script>
 		<script type="text/javascript">
 
 			var map;
@@ -85,7 +85,6 @@
 			var layer_bing_aerial;     // 12
 			var layer_ais;             // 13
 			var layer_satpro;          // 14
-			var layer_disaster;        // 15
 
 			// Select controls
 			var selectControl;
@@ -143,6 +142,7 @@
 				if (getCookie("TidalScaleLayerVisible") == "true") {
 					TidalScalesVisible = true;
 					layer_pois.setVisibility(true);
+					refreshTidalScales();
 				}
 				if (getCookie("SportLayerVisible") == "true") {
 					layer_sport.setVisibility(true);
@@ -161,13 +161,7 @@
 					map.setBaseLayer(layer_bing_aerial);
 				}
 				if (getCookie("AisLayerVisible") == "true") {
-					layer_ais.setVisibility(true);
-				}
-				if (getCookie("SatProLayerVisible") == "true") {
-					layer_satpro.setVisibility(true);
-				}
-				if (getCookie("DisasterLayerVisible") == "true") {
-					layer_disaster.setVisibility(true);
+					showAis();
 				}
 			}
 
@@ -189,8 +183,7 @@
 				document.getElementById("checkLayerWikipediaThumbnails").checked  = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
 				document.getElementById("checkLayerBingAerial").checked           = (map.baseLayer == layer_bing_aerial);
 				document.getElementById("checkLayerAis").checked                  = (layer_ais.getVisibility() === true);
-				document.getElementById("checkLayerSatPro").checked               = (layer_satpro.getVisibility() === true);
-				document.getElementById("checkLayerDisaster").checked             = (layer_disaster.getVisibility() === true);
+				//document.getElementById("checkLayerSatPro").checked               = (layer_satpro.getVisibility() === true);
 			}
 
 			// Show popup window for help
@@ -311,9 +304,11 @@
 			function showAis() {
 				if (layer_ais.visibility) {
 					layer_ais.setVisibility(false);
+					document.getElementById("license_marine_traffic").style.display = 'none';
 					setCookie("AisLayerVisible", "false");
 				} else {
 					layer_ais.setVisibility(true);
+					document.getElementById("license_marine_traffic").style.display = 'inline';
 					setCookie("AisLayerVisible", "true");
 				}
 			}
@@ -636,11 +631,8 @@
 				});
 				layer_satpro = satPro.getLayer();
 				// Disaster
-				disaster = new Disaster(map, selectControl, {
-					layerId: 15
-				});
-				layer_disaster = disaster.getLayer();
-				map.addLayers([layer_mapnik, layer_bing_aerial, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_ais, layer_satpro, layer_disaster, layer_download]);
+
+				map.addLayers([layer_mapnik, layer_bing_aerial, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_ais, layer_satpro, layer_download]);
 
 				layer_mapnik.events.register("loadend", null, function(evt) {
 					// The Bing layer will only be displayed correctly after the
@@ -664,18 +656,8 @@
 				// Activate select control
 				map.addControl(selectControl);
 				selectControl.activate();
-
-//testZoom.divEvents.register("mouseover", '', test_mouseover);
-//OpenLayers.Control.PanZoomBar.divEvents.register("mouseout", feature,  test_mouseout);
-
 			}
 
-/*function test_mouseover(ev) {
-alert(ev.getMousePosition()); //4=welt 8=Übersicht 12=Umgebung 18=details
-} 
-function test_mouseout() {
-
-}*/
 			function clearPoiLayer() {
 				harbours.clear();
 				arrayTidalScales.clear();
@@ -794,15 +776,16 @@ function test_mouseout() {
 
 		</script>
 	</head>
-	<body onload=init();>
+	<body onload="init();">
 		<div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
 		<div style="position:absolute; bottom:48px; left:12px; cursor:pointer;">
-			<img src="../resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>" onClick="showMapKey('license')"/>
-			<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="showMapKey('license')"/>
-			<a id="license_bing" href="http://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none"><img src="../resources/icons/bing.png" height="29px"/></a>
+			<a id="license_osm"  onClick="showMapKey('license')"><img alt="OSM-Logo" src="../resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>"></a>
+			<a id="license_ccbysa" onClick="showMapKey('license')"><img alt="CC by SA" src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>"></a>
+			<a id="license_bing" href="http://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none"><img alt="bing" src="../resources/icons/bing.png" height="29px"></a>
+			<a id="license_marine_traffic" onClick="showMapKey('license')" style="display:none"><img alt="Marine Traffic" src="../resources/icons/MarineTrafficLogo.png" height="30px"></a>
 		</div>
 		<div id="actionDialog">
-			<br/>&nbsp;not found&nbsp;<br/>&nbsp;
+			<br>&nbsp;not found&nbsp;<br>&nbsp;
 		</div>
 		<? include('../classes/topmenu.inc'); ?>
 	</body>
