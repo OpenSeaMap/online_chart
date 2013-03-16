@@ -102,7 +102,9 @@ $contents = '';
 
 $out  = 'GET ' . $url . ' HTTP/1.1' . "\r\n";
 $out .= 'Host: ' . $host . "\r\n";
-$out .= 'Connection: Close' . "\r\n\r\n";
+$out .= 'Connection: Close' . "\r\n";
+$out .= 'User-Agent: OpenSeaMap' . "\r\n";
+$out .= "\r\n";
 fwrite($fp, $out);
 while (!feof($fp)) {
     $contents .= fgets($fp, 128);
