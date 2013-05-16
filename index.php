@@ -571,7 +571,7 @@
 					layerId: 1
 				});
 				// Seamark
-				layer_seamark = new OpenLayers.Layer.TMS("seamarks", "http://tiles.openseamap.org/seamark/",
+				layer_seamark = new OpenLayers.Layer.TMS("seamarks", "http://t1.openseamap.org/seamark/",
 					{ layerId: 3, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
 				// Sport
 				layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
