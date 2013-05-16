@@ -1,6 +1,6 @@
 <?php
-include("../classes/Pages.php");
-include("../classes/Translation.php");
+include("classes/Pages.php");
+include("classes/Translation.php");
 
 $p = new Pages($_GET['page']);
 $p->addPage("divider1", "<b>".$t->tr("Legende")."</b>-----------------------","");

@@ -3,7 +3,7 @@
 	<head>
 		<meta name="AUTHOR" content="Olaf Hannemann">
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
-		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png">
+		<link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png">
 		<meta name="date" content="2012-10-18">
 		<title>OpenSeaMap - Water depth demo</title>
 		<style type="text/css">

@@ -1,5 +1,5 @@
 <?php
-	include("../classes/Translation.php");
+	include("classes/Translation.php");
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -11,7 +11,7 @@
 		<meta name="AUTHOR" content="Olaf Hannemann" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="content-language" content="<?=$t->getCurrentLanguage()?>" />
-		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png"/>
+		<link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png"/>
 		<link rel="stylesheet" type="text/css" href="map-edit.css">
 		<link rel="stylesheet" type="text/css" href="topmenu.css">
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
@@ -1046,7 +1046,7 @@
 		<!--Map ********************************************************************************************************************** -->
 		<div id="map" style="position:absolute; bottom:0px; right:0px;"></div>
 		<div style="position:absolute; bottom:50px; left:10px;">
-			<img src="../resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
+			<img src="resources/icons/somerights20.png" title="This work is licensed under the Creative Commons Attribution-ShareAlike 2.0 License" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
 		</div>
 		<!--Sidebar dialogs ********************************************************************************************************** -->
 		<!--Add Seamark-Data-Dialog-->

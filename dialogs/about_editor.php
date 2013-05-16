@@ -1,4 +1,4 @@
-<h3><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="44" height="44" align="center" border="0"/>&nbsp;<?=$t->tr("online_editor")?></h3>
+<h3><IMG src="resources/icons/OpenSeaMapLogo_88.png" width="44" height="44" align="center" border="0"/>&nbsp;<?=$t->tr("online_editor")?></h3>
 (c) 2009 - 2010, OpenSeaMap <br/><br/>
 <table>
 	<tr>

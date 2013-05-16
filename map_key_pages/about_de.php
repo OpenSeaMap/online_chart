@@ -1,4 +1,4 @@
-<h3><IMG src="../resources/icons/OpenSeaMapLogo_88.png" height="44" align="center" border="0"/>&nbsp;&nbsp;OpenSeaMap - Onlinekarte</h3>
+<h3><IMG src="resources/icons/OpenSeaMapLogo_88.png" height="44" align="center" border="0"/>&nbsp;&nbsp;OpenSeaMap - Onlinekarte</h3>
 
 <table>
 	<tr>

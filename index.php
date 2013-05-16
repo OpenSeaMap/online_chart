@@ -1,5 +1,5 @@
 <?php
-	include("../classes/Translation.php");
+	include("classes/Translation.php");
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -12,7 +12,7 @@
 		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage()?>">
 		<meta http-equiv="X-UA-Compatible" content="IE=9">
 		<meta name="date" content="2012-06-02">
-		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png">
+		<link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png">
 		<link rel="stylesheet" type="text/css" href="map-full.css">
 		<link rel="stylesheet" type="text/css" href="topmenu.css">
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
@@ -779,14 +779,14 @@
 	<body onload="init();">
 		<div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
 		<div style="position:absolute; bottom:48px; left:12px; cursor:pointer;">
-			<a id="license_osm"  onClick="showMapKey('license')"><img alt="OSM-Logo" src="../resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>"></a>
-			<a id="license_ccbysa" onClick="showMapKey('license')"><img alt="CC by SA" src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>"></a>
-			<a id="license_bing" href="http://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none"><img alt="bing" src="../resources/icons/bing.png" height="29px"></a>
-			<a id="license_marine_traffic" onClick="showMapKey('license')" style="display:none"><img alt="Marine Traffic" src="../resources/icons/MarineTrafficLogo.png" height="30px"></a>
+			<a id="license_osm"  onClick="showMapKey('license')"><img alt="OSM-Logo" src="resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>"></a>
+			<a id="license_ccbysa" onClick="showMapKey('license')"><img alt="CC by SA" src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>"></a>
+			<a id="license_bing" href="http://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none"><img alt="bing" src="resources/icons/bing.png" height="29px"></a>
+			<a id="license_marine_traffic" onClick="showMapKey('license')" style="display:none"><img alt="Marine Traffic" src="resources/icons/MarineTrafficLogo.png" height="30px"></a>
 		</div>
 		<div id="actionDialog">
 			<br>&nbsp;not found&nbsp;<br>&nbsp;
 		</div>
-		<? include('../classes/topmenu.inc'); ?>
+		<? include('classes/topmenu.inc'); ?>
 	</body>
 </html>

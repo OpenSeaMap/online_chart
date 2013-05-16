@@ -1,6 +1,6 @@
 <?php
-	include("../classes/Translation.php");
-	include("../classes/weather.php");
+	include("classes/Translation.php");
+	include("classes/weather.php");
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -12,7 +12,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
-		<link rel="SHORTCUT ICON" href="../resources/icons/OpenSeaMapLogo_16.png"/>
+		<link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png"/>
 		<link rel="stylesheet" type="text/css" href="weather.css">
 		<script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
 		<script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
@@ -592,12 +592,12 @@
 	<body onload=init();>
 		<div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
 		<div style="position:absolute; bottom:10px; left:12px; width:700px;">
-			<img src="../resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
-			<img src="../resources/icons/OpenPortGuideLogo_32.png" height="32px" title="<?=$t->tr("OpenPortGuide")?>" onClick="window.open('http://openportguide.org/wiki_/Main_Page')" />
+			<img src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
+			<img src="resources/icons/OpenPortGuideLogo_32.png" height="32px" title="<?=$t->tr("OpenPortGuide")?>" onClick="window.open('http://openportguide.org/wiki_/Main_Page')" />
 		</div>
 		<div id="topmenu" style="position:absolute; top:10px; left:12px;">
 			<ul>
-				<li onClick="window.location.href='./index.php?lang=<?=$t->getCurrentLanguage()?>'"><IMG src="../resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("SeaChart")?></img></li>
+				<li onClick="window.location.href='./index.php?lang=<?=$t->getCurrentLanguage()?>'"><IMG src="resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("SeaChart")?></img></li>
 				<li>&nbsp;|&nbsp;</li>
 				<li id="buttonWind" onClick="showWind()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showWindLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkWind"/><IMG src="./resources/map/WindIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("wind")?>&nbsp;</img></li>
 				<li>&nbsp;&nbsp;</li>
