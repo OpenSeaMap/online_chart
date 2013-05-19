@@ -85,16 +85,14 @@
 			var layer_bing_aerial;     // 12
 			var layer_ais;             // 13
 			var layer_satpro;          // 14
+			// layer_disaster          // 15
+			var layer_tidalscale;      // 16
 
 			// Select controls
 			var selectControl;
 
 			// Controls
 			var ZoomBar = new OpenLayers.Control.PanZoomBar();
-
-			// Visibility
-			var HarboursVisible = true;
-			var TidalScalesVisible = false;
 
 			// Load map for the first time
 			function init() {
@@ -136,12 +134,10 @@
 					layer_seamark.setVisibility(false);
 				}
 				if (getCookie("HarbourLayerVisible") == "false") {
-					HarboursVisible = false;
 					layer_pois.setVisibility(false);
 				}
 				if (getCookie("TidalScaleLayerVisible") == "true") {
-					TidalScalesVisible = true;
-					layer_pois.setVisibility(true);
+					layer_tidalscale.setVisibility(true);
 					refreshTidalScales();
 				}
 				if (getCookie("SportLayerVisible") == "true") {
@@ -171,8 +167,8 @@
 				// the permalink control also will set the visibility of
 				// layers.
 				document.getElementById("checkLayerSeamark").checked              = (layer_seamark.getVisibility() === true);
-				document.getElementById("checkLayerHarbour").checked              = (HarboursVisible === true);
-				document.getElementById("checkLayerTidalScale").checked           = (TidalScalesVisible === true);
+				document.getElementById("checkLayerHarbour").checked              = (layer_pois.getVisibility() === true);
+				document.getElementById("checkLayerTidalScale").checked           = (layer_tidalscale.getVisibility() === true);
 				document.getElementById("checkLayerSport").checked                = (layer_sport.getVisibility() === true);
 				document.getElementById("checkLayerGridWGS").checked              = (layer_grid.getVisibility() === true);
 				document.getElementById("checkLayerGebcoDepth").checked           = (layer_gebco_deepshade.getVisibility() === true || layer_gebco_deeps_gwc.getVisibility() === true);
@@ -203,41 +199,27 @@
 			}
 
 			function showHarbours() {
-				if (HarboursVisible) {
+				if (layer_pois.visibility) {
 					clearPoiLayer();
-					if (!TidalScalesVisible) {
-						layer_pois.setVisibility(false);
-					} else {
-						refreshTidalScales();
-					}
-					HarboursVisible = false;
+					layer_pois.setVisibility(false);
 					setCookie("HarbourLayerVisible", "false");
 				} else {
-					HarboursVisible = true;
 					layer_pois.setVisibility(true);
 					setCookie("HarbourLayerVisible", "true");
 					refreshHarbours();
 				}
-				resetLayerCheckboxes();
 			}
 
 			function showTidalScale() {
-				if (TidalScalesVisible) {
-					clearPoiLayer();
-					if (!HarboursVisible) {
-						layer_pois.setVisibility(false);
-					} else {
-						refreshHarbours();
-					}
-					TidalScalesVisible = false;
+				if (layer_tidalscale.visibility) {
+					clearTidalScaleLayer();
+					layer_tidalscale.setVisibility(false);
 					setCookie("TidalScaleLayerVisible", "false");
 				} else {
-					TidalScalesVisible = true;
-					layer_pois.setVisibility(true);
+					layer_tidalscale.setVisibility(true);
 					setCookie("TidalScaleLayerVisible", "true");
 					refreshTidalScales();
 				}
-				resetLayerCheckboxes();
 			}
 
 			// Show route section
@@ -630,9 +612,31 @@
 					layerId: 14
 				});
 				layer_satpro = satPro.getLayer();
-				// Disaster
+				// Disaster (15)
+				// POI-Layer for harbours and tidal scales
+				layer_tidalscale = new OpenLayers.Layer.Vector("tidalscale", {
+					layerId: 16,
+					visibility: true,
+					projection: proj4326,
+					displayOutsideMaxExtent:true
+				});
 
-				map.addLayers([layer_mapnik, layer_bing_aerial, layer_gebco_deepshade, layer_gebco_deeps_gwc, layer_seamark, layer_grid, layer_pois, layer_wikipedia, layer_nautical_route, layer_sport, layer_ais, layer_satpro, layer_download]);
+				map.addLayers([
+                                    layer_mapnik,
+                                    layer_bing_aerial,
+                                    layer_gebco_deepshade,
+                                    layer_gebco_deeps_gwc,
+                                    layer_seamark,
+                                    layer_grid,
+                                    layer_pois,
+                                    layer_tidalscale,
+                                    layer_wikipedia,
+                                    layer_nautical_route,
+                                    layer_sport,
+                                    layer_ais,
+                                    layer_satpro,
+                                    layer_download
+                                ]);
 
 				layer_mapnik.events.register("loadend", null, function(evt) {
 					// The Bing layer will only be displayed correctly after the
@@ -651,6 +655,8 @@
 				layer_nautical_route.events.register("featureselected", layer_nautical_route, onFeatureSelectPoiLayers);
 				selectControl.addLayer(layer_pois);
 				layer_pois.events.register("featureselected", layer_pois, onFeatureSelectPoiLayers);
+				selectControl.addLayer(layer_tidalscale);
+				layer_tidalscale.events.register("featureselected", layer_tidalscale, onFeatureSelectPoiLayers);
 				selectControl.addLayer(layer_wikipedia);
 				layer_wikipedia.events.register("featureselected", layer_wikipedia, onFeatureSelectPoiLayers);
 				// Activate select control
@@ -660,8 +666,12 @@
 
 			function clearPoiLayer() {
 				harbours.clear();
-				arrayTidalScales.clear();
 				layer_pois.removeAllFeatures();
+			}
+
+			function clearTidalScaleLayer() {
+				arrayTidalScales.clear();
+				layer_tidalscale.removeAllFeatures();
 			}
 
 			function onFeatureSelectPoiLayers(event) {
@@ -693,11 +703,11 @@
 				setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
 				setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
 				// Update harbour layer
-				if (HarboursVisible) {
+				if (layer_pois.getVisibility() === true) {
 					refreshHarbours();
 				}
 				// Update tidal scale layer
-				if (TidalScalesVisible) {
+				if (layer_tidalscale.getVisibility() === true) {
 					refreshTidalScales();
 				}
 			}
@@ -709,6 +719,7 @@
 				setCookie("zoom",zoom);
 				// Clear POI layer
 				clearPoiLayer();
+				clearTidalScaleLayer();
 				if(oldZoom!=zoom) {
 					oldZoom=zoom;
 				}

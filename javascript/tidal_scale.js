@@ -124,7 +124,7 @@ function createTidalScaleMarker(x, y, popupText) {
 		var pointFeature = new OpenLayers.Feature.Vector(TidalScale_marker, null, layer_poi_icon_style);
 		pointFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
 		pointFeature.data.popupContentHTML = popupText;
-		layer_pois.addFeatures([pointFeature]);
+		layer_tidalscale.addFeatures([pointFeature]);
 	}
 }
 
