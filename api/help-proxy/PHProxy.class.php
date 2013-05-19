@@ -274,7 +274,7 @@ class PHProxy
     function set_url($url)
     {
         $this->url = decode_url($url.'?printable=yes');
-		//$this->url = decode_url($url);
+        //$this->url = decode_url($url);
 
          if (strpos($this->url, '://') === false)
          {

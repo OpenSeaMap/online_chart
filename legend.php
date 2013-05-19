@@ -24,23 +24,23 @@ $p->setDefaultPage("harbour");
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-	<head>
-		<title>OSW -<?=$t->tr('nautical_chart')?>: <?=$t->tr("Legende")?> - <?=$p->getCurrentPageName()?></title>
-		<meta name="AUTHOR" content="Olaf Hannemann">
-		<meta http-equiv="content-type" content="text/html; charset=utf-8">
-		<meta http-equiv="content-language" content="<?= $t->getCurrentLanguage()?>">
-		<meta name="date" content="2012-06-02">
-		<link rel="SHORTCUT ICON" href="../resources/icons/logo.png">
-		<link rel="stylesheet" type="text/css" href="map-legend.css">
-	</head>
+    <head>
+        <title>OSW -<?=$t->tr('nautical_chart')?>: <?=$t->tr("Legende")?> - <?=$p->getCurrentPageName()?></title>
+        <meta name="AUTHOR" content="Olaf Hannemann">
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <meta http-equiv="content-language" content="<?= $t->getCurrentLanguage()?>">
+        <meta name="date" content="2012-06-02">
+        <link rel="SHORTCUT ICON" href="../resources/icons/logo.png">
+        <link rel="stylesheet" type="text/css" href="map-legend.css">
+    </head>
 
-	<body>
-		<div id="menu">
-			<?=$p->makePageLinks("legend.php?lang=".$t->getCurrentLanguage()."&amp;")?>
-		</div>
-		<div id="content">
-			<?php include($p->makeIncludePage()); ?>
-		</div>
-	</body>
+    <body>
+        <div id="menu">
+            <?=$p->makePageLinks("legend.php?lang=".$t->getCurrentLanguage()."&amp;")?>
+        </div>
+        <div id="content">
+            <?php include($p->makeIncludePage()); ?>
+        </div>
+    </body>
 </html>
 

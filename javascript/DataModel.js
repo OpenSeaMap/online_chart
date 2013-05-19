@@ -1,8 +1,8 @@
 
 
 function DataModel() {
-	this.entry;
-	this.group;
+    this.entry;
+    this.group;
 }
 
 DataModel.meta = new Array(); //Metadata***********************************************************
@@ -129,19 +129,19 @@ DataModel.trans["special_purpose"] = "buoy_special_purpose";
 
 
 DataModel.prototype.get = function(group, entry) {
-	var value = "-1"
+    var value = "-1"
 
-	switch (group) {
-		case "meta":
-			value = DataModel.meta[entry];
-			break
-		case "light":
-			value = DataModel.light[entry];
-			break
-		case "trans":
-			value = DataModel.trans[entry];
-			break
-	}
+    switch (group) {
+        case "meta":
+            value = DataModel.meta[entry];
+            break
+        case "light":
+            value = DataModel.light[entry];
+            break
+        case "trans":
+            value = DataModel.trans[entry];
+            break
+    }
 
-	return value;
+    return value;
 }

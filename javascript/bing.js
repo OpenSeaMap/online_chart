@@ -153,54 +153,54 @@ OpenLayers.Layer.Bing = OpenLayers.Class(OpenLayers.Layer.XYZ, {
         }, true);
     },
 
-	getServerResolution: function(resolution) {
-		resolution = resolution || this.map.getResolution();
-		if(this.serverResolutions &&
-			OpenLayers.Util.indexOf(this.serverResolutions, resolution) === -1) {
-			var i, serverResolution;
-			for(i=this.serverResolutions.length-1; i>= 0; i--) {
-				serverResolution = this.serverResolutions[i];
-				if(serverResolution > resolution) {
-					resolution = serverResolution;
-					break;
-				}
-			}
-			if(i === -1) {
-				throw 'no appropriate resolution in serverResolutions';
-			}
-		}
-		return resolution;
-	},
+    getServerResolution: function(resolution) {
+        resolution = resolution || this.map.getResolution();
+        if(this.serverResolutions &&
+            OpenLayers.Util.indexOf(this.serverResolutions, resolution) === -1) {
+            var i, serverResolution;
+            for(i=this.serverResolutions.length-1; i>= 0; i--) {
+                serverResolution = this.serverResolutions[i];
+                if(serverResolution > resolution) {
+                    resolution = serverResolution;
+                    break;
+                }
+            }
+            if(i === -1) {
+                throw 'no appropriate resolution in serverResolutions';
+            }
+        }
+        return resolution;
+    },
 
-	/**
-	 * Method: getXYZ
-	 * Calculates x, y and z for the given bounds.
-	 *
-	 * Parameters:
-	 * bounds - {<OpenLayers.Bounds>}
-	 *
-	 * Returns:
-	 * {Object} - an object with x, y and z properties.
-	 */
-	getXYZ: function(bounds) {
-		var res = this.getServerResolution();
-		var x = Math.round((bounds.left - this.maxExtent.left) /
-			(res * this.tileSize.w));
-		var y = Math.round((this.maxExtent.top - bounds.top) /
-			(res * this.tileSize.h));
-		var resolutions = this.serverResolutions || this.resolutions;
-		var z = this.zoomOffset == 0 ?
-			OpenLayers.Util.indexOf(resolutions, res) :
-			this.getServerZoom() + this.zoomOffset;
+    /**
+     * Method: getXYZ
+     * Calculates x, y and z for the given bounds.
+     *
+     * Parameters:
+     * bounds - {<OpenLayers.Bounds>}
+     *
+     * Returns:
+     * {Object} - an object with x, y and z properties.
+     */
+    getXYZ: function(bounds) {
+        var res = this.getServerResolution();
+        var x = Math.round((bounds.left - this.maxExtent.left) /
+            (res * this.tileSize.w));
+        var y = Math.round((this.maxExtent.top - bounds.top) /
+            (res * this.tileSize.h));
+        var resolutions = this.serverResolutions || this.resolutions;
+        var z = this.zoomOffset == 0 ?
+            OpenLayers.Util.indexOf(resolutions, res) :
+            this.getServerZoom() + this.zoomOffset;
 
-		var limit = Math.pow(2, z);
-		if (this.wrapDateLine)
-		{
-			x = ((x % limit) + limit) % limit;
-		}
+        var limit = Math.pow(2, z);
+        if (this.wrapDateLine)
+        {
+            x = ((x % limit) + limit) % limit;
+        }
 
-		return {'x': x, 'y': y, 'z': z};
-	},
+        return {'x': x, 'y': y, 'z': z};
+    },
 
     /**
      * Method: getURL

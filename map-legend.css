@@ -1,64 +1,64 @@
 html, body {
-	margin: 0;
-	padding: 0;
-	height:100%;
-	width: 100%;
-	font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height:100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
 }
 
 img {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 #menu {
-	float:left;
-	width: 200px;
-	height: 100%;
-	background-color: #EEE;
+    float:left;
+    width: 200px;
+    height: 100%;
+    background-color: #EEE;
 }
 
 #menu h2 {
-	margin: 0;
-	padding: 4px;
-	font-size: 16px;
-	color: #27408B;
-	background-color: #c0c0ff;
-	text-align: center;
+    margin: 0;
+    padding: 4px;
+    font-size: 16px;
+    color: #27408B;
+    background-color: #c0c0ff;
+    text-align: center;
 }
 
 #menu ul {
-	list-style: none;
-	margin: 0;
-	padding:  10px 0 0px 0px;
+    list-style: none;
+    margin: 0;
+    padding:  10px 0 0px 0px;
 }
 
 #menu ul li {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 #menu ul li a {
-	color: #000;
-	display: block;
-	margin: 0 0 0 0;
-	padding: 4px 0 4px 12px;
-	text-decoration: none;
+    color: #000;
+    display: block;
+    margin: 0 0 0 0;
+    padding: 4px 0 4px 12px;
+    text-decoration: none;
 }
 
 #menu #selected a {
-	background-color: #CCCCCC;
+    background-color: #CCCCCC;
 }
 
 #menu a:hover {
-	background-color: #AAA;
+    background-color: #AAA;
 }
 
 #content {
-	position:absolute;
-	top:2px;
-	left:200px;
-	clear: both;
-	padding: 0px 0 0px 20px;
+    position:absolute;
+    top:2px;
+    left:200px;
+    clear: both;
+    padding: 0px 0 0px 20px;
 }
 
 
