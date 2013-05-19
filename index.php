@@ -616,7 +616,7 @@
 				// POI-Layer for harbours and tidal scales
 				layer_tidalscale = new OpenLayers.Layer.Vector("tidalscale", {
 					layerId: 16,
-					visibility: true,
+					visibility: false,
 					projection: proj4326,
 					displayOutsideMaxExtent:true
 				});
