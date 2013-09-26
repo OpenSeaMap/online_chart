@@ -44,7 +44,7 @@
                 <li onClick="showAis()"><a><input type="checkbox" id="checkLayerAis">&nbsp;<?=$t->tr("ais")?></a></li>
                 <li><a><img alt="dev" src="./resources/map/development_32px.png" width="24" height="24" border="0">&nbsp;<?=$t->tr("development")?></a>
                     <ul class="sub_menu">
-                        <li><a href="http://dev.openseamap.org/water_depth/water_depth.php">&nbsp;<?=$t->tr("water_depth")?></a></li>
+                        <li><a href="http://testdepth.openseamap.org" target="_blank">&nbsp;<?=$t->tr("water_depth")?></a></li>
                     </ul>
                 </li>
             </ul>
