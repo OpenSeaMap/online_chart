@@ -38,7 +38,7 @@
             var map;
             var arrayMaps = new Array();
 
-            // Position and zoomlevel of the map  (will be overriden with permalink parameters or cookies)
+            // Position and zoomlevel of the map (will be overriden with permalink parameters or cookies)
             var lon = 11.6540;
             var lat = 54.1530;
             var zoom = 10;
