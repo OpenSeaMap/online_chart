@@ -87,6 +87,7 @@
             var layer_satpro;          // 14
             // layer_disaster          // 15
             var layer_tidalscale;      // 16
+	    var layer_permalink;       // 17
 
             // Select controls
             var selectControl;
@@ -123,7 +124,7 @@
                 // Set current language for internationalization
                 OpenLayers.Lang.setCode(language);
             }
-
+           
             function readLayerCookies() {
                 if (getArgument('layers') != -1) {
                     // There is a 'layers' url param -> ignore cookies
@@ -179,6 +180,7 @@
                 document.getElementById("checkLayerWikipediaThumbnails").checked  = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
                 document.getElementById("checkLayerBingAerial").checked           = (map.baseLayer == layer_bing_aerial);
                 document.getElementById("checkLayerAis").checked                  = (layer_ais.getVisibility() === true);
+                document.getElementById("checkPermalink").checked                 = (layer_permalink.getVisibility() === true);
                 //document.getElementById("checkLayerSatPro").checked               = (layer_satpro.getVisibility() === true);
             }
 
@@ -228,6 +230,13 @@
                     closeNauticalRoute();
                 } else {
                     addNauticalRoute();
+                }
+            }
+			function showPermalink() {
+                if (layer_permalink.visibility) {
+                    closePermalink();
+                } else {
+                    addPermalink();
                 }
             }
 
@@ -448,11 +457,136 @@
                 showActionDialog(htmlText);
                 NauticalRoute_startEditMode();
             }
+			
+			function addPermalink() {
+                layer_permalink.setVisibility(true);
+                var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
+                htmlText += "<img src=\"./resources/action/close.gif\" onClick=\"closePermalink();\"/></div>";
+                htmlText += "<h3><?=$t->tr("permalinks")?>:</h3><br/>"; // reference to translation.php
+                htmlText += "<p><?=$t->tr("markset")?></p>" 
+                htmlText += "<br /><hr /><br />"
+                
+                // Übersetzungen in die PHP-Files reinschreiben; kein Text sollte ohne die Möglichkeit der Bearbeitung hier drin stehen
 
+                htmlText += "<table border=\"0\" width=\"370px\">";
+                htmlText += "<tr><td><?=$t->tr("position")?>:</td><td id=\"markerpos\">- - -</td></tr>"; // Lat/Lon of the user's click
+                htmlText += "<tr><td><?=$t->tr("description")?>:</td><td><textarea cols=\"25\" rows=\"5\" id=\"markerText\"></textarea></td></tr>"; // userInput
+                htmlText += "<tr><td><?=$t->tr("actLayers")?>:</td><td id=\"actLayers\"></td></tr>"; //list of active layers
+                htmlText += "</td></tr></table>";
+                htmlText += "<br /><hr /><br />"
+                htmlText += "<?=$t->tr("copynpaste")?>:<br /><textarea onclick=\"this.select();\" cols=\"50\" rows=\"2\" id=\"userURL\"></textarea>"; // secure & convient onlick-solution for copy and paste
+            
+                // Marker Init
+                var lonlat = [0.0,0.0]; // Init of lon/lat 
+                var size = new OpenLayers.Size(32,32); // size of the marker
+                var offset = new OpenLayers.Pixel(-(size.w/2), -size.h); // offset to get the pinpoint of the needle to mouse pos
+                var icon = new OpenLayers.Icon('http://map.openseamap.org/resources/icons/Needle_Red_32.png', size, offset); // Init of icon  
+
+                //### Onclick behaviour
+                map.events.register("click", layer_permalink, function(e) {
+                
+                // Adding of Marker 
+                layer_permalink.clearMarkers(); // clear all markers to only keep one marker at a time on the map
+                var position = this.events.getMousePosition(e); // get position of mouse click
+                var lonlat = map.getLonLatFromPixel(position); // get Lon/Lat from position
+                var lonlatTransf = lonlat.transform(map.getProjectionObject(), proj4326); // transform Lon/Lat into suitable projection
+                var lonlat = lonlatTransf.transform(proj4326, map.getProjectionObject()); 
+                layer_permalink.addMarker(new OpenLayers.Marker(lonlat, icon)); // add maker
+
+                // Display Marker Position
+                lonlat.transform(projMerc, proj4326);
+                    // code from mousepostion_dm.js - redundant, try to reuse
+                var ns = lonlat.lat >= 0 ? 'N' : 'S';
+                var we = lonlat.lon >= 0 ? 'E' : 'W';
+                var lon_m = Math.abs(lonlat.lon*60).toFixed(3);
+                var lat_m = Math.abs(lonlat.lat*60).toFixed(3);
+                var lon_d = Math.floor (lon_m/60);
+                var lat_d = Math.floor (lat_m/60);
+                lon_m -= lon_d*60;
+                lat_m -= lat_d*60;
+                    // check if "markerpos" exists; if so write the specified content inside
+                OpenLayers.Util.getElement("markerpos").innerHTML = ns + lat_d + "°" + format2FixedLenght(lat_m,6,3) + "'" + " " + we + lon_d + "°" + format2FixedLenght(lon_m,6,3) + "'";
+
+
+                // Layers - used for display in dialog and creation of permalink 
+                // Display in dialog:
+                var layersQuery = [];
+                for(var i = 0; i < map.layers.length; i++) {
+                    if (map.layers[i].layerId === void(0)) { 
+                        continue; // disregard layer if it has no ID
+                    }
+                    else if (map.layers[i].name === "Marker") {
+                        continue; // disregard Marker-Layer since it is only created when a permalink-url is called; user who open the map without any parameters will not invoke the creation the markers-layer
+                    }
+                    else {
+                        layersQuery[i] = [map.layers[i].layerId, map.layers[i].name, map.layers[i].visibility]; // create array with layerId, layer name and layer visibility (boolean)
+                    };
+                };
+                layersQuery.splice(1,0, ["2", "Marker Layer Placeholder", true]); // order of the layers is important for permalink, marker-layer is always disregarded (see above); placeholder with ID "2" will take it's place
+                layersQuery = layersQuery.sort(function(a,b) { // sort layers by ID
+                    return a[0] > b[0]; 
+                });
+                var layerList = ""; // variable for display in dialog
+                for (var i = 0; i < layersQuery.length; i++) {
+                    if (layersQuery[i][2] === true && layersQuery[i][1] != "Marker Layer Placeholder" && layersQuery[i][1] != "Permalink") {
+                        layerList += layersQuery[i][1] + ", "; // get all visible layers which are not a placeholder or permalink (both not relevant for user)
+                    };
+                };                
+                layerList = layerList.substring(0, layerList.length - 2); // cut the space and comma at the end of the string
+                OpenLayers.Util.getElement("actLayers").innerHTML = layerList; // check if "actLayers" exists, if so write contents of layerList inside
+               
+                // Create Permalink for Layers
+                var layersPermalink = "";
+                for (var i = 0; i < layersQuery.length; i++) {
+                    if (layersQuery[i][2] === false && layersQuery[i][1] === "Mapnik") {
+                        layersPermalink += "0"; // if mapnik isn't visible, write 0 (won't show)
+                    }
+                    else if (layersQuery[i][2] === true && layersQuery[i][1] === "Mapnik") {
+                        layersPermalink += "B"; // if mapnik is visible, write B (for baselayer)
+                    }
+                    else if (layersQuery[i][2] === false && layersQuery[i][1] === "Aerial photo") {
+                         layersPermalink += "0"; // if aerial photo isn't visible, write 0
+                    }
+                    else if (layersQuery[i][2] === true && layersQuery[i][1] === "Aerial photo") {
+                        layersPermalink += "B"; // if aerial photo is visible, write B
+                    }
+                    else if (layersQuery[i][2] === false) {
+                        layersPermalink += "F"; // if layer isn't visible, write F (false, won't show)
+                    }
+                    else {
+                        layersPermalink += "T"; // if layer is visible, write T (true, will show)
+                    }
+
+                };
+                
+                // Permalink coordinates
+                var permPosition = this.events.getMousePosition(e); // get the mouse position from click-event
+                var permLonLat = map.getLonLatFromPixel(permPosition); // get LonLat from pixel coordinates
+                permLonLat.transform(projMerc, proj4326); // get the lonlat coordinates to the correct projection
+
+                // Generate Permalink for copy and paste
+                var userURL = "http://map.openseamap.org/map/"; // prefix
+                userURL += "?zoom=" + map.getZoom(); // add map zoom to string
+                userURL += "&mlat=" + permLonLat.lat; // add latitude
+                userURL += "&mlon=" + permLonLat.lon; // add longitude
+                userURL += "&mtext=" + document.getElementById("markerText").value; // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
+                userURL += "&layers=" + layersPermalink; // add encoded layers
+                OpenLayers.Util.getElement("userURL").innerHTML = userURL; // write contents of userURL to textarea
+        
+                });
+
+                showActionDialog(htmlText);
+            }
+            
             function closeNauticalRoute() {
                 layer_nautical_route.setVisibility(false);
                 closeActionDialog();
                 NauticalRoute_stopEditMode();
+            }
+			
+			function closePermalink() {
+                layer_permalink.setVisibility(false); 
+                closeActionDialog();
             }
 
             function addSearchResults(xmlHttp) {
@@ -620,7 +754,13 @@
                     projection: proj4326,
                     displayOutsideMaxExtent:true
                 });
-
+		// Permalink Layer (17)
+		layer_permalink = new OpenLayers.Layer.Markers("Permalink", { 
+		    layerId: 17,
+		    visibility: false,
+                    projection: proj4326,
+		});
+				
                 map.addLayers([
                                     layer_mapnik,
                                     layer_bing_aerial,
@@ -635,7 +775,8 @@
                                     layer_sport,
                                     layer_ais,
                                     layer_satpro,
-                                    layer_download
+                                    layer_download,
+									layer_permalink
                                 ]);
 
                 layer_mapnik.events.register("loadend", null, function(evt) {
@@ -696,7 +837,7 @@
                     map.addPopup(popup);
                 }
             }
-
+            
             // Map event listener moved
             function mapEventMove(event) {
                 // Set cookie for remembering lat lon values
