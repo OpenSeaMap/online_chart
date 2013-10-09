@@ -87,7 +87,7 @@
             var layer_satpro;          // 14
             // layer_disaster          // 15
             var layer_tidalscale;      // 16
-	    var layer_permalink;       // 17
+        var layer_permalink;       // 17
 
             // Select controls
             var selectControl;
@@ -232,7 +232,7 @@
                     addNauticalRoute();
                 }
             }
-			function showPermalink() {
+            function showPermalink() {
                 if (layer_permalink.visibility) {
                     closePermalink();
                 } else {
@@ -457,8 +457,8 @@
                 showActionDialog(htmlText);
                 NauticalRoute_startEditMode();
             }
-			
-			function addPermalink() {
+            
+            function addPermalink() {
                 layer_permalink.setVisibility(true);
                 var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
                 htmlText += "<img src=\"./resources/action/close.gif\" onClick=\"closePermalink();\"/></div>";
@@ -583,8 +583,8 @@
                 closeActionDialog();
                 NauticalRoute_stopEditMode();
             }
-			
-			function closePermalink() {
+            
+            function closePermalink() {
                 layer_permalink.setVisibility(false); 
                 closeActionDialog();
             }
@@ -754,13 +754,13 @@
                     projection: proj4326,
                     displayOutsideMaxExtent:true
                 });
-		// Permalink Layer (17)
-		layer_permalink = new OpenLayers.Layer.Markers("Permalink", { 
-		    layerId: 17,
-		    visibility: false,
+        // Permalink Layer (17)
+        layer_permalink = new OpenLayers.Layer.Markers("Permalink", { 
+            layerId: 17,
+            visibility: false,
                     projection: proj4326,
-		});
-				
+        });
+                
                 map.addLayers([
                                     layer_mapnik,
                                     layer_bing_aerial,
@@ -776,7 +776,7 @@
                                     layer_ais,
                                     layer_satpro,
                                     layer_download,
-									layer_permalink
+                                    layer_permalink
                                 ]);
 
                 layer_mapnik.events.register("loadend", null, function(evt) {
