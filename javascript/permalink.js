@@ -65,26 +65,30 @@ OpenSeaMap.Control.Permalink = OpenLayers.Class(OpenLayers.Control.Permalink, {
             params = OpenLayers.Control.Permalink.prototype.createParams.apply(this, [center, zoom, layers]);
 
             // Override layers param
-            layers = layers || this.map.layers;
-            params.layers = '';
-            for (var i = 0, len = layers.length; i < len; i++) {
-                var layer = layers[i];
-                var id = layer.layerId || 0;
-                var flag;
-                if (id < 1) {
-                    // No layerId set -> ignore the layer
-                    continue;
-                }
-                if (layer.isBaseLayer) {
-                    flag = (layer == this.map.baseLayer) ? 'B' : '0';
-                } else {
-                    flag = (layer.getVisibility()) ? 'T' : 'F';
-                }
-                params.layers = this.setFlag(params.layers, flag, id);
-            }
+            params.layers = this.getLayerString(layers);
         }
 
         return params;
+    },
+    getLayerString: function(layers) {
+        var layers = layers || this.map.layers;
+        var result = '';
+        for (var i = 0, len = layers.length; i < len; i++) {
+            var layer = layers[i];
+            var id = layer.layerId || 0;
+            var flag;
+            if (id < 1) {
+                // No layerId set -> ignore the layer
+                continue;
+            }
+            if (layer.isBaseLayer) {
+                flag = (layer == this.map.baseLayer) ? 'B' : '0';
+            } else {
+                flag = (layer.getVisibility()) ? 'T' : 'F';
+            }
+            result = this.setFlag(result, flag, id);
+        }
+        return result;
     },
     setFlag: function(config, flagValue, id) {
         // The layers can be in different order

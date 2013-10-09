@@ -87,12 +87,14 @@
             var layer_satpro;          // 14
             // layer_disaster          // 15
             var layer_tidalscale;      // 16
+            var layer_permalink;       // 17
 
             // Select controls
             var selectControl;
 
             // Controls
-            var ZoomBar = new OpenLayers.Control.PanZoomBar();
+            var ZoomBar          = new OpenLayers.Control.PanZoomBar();
+            var permalinkControl = new OpenSeaMap.Control.Permalink();
 
             // Load map for the first time
             function init() {
@@ -116,7 +118,7 @@
                         layerId: 2
                     });
                     map.addLayer(layer_marker);
-                    addMarker(layer_marker, mlon, mlat, convert2Text(getArgument("mtext")));
+                    addMarker(layer_marker, mlon, mlat, decodeURIComponent(getArgument("mtext")));
                 }
                 readLayerCookies();
                 resetLayerCheckboxes();
@@ -180,6 +182,7 @@
                 document.getElementById("checkLayerWikipediaThumbnails").checked  = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
                 document.getElementById("checkLayerBingAerial").checked           = (map.baseLayer == layer_bing_aerial);
                 document.getElementById("checkLayerAis").checked                  = (layer_ais.getVisibility() === true);
+                document.getElementById("checkPermalink").checked                 = (layer_permalink.getVisibility() === true);
                 //document.getElementById("checkLayerSatPro").checked               = (layer_satpro.getVisibility() === true);
             }
 
@@ -228,6 +231,14 @@
                     addNauticalRoute();
                 } else {
                     closeNauticalRoute();
+                }
+            }
+
+            function togglePermalink(show) {
+                if (show) {
+                    addPermalink();
+                } else {
+                    closePermalink();
                 }
             }
 
@@ -454,6 +465,110 @@
                 NauticalRoute_stopEditMode();
             }
 
+            function onAddMarker(e) {
+                // Marker Init
+                var size = new OpenLayers.Size(32, 32); // size of the marker
+                var offset = new OpenLayers.Pixel(-(size.w/2), -size.h); // offset to get the pinpoint of the needle to mouse pos
+                var icon = new OpenLayers.Icon('http://map.openseamap.org/resources/icons/Needle_Red_32.png', size, offset); // Init of icon
+
+                // Adding of Marker
+                layer_permalink.clearMarkers(); // clear all markers to only keep one marker at a time on the map
+                var position = this.events.getMousePosition(e); // get position of mouse click
+                var lonlat = map.getLonLatFromLayerPx(position); // get Lon/Lat from position
+                layer_permalink.addMarker(new OpenLayers.Marker(lonlat, icon)); // add maker
+
+                // Display Marker Position
+                lonlat.transform(projMerc, proj4326);
+                // Code from mousepostion_dm.js - redundant, try to reuse
+                var ns = lonlat.lat >= 0 ? 'N' : 'S';
+                var we = lonlat.lon >= 0 ? 'E' : 'W';
+                var lon_m = Math.abs(lonlat.lon*60).toFixed(3);
+                var lat_m = Math.abs(lonlat.lat*60).toFixed(3);
+                var lon_d = Math.floor(lon_m/60);
+                var lat_d = Math.floor(lat_m/60);
+                lon_m -= lon_d*60;
+                lat_m -= lat_d*60;
+                // Write the specified content inside
+                OpenLayers.Util.getElement("markerpos").innerHTML = ns + lat_d + "°" + format2FixedLenght(lat_m,6,3) + "'" + " " + we + lon_d + "°" + format2FixedLenght(lon_m,6,3) + "'";
+
+                // Layers - used for display in dialog and creation of permalink
+                // Get all visible layers which are not a placeholder or permalink (both not relevant for user)
+                var layerList = '';
+                for (var i = 0; i < map.layers.length; i++) {
+                    if (map.layers[i] === layer_marker) {
+                        continue;
+                    }
+                    if (map.layers[i] === layer_permalink) {
+                        continue;
+                    }
+                    if (map.layers[i].getVisibility() === false) {
+                        continue;
+                    }
+                    if (!map.layers[i].layerId) {
+                        continue;
+                    }
+                    layerList += map.layers[i].name + ', ';
+                };
+                // Cut the space and comma at the end of the string
+                layerList = layerList.substring(0, layerList.length - 2);
+                // Write contents of layerList inside
+                OpenLayers.Util.getElement("actLayers").innerHTML = layerList;
+
+                // Create Permalink for Layers
+                var layersPermalink = permalinkControl.getLayerString();
+                layersPermalink = permalinkControl.setFlag(layersPermalink, 'F', layer_permalink.layerId);
+
+
+                // Generate Permalink for copy and paste
+                var userURL = "http://map.openseamap.org/map/"; // prefix
+                userURL += "?zoom=" + map.getZoom(); // add map zoom to string
+                userURL += "&mlat=" + lonlat.lat.toFixed(5); // add latitude
+                userURL += "&mlon=" + lonlat.lon.toFixed(5); // add longitude
+                userURL += "&mtext=" + document.getElementById("markerText").value; // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
+                userURL += "&layers=" + layersPermalink; // add encoded layers
+                OpenLayers.Util.getElement("userURL").innerHTML = userURL; // write contents of userURL to textarea
+            }
+
+            function addPermalink() {
+                layer_permalink.setVisibility(true);
+                var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
+                htmlText += "<img src=\"./resources/action/close.gif\" onClick=\"closePermalink();\"/></div>";
+                htmlText += "<h3><?=$t->tr("permalinks")?>:</h3><br/>"; // reference to translation.php
+                htmlText += "<p><?=$t->tr("markset")?></p>"
+                htmlText += "<br /><hr /><br />"
+
+                // Übersetzungen in die PHP-Files reinschreiben; kein Text sollte ohne die Möglichkeit der Bearbeitung hier drin stehen
+
+                htmlText += "<table border=\"0\" width=\"370px\">";
+                htmlText += "<tr><td><?=$t->tr("position")?>:</td><td id=\"markerpos\">- - -</td></tr>"; // Lat/Lon of the user's click
+                htmlText += "<tr><td><?=$t->tr("description")?>:</td><td><textarea cols=\"25\" rows=\"5\" id=\"markerText\"></textarea></td></tr>"; // userInput
+                htmlText += "<tr><td><?=$t->tr("actLayers")?>:</td><td id=\"actLayers\"></td></tr>"; //list of active layers
+                htmlText += "</td></tr></table>";
+                htmlText += "<br /><hr /><br />"
+                htmlText += "<?=$t->tr("copynpaste")?>:<br /><textarea onclick=\"this.select();\" cols=\"50\" rows=\"2\" id=\"userURL\"></textarea>"; // secure & convient onlick-solution for copy and paste
+
+                showActionDialog(htmlText);
+
+                $('#markerText').on('keyup', function(evt) {
+                    var text = $(evt.currentTarget).val();
+                    var url  = $('#userURL').val();
+                    if (url.length === 0) {
+                        // No Marker set, yet.
+                        return;
+                    }
+                    url = url.replace(/mtext=.*&/, 'mtext=' + encodeURIComponent(text) + '&');
+                    $('#userURL').val(url);
+                });
+
+                map.events.register("click", layer_permalink, onAddMarker);
+            }
+
+            function closePermalink() {
+                map.events.unregister("click", layer_permalink, onAddMarker);
+                layer_permalink.setVisibility(false);
+                closeActionDialog();
+            }
+
             function addSearchResults(xmlHttp) {
                 var items = xmlHttp.responseXML.getElementsByTagName("place");
                 var placeName, description, placeLat, placeLon;
@@ -486,7 +601,7 @@
                     },
 
                     controls: [
-                        new OpenSeaMap.Control.Permalink(),
+                        permalinkControl,
                         new OpenLayers.Control.Navigation(),
                         //new OpenLayers.Control.LayerSwitcher(), //only for debugging
                         new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: '40'}),
@@ -619,23 +734,30 @@
                     projection: proj4326,
                     displayOutsideMaxExtent:true
                 });
+                // Permalink
+                layer_permalink = new OpenLayers.Layer.Markers("Permalink", {
+                    layerId: 17,
+                    visibility: false,
+                    projection: proj4326
+                });
 
                 map.addLayers([
-                                    layer_mapnik,
-                                    layer_bing_aerial,
-                                    layer_gebco_deepshade,
-                                    layer_gebco_deeps_gwc,
-                                    layer_seamark,
-                                    layer_grid,
-                                    layer_pois,
-                                    layer_tidalscale,
-                                    layer_wikipedia,
-                                    layer_nautical_route,
-                                    layer_sport,
-                                    layer_ais,
-                                    layer_satpro,
-                                    layer_download
-                                ]);
+                    layer_mapnik,
+                    layer_bing_aerial,
+                    layer_gebco_deepshade,
+                    layer_gebco_deeps_gwc,
+                    layer_seamark,
+                    layer_grid,
+                    layer_pois,
+                    layer_tidalscale,
+                    layer_wikipedia,
+                    layer_nautical_route,
+                    layer_sport,
+                    layer_ais,
+                    layer_satpro,
+                    layer_download,
+                    layer_permalink
+                ]);
 
                 layer_mapnik.events.register("loadend", null, function(evt) {
                     // The Bing layer will only be displayed correctly after the
@@ -791,12 +913,18 @@
                     switch (layerName) {
                         case 'download':
                             toggleNauticalRoute(false);
+                            togglePermalink(false);
                             toggleMapDownload(checked);
                             break;
                         case 'nautical_route':
                             toggleMapDownload(false);
+                            togglePermalink(false);
                             toggleNauticalRoute(checked);
                             break;
+                        case 'permalink':
+                            toggleMapDownload(false);
+                            toggleNauticalRoute(false);
+                            togglePermalink(checked);
                         default:
                             break;
                     }
