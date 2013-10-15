@@ -29,6 +29,7 @@ $english = array(
     "logout"                 => "Logout",
     "createAccount"          => "Create New Account",
     "language"               => "Language",
+    "clearMarker"            => "Clear Markers",
 
     // Map-----------------------------------------------------------
     "actLayers"              => "Active Layers",
@@ -37,7 +38,7 @@ $english = array(
     "copynpaste"             => "URL (Copy with Ctrl/Cmd + C)",
     "course"                 => "Course",
     "development"            => "Development",
-    "description"            => "Description",
+    "description"            => "Marker-Text",
     "distance"               => "Distance",
     "editMapOE"              => "Map with Online Editor",
     "editMapJOSM"            => "Map with JOSM Remote",
@@ -66,7 +67,7 @@ $english = array(
     "tidalScale"             => "Tidal Scale",
     "tools"                  => "Tools",
     "tripPlanner"            => "Trip Planner",
-    "permalinks"             => "Permalinks",
+    "permalinks"             => "Link with Marker",
     "view"                   => "View",
     "water_depth"            => "Water depth",
     "wikiHelp"               => "Help (Wiki)",

@@ -33,6 +33,12 @@
         <script type="text/javascript" src="./javascript/bing.js"></script>
         <script type="text/javascript" src="./javascript/ais.js"></script>
         <script type="text/javascript" src="./javascript/satpro.js"></script>
+        <link rel="stylesheet" href="./classes/jquery-ui-1.10.3.custom.css" type="text/css">
+        <script src="./classes/jquery-1.9.1.js"></script>
+        <script src="./classes/jquery-ui-1.10.3.custom.min.js"></script>
+
+
+
         <script type="text/javascript">
 
             var map;
@@ -87,7 +93,8 @@
             var layer_satpro;          // 14
             // layer_disaster          // 15
             var layer_tidalscale;      // 16
-        var layer_permalink;       // 17
+            var layer_permalink;       // 17
+            var layer_water_depth;     // 18
 
             // Select controls
             var selectControl;
@@ -124,7 +131,7 @@
                 // Set current language for internationalization
                 OpenLayers.Lang.setCode(language);
             }
-           
+          
             function readLayerCookies() {
                 if (getArgument('layers') != -1) {
                     // There is a 'layers' url param -> ignore cookies
@@ -150,6 +157,9 @@
                 if (getCookie("GebcoDepthLayerVisible") == "true") {
                     layer_gebco_deepshade.setVisibility(true);
                     layer_gebco_deeps_gwc.setVisibility(true);
+                }
+                if (getCookie("checkLayerWaterDepth") == "true") {
+                    layer_water_depth.setVisibility(true);
                 }
                 if (getCookie("WikipediaLayerVisible") == "true") {
                     showWikipediaLinks(true, false);
@@ -181,6 +191,8 @@
                 document.getElementById("checkLayerBingAerial").checked           = (map.baseLayer == layer_bing_aerial);
                 document.getElementById("checkLayerAis").checked                  = (layer_ais.getVisibility() === true);
                 document.getElementById("checkPermalink").checked                 = (layer_permalink.getVisibility() === true);
+                document.getElementById("checkLayerWaterDepth").checked           = (layer_water_depth.getVisibility() === true);
+                document.getElementById("checkSlider").checked                    = false;
                 //document.getElementById("checkLayerSatPro").checked               = (layer_satpro.getVisibility() === true);
             }
 
@@ -269,6 +281,16 @@
                     layer_gebco_deepshade.setVisibility(true);
                     layer_gebco_deeps_gwc.setVisibility(true);
                     setCookie("GebcoDepthLayerVisible", "true");
+                }
+            }
+
+            function showWaterDepth() {
+                if (layer_water_depth.visibility) {
+                    layer_water_depth.setVisibility(false);
+                    setCookie("WaterDepthLayerVisible", "false");
+                } else {
+                    layer_water_depth.setVisibility(true);
+                    setCookie("WaterDepthLayerVisible", "true");
                 }
             }
 
@@ -458,6 +480,28 @@
                 NauticalRoute_startEditMode();
             }
             
+            function boldText(textAreaId, link) { // taken from http://jsfiddle.net/HXnru/
+                var browser=navigator.appName
+                var b_version=navigator.appVersion
+
+                if (browser=="Microsoft Internet Explorer" && b_version>='4')
+                {
+                var str = document.selection.createRange().text;
+                document.getElementById(textAreaId).focus();
+                var sel = document.selection.createRange();
+                sel.text = "<b>" + str + "</b>";
+                return;
+                }
+
+                field = document.getElementById(textAreaId);
+                startPos = field.selectionStart;
+                endPos = field.selectionEnd;
+                before = field.value.substr(0, startPos);
+                selected = field.value.substr(field.selectionStart, (field.selectionEnd - field.selectionStart));
+                after = field.value.substr(field.selectionEnd, (field.value.length - field.selectionEnd));
+                field.value = before + "<b>" + selected + "</b>" + after;
+            }
+
             function addPermalink() {
                 layer_permalink.setVisibility(true);
                 var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
@@ -466,11 +510,9 @@
                 htmlText += "<p><?=$t->tr("markset")?></p>" 
                 htmlText += "<br /><hr /><br />"
                 
-                // Übersetzungen in die PHP-Files reinschreiben; kein Text sollte ohne die Möglichkeit der Bearbeitung hier drin stehen
-
                 htmlText += "<table border=\"0\" width=\"370px\">";
-                htmlText += "<tr><td><?=$t->tr("position")?>:</td><td id=\"markerpos\">- - -</td></tr>"; // Lat/Lon of the user's click
-                htmlText += "<tr><td><?=$t->tr("description")?>:</td><td><textarea cols=\"25\" rows=\"5\" id=\"markerText\"></textarea></td></tr>"; // userInput
+                htmlText += "<tr><td><?=$t->tr("position")?>:</td><td id=\"markerpos\">- - -<br />- - -</td></tr>"; // Lat/Lon of the user's click
+                htmlText += "<tr><td><?=$t->tr("description")?>:</td><td><textarea cols=\"25\" rows=\"5\" id=\"markerText\"></textarea><br /><input type=\"button\" value=\"Bold\" onclick=\"boldText('markerText')\" /></td></tr>"; // userInput
                 htmlText += "<tr><td><?=$t->tr("actLayers")?>:</td><td id=\"actLayers\"></td></tr>"; //list of active layers
                 htmlText += "</td></tr></table>";
                 htmlText += "<br /><hr /><br />"
@@ -504,8 +546,7 @@
                 var lat_d = Math.floor (lat_m/60);
                 lon_m -= lon_d*60;
                 lat_m -= lat_d*60;
-                    // check if "markerpos" exists; if so write the specified content inside
-                OpenLayers.Util.getElement("markerpos").innerHTML = ns + lat_d + "°" + format2FixedLenght(lat_m,6,3) + "'" + " " + we + lon_d + "°" + format2FixedLenght(lon_m,6,3) + "'";
+                
 
 
                 // Layers - used for display in dialog and creation of permalink 
@@ -563,19 +604,84 @@
                 var permPosition = this.events.getMousePosition(e); // get the mouse position from click-event
                 var permLonLat = map.getLonLatFromPixel(permPosition); // get LonLat from pixel coordinates
                 permLonLat.transform(projMerc, proj4326); // get the lonlat coordinates to the correct projection
+                permLonLat.lat = Math.round(permLonLat.lat * 1000000) / 1000000;
+                permLonLat.lon = Math.round(permLonLat.lon * 1000000) / 1000000;
 
                 // Generate Permalink for copy and paste
                 var userURL = "http://map.openseamap.org/map/"; // prefix
                 userURL += "?zoom=" + map.getZoom(); // add map zoom to string
                 userURL += "&mlat=" + permLonLat.lat; // add latitude
                 userURL += "&mlon=" + permLonLat.lon; // add longitude
-                userURL += "&mtext=" + document.getElementById("markerText").value; // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
+                userURLtemp = document.getElementById("markerText").value;
+                userURLtemp = userURLtemp.replace(/\r?\n/g, '<br />');
+                userURL += "&mtext=" + userURLtemp // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
                 userURL += "&layers=" + layersPermalink; // add encoded layers
                 OpenLayers.Util.getElement("userURL").innerHTML = userURL; // write contents of userURL to textarea
         
-                });
+
+                // check if "markerpos" exists; if so write the specified content inside
+                OpenLayers.Util.getElement("markerpos").innerHTML = ns + lat_d + "°" + format2FixedLenght(lat_m,6,3) + "'" + " " + we + lon_d + "°" + format2FixedLenght(lon_m,6,3) + "'" + "<br />" + permLonLat.lat + ", " + permLonLat.lon;
+                });          
 
                 showActionDialog(htmlText);
+            }
+
+            function showAerialSlider() {
+                if ($('#slider').is(':visible') === true) { // check if slider is activated
+                    closeAerialSlider();
+                    document.getElementById("checkLayerBingAerial").checked = false; // make sure the checkboxes are right
+                    document.getElementById("checkSlider").checked = false;
+                    layer_bing_aerial.setVisibility(false); // hide aerial when slider is closed
+                } else {
+                    showBingAerial();
+                    addAerialSlider();
+                    document.getElementById("checkLayerBingAerial").checked = true; // make sure the checkboxes are right
+                    document.getElementById("checkSlider").checked = true;
+                };
+            }
+
+            function closeAerialSlider() {
+                $('#slider').hide();
+            }
+
+            function addAerialSlider() {
+
+                layer_bing_aerial.setOpacity(1); // make
+                layer_bing_aerial.setVisibility(true);
+                $('#slider').show();
+                
+                $(function() {
+
+                    var slider  = $('#slider');
+
+                    //Call the Slider
+                    slider.slider({
+                    //Config
+                        range: "min", //init values for the slider; goes from 0 to 1 with 0.01 as minimal distance between two values
+                        min: 0,
+                        value: 1,
+                        step: 0.01,
+                        max: 1,
+
+                    start: function(event,ui) { // when the knob is touched
+                        layer_mapnik.setVisibility(true); // would be invisible when aerial shows up by default; make it visible
+                },
+
+                    //Slider Event
+                    slide: function(event, ui) { //When the slider is sliding
+
+                        var value  = slider.slider('value'); // get value from slider
+                        layer_bing_aerial.setOpacity(value); // write value to opacity
+
+                        },
+
+                        stop: function(event,ui) { 
+                            document.getElementById("checkSlider").checked = true; // make checkbox is right
+                        },
+                    });
+
+                });
+
             }
             
             function closeNauticalRoute() {
@@ -590,6 +696,14 @@
             }
 
             function addSearchResults(xmlHttp) {
+                // Marker at search results
+                map.addLayer(layer_permalink); // use of existing layer; when addPermalink() is called, all search related markers will be cleared
+                layer_permalink.setVisibility(true); // set layer visible
+                var size = new OpenLayers.Size(21,25); // marker init values
+                var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+                var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset);
+                
+
                 var items = xmlHttp.responseXML.getElementsByTagName("place");
                 var placeName, description, placeLat, placeLon;
                 var buff, pos;
@@ -604,8 +718,11 @@
                     placeName = buff.substring(0, pos);
                     description = buff.substring(pos +1).trim();
                     htmlText += "<tr style=\"cursor:pointer;\" onmouseover=\"this.style.backgroundColor = '#ADD8E6';\"onmouseout=\"this.style.backgroundColor = '#FFF';\" onclick=\"jumpTo(" + placeLon + ", " + placeLat + ", " + zoom + ");\"><td  valign=\"top\"><b>" + placeName + "</b></td><td>" + description + "</td></tr>";
+                        var markLonLat = new OpenLayers.LonLat(placeLon,placeLat); // construct new LonLat object
+                        markLonLat.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913")); // coordinate transformation
+                        layer_permalink.addMarker(new OpenLayers.Marker(markLonLat,icon.clone())); // add marker to layer
                 }
-                htmlText += "<tr><td>&nbsp;</td><td align=\"right\"><br/><input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeActionDialog();\"></td></tr></table>";
+                htmlText += "<tr><td>&nbsp;</td><td align=\"right\"><br/><input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("clearMarker")?>\" onclick=\"layer_permalink.clearMarkers();\">&nbsp;<input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeActionDialog();\"></td></tr></table>";
                 showActionDialog(htmlText);
             }
 
@@ -726,7 +843,7 @@
                 // Grid WGS
                 layer_grid = new OpenLayers.Layer.GridWGS("coordinateGrid", {
                     layerId: 10,
-                    visibility: false,
+                    visibility: true,
                     zoomUnits: zoomUnits
                 });
                 layer_wikipedia = new OpenLayers.Layer.Vector("Wikipedia World", {
@@ -754,12 +871,17 @@
                     projection: proj4326,
                     displayOutsideMaxExtent:true
                 });
-        // Permalink Layer (17)
-        layer_permalink = new OpenLayers.Layer.Markers("Permalink", { 
-            layerId: 17,
-            visibility: false,
-                    projection: proj4326,
-        });
+                // Permalink Layer (17)
+                layer_permalink = new OpenLayers.Layer.Markers("Permalink", { 
+                    layerId: 17,
+                    visibility: false,
+                    projection: proj4326
+                });
+                // Water Depth Beta (18)
+                layer_water_depth = new OpenLayers.Layer.WMS("Water Depth Track Points", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
+                    {layers: "trackpoints_cor1_test_dbs,trackpoints_cor1_test,test_zoom_10_cor_1_points,test_zoom_9_cor_1_points,test_zoom_8_cor_1_points,test_zoom_7_cor_1_points,test_zoom_6_cor_1_points,test_zoom_5_cor_1_points,test_zoom_4_cor_1_points,test_zoom_3_cor_1_points,test_zoom_2_cor_1_points", projection: new OpenLayers.Projection("EPSG:900913"), type: 'png',transparent:!0},
+                    {layerId: 18, isBaseLayer: false, visibility: false, tileSize:new OpenLayers.Size(1024,1024)});
+
                 
                 map.addLayers([
                                     layer_mapnik,
@@ -776,7 +898,8 @@
                                     layer_ais,
                                     layer_satpro,
                                     layer_download,
-                                    layer_permalink
+                                    layer_permalink,
+                                    layer_water_depth
                                 ]);
 
                 layer_mapnik.events.register("loadend", null, function(evt) {
@@ -858,6 +981,8 @@
                 zoom = map.getZoom();
                 // Set cookie for remembering zoomlevel
                 setCookie("zoom",zoom);
+                layer_mapnik.redraw();
+                layer_bing_aerial.redraw();
                 // Clear POI layer
                 clearPoiLayer();
                 clearTidalScaleLayer();
@@ -939,6 +1064,13 @@
         <div id="actionDialog">
             <br>&nbsp;not found&nbsp;<br>&nbsp;
         </div>
-        <? include('classes/topmenu.inc'); ?>
+        <?php include('classes/topmenu.inc'); ?>
+
+
+        <div id="noez" style="position:absolute; top:25px; left:50%; width: 200px;">
+        
+            <div id="slider" style="display:none;"></div>
+        </div>        
+        
     </body>
 </html>
