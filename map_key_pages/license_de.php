@@ -31,4 +31,20 @@
         <td><img alt="OSM-Logo" src="resources/icons/OpenPortGuideLogo_32.png" height="44" border="0"></td>
         <td>Alle Wetterinformationen entstammen dem <a href="http://openportguide.org/wiki_/Main_Page" target="_blank">OpenPortGuide-Projekt</a>.</td>
     </tr>
+    <tr>
+        <td height="5" class="normal" colspan="2">
+            <hr>
+        </td>
+    </tr>
+    <tr>
+        <td><img alt="Water Depth Logo" src="resources/icons/depth.jpg" height="32" border="0"></td>
+        <td>
+            <span>Die Tiefendaten entstammen folgenden Quellen:</span>
+            <ul>
+                <li>
+                    <a href="http://depth.openseamap.org" target="_blank">OpenSeaMap Wassertiefen Projekt</a>
+                </li>
+            </ul>
+        </td>
+    </tr>
 </table>

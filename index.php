@@ -33,6 +33,7 @@
         <script type="text/javascript" src="./javascript/bing.js"></script>
         <script type="text/javascript" src="./javascript/ais.js"></script>
         <script type="text/javascript" src="./javascript/satpro.js"></script>
+        <script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script>
         <script type="text/javascript">
 
             var map;
@@ -71,23 +72,24 @@
             var language = "<?=$t->getCurrentLanguage()?>";
 
             // Layers
-            var layer_mapnik;          // 1
-            var layer_marker;          // 2
-            var layer_seamark;         // 3
-            var layer_sport;           // 4
-            var layer_gebco_deepshade; // 5
-            var layer_gebco_deeps_gwc; // 6
-            var layer_pois;            // 7
-            var layer_download;        // 8
-            var layer_nautical_route;  // 9
-            var layer_grid;            // 10
-            var layer_wikipedia;       // 11
-            var layer_bing_aerial;     // 12
-            var layer_ais;             // 13
-            var layer_satpro;          // 14
-            // layer_disaster          // 15
-            var layer_tidalscale;      // 16
-            var layer_permalink;       // 17
+            var layer_mapnik;                 // 1
+            var layer_marker;                 // 2
+            var layer_seamark;                // 3
+            var layer_sport;                  // 4
+            var layer_gebco_deepshade;        // 5
+            var layer_gebco_deeps_gwc;        // 6
+            var layer_pois;                   // 7
+            var layer_download;               // 8
+            var layer_nautical_route;         // 9
+            var layer_grid;                   // 10
+            var layer_wikipedia;              // 11
+            var layer_bing_aerial;            // 12
+            var layer_ais;                    // 13
+            var layer_satpro;                 // 14
+            // layer_disaster                 // 15
+            var layer_tidalscale;             // 16
+            var layer_permalink;              // 17
+            var layer_waterdepth_trackpoints; // 18
 
             // Select controls
             var selectControl;
@@ -162,6 +164,10 @@
                 if (getCookie("AisLayerVisible") == "true") {
                     showAis();
                 }
+                if (getCookie("WaterDepthTrackPointsLayerVisible") == "true") {
+                    layer_waterdepth_trackpoints.setVisibility(true);
+                    document.getElementById("license_waterdepth").style.display = 'inline';
+                }
             }
 
             function resetLayerCheckboxes()
@@ -169,21 +175,22 @@
                 // This method is separated from readLayerCookies because
                 // the permalink control also will set the visibility of
                 // layers.
-                document.getElementById("checkLayerSeamark").checked              = (layer_seamark.getVisibility() === true);
-                document.getElementById("checkLayerHarbour").checked              = (layer_pois.getVisibility() === true);
-                document.getElementById("checkLayerTidalScale").checked           = (layer_tidalscale.getVisibility() === true);
-                document.getElementById("checkLayerSport").checked                = (layer_sport.getVisibility() === true);
-                document.getElementById("checkLayerGridWGS").checked              = (layer_grid.getVisibility() === true);
-                document.getElementById("checkLayerGebcoDepth").checked           = (layer_gebco_deepshade.getVisibility() === true || layer_gebco_deeps_gwc.getVisibility() === true);
-                document.getElementById("checkDownload").checked                  = (layer_download.getVisibility() === true);
-                document.getElementById("checkNauticalRoute").checked             = (layer_nautical_route.getVisibility() === true);
-                document.getElementById("checkLayerWikipedia").checked            = (layer_wikipedia.getVisibility() === true);
-                document.getElementById("checkLayerWikipediaMarker").checked      = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === false);
-                document.getElementById("checkLayerWikipediaThumbnails").checked  = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
-                document.getElementById("checkLayerBingAerial").checked           = (map.baseLayer == layer_bing_aerial);
-                document.getElementById("checkLayerAis").checked                  = (layer_ais.getVisibility() === true);
-                document.getElementById("checkPermalink").checked                 = (layer_permalink.getVisibility() === true);
-                //document.getElementById("checkLayerSatPro").checked               = (layer_satpro.getVisibility() === true);
+                document.getElementById("checkLayerSeamark").checked                = (layer_seamark.getVisibility() === true);
+                document.getElementById("checkLayerHarbour").checked                = (layer_pois.getVisibility() === true);
+                document.getElementById("checkLayerTidalScale").checked             = (layer_tidalscale.getVisibility() === true);
+                document.getElementById("checkLayerSport").checked                  = (layer_sport.getVisibility() === true);
+                document.getElementById("checkLayerGridWGS").checked                = (layer_grid.getVisibility() === true);
+                document.getElementById("checkLayerGebcoDepth").checked             = (layer_gebco_deepshade.getVisibility() === true || layer_gebco_deeps_gwc.getVisibility() === true);
+                document.getElementById("checkDownload").checked                    = (layer_download.getVisibility() === true);
+                document.getElementById("checkNauticalRoute").checked               = (layer_nautical_route.getVisibility() === true);
+                document.getElementById("checkLayerWikipedia").checked              = (layer_wikipedia.getVisibility() === true);
+                document.getElementById("checkLayerWikipediaMarker").checked        = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === false);
+                document.getElementById("checkLayerWikipediaThumbnails").checked    = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
+                document.getElementById("checkLayerBingAerial").checked             = (map.baseLayer == layer_bing_aerial);
+                document.getElementById("checkLayerAis").checked                    = (layer_ais.getVisibility() === true);
+                document.getElementById("checkPermalink").checked                   = (layer_permalink.getVisibility() === true);
+                //document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisibility() === true);
+                document.getElementById("checkLayerWaterDepthTrackPoints").checked  = (layer_waterdepth_trackpoints.getVisibility() === true);
             }
 
             // Show popup window for help
@@ -332,6 +339,18 @@
                     selectControl.removePopup();
                 } else {
                     closeMapDownload();
+                }
+            }
+
+            function showWaterDepthTrackPoints() {
+                if (layer_waterdepth_trackpoints.visibility) {
+                    layer_waterdepth_trackpoints.setVisibility(false);
+                    document.getElementById("license_waterdepth").style.display = 'none';
+                    setCookie("WaterDepthTrackPointsLayerVisible", "false");
+                } else {
+                    layer_waterdepth_trackpoints.setVisibility(true);
+                    document.getElementById("license_waterdepth").style.display = 'inline';
+                    setCookie("WaterDepthTrackPointsLayerVisible", "true");
                 }
             }
 
@@ -740,6 +759,11 @@
                     visibility: false,
                     projection: proj4326
                 });
+                // Water Depth
+                waterDepthTrackPoints = new WaterDepthTrackPoints(map, selectControl, {
+                    layerId: 18
+                });
+                layer_waterdepth_trackpoints = waterDepthTrackPoints.getLayer();
 
                 map.addLayers([
                     layer_mapnik,
@@ -756,7 +780,8 @@
                     layer_ais,
                     layer_satpro,
                     layer_download,
-                    layer_permalink
+                    layer_permalink,
+                    layer_waterdepth_trackpoints
                 ]);
 
                 layer_mapnik.events.register("loadend", null, function(evt) {
@@ -940,6 +965,7 @@
             <a id="license_ccbysa" onClick="showMapKey('license')"><img alt="CC by SA" src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>"></a>
             <a id="license_bing" href="http://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none"><img alt="bing" src="resources/icons/bing.png" height="29px"></a>
             <a id="license_marine_traffic" onClick="showMapKey('license')" style="display:none"><img alt="Marine Traffic" src="resources/icons/MarineTrafficLogo.png" height="30px"></a>
+            <a id="license_waterdepth" onClick="showMapKey('license')" style="display:none"><img alt="Water Depth" src="resources/icons/depth.jpg" height="32px"></a>
         </div>
         <div id="actionDialog">
             <br>&nbsp;not found&nbsp;<br>&nbsp;
