@@ -18,7 +18,6 @@
         <script type="text/javascript" src="./javascript/lib/jquery.js"></script>
         <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
         <script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
-        <script type="text/javascript" src="./javascript/prototype.js"></script>
         <script type="text/javascript" src="./javascript/translation-<?=$t->getCurrentLanguageSafe()?>.js"></script>
         <script type="text/javascript" src="./javascript/permalink.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>

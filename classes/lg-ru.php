@@ -104,7 +104,6 @@ $russian = array(
     "UrlOSM"                 => "http://openstreetmap.org",
     "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/Ru:Main_Page",
     "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/Ru:OpenSeaMap",
-    "UrlEditor"              => "./map/map_edit.php?lang=en",
 
     // Legende ------------------------------------------------------
     "Legende"                => "Условные обозначения",

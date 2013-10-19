@@ -138,7 +138,6 @@ $english = array(
     "zoomToSmall"            => "The zoom level is to small.<br/>Please zoom in.<br/>Editing will be possible on Level 16.<br/>Current Zoom: ",
     "noData"                 => "Failed to load data!",
     "online_editor"          => "OpenSeaMap - Editor",
-    "about_editor"           => "About Online - Editor",
     "version"                => "Version",
     "author"                 => "Author",
     "license"                => "License",
@@ -154,7 +153,6 @@ $english = array(
     "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/Main_Page",
     "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/OpenSeaMap",
     "UrlGPLV3"               => "http://www.gnu.de/documents/gpl-3.0.en.html",
-    "UrlEditor"              => "./map/map_edit.php?lang=en",
 
     // Map key ------------------------------------------------------
     "about"                  => "About OpenSeaMap",

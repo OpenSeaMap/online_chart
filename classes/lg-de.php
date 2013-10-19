@@ -140,7 +140,6 @@ $german = array(
     "zoomToSmall"            => "Die Zoomstufe ist zu klein.<br/>Bitte zoome weiter in die Karte. <br/>Ein Bearbeiten ist ab Stufe 16 möglich.  <br/> Aktueller Zoom: ",
     "noData"                 => "Es konnten keine Daten <br/>geladen werden!",
     "online_editor"          => "OpenSeaMap - Editor",
-    "about_editor"           => "Über Online - Editor",
     "version"                => "Version",
     "author"                 => "Autor",
     "license"                => "Lizenz",
@@ -157,7 +156,6 @@ $german = array(
     "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/Hauptseite",
     "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/DE:OpenSeaMap",
     "UrlGPLV3"               => "http://www.gnu.de/documents/gpl.de.html",
-    "UrlEditor"              => "./map/map_edit.php?lang=de",
 
     // Legende ------------------------------------------------------
     "about"                  => "Über OpenSeaMap",
