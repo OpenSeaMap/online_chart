@@ -55,6 +55,9 @@ function NauticalRoute_startEditMode() {
 }
 
 function NauticalRoute_stopEditMode() {
+    if (!routeDraw) {
+        return;
+    }
     routeDraw.deactivate();
     routeEdit.deactivate();
     layer_nautical_route.removeAllFeatures();

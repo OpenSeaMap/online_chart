@@ -120,6 +120,7 @@
                 }
                 readLayerCookies();
                 resetLayerCheckboxes();
+                initMenuTools();
                 // Set current language for internationalization
                 OpenLayers.Lang.setCode(language);
             }
@@ -222,12 +223,11 @@
                 }
             }
 
-            // Show route section
-            function showNauticalRoute() {
-                if (layer_nautical_route.visibility) {
-                    closeNauticalRoute();
-                } else {
+            function toggleNauticalRoute(show) {
+                if (show) {
                     addNauticalRoute();
+                } else {
+                    closeNauticalRoute();
                 }
             }
 
@@ -315,9 +315,8 @@
                 }
             }
 
-            // Show Download section
-            function showMapDownload() {
-                if (!downloadLoaded) {
+            function toggleMapDownload(show) {
+                if (show) {
                     addMapDownload();
                     selectControl.removePopup();
                 } else {
@@ -665,12 +664,12 @@
             }
 
             function clearPoiLayer() {
-                harbours.clear();
+                harbours = [];
                 layer_pois.removeAllFeatures();
             }
 
             function clearTidalScaleLayer() {
-                arrayTidalScales.clear();
+                arrayTidalScales = [];
                 layer_tidalscale.removeAllFeatures();
             }
 
@@ -783,6 +782,25 @@
                         arrayMaps[box.id.split("_")[1]] = name + ":" + link;
                     }
                 }
+            }
+
+            function initMenuTools() {
+                $('#topmenu2').find('[data-tools]').click(function(evt) {
+                    var layerName = $(evt.currentTarget).data('tools');
+                    var checked   = $(evt.currentTarget).find('input').is(':checked');
+                    switch (layerName) {
+                        case 'download':
+                            toggleNauticalRoute(false);
+                            toggleMapDownload(checked);
+                            break;
+                        case 'nautical_route':
+                            toggleMapDownload(false);
+                            toggleNauticalRoute(checked);
+                            break;
+                        default:
+                            break;
+                    }
+                });
             }
 
         </script>
