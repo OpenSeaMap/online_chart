@@ -45,7 +45,6 @@ $italian = array(
     "UrlOSM"                 => "http://openstreetmap.it",
     "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/IT:Pagina_Principale",
     "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/IT:OpenSeaMap",
-    "UrlEditor"              => "./map/map_edit.php?lang=en",
 
     // Legende ------------------------------------------------------
     "Legende"                => "Legenda",

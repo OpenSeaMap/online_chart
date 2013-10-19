@@ -104,7 +104,6 @@ $spanish = array(
     "UrlOSM"                 => "http://openstreetmap.org",
     "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/ES:Main_Page",
     "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/OpenSeaMap",
-    "UrlEditor"              => "./map/map_edit.php?lang=en",
 
     // Legende ------------------------------------------------------
     "Legende"                => "Leyenda",

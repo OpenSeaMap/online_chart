@@ -45,7 +45,6 @@ $french = array(
     "UrlOSM"                 => "http://openstreetmap.fr",
     "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/Page_Principale",
     "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/FR:OpenSeaMap",
-    "UrlEditor"              => "./map/map_edit.php?lang=en",
 
     // Legende ------------------------------------------------------
     "Legende"                => "Légende",
