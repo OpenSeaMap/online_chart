@@ -15,6 +15,7 @@
         <link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png">
         <link rel="stylesheet" type="text/css" href="map-full.css">
         <link rel="stylesheet" type="text/css" href="topmenu.css">
+        <script type="text/javascript" src="./javascript/lib/jquery.js"></script>
         <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
         <script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
         <script type="text/javascript" src="./javascript/prototype.js"></script>
