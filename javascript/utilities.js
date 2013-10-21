@@ -96,7 +96,11 @@ function convert2Locode(buffer) {
 function convert2Text(buffer) {
     buffer = buffer.replace(/%20/g, ' ');
     buffer = buffer.replace(/&#176;/g, '°');
-
+    buffer = decodeURIComponent(buffer);
+    //prevent XSS
+    buffer = buffer.replace(/http/g, '');
+    buffer = buffer.replace(/ftp/g, '');
+   
     return buffer
 }
 

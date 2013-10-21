@@ -4,7 +4,7 @@
     <ul class="dropdown">
         <li>
             <a href="http://openseamap.org/" target="blank">
-                <img alt="OpenSeaMapLogo" src="../resources/icons/OpenSeaMapLogo_32.png" width="24" height="24" border="0">
+                <img alt="OpenSeaMapLogo" src="./resources/icons/OpenSeaMapLogo_32.png" width="24" height="24" border="0">
             </a>
         </li>
         <li>
@@ -42,6 +42,7 @@
                     </ul>
                 </li>
                 <li onClick="showAis()"><a><input type="checkbox" id="checkLayerAis">&nbsp;<?=$t->tr("ais")?></a></li>
+                <li onClick="showWaterDepth()"><a><input type="checkbox" id="checkLayerWaterDepth">&nbsp;Water depth (Beta)</a></li>
                 <li><a><img alt="dev" src="./resources/map/development_32px.png" width="24" height="24" border="0">&nbsp;<?=$t->tr("development")?></a>
                     <ul class="sub_menu">
                         <li><a href="http://testdepth.openseamap.org" target="_blank">&nbsp;<?=$t->tr("water_depth")?></a></li>
@@ -57,6 +58,12 @@
                 </li>
                 <li onClick="showNauticalRoute()">
                     <a><input type="checkbox" id="checkNauticalRoute">&nbsp;<img alt="route" src="./resources/action/route-32px.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("tripPlanner")?></a>
+                </li>
+				<li onClick="showPermalink()">
+                    <a><input type="checkbox" id="checkPermalink">&nbsp;<img alt="permalink" src="./resources/action/permalink-32x.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("permalinks")?></a>
+                </li>
+                <li onClick="showAerialSlider()">
+                    <a><input type="checkbox" id="checkSlider">&nbsp;<img onclick="document.getElementById("checkSlider").checked = true;" alt="permalink" src="./resources/action/layers-icon.png" width="22" height="22" border="0">&nbsp;Aerial Overlay</a> <!-- Icon from: http://www.iconarchive.com/show/farm-fresh-icons-by-fatcow/layers-icon.html-->
                 </li>
             </ul>
         </li>
