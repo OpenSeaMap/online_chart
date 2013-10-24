@@ -113,3 +113,11 @@ img {
     background-color: #FFF;
     padding: 2px;
 }
+
+.olImageLoadError {
+    /* Some layers (e.g. seamark, sports) only render tiles where
+     * an object exists. Unknown tiles are displayed in pink by
+     * default. We change this behaviour by hiding these tiles.
+     */
+    display: none !important;
+}
