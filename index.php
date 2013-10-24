@@ -725,7 +725,7 @@
                 // Grid WGS
                 layer_grid = new OpenLayers.Layer.GridWGS("coordinateGrid", {
                     layerId: 10,
-                    visibility: false,
+                    visibility: true,
                     zoomUnits: zoomUnits
                 });
                 layer_wikipedia = new OpenLayers.Layer.Vector("Wikipedia World", {
