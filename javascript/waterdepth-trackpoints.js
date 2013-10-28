@@ -29,7 +29,7 @@ WaterDepthTrackPoints = OpenLayers.Class(Object,{
     initLayer:function(options){
         this.layer = new OpenLayers.Layer.WMS('Water Depth Track Points',
             'http://osm.franken.de/cgi-bin/mapserv.fcgi',
-            OpenLayers.Util.applyDefaults(options, {
+            {
                 projection  : new OpenLayers.Projection('EPSG:900913'),
                 type        : 'png',
                 transparent : true,
@@ -46,12 +46,12 @@ WaterDepthTrackPoints = OpenLayers.Class(Object,{
                     'test_zoom_3_cor_1_points',
                     'test_zoom_2_cor_1_points'
                 ]
-            }),
-            {
+            },
+            OpenLayers.Util.applyDefaults(options, {
                 visibility  : false,
                 isBaseLayer : false,
                 tileSize    : new OpenLayers.Size(1024,1024)
-            }
+            })
         );
     },
     getLayer:function(){
