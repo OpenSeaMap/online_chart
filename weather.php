@@ -15,7 +15,6 @@
         <link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png"/>
         <link rel="stylesheet" type="text/css" href="weather.css">
         <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
-        <script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>
         <script type="text/javascript" src="./javascript/map_utils.js"></script>
         <script type="text/javascript">
@@ -130,7 +129,9 @@
 
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
                 // Mapnik
-                var layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+                var layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik', [
+                    'http://osm1.wtnet.de/tiles/base/${z}/${x}/${y}.png'
+                ]);
                 // Wind layers
                 layer_weather_wind1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/wind_vector/5/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});

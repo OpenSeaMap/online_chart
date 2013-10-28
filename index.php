@@ -17,7 +17,6 @@
         <link rel="stylesheet" type="text/css" href="topmenu.css">
         <script type="text/javascript" src="./javascript/lib/jquery.js"></script>
         <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
-        <script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
         <script type="text/javascript" src="./javascript/translation-<?=$t->getCurrentLanguageSafe()?>.js"></script>
         <script type="text/javascript" src="./javascript/permalink.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>
@@ -681,8 +680,10 @@
 
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
                 // Mapnik (Base map)
-                layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik", {
-                    layerId: 1
+                layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik', [
+                    'http://osm1.wtnet.de/tiles/base/${z}/${x}/${y}.png'
+                ],{
+                    layerId : 1
                 });
                 // Seamark
                 layer_seamark = new OpenLayers.Layer.TMS("seamarks", "http://t1.openseamap.org/seamark/",
