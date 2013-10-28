@@ -29,7 +29,6 @@
         <script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script>
         <script type="text/javascript" src="./javascript/mouseposition_dm.js"></script>
         <script type="text/javascript" src="./javascript/grid_wgs.js"></script>
-        <!-- Actual bing class from devel tree (can be removed on next OpenLayers release) -->
         <script type="text/javascript" src="./javascript/bing.js"></script>
         <script type="text/javascript" src="./javascript/ais.js"></script>
         <script type="text/javascript" src="./javascript/satpro.js"></script>
@@ -706,7 +705,7 @@
                     displayOutsideMaxExtent:true
                 });
                 // Bing
-                layer_bing_aerial = new OpenLayers.Layer.Bing({
+                layer_bing_aerial = new Bing({
                     layerId: 12,
                     name: 'Aerial photo',
                     key: 'AuA1b41REXrEohfokJjbHgCSp1EmwTcW8PEx_miJUvZERC0kbRnpotPTzGsPjGqa',
