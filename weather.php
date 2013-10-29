@@ -110,8 +110,10 @@
 
             function drawmap() {
                 map = new OpenLayers.Map('map', {
-                    projection: projMerc,
-                    displayProjection: proj4326,
+                    numZoomLevels     : 8,
+                    zoomOffset        : 4,
+                    projection        : projMerc,
+                    displayProjection : proj4326,
                     eventListeners: {
                         "moveend": mapEventMove,
                         "zoomend": mapEventZoom
@@ -119,12 +121,8 @@
                     controls: [
                         new OpenLayers.Control.Permalink(),
                         new OpenLayers.Control.OverviewMap(),
-                        new OpenLayers.Control.Navigation({zoomWheelEnabled: false})],
-                        maxExtent:
-                        new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
-                    numZoomLevels: 3,
-                    maxResolution: 156543,
-                    units: 'meters'
+                        new OpenLayers.Control.Navigation({zoomWheelEnabled: false})
+                    ]
                 });
 
                 // Add Layers to map-------------------------------------------------------------------------------------------------------

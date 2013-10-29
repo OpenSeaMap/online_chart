@@ -608,15 +608,15 @@
 
             function drawmap() {
                 map = new OpenLayers.Map('map', {
-                    projection: projMerc,
-                    displayProjection: proj4326,
+                    numZoomLevels     : 19,
+                    projection        : projMerc,
+                    displayProjection : proj4326,
                     eventListeners: {
-                        moveend: mapEventMove,
-                        zoomend: mapEventZoom,
-                        click: mapEventClick,
-                        changelayer: mapChangeLayer
+                        moveend     : mapEventMove,
+                        zoomend     : mapEventZoom,
+                        click       : mapEventClick,
+                        changelayer : mapChangeLayer
                     },
-
                     controls: [
                         permalinkControl,
                         new OpenLayers.Control.Navigation(),
@@ -625,12 +625,7 @@
                         new OpenLayers.Control.MousePositionDM(),
                         new OpenLayers.Control.OverviewMap(),
                         ZoomBar
-                    ],
-                    maxExtent:
-                    new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
-                    numZoomLevels: 19,
-                    maxResolution: 156543,
-                    units: 'meters'
+                    ]
                 });
 
                 // Set proxy url for accessing cross side domains
