@@ -35,7 +35,6 @@
         <script type="text/javascript">
 
             var map;
-            var arrayMaps = new Array();
 
             // Position and zoomlevel of the map (will be overriden with permalink parameters or cookies)
             var lon = 11.6540;
@@ -447,13 +446,11 @@
 
             function selectedMap (event) {
                 var feature = event.feature;
-                var selectedMap = feature.id.split(".");
-                var buff = arrayMaps[selectedMap[2].split("_")[1]].split(":");
 
-                downloadName = buff[0];
-                downloadLink = buff[1];
+                downloadName = feature.attributes.name;
+                downloadLink = feature.attributes.link;
 
-                var mapName =downloadName;
+                var mapName = downloadName;
 
                 document.getElementById('info_dialog').innerHTML=""+ mapName +"";
                 document.getElementById('buttonMapDownload').disabled=false;
@@ -919,11 +916,13 @@
                         var bounds = new OpenLayers.Bounds(w, s, e, n);
                         bounds.transform(new OpenLayers.Projection("EPSG:4326"), new
                         OpenLayers.Projection("EPSG:900913"));
-                        var box = new OpenLayers.Feature.Vector(bounds.toGeometry());
-                        layer_download.addFeatures(box);
                         var name = item.getElementsByTagName("name")[0].childNodes[0].nodeValue.trim();
                         var link = item.getElementsByTagName("link")[0].childNodes[0].nodeValue.trim();
-                        arrayMaps[box.id.split("_")[1]] = name + ":" + link;
+                        var box  = new OpenLayers.Feature.Vector(bounds.toGeometry(), {
+                            name: name,
+                            link: link
+                        });
+                        layer_download.addFeatures(box);
                     }
                 }
             }
