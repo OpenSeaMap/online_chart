@@ -678,7 +678,8 @@
                 layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik', [
                     'http://osm1.wtnet.de/tiles/base/${z}/${x}/${y}.png'
                 ],{
-                    layerId : 1
+                    layerId      : 1,
+                    wrapDateLine : true
                 });
                 // Seamark
                 layer_seamark = new OpenLayers.Layer.TMS("seamarks", "http://t1.openseamap.org/seamark/",
@@ -707,7 +708,8 @@
                     key: 'AuA1b41REXrEohfokJjbHgCSp1EmwTcW8PEx_miJUvZERC0kbRnpotPTzGsPjGqa',
                     type: 'Aerial',
                     isBaseLayer: true,
-                    displayOutsideMaxExtent: true
+                    displayOutsideMaxExtent: true,
+                    wrapDateLine: true
                 });
                 // Map download
                 layer_download = new OpenLayers.Layer.Vector("Map Download", {
