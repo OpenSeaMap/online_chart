@@ -43,6 +43,7 @@ $english = array(
     "editMapJOSM"            => "Map with JOSM Remote",
     "finish"                 => "Finish",
     "format"                 => "Format",
+    "elevationProfile"       => "Elevation Profile",
     "gebcoDepth"             => "Marine Profile",
     "downloadChart"          => "Download Chart",
     "bingaerial"             => "Aerial photo",

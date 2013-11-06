@@ -43,6 +43,7 @@ $german = array(
     "editMapJOSM"            => "Karte mit JOSM Remote",
     "finish"                 => "Ziel",
     "format"                 => "Format",
+    "elevationProfile"       => "Höhenprofil",
     "gebcoDepth"             => "Meeresprofil",
     "bingaerial"             => "Luftbild",
     "ais"                    => "Marine Traffic",

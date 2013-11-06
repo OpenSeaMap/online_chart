@@ -33,6 +33,7 @@
                 <li onClick="showSport()"><a><input type="checkbox" id="checkLayerSport">&nbsp;Sport</a></li>
                 <li onClick="showBingAerial()"><a><input type="checkbox" id="checkLayerBingAerial">&nbsp;<?=$t->tr("bingaerial")?></a></li>
                 <li onClick="showGridWGS()"><a><input type="checkbox" id="checkLayerGridWGS">&nbsp;<?=$t->tr("coordinateGrid")?></a></li>
+                <li onClick="showElevationProfile()"><a><input type="checkbox" id="checkLayerElevationProfile">&nbsp;<?=$t->tr("elevationProfile")?></a></li>
                 <li onClick="showGebcoDepth()"><a><input type="checkbox" id="checkLayerGebcoDepth">&nbsp;<?=$t->tr("gebcoDepth")?></a></li>
                 <li onClick="showWikipediaLinks(false, false)">
                     <a><input type="checkbox" id="checkLayerWikipedia">&nbsp;Wikipedia-Links</a>

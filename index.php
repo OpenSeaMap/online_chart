@@ -69,24 +69,26 @@
             var language = "<?=$t->getCurrentLanguage()?>";
 
             // Layers
-            var layer_mapnik;                 // 1
-            var layer_marker;                 // 2
-            var layer_seamark;                // 3
-            var layer_sport;                  // 4
-            var layer_gebco_deepshade;        // 5
-            var layer_gebco_deeps_gwc;        // 6
-            var layer_pois;                   // 7
-            var layer_download;               // 8
-            var layer_nautical_route;         // 9
-            var layer_grid;                   // 10
-            var layer_wikipedia;              // 11
-            var layer_bing_aerial;            // 12
-            var layer_ais;                    // 13
-            var layer_satpro;                 // 14
-            // layer_disaster                 // 15
-            var layer_tidalscale;             // 16
-            var layer_permalink;              // 17
-            var layer_waterdepth_trackpoints; // 18
+            var layer_mapnik;                      // 1
+            var layer_marker;                      // 2
+            var layer_seamark;                     // 3
+            var layer_sport;                       // 4
+            var layer_gebco_deepshade;             // 5
+            var layer_gebco_deeps_gwc;             // 6
+            var layer_pois;                        // 7
+            var layer_download;                    // 8
+            var layer_nautical_route;              // 9
+            var layer_grid;                        // 10
+            var layer_wikipedia;                   // 11
+            var layer_bing_aerial;                 // 12
+            var layer_ais;                         // 13
+            var layer_satpro;                      // 14
+            // layer_disaster                      // 15
+            var layer_tidalscale;                  // 16
+            var layer_permalink;                   // 17
+            var layer_waterdepth_trackpoints;      // 18
+            var layer_elevation_profile_contours;  // 19
+            var layer_elevation_profile_hillshade; // 20
 
             // Select controls
             var selectControl;
@@ -164,6 +166,10 @@
                 if (getCookie("WaterDepthTrackPointsLayerVisible") == "true") {
                     layer_waterdepth_trackpoints.setVisibility(true);
                     document.getElementById("license_waterdepth").style.display = 'inline';
+                }
+                if (getCookie("ElevationProfileLayerVisible") == "true") {
+                    layer_elevation_profile_contours.setVisibility(true);
+                    layer_elevation_profile_hillshade.setVisibility(true);
                 }
             }
 
@@ -348,6 +354,18 @@
                     layer_waterdepth_trackpoints.setVisibility(true);
                     document.getElementById("license_waterdepth").style.display = 'inline';
                     setCookie("WaterDepthTrackPointsLayerVisible", "true");
+                }
+            }
+
+            function showElevationProfile() {
+                if (layer_elevation_profile_contours.visibility) {
+                    layer_elevation_profile_contours.setVisibility(false);
+                    layer_elevation_profile_hillshade.setVisibility(false);
+                    setCookie("ElevationProfileLayerVisible", "false");
+                } else {
+                    layer_elevation_profile_contours.setVisibility(true);
+                    layer_elevation_profile_hillshade.setVisibility(true);
+                    setCookie("ElevationProfileLayerVisible", "true");
                 }
             }
 
@@ -758,10 +776,40 @@
                     layerId: 18
                 });
                 layer_waterdepth_trackpoints = waterDepthTrackPoints.getLayer();
+                // Elevation Profile
+                layer_elevation_profile_contours = new OpenLayers.Layer.TMS(
+                    'ASTER GDEM Contour Lines (zoom 13-17)',
+                    'http://129.206.74.245:8006/tms_il.ashx?',
+                    {
+                        layerId                 : 19,
+                        type                    : 'png',
+                        getURL                  : getTileURLAsParams,
+                        displayOutsideMaxExtent : true,
+                        isBaseLayer             : false,
+                        maxResolution           : 19.109257068634033,
+                        minResolution           : 1.194328566789627,
+                        visibility              : false
+                    }
+                );
+                layer_elevation_profile_hillshade = new OpenLayers.Layer.TMS(
+                    'ASTER GDEM & SRTM Hillshade (experimental)',
+                    'http://129.206.74.245:8004/tms_hs.ashx?',
+                    {
+                        layerId                 : 20,
+                        type                    : 'png',
+                        getURL                  : getTileURLAsParams,
+                        displayOutsideMaxExtent : true,
+                        isBaseLayer             : false,
+                        minResolution           : 19.109257068634033,
+                        visibility              : false
+                    }
+                );
 
                 map.addLayers([
                     layer_mapnik,
                     layer_bing_aerial,
+                    layer_elevation_profile_contours,
+                    layer_elevation_profile_hillshade,
                     layer_gebco_deepshade,
                     layer_gebco_deeps_gwc,
                     layer_seamark,
