@@ -15,7 +15,6 @@
         <link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png"/>
         <link rel="stylesheet" type="text/css" href="weather.css">
         <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
-        <script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>
         <script type="text/javascript" src="./javascript/map_utils.js"></script>
         <script type="text/javascript">
@@ -111,8 +110,10 @@
 
             function drawmap() {
                 map = new OpenLayers.Map('map', {
-                    projection: projMerc,
-                    displayProjection: proj4326,
+                    numZoomLevels     : 8,
+                    zoomOffset        : 4,
+                    projection        : projMerc,
+                    displayProjection : proj4326,
                     eventListeners: {
                         "moveend": mapEventMove,
                         "zoomend": mapEventZoom
@@ -120,17 +121,15 @@
                     controls: [
                         new OpenLayers.Control.Permalink(),
                         new OpenLayers.Control.OverviewMap(),
-                        new OpenLayers.Control.Navigation({zoomWheelEnabled: false})],
-                        maxExtent:
-                        new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
-                    numZoomLevels: 3,
-                    maxResolution: 156543,
-                    units: 'meters'
+                        new OpenLayers.Control.Navigation({zoomWheelEnabled: false})
+                    ]
                 });
 
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
                 // Mapnik
-                var layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+                var layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik', [
+                    'http://osm1.wtnet.de/tiles/base/${z}/${x}/${y}.png'
+                ]);
                 // Wind layers
                 layer_weather_wind1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/wind_vector/5/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});

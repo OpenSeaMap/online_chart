@@ -17,7 +17,6 @@
         <link rel="stylesheet" type="text/css" href="topmenu.css">
         <script type="text/javascript" src="./javascript/lib/jquery.js"></script>
         <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
-        <script type="text/javascript" src="./javascript/OpenStreetMap.js"></script>
         <script type="text/javascript" src="./javascript/translation-<?=$t->getCurrentLanguageSafe()?>.js"></script>
         <script type="text/javascript" src="./javascript/permalink.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>
@@ -29,7 +28,6 @@
         <script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script>
         <script type="text/javascript" src="./javascript/mouseposition_dm.js"></script>
         <script type="text/javascript" src="./javascript/grid_wgs.js"></script>
-        <!-- Actual bing class from devel tree (can be removed on next OpenLayers release) -->
         <script type="text/javascript" src="./javascript/bing.js"></script>
         <script type="text/javascript" src="./javascript/ais.js"></script>
         <script type="text/javascript" src="./javascript/satpro.js"></script>
@@ -37,7 +35,6 @@
         <script type="text/javascript">
 
             var map;
-            var arrayMaps = new Array();
 
             // Position and zoomlevel of the map (will be overriden with permalink parameters or cookies)
             var lon = 11.6540;
@@ -449,13 +446,11 @@
 
             function selectedMap (event) {
                 var feature = event.feature;
-                var selectedMap = feature.id.split(".");
-                var buff = arrayMaps[selectedMap[2].split("_")[1]].split(":");
 
-                downloadName = buff[0];
-                downloadLink = buff[1];
+                downloadName = feature.attributes.name;
+                downloadLink = feature.attributes.link;
 
-                var mapName =downloadName;
+                var mapName = downloadName;
 
                 document.getElementById('info_dialog').innerHTML=""+ mapName +"";
                 document.getElementById('buttonMapDownload').disabled=false;
@@ -610,15 +605,15 @@
 
             function drawmap() {
                 map = new OpenLayers.Map('map', {
-                    projection: projMerc,
-                    displayProjection: proj4326,
+                    numZoomLevels     : 19,
+                    projection        : projMerc,
+                    displayProjection : proj4326,
                     eventListeners: {
-                        moveend: mapEventMove,
-                        zoomend: mapEventZoom,
-                        click: mapEventClick,
-                        changelayer: mapChangeLayer
+                        moveend     : mapEventMove,
+                        zoomend     : mapEventZoom,
+                        click       : mapEventClick,
+                        changelayer : mapChangeLayer
                     },
-
                     controls: [
                         permalinkControl,
                         new OpenLayers.Control.Navigation(),
@@ -627,12 +622,7 @@
                         new OpenLayers.Control.MousePositionDM(),
                         new OpenLayers.Control.OverviewMap(),
                         ZoomBar
-                    ],
-                    maxExtent:
-                    new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
-                    numZoomLevels: 19,
-                    maxResolution: 156543,
-                    units: 'meters'
+                    ]
                 });
 
                 // Set proxy url for accessing cross side domains
@@ -682,8 +672,11 @@
 
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
                 // Mapnik (Base map)
-                layer_mapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik", {
-                    layerId: 1
+                layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik', [
+                    'http://osm1.wtnet.de/tiles/base/${z}/${x}/${y}.png'
+                ],{
+                    layerId      : 1,
+                    wrapDateLine : true
                 });
                 // Seamark
                 layer_seamark = new OpenLayers.Layer.TMS("seamarks", "http://t1.openseamap.org/seamark/",
@@ -706,13 +699,14 @@
                     displayOutsideMaxExtent:true
                 });
                 // Bing
-                layer_bing_aerial = new OpenLayers.Layer.Bing({
+                layer_bing_aerial = new Bing({
                     layerId: 12,
                     name: 'Aerial photo',
                     key: 'AuA1b41REXrEohfokJjbHgCSp1EmwTcW8PEx_miJUvZERC0kbRnpotPTzGsPjGqa',
                     type: 'Aerial',
                     isBaseLayer: true,
-                    displayOutsideMaxExtent: true
+                    displayOutsideMaxExtent: true,
+                    wrapDateLine: true
                 });
                 // Map download
                 layer_download = new OpenLayers.Layer.Vector("Map Download", {
@@ -922,11 +916,13 @@
                         var bounds = new OpenLayers.Bounds(w, s, e, n);
                         bounds.transform(new OpenLayers.Projection("EPSG:4326"), new
                         OpenLayers.Projection("EPSG:900913"));
-                        var box = new OpenLayers.Feature.Vector(bounds.toGeometry());
-                        layer_download.addFeatures(box);
                         var name = item.getElementsByTagName("name")[0].childNodes[0].nodeValue.trim();
                         var link = item.getElementsByTagName("link")[0].childNodes[0].nodeValue.trim();
-                        arrayMaps[box.id.split("_")[1]] = name + ":" + link;
+                        var box  = new OpenLayers.Feature.Vector(bounds.toGeometry(), {
+                            name: name,
+                            link: link
+                        });
+                        layer_download.addFeatures(box);
                     }
                 }
             }

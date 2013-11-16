@@ -137,7 +137,7 @@ function NauticalRoute_routeAdded(event) {
     routeEdit.activate();
     NauticalRoute_getPoints(routeTrack);
     // Select element for editing
-    routeEdit.selectControl.select(routeObject);
+    routeEdit.selectFeature(routeObject);
     document.getElementById('buttonRouteDownloadTrack').disabled=false;
 }
 
