@@ -119,7 +119,7 @@
                         layerId: 2
                     });
                     map.addLayer(layer_marker);
-                    addMarker(layer_marker, mlon, mlat, decodeURIComponent(getArgument("mtext")));
+                    addMarker(layer_marker, mlon, mlat, decodeURIComponent(getArgument("mtext")).replace(/\n/g, '<br/>'));
                 }
                 readLayerCookies();
                 resetLayerCheckboxes();
@@ -556,7 +556,7 @@
                 userURL += "?zoom=" + map.getZoom(); // add map zoom to string
                 userURL += "&mlat=" + lonlat.lat.toFixed(5); // add latitude
                 userURL += "&mlon=" + lonlat.lon.toFixed(5); // add longitude
-                userURL += "&mtext=" + document.getElementById("markerText").value; // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
+                userURL += "&mtext=" + encodeURIComponent(document.getElementById("markerText").value); // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
                 userURL += "&layers=" + layersPermalink; // add encoded layers
                 OpenLayers.Util.getElement("userURL").innerHTML = userURL; // write contents of userURL to textarea
             }
