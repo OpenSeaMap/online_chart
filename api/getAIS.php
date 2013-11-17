@@ -35,7 +35,7 @@
 // As a start for your practice, please feel free to use the following URL
 // to retrieve real-time AIS positions in XML:
 //
-//   http://www.marinetraffic.com/ais/getxml_i.aspx?
+//   http://mob0.marinetraffic.com/ais/de/getxml_i.aspx?
 //       sw_x=24.0&sw_y=34.0&ne_x=30.0&ne_y=39.5&zoom=14
 //
 // You must specify SW and NE bounds of the area you wish to download. Zoom
@@ -83,8 +83,8 @@ $neY = round($bbox[3] * 10000) / 10000;
 // Fetch data
 // -----------------------------------------------------------------------------
 
-$host = 'www.marinetraffic.com';
-$url  = '/ais/getxml_i.aspx';
+$host = 'mob0.marinetraffic.com';
+$url  = '/ais/de/getxml_i.aspx';
 $url .= '?sw_x=' . $swX;
 $url .= '&sw_y=' . $swY;
 $url .= '&ne_x=' . $neX;
