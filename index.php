@@ -194,6 +194,7 @@
                 document.getElementById("checkPermalink").checked                   = (layer_permalink.getVisibility() === true);
                 //document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisibility() === true);
                 document.getElementById("checkLayerWaterDepthTrackPoints").checked  = (layer_waterdepth_trackpoints.getVisibility() === true);
+                document.getElementById("checkLayerElevationProfile").checked       = (layer_elevation_profile_contours.getVisibility() === true || layer_elevation_profile_hillshade.getVisibility() === true);
             }
 
             // Show popup window for help
