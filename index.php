@@ -42,8 +42,8 @@
             var zoom = 10;
 
             // marker position
-            var mlon = -1;
-            var mlat = -1;
+            var mLat = -1;
+            var mLon = -1;
 
             //last zoomlevel of the map
             var oldZoom = 0;
@@ -102,24 +102,32 @@
                 var buffZoom = parseInt(getCookie("zoom"));
                 var buffLat = parseFloat(getCookie("lat"));
                 var buffLon = parseFloat(getCookie("lon"));
-                mlat = getArgument("mlat");
-                mlon = getArgument("mlon");
+                mLat  = getArgument("mlat");
+                mLon  = getArgument("mlon");
+                mZoom = getArgument("zoom");
 
                 if (buffZoom != -1) {
                     zoom = buffZoom;
+                }
+                if (mZoom != -1) {
+                    zoom = mZoom;
                 }
                 if (buffLat != -1 && buffLon != -1) {
                     lat = buffLat;
                     lon = buffLon;
                 }
+                if (mLat != -1 && mLon != -1) {
+                    lat = mLat;
+                    lon = mLon;
+                }
                 drawmap();
                 // Create Marker, if arguments are given
-                if (mlat != -1 && mlon != -1) {
+                if (mLat != -1 && mLon != -1) {
                     layer_marker = new OpenLayers.Layer.Markers("Marker",{
                         layerId: 2
                     });
                     map.addLayer(layer_marker);
-                    addMarker(layer_marker, mlon, mlat, decodeURIComponent(getArgument("mtext")).replace(/\n/g, '<br/>'));
+                    addMarker(layer_marker, mLon, mLat, decodeURIComponent(getArgument("mtext")).replace(/\n/g, '<br/>'));
                 }
                 readLayerCookies();
                 resetLayerCheckboxes();
