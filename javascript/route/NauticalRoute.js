@@ -100,6 +100,10 @@ function NauticalRoute_DownloadTrack() {
             content = NauticalRoute_getRouteGml(routeObject);
             break;
     }
+
+    // Remove previous added forms
+    $('#actionDialog > form').remove();
+
     form = document.createElement('form');
     form.id = this.id + '_export_form';
     form.method = 'post';
@@ -112,21 +116,22 @@ function NauticalRoute_DownloadTrack() {
     input.id = this.id + '_export_input_mimetype';
     input.name = 'mimetype';
     input.type = 'hidden';
+    input.value = mimetype;
     div.appendChild(input);
     input = document.createElement('input');
     input.id = this.id + '_export_input_filename';
     input.name = 'filename';
     input.type = 'hidden';
+    input.value = filename;
     div.appendChild(input);
     input = document.createElement('input');
     input.id = this.id + '_export_input_content';
     input.name = 'content';
     input.type = 'hidden';
+    input.value = content;
     div.appendChild(input);
-    $(this.id + '_export_input_mimetype').value = mimetype;
-    $(this.id + '_export_input_filename').value = filename;
-    $(this.id + '_export_input_content').value = content;
-    $(this.id + '_export_form').submit();
+
+    $('#actionDialog > form').get(0).submit();
 }
 
 function NauticalRoute_routeAdded(event) {
