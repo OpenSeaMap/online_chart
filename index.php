@@ -50,7 +50,6 @@
 
             var downloadName;
             var downloadLink;
-            var downloadLoaded = false;
             var wikipediaThumbs = false;
 
             // FIXME: Work around for accessing translations from harbour.js
@@ -452,7 +451,6 @@
                 htmlText += "<tr><td><br/><input type=\"button\" id=\"buttonMapDownload\" value=\"<?=$t->tr("download")?>\" onclick=\"downloadMap()\" disabled=\"true\"></td><td align=\"right\"><br/><input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeMapDownload()\"></td></tr>";
                 htmlText += "</table>";
                 showActionDialog(htmlText);
-                downloadLoaded = true;
             }
 
             function closeMapDownload() {
@@ -460,7 +458,6 @@
                 layer_download.setVisibility(false);
                 layer_download.removeAllFeatures();
                 closeActionDialog();
-                downloadLoaded = false;
             }
 
             function downloadMap() {
@@ -928,7 +925,7 @@
                 if(oldZoom!=zoom) {
                     oldZoom=zoom;
                 }
-                if (downloadLoaded) {
+                if (layer_download.getVisibility() === true) {
                     closeMapDownload();
                     addMapDownload();
                 }
