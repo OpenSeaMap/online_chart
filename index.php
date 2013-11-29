@@ -992,27 +992,52 @@
                 }
             }
 
+            function switchMenuTools(toolName, activate) {
+                switch (toolName) {
+                    case 'download':
+                        toggleNauticalRoute(false);
+                        togglePermalink(false);
+                        toggleMapDownload(activate);
+                        break;
+                    case 'nautical_route':
+                        toggleMapDownload(false);
+                        togglePermalink(false);
+                        toggleNauticalRoute(activate);
+                        break;
+                    case 'permalink':
+                        toggleMapDownload(false);
+                        toggleNauticalRoute(false);
+                        togglePermalink(activate);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
             function initMenuTools() {
+                // The layers will be displayed based on permalink
+                // settings. Unfortunately the action dialog will not
+                // be generated. This workaround guarantees, that the
+                // corresponding action dialog will be generated.
+                if (layer_download.getVisibility() === true) {
+                    switchMenuTools('download', true);
+                }
+                if (layer_nautical_route.getVisibility() === true) {
+                    switchMenuTools('nautical_route', true);
+                }
+                if (layer_permalink.getVisibility() === true) {
+                    switchMenuTools('permalink', true);
+                }
+
                 $('#topmenu2').find('[data-tools]').click(function(evt) {
-                    var layerName = $(evt.currentTarget).data('tools');
-                    var checked   = $(evt.currentTarget).find('input').is(':checked');
-                    switch (layerName) {
-                        case 'download':
-                            toggleNauticalRoute(false);
-                            togglePermalink(false);
-                            toggleMapDownload(checked);
-                            break;
-                        case 'nautical_route':
-                            toggleMapDownload(false);
-                            togglePermalink(false);
-                            toggleNauticalRoute(checked);
-                            break;
-                        case 'permalink':
-                            toggleMapDownload(false);
-                            toggleNauticalRoute(false);
-                            togglePermalink(checked);
-                        default:
-                            break;
+                    var layerName       = $(evt.currentTarget).data('tools');
+                    var checked         = $(evt.currentTarget).find('input').is(':checked');
+                    var checkboxClicked = $(evt.target).is('input');
+
+                    if (checkboxClicked) {
+                        switchMenuTools(layerName, checked);
+                    } else {
+                        switchMenuTools(layerName, !checked);
                     }
                 });
             }
