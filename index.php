@@ -90,12 +90,20 @@
             var layer_elevation_profile_contours;  // 19
             var layer_elevation_profile_hillshade; // 20
 
+            // To not change the permalink layer order, every removed
+            // layer keeps its number. The ArgParser compares the
+            // count of layers with the layers argument length. So we
+            // have to let him know, how many layers are removed.
+            var ignoredLayers = 1;
+
             // Select controls
             var selectControl;
 
             // Controls
             var ZoomBar          = new OpenLayers.Control.PanZoomBar();
-            var permalinkControl = new OpenSeaMap.Control.Permalink();
+            var permalinkControl = new OpenSeaMap.Control.Permalink(null, null, {
+                ignoredLayers : ignoredLayers
+            });
 
             // Load map for the first time
             function init() {
