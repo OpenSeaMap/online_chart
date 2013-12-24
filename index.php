@@ -714,7 +714,7 @@
                 layer_seamark = new OpenLayers.Layer.TMS("seamarks", "http://t1.openseamap.org/seamark/",
                     { layerId: 3, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
                 // Sport
-                layer_sport = new OpenLayers.Layer.TMS("Sport", "http://tiles.openseamap.org/sport/",
+                layer_sport = new OpenLayers.Layer.TMS("Sport", "http://t1.openseamap.org/sport/",
                     { layerId: 4, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 //GebcoDepth
                 layer_gebco_deepshade = new OpenLayers.Layer.WMS("deepshade", "http:///osm.franken.de:8080/geoserver/wms",
