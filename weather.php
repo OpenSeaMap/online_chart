@@ -128,7 +128,9 @@
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
                 // Mapnik
                 var layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik', [
-                    'http://osm1.wtnet.de/tiles/base/${z}/${x}/${y}.png'
+                    'http://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
+                    'http://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
+                    'http://c.tile.openstreetmap.org/${z}/${x}/${y}.png'
                 ]);
                 // Wind layers
                 layer_weather_wind1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/wind_vector/5/",
