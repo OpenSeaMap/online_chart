@@ -44,7 +44,7 @@ function makeTidalScaleRequest(params) {
         url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
     }
     // Get tidal scales for Germany
-    var TidalScaleDeUrl="http://osm.chaosdwarfs.de/web/getTidalTest.php";
+    var TidalScaleDeUrl="http://gauges.openseamap.smurf.noris.de/getTides.php";
     var scriptDe = document.createElement("script");
     scriptDe.src = TidalScaleDeUrl + url;
     scriptDe.type = "text/javascript";
