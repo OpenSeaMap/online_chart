@@ -723,7 +723,7 @@
                     {layers: "gebco:deepshade", projection: new OpenLayers.Projection("EPSG:900913"), type: 'png', transparent: true},
                     { layerId: 5, isBaseLayer: false, visibility: false, opacity: 0.2, minResolution: 38.22});
                 layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("deeps_gwc", "http://osm.franken.de:8080/geoserver/gwc/service/wms",
-                    {layers: "gebco_new", format:"image/jpeg"},
+                    {layers: "gebco_new", format:"image/png"},
                     { layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.4});
                 // POI-Layer for harbours and tidal scales
                 layer_pois = new OpenLayers.Layer.Vector("pois", {
