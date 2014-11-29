@@ -1055,6 +1055,6 @@
         <div id="actionDialog">
             <br>&nbsp;not found&nbsp;<br>&nbsp;
         </div>
-        <? include('classes/topmenu.inc'); ?>
+        <?php include('classes/topmenu.inc'); ?>
     </body>
 </html>
