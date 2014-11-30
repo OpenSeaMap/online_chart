@@ -20,8 +20,24 @@ if [ -z "$refname" -o -z "$oldrev" -o -z "$newrev" ]; then
         exit 1
 fi
 
+HEAD=$(git symbolic-ref HEAD)
+if [ "$refname" = "$HEAD" ] ; then
+        echo "The '$refname' branch is currently checked out." >&2
+        exit 1
+fi
+
+if [ "$refname" = "refs/heads/master" ] ; then
+        echo "You cannot push to the 'master' branch here. Use 'web'." >&2
+        exit 1
+fi
+
 if [ "$refname" != "refs/heads/web" ] ; then
-        echo "You can only push to the 'web' branch here, not '$refname'!" >&2
+        #echo "You can only push to the 'web' branch here, not '$refname'!" >&2
+        exit 0
+fi
+
+if [ $HEAD != "refs/heads/master" ] ; then
+        echo "The 'web' branch is not currently checked out." >&2
         exit 1
 fi
 
@@ -35,6 +51,12 @@ fi
 cd "$GIT_DIR"
 GIT_DIR="$(pwd)"
 cd ../../$(basename "$GIT_DIR" .git)
+
+if [ $( git-ls-files -mo | wc -l ) -gt 0 ] ; then
+        echo "There are modified or untracked files:" >&2
+        git-ls-files -mo >&2
+        exit 1
+fi
 
 if ! git merge --ff-only web ; then
         echo "Merge failed. (Not fast-forward?) Aborting." >&2
