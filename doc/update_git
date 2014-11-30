@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+# --- Command line
+refname="$1"
+oldrev="$2"
+newrev="$3"
+
+# --- Safety check
+if [ -z "$GIT_DIR" ]; then
+        echo "Don't run this script from the command line." >&2
+        echo " (if you want, you could supply GIT_DIR then run" >&2
+        echo "  $0 <ref> <oldrev> <newrev>)" >&2
+        exit 1
+fi
+
+if [ -z "$refname" -o -z "$oldrev" -o -z "$newrev" ]; then
+        echo "usage: $0 <ref> <oldrev> <newrev>" >&2
+        exit 1
+fi
+
+if [ "$refname" != "refs/heads/web" ] ; then
+        echo "You can only push to the 'web' branch here, not '$refname'!" >&2
+        exit 1
+fi
+
+zero="0000000000000000000000000000000000000000"
+if [ "$newrev" = "$zero" ]; then
+        echo "You cannot delete the web branch!" >&2
+        exit 1
+fi
+
+# absolute path
+cd "$GIT_DIR"
+GIT_DIR="$(pwd)"
+cd ../../$(basename "$GIT_DIR" .git)
+
+if ! git merge --ff-only web ; then
+        echo "Merge failed. (Not fast-forward?) Aborting." >&2
+        exit 1
+fi
+
+exit 0
