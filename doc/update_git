@@ -58,7 +58,7 @@ if [ $( git-ls-files -mo | wc -l ) -gt 0 ] ; then
         exit 1
 fi
 
-if ! git merge --ff-only web ; then
+if ! git merge --ff-only $newrev ; then
         echo "Merge failed. (Not fast-forward?) Aborting." >&2
         exit 1
 fi
