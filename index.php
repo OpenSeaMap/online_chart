@@ -725,7 +725,7 @@
                 layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("deeps_gwc", "http://osm.franken.de:8080/geoserver/gwc/service/wms",
                     {layers: "gebco_new", format:"image/jpeg"},
                     { layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.4});
-                // POI-Layer for harbours and tidal scales
+                // POI-Layer for harbours
                 layer_pois = new OpenLayers.Layer.Vector("pois", {
                     layerId: 7,
                     visibility: true,
@@ -774,7 +774,7 @@
                 });
                 layer_satpro = satPro.getLayer();
                 // Disaster (15)
-                // POI-Layer for harbours and tidal scales
+                // POI-Layer for tidal scales
                 layer_tidalscale = new OpenLayers.Layer.Vector("tidalscale", {
                     layerId: 16,
                     visibility: false,
