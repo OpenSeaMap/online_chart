@@ -33,3 +33,10 @@ systemctl restart php5-fpm.service
 
 systemctl enable nginx.service
 systemctl restart nginx.service
+
+if test ! -s /etc/sudoers.d/openseamap ; then
+    echo "You might want to enable this entry in /etc/sudoers.d/openseamap:"
+    echo ""
+    echo "# %openseamap   ALL=(ALL:ALL) NOPASSWD: ALL" >/etc/sudoers.d/openseamap
+    cat /etc/sudoers.d/openseamap
+fi
