@@ -4,6 +4,8 @@
 ## Please take care to make this script idempotent, i.e. running it 
 ## again should not change anything.
 
+umask 002
+
 DEST=${DEST:-/srv/osm}
 ME=map
 

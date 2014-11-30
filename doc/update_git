@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/bin/sh -e
 #
+umask 002
+
 # --- Command line
 refname="$1"
 oldrev="$2"
