@@ -720,11 +720,8 @@
                     { layerId: 4, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 //GebcoDepth
                 layer_gebco_deepshade = new OpenLayers.Layer.WMS("deepshade", "http:///osm.franken.de:8080/geoserver/wms",
-                    // renaming the "gebco:deepshade" layer is a quick and evil
-                    // hack to test whether this is the one causing the "milky"
-                    // appearance with the "Marine Profile" view:
-                    {layers: "gebco:deepshade_disabled", projection: new OpenLayers.Projection("EPSG:900913"), type: 'png', transparent: true},
-                    { layerId: 5, isBaseLayer: false, visibility: false, opacity: 0.2, minResolution: 38.22});
+                    {layers: "gebco:deepshade_2014", projection: new OpenLayers.Projection("EPSG:900913"), format:"image/png", transparent:"true"},
+                    { layerId: 5, isBaseLayer: false, visibility: false, opacity: 0.6, minResolution: 38.22});
                 layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("deeps_gwc", "http://osm.franken.de:8080/geoserver/gwc/service/wms",
                     {layers: "gebco_new", format:"image/png"},
                     { layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.4});
