@@ -9,16 +9,16 @@ umask 002
 DEST=${DEST:-/srv/osm}
 ME=map
 
-mkdir -p "$DEST/$MAP" "$DEST"/git
+mkdir -p "$DEST/$ME" "$DEST"/git
 cd "$(dirname "$0")"/..
 export GIT_DIR="$DEST"/git/$ME.git
 if test ! -d "$GIT_DIR" ; then
     cp -a .git "$GIT_DIR"
-    cd "$DEST/$MAP"
+    cd "$DEST/$ME"
     git checkout -b web
     git checkout -- .
 else
-    cd "$DEST/$MAP"
+    cd "$DEST/$ME"
 fi
 
 # minimal packages required
