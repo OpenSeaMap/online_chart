@@ -22,7 +22,8 @@ else
 fi
 
 # minimal packages required
-apt-get install nginx php5-fpm locales
+apt-get update
+apt-get -y install nginx php5-fpm locales
 
 ## errors go to syslog
 cat <<END >/etc/php5/fpm/conf.d/99-errors.ini
