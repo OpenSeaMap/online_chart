@@ -16,6 +16,7 @@ if test ! -d "$GIT_DIR" ; then
     cp -a .git "$GIT_DIR"
     cd "$DEST/$MAP"
     git checkout -b web
+    git checkout -- .
 else
     cd "$DEST/$MAP"
 fi
