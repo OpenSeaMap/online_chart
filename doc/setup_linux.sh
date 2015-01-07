@@ -11,11 +11,15 @@ ME=map
 
 mkdir -p "$DEST/$MAP" "$DEST"/git
 cd "$(dirname "$0")"/..
+SRC=$(/bin/pwd)
 export GIT_DIR="$DEST"/git/$ME.git
 if test ! -d "$GIT_DIR" ; then
     cp -a .git "$GIT_DIR"
-    cd "$DEST/$MAP"
-    git checkout -b web
+    cp doc/update_git "$GIT_DIR"/hooks/update
+    chmod +x "$GIT_DIR"/hooks/update
+    mkdir -p "$DEST/$ME"
+    cd "$DEST/$ME"
+    git checkout -f -b web
 else
     cd "$DEST/$MAP"
 fi
@@ -37,7 +41,7 @@ sed \
     -e "s,%HOSTNAME%,$(hostname -f),g" \
     -e "s,%ME%,$ME,g" \
     -e "s,%DEST%,$DEST,g" \
-    < doc/nginx.conf > /etc/nginx/sites-available/map.openseamap.conf
+    < $SRC/doc/nginx.conf > /etc/nginx/sites-available/map.openseamap.conf
 cd /etc/nginx/sites-enabled
 ln -sf ../sites-available/map.openseamap.conf .
 
