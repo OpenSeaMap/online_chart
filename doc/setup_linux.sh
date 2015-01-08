@@ -9,7 +9,7 @@ umask 002
 DEST=${DEST:-/srv/osm}
 ME=map
 
-mkdir -p "$DEST/$MAP" "$DEST"/git
+mkdir -p "$DEST/$ME" "$DEST"/git
 cd "$(dirname "$0")"/..
 SRC=$(/bin/pwd)
 export GIT_DIR="$DEST"/git/$ME.git
@@ -17,15 +17,15 @@ if test ! -d "$GIT_DIR" ; then
     cp -a .git "$GIT_DIR"
     cp doc/update_git "$GIT_DIR"/hooks/update
     chmod +x "$GIT_DIR"/hooks/update
-    mkdir -p "$DEST/$ME"
     cd "$DEST/$ME"
     git checkout -f -b web
 else
-    cd "$DEST/$MAP"
+    cd "$DEST/$ME"
 fi
 
 # minimal packages required
-apt-get install nginx php5-fpm locales
+apt-get update
+apt-get -y install nginx php5-fpm locales
 
 ## errors go to syslog
 cat <<END >/etc/php5/fpm/conf.d/99-errors.ini
