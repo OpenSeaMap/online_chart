@@ -109,7 +109,7 @@ Ais = OpenLayers.Class(Object,{
                         }
                     }),
                     'select':{
-                        cursor:'crosshai'
+                        cursor:'crosshair'
                     }
                 })
             })
