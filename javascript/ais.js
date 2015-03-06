@@ -77,7 +77,8 @@ Ais = OpenLayers.Class(Object,{
                     'default':new OpenLayers.Style({
                         externalGraphic:'${graphic}',
                         graphicHeight:'${graphicSize}',
-                        rotation:'${heading}'
+                        rotation:'${heading}',
+                        cursor:'crosshair'
                     },{
                         context:{
                             graphic:function(feature){
@@ -107,10 +108,7 @@ Ais = OpenLayers.Class(Object,{
                                 }
                             }
                         }
-                    }),
-                    'select':{
-                        cursor:'crosshair'
-                    }
+                    })
                 })
             })
         );
