@@ -1,4 +1,3 @@
-<!--updated 2012-06-02-->
 <iframe id="josm_call_iframe" src="#" style="visibility:hidden;"></iframe>
 <div id="topmenu2" style="position:absolute; top:10px; left:60px;">
     <ul class="dropdown">
@@ -43,7 +42,22 @@
                     </ul>
                 </li>
                 <li onClick="showAis()"><a><input type="checkbox" id="checkLayerAis">&nbsp;<?=$t->tr("ais")?></a></li>
-                <li onClick="showWaterDepthTrackPoints()"><a><input type="checkbox" id="checkLayerWaterDepthTrackPoints">&nbsp;<?=$t->tr("water_depth")?> (beta)</a></li>
+
+                <li onClick="showWaterDepthTrackPoints(true)">
+                  <a onClick="document.getElementById('checkLayerWaterDepthTrackPoints').checked = !document.getElementById('checkLayerWaterDepthTrackPoints').checked">
+                    <input type="checkbox" id="checkLayerWaterDepthTrackPoints" />&nbsp;<?=$t->tr("water_depth")?></input>
+                  </a>
+                    <ul class="sub_menu">
+                        <li onClick="layer_waterdepth_trackpoints_10m.setVisibility(true);layer_waterdepth_trackpoints_100m.setVisibility(false)">
+                          <a><input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints10m" />&nbsp;10 m</a>
+                        </li>
+                            <li onClick="layer_waterdepth_trackpoints_10m.setVisibility(false);layer_waterdepth_trackpoints_100m.setVisibility(true)">
+                              <a><input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints100m" />&nbsp;100 m</a>
+                            </li>
+                    </ul>
+                </li>
+
+<!--                <li onClick="showWaterDepthTrackPoints()"><a><input type="checkbox" id="checkLayerWaterDepthTrackPoints">&nbsp;<?=$t->tr("water_depth")?> (beta)</a></li> -->
                 <li><a><img alt="dev" src="./resources/map/development_32px.png" width="24" height="24" border="0">&nbsp;<?=$t->tr("development")?></a>
                     <ul class="sub_menu">
                         <li><a href="http://testdepth.openseamap.org" target="_blank">&nbsp;<?=$t->tr("water_depth")?></a></li>
@@ -114,4 +128,3 @@
         </li>
     </ul>
 </div>
-
