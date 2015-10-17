@@ -57,7 +57,6 @@
                     </ul>
                 </li>
 
-<!--                <li onClick="showWaterDepthTrackPoints()"><a><input type="checkbox" id="checkLayerWaterDepthTrackPoints">&nbsp;<?=$t->tr("water_depth")?> (beta)</a></li> -->
                 <li><a><img alt="dev" src="./resources/map/development_32px.png" width="24" height="24" border="0">&nbsp;<?=$t->tr("development")?></a>
                     <ul class="sub_menu">
                         <li><a href="http://testdepth.openseamap.org" target="_blank">&nbsp;<?=$t->tr("water_depth")?></a></li>
