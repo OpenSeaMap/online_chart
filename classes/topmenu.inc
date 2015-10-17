@@ -4,7 +4,7 @@
     <ul class="dropdown">
         <li>
             <a href="http://openseamap.org/" target="blank">
-                <img alt="OpenSeaMapLogo" src="../resources/icons/OpenSeaMapLogo_32.png" width="24" height="24" border="0">
+                <img alt="OpenSeaMapLogo" src="./resources/icons/OpenSeaMapLogo_32.png" width="24" height="24" border="0">
             </a>
         </li>
         <li>

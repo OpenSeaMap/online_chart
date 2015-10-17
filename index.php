@@ -515,7 +515,7 @@
                 // Marker Init
                 var size = new OpenLayers.Size(32, 32); // size of the marker
                 var offset = new OpenLayers.Pixel(-(size.w/2), -size.h); // offset to get the pinpoint of the needle to mouse pos
-                var icon = new OpenLayers.Icon('http://map.openseamap.org/resources/icons/Needle_Red_32.png', size, offset); // Init of icon
+                var icon = new OpenLayers.Icon('./resources/icons/Needle_Red_32.png', size, offset); // Init of icon
 
                 // Adding of Marker
                 layer_permalink.clearMarkers(); // clear all markers to only keep one marker at a time on the map
@@ -566,7 +566,8 @@
 
 
                 // Generate Permalink for copy and paste
-                var userURL = "http://map.openseamap.org/map/"; // prefix
+                var url = window.location.href;
+                var userURL = url.substr(0, url.lastIndexOf('/')+1)
                 userURL += "?zoom=" + map.getZoom(); // add map zoom to string
                 userURL += "&mlat=" + lonlat.lat.toFixed(5); // add latitude
                 userURL += "&mlon=" + lonlat.lon.toFixed(5); // add longitude
