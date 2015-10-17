@@ -31,7 +31,6 @@ $german = array(
     "language"               => "Sprache",
 
     // Map-----------------------------------------------------------
-    "actLayers"              => "Active Layers",
     "coordinate"             => "Koordinate",
     "coordinateGrid"         => "Koordinatengitter",
     "copynpaste"             => "URL (Kopieren mit Strg/Cmd + C)",

@@ -225,6 +225,8 @@
                 //document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisibility() === true);
                 showWaterDepthTrackPoints();
                 document.getElementById("checkLayerElevationProfile").checked       = (layer_elevation_profile_contours.getVisibility() === true || layer_elevation_profile_hillshade.getVisibility() === true);
+
+                createPermaLink();
             }
 
             // Show popup window for help
@@ -586,48 +588,48 @@
                 // Write the specified content inside
                 OpenLayers.Util.getElement("markerpos").innerHTML = ns + lat_d + "°" + format2FixedLenght(lat_m,6,3) + "'" + " " + we + lon_d + "°" + format2FixedLenght(lon_m,6,3) + "'";
 
-                // Layers - used for display in dialog and creation of permalink
-                // Get all visible layers which are not a placeholder or permalink (both not relevant for user)
-                var layerList = '';
-                for (var i = 0; i < map.layers.length; i++) {
-                    if (map.layers[i] === layer_marker) {
-                        continue;
-                    }
-                    if (map.layers[i] === layer_permalink) {
-                        continue;
-                    }
-                    if (map.layers[i].getVisibility() === false) {
-                        continue;
-                    }
-                    if (!map.layers[i].layerId) {
-                        continue;
-                    }
-                    layerList += map.layers[i].name + ', ';
-                };
-                // Cut the space and comma at the end of the string
-                layerList = layerList.substring(0, layerList.length - 2);
-                // Write contents of layerList inside
-                OpenLayers.Util.getElement("actLayers").innerHTML = layerList;
+                $("#markerpos").data("lat", lonlat.lat.toFixed(5))
+                $("#markerpos").data("lon", lonlat.lon.toFixed(5))
+
+                createPermaLink();
+              }
+
+              function createPermaLink(){
+                if(!layer_permalink.visibility)
+                  return;
+                if(!OpenLayers.Util.getElement("permalinkDialog"))
+                  return
 
                 // Create Permalink for Layers
                 var layersPermalink = permalinkControl.getLayerString();
                 layersPermalink = permalinkControl.setFlag(layersPermalink, 'F', layer_permalink.layerId);
 
-
                 // Generate Permalink for copy and paste
                 var url = window.location.href;
                 var userURL = url.substr(0, url.lastIndexOf('/')+1)
                 userURL += "?zoom=" + map.getZoom(); // add map zoom to string
-                userURL += "&mlat=" + lonlat.lat.toFixed(5); // add latitude
-                userURL += "&mlon=" + lonlat.lon.toFixed(5); // add longitude
-                userURL += "&mtext=" + encodeURIComponent(document.getElementById("markerText").value); // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
+                userURL += "&lat=" + y2lat(map.getCenter().lat).toFixed(5); // add map zoom to string
+                userURL += "&lon=" + x2lon(map.getCenter().lon).toFixed(5); // add map zoom to string
+
+                var lat = $("#markerpos").data("lat")
+                if(lat)
+                  userURL += "&mlat=" + lat; // add latitude
+
+                var lon = $("#markerpos").data("lon")
+                if(lon)
+                  userURL += "&mlon=" + $("#markerpos").data("lon"); // add longitude
+
+                var mText = encodeURIComponent(document.getElementById("markerText").value)
+                if(mText != "")
+                  userURL += "&mtext=" + mText; // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
+
                 userURL += "&layers=" + layersPermalink; // add encoded layers
                 OpenLayers.Util.getElement("userURL").innerHTML = userURL; // write contents of userURL to textarea
             }
 
             function addPermalink() {
                 layer_permalink.setVisibility(true);
-                var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
+                var htmlText = "<div id='permalinkDialog' style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
                 htmlText += "<img src=\"./resources/action/close.gif\" onClick=\"closePermalink();\"/></div>";
                 htmlText += "<h3><?=$t->tr("permalinks")?>:</h3><br/>"; // reference to translation.php
                 htmlText += "<p><?=$t->tr("markset")?></p>"
@@ -638,25 +640,18 @@
                 htmlText += "<table border=\"0\" width=\"370px\">";
                 htmlText += "<tr><td><?=$t->tr("position")?>:</td><td id=\"markerpos\">- - -</td></tr>"; // Lat/Lon of the user's click
                 htmlText += "<tr><td><?=$t->tr("description")?>:</td><td><textarea cols=\"25\" rows=\"5\" id=\"markerText\"></textarea></td></tr>"; // userInput
-                htmlText += "<tr><td><?=$t->tr("actLayers")?>:</td><td id=\"actLayers\"></td></tr>"; //list of active layers
                 htmlText += "</td></tr></table>";
                 htmlText += "<br /><hr /><br />"
-                htmlText += "<?=$t->tr("copynpaste")?>:<br /><textarea onclick=\"this.select();\" cols=\"50\" rows=\"2\" id=\"userURL\"></textarea>"; // secure & convient onlick-solution for copy and paste
+                htmlText += "<?=$t->tr("copynpaste")?>:<br /><textarea onclick=\"this.select();\" cols=\"50\" rows=\"3\" id=\"userURL\"></textarea>"; // secure & convient onlick-solution for copy and paste
 
                 showActionDialog(htmlText);
 
                 $('#markerText').on('keyup', function(evt) {
-                    var text = $(evt.currentTarget).val();
-                    var url  = $('#userURL').val();
-                    if (url.length === 0) {
-                        // No Marker set, yet.
-                        return;
-                    }
-                    url = url.replace(/mtext=.*&/, 'mtext=' + encodeURIComponent(text) + '&');
-                    $('#userURL').val(url);
+                  createPermaLink()
                 });
 
                 map.events.register("click", layer_permalink, onAddMarker);
+                createPermaLink();
             }
 
             function closePermalink() {
@@ -1071,7 +1066,6 @@
             }
 
             function initMenuTools() {
-              console.log("initMenuTools")
                 // The layers will be displayed based on permalink
                 // settings. Unfortunately the action dialog will not
                 // be generated. This workaround guarantees, that the
