@@ -129,13 +129,17 @@
                     lon = mLon;
                 }
                 drawmap();
-                // Create Marker, if arguments are given
-                if (mLat != -1 && mLon != -1) {
-                    layer_marker = new OpenLayers.Layer.Markers("Marker",{
-                        layerId: 2
-                    });
-                    map.addLayer(layer_marker);
-                    addMarker(layer_marker, mLon, mLat, decodeURIComponent(getArgument("mtext")).replace(/\n/g, '<br/>'));
+                try{
+                  // Create Marker, if arguments are given
+                  if (mLat != -1 && mLon != -1) {
+                      layer_marker = new OpenLayers.Layer.Markers("Marker",{
+                          layerId: 2
+                      });
+                      map.addLayer(layer_marker);
+                      addMarker(layer_marker, mLon, mLat, decodeURIComponent(getArgument("mtext")).replace(/\n/g, '<br/>'));
+                  }
+                }catch(err) {
+                    console.log(err)
                 }
                 readLayerCookies();
                 resetLayerCheckboxes();
@@ -1067,6 +1071,7 @@
             }
 
             function initMenuTools() {
+              console.log("initMenuTools")
                 // The layers will be displayed based on permalink
                 // settings. Unfortunately the action dialog will not
                 // be generated. This workaround guarantees, that the
