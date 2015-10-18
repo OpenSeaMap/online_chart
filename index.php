@@ -160,26 +160,27 @@
                     return;
                 }
                 // Set Layer visibility from cookie
-                if (getCookie("SeamarkLayerVisible") == "false") {
-                    layer_seamark.setVisibility(false);
-                }
-                if (getCookie("HarbourLayerVisible") == "false") {
-                    layer_pois.setVisibility(false);
-                }
-                if (getCookie("TidalScaleLayerVisible") == "true") {
-                    layer_tidalscale.setVisibility(true);
-                    refreshTidalScales();
-                }
-                if (getCookie("SportLayerVisible") == "true") {
-                    layer_sport.setVisibility(true);
-                }
-                if (getCookie("GridWGSLayerVisible") == "true") {
-                    layer_grid.setVisibility(true);
-                }
-                if (getCookie("GebcoDepthLayerVisible") == "true") {
-                    layer_gebco_deepshade.setVisibility(true);
-                    layer_gebco_deeps_gwc.setVisibility(true);
-                }
+                var seamarkVisible = getCookie("SeamarkLayerVisible") === "true"
+                layer_seamark.setVisibility(seamarkVisible);
+
+                var poisVisible = getCookie("HarbourLayerVisible") === "true"
+                layer_pois.setVisibility(poisVisible);
+
+                var tidalVisible = getCookie("TidalScaleLayerVisible") === "true"
+                layer_tidalscale.setVisibility(tidalVisible);
+                if(layer_tidalscale.visibility)
+                  refreshTidalScales();
+
+                var sportVisible = getCookie("SportLayerVisible") === "true"
+                layer_sport.setVisibility(sportVisible);
+
+                var gridVisible = getCookie("GridWGSLayerVisible") === "true"
+                layer_grid.setVisibility(gridVisible);
+
+                var gebcoVisible = getCookie("GebcoDepthLayerVisible") === "true"
+                layer_gebco_deepshade.setVisibility(gebcoVisible);
+                layer_gebco_deeps_gwc.setVisibility(gebcoVisible);
+
                 if (getCookie("WikipediaLayerVisible") == "true") {
                     showWikipediaLinks(true, false);
                 }
@@ -189,18 +190,19 @@
                 if (getCookie("AisLayerVisible") == "true") {
                     showAis();
                 }
-                if (getCookie("WaterDepthTrackPointsLayerVisible10m") == "true") {
-                    layer_waterdepth_trackpoints_10m.setVisibility(true);
-                    document.getElementById('checkLayerWaterDepthTrackPoints').checked = true
-                }
-                if (getCookie("WaterDepthTrackPointsLayerVisible100m") == "true") {
-                    layer_waterdepth_trackpoints_100m.setVisibility(true);
-                    document.getElementById('checkLayerWaterDepthTrackPoints').checked = true
-                }
-                if (getCookie("ElevationProfileLayerVisible") == "true") {
-                    layer_elevation_profile_contours.setVisibility(true);
-                    layer_elevation_profile_hillshade.setVisibility(true);
-                }
+
+                var depth10mVisible = getCookie("WaterDepthTrackPointsLayerVisible10m") === "true"
+                layer_waterdepth_trackpoints_10m.setVisibility(depth10mVisible);
+
+                var depth100mVisible = getCookie("WaterDepthTrackPointsLayerVisible100m") === "true"
+                layer_waterdepth_trackpoints_100m.setVisibility(depth100mVisible);
+
+                document.getElementById('checkLayerWaterDepthTrackPoints').checked = depth10mVisible || depth100mVisible
+                showWaterDepthTrackPoints();
+
+                var profileVisible = getCookie("ElevationProfileLayerVisible") === "true"
+                layer_elevation_profile_contours.setVisibility(profileVisible);
+                layer_elevation_profile_hillshade.setVisibility(profileVisible);
             }
 
             function resetLayerCheckboxes()
@@ -223,7 +225,7 @@
                 document.getElementById("checkLayerAis").checked                    = (layer_ais.getVisibility() === true);
                 document.getElementById("checkPermalink").checked                   = (layer_permalink.getVisibility() === true);
                 //document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisibility() === true);
-                showWaterDepthTrackPoints();
+                setWaterDepthBoxes();
                 document.getElementById("checkLayerElevationProfile").checked       = (layer_elevation_profile_contours.getVisibility() === true || layer_elevation_profile_hillshade.getVisibility() === true);
 
                 createPermaLink();
@@ -378,7 +380,8 @@
                 }
             }
 
-            function showWaterDepthTrackPoints(fromClick) {
+            /// update visual elements based onlayer visibility
+            function setWaterDepthBoxes(fromClick){
               // overwrite checkbox.checked if not comming from an mouse click
               if(fromClick !== true){
                 document.getElementById('checkLayerWaterDepthTrackPoints').checked = layer_waterdepth_trackpoints_10m.visibility ||                          layer_waterdepth_trackpoints_100m.visibility
@@ -400,7 +403,10 @@
 
               document.getElementById("checkLayerWaterDepthTrackPoints10m").checked = layer_waterdepth_trackpoints_10m.visibility
               document.getElementById("checkLayerWaterDepthTrackPoints100m").checked = layer_waterdepth_trackpoints_100m.visibility
+            }
 
+            function showWaterDepthTrackPoints(fromClick) {
+              setWaterDepthBoxes(fromClick)
               showWaterDepthTrackPoints10m();
               showWaterDepthTrackPoints100m();
             }
