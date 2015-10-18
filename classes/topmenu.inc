@@ -34,11 +34,10 @@
                 <li onClick="showGridWGS()"><a><input type="checkbox" id="checkLayerGridWGS">&nbsp;<?=$t->tr("coordinateGrid")?></a></li>
                 <li onClick="showElevationProfile()"><a><input type="checkbox" id="checkLayerElevationProfile">&nbsp;<?=$t->tr("elevationProfile")?></a></li>
                 <li onClick="showGebcoDepth()"><a><input type="checkbox" id="checkLayerGebcoDepth">&nbsp;<?=$t->tr("gebcoDepth")?></a></li>
-                <li onClick="showWikipediaLinks(false, false)">
+                <li onClick="showWikipediaLinks(false)">
                     <a><input type="checkbox" id="checkLayerWikipedia">&nbsp;Wikipedia-Links</a>
                     <ul class="sub_menu">
-                        <li onClick="showWikipediaLinks(false, true)"><a><input type="checkbox" id="checkLayerWikipediaMarker">&nbsp;Marker</a></li>
-                        <li onClick="showWikipediaLinks(true, true)"><a><input type="checkbox" id="checkLayerWikipediaThumbnails">&nbsp;Thumbnails</a></li>
+                        <li onClick="showWikipediaLinks(true)"><a><input type="checkbox" id="checkLayerWikipediaThumbnails">&nbsp;Thumbnails</a></li>
                     </ul>
                 </li>
                 <li onClick="showAis()"><a><input type="checkbox" id="checkLayerAis">&nbsp;<?=$t->tr("ais")?></a></li>

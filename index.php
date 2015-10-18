@@ -181,9 +181,11 @@
                 layer_gebco_deepshade.setVisibility(gebcoVisible);
                 layer_gebco_deeps_gwc.setVisibility(gebcoVisible);
 
-                if (getCookie("WikipediaLayerVisible") == "true") {
-                    showWikipediaLinks(true, false);
-                }
+                var wikiLayerVisible = getCookie("WikipediaLayerVisible") === "true"
+                var wikiThumbsVisible = getCookie("WikipediaLayerThumbs") === "true"
+                setWikiThumbs(wikiThumbsVisible)
+                setWikiLayer(wikiLayerVisible)
+
                 if (getCookie("BingAerialLayerVisible") == "true") {
                     map.setBaseLayer(layer_bing_aerial);
                 }
@@ -219,7 +221,6 @@
                 document.getElementById("checkDownload").checked                    = (layer_download.getVisibility() === true);
                 document.getElementById("checkNauticalRoute").checked               = (layer_nautical_route.getVisibility() === true);
                 document.getElementById("checkLayerWikipedia").checked              = (layer_wikipedia.getVisibility() === true);
-                document.getElementById("checkLayerWikipediaMarker").checked        = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === false);
                 document.getElementById("checkLayerWikipediaThumbnails").checked    = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
                 document.getElementById("checkLayerBingAerial").checked             = (map.baseLayer == layer_bing_aerial);
                 document.getElementById("checkLayerAis").checked                    = (layer_ais.getVisibility() === true);
@@ -443,46 +444,50 @@
             }
 
             // Show Wikipedia layer
-            function showWikipediaLinks(thumbs, sub) {
+            function showWikipediaLinks(sub) {
                 if (sub) {
-                    if (thumbs) {
-                        var displayThumbs = 'yes';
-                        setCookie("WikipediaLayerThumbs", "true");
-                    } else {
-                        var displayThumbs = 'no';
-                        setCookie("WikipediaLayerThumbs", "false");
-                    }
-                    if (wikipediaThumbs === false && thumbs === true) {
-                        wikipediaThumbs = true;
-                        layer_wikipedia.setVisibility(false);
-                    } else if (wikipediaThumbs === true && thumbs === false) {
-                        wikipediaThumbs = false;
-                        layer_wikipedia.setVisibility(false);
-                    } else {
-                        wikipediaThumbs = thumbs;
-                    }
-                    var iconsProtocol = new OpenLayers.Protocol.HTTP({
-                        url: 'http://toolserver.org/~kolossos/geoworld/marks.php?',
-                        params: {
-                            'LANG' : language,
-                            'thumbs' : displayThumbs
-                        },
-                        format: new OpenLayers.Format.KML({
-                            extractStyles: true,
-                            extractAttributes: true
-                        })
-                    });
-                    layer_wikipedia.protocol = iconsProtocol;
+                  var checked = document.getElementById("checkLayerWikipediaThumbnails").checked
+                  setWikiLayer(false); // will be toggled by parent <li onClick>
+                  // toggle thumb display
+                  setWikiThumbs(!checked)
+
                 } else {
-                    if (layer_wikipedia.getVisibility() === true) {
-                        layer_wikipedia.setVisibility(false);
-                        selectControl.removePopup();
-                        setCookie("WikipediaLayerVisible", "false");
-                    } else {
-                        layer_wikipedia.setVisibility(true);
-                        setCookie("WikipediaLayerVisible", "true");
-                    }
+                  // toggle wiki layer
+                  setWikiLayer(!layer_wikipedia.getVisibility())
                 }
+            }
+
+            function setWikiThumbs(active){
+              wikipediaThumbs = active
+              setWikiProtocol();
+            }
+
+            function setWikiLayer(visible){
+              layer_wikipedia.setVisibility(visible);
+              setCookie("WikipediaLayerVisible", visible);
+              if(!visible) {
+                selectControl.removePopup();
+              }else{
+                setWikiProtocol()
+              }
+
+            }
+
+            function setWikiProtocol(){
+              setCookie("WikipediaLayerThumbs", wikipediaThumbs);
+              var displayThumbs = wikipediaThumbs ? 'yes' : 'no';
+              var iconsProtocol = new OpenLayers.Protocol.HTTP({
+                        url: 'http://toolserver.org/~kolossos/geoworld/marks.php?',
+                  params: {
+                      'LANG' : language,
+                      'thumbs' : displayThumbs
+                  },
+                  format: new OpenLayers.Format.KML({
+                      extractStyles: true,
+                      extractAttributes: true
+                  })
+              });
+              layer_wikipedia.protocol = iconsProtocol;
             }
 
             // Show dialog window
