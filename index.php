@@ -31,6 +31,7 @@
         <script type="text/javascript" src="./javascript/bing.js"></script>
         <script type="text/javascript" src="./javascript/ais.js"></script>
         <script type="text/javascript" src="./javascript/satpro.js"></script>
+        <script type="text/javascript" src="./javascript/lib/he.js"></script>
         <script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script>
         <script type="text/javascript">
 
@@ -137,7 +138,9 @@
                           layerId: 2
                       });
                       map.addLayer(layer_marker);
-                      addMarker(layer_marker, mLon, mLat, decodeURIComponent(getArgument("mtext")).replace(/\n/g, '<br/>'));
+                      var mtext = he.encode(decodeURIComponent(getArgument("mtext"))).replace(/\n/g, '<br/>')
+console.log("mtext: "+mtext)
+                      addMarker(layer_marker, mLon, mLat, mtext);
                   }
                 }catch(err) {
                     console.log(err)
