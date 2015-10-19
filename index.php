@@ -89,6 +89,7 @@
             var layer_elevation_profile_contours;  // 19
             var layer_elevation_profile_hillshade; // 20
             var layer_waterdepth_trackpoints_10m;      // 21
+            var layer_waterdepth_contours;        // 22
 
             // To not change the permalink layer order, every removed
             // layer keeps its number. The ArgParser compares the
@@ -199,6 +200,9 @@
                 var depth100mVisible = getCookie("WaterDepthTrackPointsLayerVisible100m") === "true"
                 layer_waterdepth_trackpoints_100m.setVisibility(depth100mVisible);
 
+                var contoursVisible = getCookie("WaterDepthContoursVisible") === "true"
+                layer_waterdepth_contours.setVisibility(contoursVisible);
+
                 document.getElementById('checkLayerWaterDepthTrackPoints').checked = depth10mVisible || depth100mVisible
                 showWaterDepthTrackPoints();
 
@@ -227,6 +231,7 @@
                 document.getElementById("checkPermalink").checked                   = (layer_permalink.getVisibility() === true);
                 //document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisibility() === true);
                 setWaterDepthBoxes();
+                document.getElementById("checkDepthContours").checked                   = (layer_waterdepth_contours.getVisibility() === true);
                 document.getElementById("checkLayerElevationProfile").checked       = (layer_elevation_profile_contours.getVisibility() === true || layer_elevation_profile_hillshade.getVisibility() === true);
 
                 createPermaLink();
@@ -429,6 +434,12 @@
                     layer_waterdepth_trackpoints_100m.setVisibility(true);
                     setCookie("WaterDepthTrackPointsLayerVisible100m", "true");
                 }
+            }
+
+            function showContours() {
+              var visibleNew = !layer_waterdepth_contours.visibility
+              layer_waterdepth_contours.setVisibility(visibleNew);
+              setCookie("WaterDepthContoursVisible", visibleNew);
             }
 
             function showElevationProfile() {
@@ -883,6 +894,16 @@
                     }
                 );
 
+                layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
+                    {
+                      layers: ['contour','contour2'],
+                      numZoomLevels: 22,
+                      projection: this.projectionMercator,
+                      type: 'png',
+
+                      transparent: true},
+                    { layerId: 22, isBaseLayer: false, visibility: false,tileSize: new OpenLayers.Size(1024,1024), });
+
                 map.addLayers([
                     layer_mapnik,
                     layer_bing_aerial,
@@ -903,6 +924,7 @@
                     layer_permalink,
                     layer_waterdepth_trackpoints_10m,
                     layer_waterdepth_trackpoints_100m,
+                    layer_waterdepth_contours,
                 ]);
 
                 layer_mapnik.events.register("loadend", null, function(evt) {

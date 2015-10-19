@@ -55,6 +55,7 @@
                             </li>
                     </ul>
                 </li>
+                <li onClick="showContours()"><a><input type="checkbox" id="checkDepthContours">&nbsp;<?=$t->tr("depth_contours")?></a></li>
 
                 <li><a><img alt="dev" src="./resources/map/development_32px.png" width="24" height="24" border="0">&nbsp;<?=$t->tr("development")?></a>
                     <ul class="sub_menu">

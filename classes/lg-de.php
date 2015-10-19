@@ -70,6 +70,7 @@ $german = array(
     "view"                   => "Ansicht",
     "water_depth"            => "Wassertiefen",
     "wikiHelp"               => "Wiki-Hilfe",
+    "depth_contours"         => "Tiefenlinien (beta)",
 
     // Weather-------------------------------------------------------
     "weather"                => "Wetter",
