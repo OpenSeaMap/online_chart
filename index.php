@@ -405,7 +405,7 @@
                         wikipediaThumbs = thumbs;
                     }
                     var iconsProtocol = new OpenLayers.Protocol.HTTP({
-                        url: 'http://toolserver.org/~kolossos/geoworld/marks.php?',
+                        url: 'api/proxy-wikipedia.php?',
                         params: {
                             'LANG' : language,
                             'thumbs' : displayThumbs
@@ -657,16 +657,13 @@
                     ]
                 });
 
-                // Set proxy url for accessing cross side domains
-                OpenLayers.ProxyHost = './api/wikipedia-proxy/index.php?q=';
-
                 var bboxStrategyWikipedia = new OpenLayers.Strategy.BBOX( {
                     ratio : 1.1,
                     resFactor: 1
                 });
 
                 var poiLayerWikipediaHttp = new OpenLayers.Protocol.HTTP({
-                    url: 'http://toolserver.org/~kolossos/geoworld/marks.php?',
+                    url: 'api/proxy-wikipedia.php?',
                     params: {
                         'LANG' : language,
                         'thumbs' : 'no'
