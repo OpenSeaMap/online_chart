@@ -514,7 +514,7 @@ console.log("mtext: "+mtext)
               setCookie("WikipediaLayerThumbs", wikipediaThumbs);
               var displayThumbs = wikipediaThumbs ? 'yes' : 'no';
               var iconsProtocol = new OpenLayers.Protocol.HTTP({
-                        url: 'http://toolserver.org/~kolossos/geoworld/marks.php?',
+                        url: 'api/proxy-wikipedia.php?',
                   params: {
                       'LANG' : language,
                       'thumbs' : displayThumbs
