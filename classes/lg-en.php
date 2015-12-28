@@ -31,7 +31,6 @@ $english = array(
     "language"               => "Language",
 
     // Map-----------------------------------------------------------
-    "actLayers"              => "Active Layers",
     "coordinate"             => "Coordinate",
     "coordinateGrid"         => "Coordinate Grid",
     "copynpaste"             => "URL (Copy with Ctrl/Cmd + C)",
@@ -71,6 +70,7 @@ $english = array(
     "view"                   => "View",
     "water_depth"            => "Water depth",
     "wikiHelp"               => "Help (Wiki)",
+    "depth_contours"         => "Depth contours (beta)",
 
     // Weather-------------------------------------------------------
     "weather"                => "Weather",

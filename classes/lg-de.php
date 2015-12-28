@@ -31,7 +31,6 @@ $german = array(
     "language"               => "Sprache",
 
     // Map-----------------------------------------------------------
-    "actLayers"              => "Active Layers",
     "coordinate"             => "Koordinate",
     "coordinateGrid"         => "Koordinatengitter",
     "copynpaste"             => "URL (Kopieren mit Strg/Cmd + C)",
@@ -71,6 +70,7 @@ $german = array(
     "view"                   => "Ansicht",
     "water_depth"            => "Wassertiefen",
     "wikiHelp"               => "Wiki-Hilfe",
+    "depth_contours"         => "Tiefenlinien (beta)",
 
     // Weather-------------------------------------------------------
     "weather"                => "Wetter",

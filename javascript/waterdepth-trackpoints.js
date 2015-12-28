@@ -20,7 +20,7 @@
 // -----------------------------------------------------------------------------
 
 
-WaterDepthTrackPoints = OpenLayers.Class(Object,{
+WaterDepthTrackPoints100m = OpenLayers.Class(Object,{
     initialize:function(map, select, options){
         this.map = map;
         this.select = select;
@@ -45,6 +45,44 @@ WaterDepthTrackPoints = OpenLayers.Class(Object,{
                     'test_zoom_4_cor_1_points',
                     'test_zoom_3_cor_1_points',
                     'test_zoom_2_cor_1_points'
+                ]
+            },
+            OpenLayers.Util.applyDefaults(options, {
+                visibility  : false,
+                isBaseLayer : false,
+                tileSize    : new OpenLayers.Size(1024,1024)
+            })
+        );
+    },
+    getLayer:function(){
+        return this.layer;
+    }
+});
+
+WaterDepthTrackPoints10m = OpenLayers.Class(Object,{
+    initialize:function(map, select, options){
+        this.map = map;
+        this.select = select;
+        this.initLayer(options);
+    },
+    initLayer:function(options){
+        this.layer = new OpenLayers.Layer.WMS('Water Depth Track Points',
+            'http://osm.franken.de/cgi-bin/mapserv.fcgi',
+            {
+                projection  : new OpenLayers.Projection('EPSG:900913'),
+                type        : 'png',
+                transparent : true,
+                layers: [ 'trackpoints_cor1_test_dbs_10',
+                'trackpoints_cor1_test_10',
+                'test_zoom_10_cor_1_points_10',
+                'test_zoom_9_cor_1_points_10',
+                'test_zoom_8_cor_1_points_10',
+                'test_zoom_7_cor_1_points_10',
+                'test_zoom_6_cor_1_points_10',
+                'test_zoom_5_cor_1_points_10',
+                'test_zoom_4_cor_1_points_10',
+                'test_zoom_3_cor_1_points_10',
+                'test_zoom_2_cor_1_points_10',
                 ]
             },
             OpenLayers.Util.applyDefaults(options, {
