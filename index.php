@@ -460,34 +460,11 @@ console.log("mtext: "+mtext)
             // Show Wikipedia layer
             function showWikipediaLinks(sub) {
                 if (sub) {
-                    if (thumbs) {
-                        var displayThumbs = 'yes';
-                        setCookie("WikipediaLayerThumbs", "true");
-                    } else {
-                        var displayThumbs = 'no';
-                        setCookie("WikipediaLayerThumbs", "false");
-                    }
-                    if (wikipediaThumbs === false && thumbs === true) {
-                        wikipediaThumbs = true;
-                        layer_wikipedia.setVisibility(false);
-                    } else if (wikipediaThumbs === true && thumbs === false) {
-                        wikipediaThumbs = false;
-                        layer_wikipedia.setVisibility(false);
-                    } else {
-                        wikipediaThumbs = thumbs;
-                    }
-                    var iconsProtocol = new OpenLayers.Protocol.HTTP({
-                        url: 'api/proxy-wikipedia.php?',
-                        params: {
-                            'LANG' : language,
-                            'thumbs' : displayThumbs
-                        },
-                        format: new OpenLayers.Format.KML({
-                            extractStyles: true,
-                            extractAttributes: true
-                        })
-                    });
-                    layer_wikipedia.protocol = iconsProtocol;
+                  var checked = document.getElementById("checkLayerWikipediaThumbnails").checked
+                  setWikiLayer(false); // will be toggled by parent <li onClick>
+                  // toggle thumb display
+                  setWikiThumbs(!checked)
+
                 } else {
                   // toggle wiki layer
                   setWikiLayer(!layer_wikipedia.getVisibility())
