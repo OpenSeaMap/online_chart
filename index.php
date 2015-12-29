@@ -139,7 +139,7 @@
                       });
                       map.addLayer(layer_marker);
                       var mtext = he.encode(decodeURIComponent(getArgument("mtext"))).replace(/\n/g, '<br/>')
-console.log("mtext: "+mtext)
+
                       addMarker(layer_marker, mLon, mLat, mtext);
                   }
                 }catch(err) {
@@ -179,6 +179,9 @@ console.log("mtext: "+mtext)
                 layer_sport.setVisibility(sportVisible);
 
                 var gridVisible = getCookie("GridWGSLayerVisible") === "true"
+                if(getCookie("GridWGSLayerVisible") === "-1")
+                  gridVisible = true; // default to visible
+
                 layer_grid.setVisibility(gridVisible);
 
                 var gebcoVisible = getCookie("GebcoDepthLayerVisible") === "true"
