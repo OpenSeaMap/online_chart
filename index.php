@@ -138,8 +138,10 @@
                           layerId: 2
                       });
                       map.addLayer(layer_marker);
-                      var mtext = he.encode(decodeURIComponent(getArgument("mtext"))).replace(/\n/g, '<br/>')
-
+                      var mtext = he.encode(decodeURIComponent(getArgument("mtext")))
+                                    .replace(/\n/g, '<br/>');
+                      mtext = mtext.replace('&#x3C;b&#x3E;', '<b>')
+                                    .replace('&#x3C;%2Fb&#x3E;', '</b>');
                       addMarker(layer_marker, mLon, mLat, mtext);
                   }
                 }catch(err) {
