@@ -168,6 +168,8 @@
                 }
                 // Set Layer visibility from cookie
                 var seamarkVisible = getCookie("SeamarkLayerVisible") === "true"
+                if(getCookie("SeamarkLayerVisible") === "-1")
+                  seamarkVisible = true; // default to visible
                 layer_seamark.setVisibility(seamarkVisible);
 
                 var poisVisible = getCookie("HarbourLayerVisible") === "true"
