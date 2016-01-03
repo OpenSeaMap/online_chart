@@ -2,6 +2,19 @@
 
 The following external sites/services are used to display the various layers.
 
+## OSM base layer
+
+### OpenStreetMap server
+- http://a.tile.openstreetmap.org/11/1088/657.png
+- http://b.tile.openstreetmap.org/11/1088/657.png
+- http://c.tile.openstreetmap.org/11/1088/657.png
+
+### Our tile server (Bravo)
+- http://osm1.wtnet.de/tiles/base/11/1088/657.png
+
+
+All should return a png tile with the size 256x256 px.
+
 ## Seamarks
 t1.openseamap.org
 
