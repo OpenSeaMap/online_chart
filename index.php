@@ -233,7 +233,7 @@
                 document.getElementById("checkLayerSport").checked                  = (layer_sport.getVisibility() === true);
                 document.getElementById("checkLayerGridWGS").checked                = (layer_grid.getVisibility() === true);
                 document.getElementById("checkLayerGebcoDepth").checked             = (layer_gebco_deepshade.getVisibility() === true || layer_gebco_deeps_gwc.getVisibility() === true);
-                document.getElementById("checkDownload").checked                    = (layer_download.getVisibility() === true);
+                //document.getElementById("checkDownload").checked                    = (layer_download.getVisibility() === true);
                 document.getElementById("checkNauticalRoute").checked               = (layer_nautical_route.getVisibility() === true);
                 document.getElementById("checkLayerWikipedia").checked              = (layer_wikipedia.getVisibility() === true);
                 document.getElementById("checkLayerWikipediaThumbnails").checked    = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
