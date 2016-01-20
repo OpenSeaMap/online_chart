@@ -67,14 +67,26 @@
         <li>
             <a><img alt="tools" src="./resources/action/tools.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("tools")?></a>
             <ul class="sub_menu">
-                <li data-tools="download">
-                    <a><input type="checkbox" id="checkDownload">&nbsp;<img alt="download" src="./resources/action/download.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("downloadChart")?></a>
+				        <li data-tools="permalink">
+                    <a><input type="checkbox" id="checkPermalink">&nbsp;<img alt="permalink" src="./resources/action/permalink-32x.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("permalinks")?></a>
                 </li>
                 <li data-tools="nautical_route">
                     <a><input type="checkbox" id="checkNauticalRoute">&nbsp;<img alt="route" src="./resources/action/route-32px.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("tripPlanner")?></a>
                 </li>
-				<li data-tools="permalink">
-                    <a><input type="checkbox" id="checkPermalink">&nbsp;<img alt="permalink" src="./resources/action/permalink-32x.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("permalinks")?></a>
+<!--                    <li data-tools="download">
+                        <a><input type="checkbox" id="checkDownload">&nbsp;<img alt="download" src="./resources/action/download.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("downloadChart")?></a>
+                    </li>-->
+                <li>
+                  <a href="http://openseamap.org"><strong>Download</strong></a>
+                </li>
+            <li>
+              <a href="http://wiki.openstreetmap.org/wiki/KAP-charts_from_OpenSeaMap" target="_blank">OpenCPN (Kap)</a>
+            </li>
+                <li>
+                  <a href="http://wiki.openstreetmap.org/wiki/DE:OpenSeaMap_and_Garmin_nautical_chart_plotter#Download" target="_blank">Garmin</a>
+                </li>
+                <li>
+                  <a href="http://wiki.openstreetmap.org/wiki/AT5-OpenSeaMap-Chart_for_Lowrance_Simrad_B%26G" target="_blank">Navico (Lowrance, Simrad, B&amp;G)</a>
                 </li>
             </ul>
         </li>
