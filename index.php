@@ -1149,5 +1149,6 @@
             <br>&nbsp;not found&nbsp;<br>&nbsp;
         </div>
         <?php include('classes/topmenu.inc'); ?>
+        <?php include('classes/footer.inc'); ?>
     </body>
 </html>
