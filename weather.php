@@ -133,89 +133,89 @@
                     'http://c.tile.openstreetmap.org/${z}/${x}/${y}.png'
                 ]);
                 // Wind layers
-                layer_weather_wind1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/wind_vector/5/",
+                layer_weather_wind1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/wind_stream/5/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind2 = new OpenLayers.Layer.TMS("Wind18", "http://www.openportguide.org/tiles/actual/wind_vector/7/",
+                layer_weather_wind2 = new OpenLayers.Layer.TMS("Wind18", "http://weather.openportguide.de/tiles/actual/wind_stream/7/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind3 = new OpenLayers.Layer.TMS("Wind24", "http://www.openportguide.org/tiles/actual/wind_vector/9/",
+                layer_weather_wind3 = new OpenLayers.Layer.TMS("Wind24", "http://weather.openportguide.de/tiles/actual/wind_stream/9/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind4 = new OpenLayers.Layer.TMS("Wind30", "http://www.openportguide.org/tiles/actual/wind_vector/11/",
+                layer_weather_wind4 = new OpenLayers.Layer.TMS("Wind30", "http://weather.openportguide.de/tiles/actual/wind_stream/11/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind5 = new OpenLayers.Layer.TMS("Wind42", "http://www.openportguide.org/tiles/actual/wind_vector/15/",
+                layer_weather_wind5 = new OpenLayers.Layer.TMS("Wind42", "http://weather.openportguide.de/tiles/actual/wind_stream/15/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind6 = new OpenLayers.Layer.TMS("Wind54", "http://www.openportguide.org/tiles/actual/wind_vector/19/",
+                layer_weather_wind6 = new OpenLayers.Layer.TMS("Wind54", "http://weather.openportguide.de/tiles/actual/wind_stream/19/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind7 = new OpenLayers.Layer.TMS("Wind66", "http://www.openportguide.org/tiles/actual/wind_vector/23/",
+                layer_weather_wind7 = new OpenLayers.Layer.TMS("Wind66", "http://weather.openportguide.de/tiles/actual/wind_stream/23/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind8 = new OpenLayers.Layer.TMS("Wind78", "http://www.openportguide.org/tiles/actual/wind_vector/27/",
+                layer_weather_wind8 = new OpenLayers.Layer.TMS("Wind78", "http://weather.openportguide.de/tiles/actual/wind_stream/27/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 // Air pressure layers
-                layer_weather_pressure1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/surface_pressure/5/",
+                layer_weather_pressure1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/surface_pressure/5/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure2 = new OpenLayers.Layer.TMS("Wind18", "http://www.openportguide.org/tiles/actual/surface_pressure/7/",
+                layer_weather_pressure2 = new OpenLayers.Layer.TMS("Wind18", "http://weather.openportguide.de/tiles/actual/surface_pressure/7/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure3 = new OpenLayers.Layer.TMS("Wind24", "http://www.openportguide.org/tiles/actual/surface_pressure/9/",
+                layer_weather_pressure3 = new OpenLayers.Layer.TMS("Wind24", "http://weather.openportguide.de/tiles/actual/surface_pressure/9/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure4 = new OpenLayers.Layer.TMS("Wind30", "http://www.openportguide.org/tiles/actual/surface_pressure/11/",
+                layer_weather_pressure4 = new OpenLayers.Layer.TMS("Wind30", "http://weather.openportguide.de/tiles/actual/surface_pressure/11/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure5 = new OpenLayers.Layer.TMS("Wind42", "http://www.openportguide.org/tiles/actual/surface_pressure/15/",
+                layer_weather_pressure5 = new OpenLayers.Layer.TMS("Wind42", "http://weather.openportguide.de/tiles/actual/surface_pressure/15/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure6 = new OpenLayers.Layer.TMS("Wind54", "http://www.openportguide.org/tiles/actual/surface_pressure/19/",
+                layer_weather_pressure6 = new OpenLayers.Layer.TMS("Wind54", "http://weather.openportguide.de/tiles/actual/surface_pressure/19/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure7 = new OpenLayers.Layer.TMS("Wind66", "http://www.openportguide.org/tiles/actual/surface_pressure/23/",
+                layer_weather_pressure7 = new OpenLayers.Layer.TMS("Wind66", "http://weather.openportguide.de/tiles/actual/surface_pressure/23/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure8 = new OpenLayers.Layer.TMS("Wind78", "http://www.openportguide.org/tiles/actual/surface_pressure/27/",
+                layer_weather_pressure8 = new OpenLayers.Layer.TMS("Wind78", "http://weather.openportguide.de/tiles/actual/surface_pressure/27/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 // Temperature layers
-                layer_weather_air_temperature1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/air_temperature/5/",
+                layer_weather_air_temperature1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/air_temperature/5/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature2 = new OpenLayers.Layer.TMS("Wind18", "http://www.openportguide.org/tiles/actual/air_temperature/7/",
+                layer_weather_air_temperature2 = new OpenLayers.Layer.TMS("Wind18", "http://weather.openportguide.de/tiles/actual/air_temperature/7/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature3 = new OpenLayers.Layer.TMS("Wind24", "http://www.openportguide.org/tiles/actual/air_temperature/9/",
+                layer_weather_air_temperature3 = new OpenLayers.Layer.TMS("Wind24", "http://weather.openportguide.de/tiles/actual/air_temperature/9/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature4 = new OpenLayers.Layer.TMS("Wind30", "http://www.openportguide.org/tiles/actual/air_temperature/11/",
+                layer_weather_air_temperature4 = new OpenLayers.Layer.TMS("Wind30", "http://weather.openportguide.de/tiles/actual/air_temperature/11/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature5 = new OpenLayers.Layer.TMS("Wind42", "http://www.openportguide.org/tiles/actual/air_temperature/15/",
+                layer_weather_air_temperature5 = new OpenLayers.Layer.TMS("Wind42", "http://weather.openportguide.de/tiles/actual/air_temperature/15/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature6 = new OpenLayers.Layer.TMS("Wind54", "http://www.openportguide.org/tiles/actual/air_temperature/19/",
+                layer_weather_air_temperature6 = new OpenLayers.Layer.TMS("Wind54", "http://weather.openportguide.de/tiles/actual/air_temperature/19/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature7 = new OpenLayers.Layer.TMS("Wind66", "http://www.openportguide.org/tiles/actual/air_temperature/23/",
+                layer_weather_air_temperature7 = new OpenLayers.Layer.TMS("Wind66", "http://weather.openportguide.de/tiles/actual/air_temperature/23/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature8 = new OpenLayers.Layer.TMS("Wind78", "http://www.openportguide.org/tiles/actual/air_temperature/27/",
+                layer_weather_air_temperature8 = new OpenLayers.Layer.TMS("Wind78", "http://weather.openportguide.de/tiles/actual/air_temperature/27/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 // Precipitation layers
-                layer_weather_precipitation1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/precipitation/5/",
+                layer_weather_precipitation1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/precipitation/5/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation2 = new OpenLayers.Layer.TMS("Wind18", "http://www.openportguide.org/tiles/actual/precipitation/7/",
+                layer_weather_precipitation2 = new OpenLayers.Layer.TMS("Wind18", "http://weather.openportguide.de/tiles/actual/precipitation/7/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation3 = new OpenLayers.Layer.TMS("Wind24", "http://www.openportguide.org/tiles/actual/precipitation/9/",
+                layer_weather_precipitation3 = new OpenLayers.Layer.TMS("Wind24", "http://weather.openportguide.de/tiles/actual/precipitation/9/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation4 = new OpenLayers.Layer.TMS("Wind30", "http://www.openportguide.org/tiles/actual/precipitation/11/",
+                layer_weather_precipitation4 = new OpenLayers.Layer.TMS("Wind30", "http://weather.openportguide.de/tiles/actual/precipitation/11/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation5 = new OpenLayers.Layer.TMS("Wind42", "http://www.openportguide.org/tiles/actual/precipitation/15/",
+                layer_weather_precipitation5 = new OpenLayers.Layer.TMS("Wind42", "http://weather.openportguide.de/tiles/actual/precipitation/15/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation6 = new OpenLayers.Layer.TMS("Wind54", "http://www.openportguide.org/tiles/actual/precipitation/19/",
+                layer_weather_precipitation6 = new OpenLayers.Layer.TMS("Wind54", "http://weather.openportguide.de/tiles/actual/precipitation/19/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation7 = new OpenLayers.Layer.TMS("Wind66", "http://www.openportguide.org/tiles/actual/precipitation/23/",
+                layer_weather_precipitation7 = new OpenLayers.Layer.TMS("Wind66", "http://weather.openportguide.de/tiles/actual/precipitation/23/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation8 = new OpenLayers.Layer.TMS("Wind78", "http://www.openportguide.org/tiles/actual/precipitation/27/",
+                layer_weather_precipitation8 = new OpenLayers.Layer.TMS("Wind78", "http://weather.openportguide.de/tiles/actual/precipitation/27/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 // Temperature layers
-                layer_weather_significant_wave_height1 = new OpenLayers.Layer.TMS("Wind12", "http://www.openportguide.org/tiles/actual/significant_wave_height/5/",
+                layer_weather_significant_wave_height1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/significant_wave_height/5/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height2 = new OpenLayers.Layer.TMS("Wind18", "http://www.openportguide.org/tiles/actual/significant_wave_height/7/",
+                layer_weather_significant_wave_height2 = new OpenLayers.Layer.TMS("Wind18", "http://weather.openportguide.de/tiles/actual/significant_wave_height/7/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height3 = new OpenLayers.Layer.TMS("Wind24", "http://www.openportguide.org/tiles/actual/significant_wave_height/9/",
+                layer_weather_significant_wave_height3 = new OpenLayers.Layer.TMS("Wind24", "http://weather.openportguide.de/tiles/actual/significant_wave_height/9/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height4 = new OpenLayers.Layer.TMS("Wind30", "http://www.openportguide.org/tiles/actual/significant_wave_height/11/",
+                layer_weather_significant_wave_height4 = new OpenLayers.Layer.TMS("Wind30", "http://weather.openportguide.de/tiles/actual/significant_wave_height/11/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height5 = new OpenLayers.Layer.TMS("Wind42", "http://www.openportguide.org/tiles/actual/significant_wave_height/15/",
+                layer_weather_significant_wave_height5 = new OpenLayers.Layer.TMS("Wind42", "http://weather.openportguide.de/tiles/actual/significant_wave_height/15/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height6 = new OpenLayers.Layer.TMS("Wind54", "http://www.openportguide.org/tiles/actual/significant_wave_height/19/",
+                layer_weather_significant_wave_height6 = new OpenLayers.Layer.TMS("Wind54", "http://weather.openportguide.de/tiles/actual/significant_wave_height/19/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height7 = new OpenLayers.Layer.TMS("Wind66", "http://www.openportguide.org/tiles/actual/significant_wave_height/23/",
+                layer_weather_significant_wave_height7 = new OpenLayers.Layer.TMS("Wind66", "http://weather.openportguide.de/tiles/actual/significant_wave_height/23/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height8 = new OpenLayers.Layer.TMS("Wind78", "http://www.openportguide.org/tiles/actual/significant_wave_height/27/",
+                layer_weather_significant_wave_height8 = new OpenLayers.Layer.TMS("Wind78", "http://weather.openportguide.de/tiles/actual/significant_wave_height/27/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 map.addLayers([layer_mapnik, layer_weather_wind1, layer_weather_wind2, layer_weather_wind3, layer_weather_wind4, layer_weather_wind5, layer_weather_wind6, layer_weather_wind7,
                     layer_weather_wind8, layer_weather_pressure1, layer_weather_pressure2, layer_weather_pressure3, layer_weather_pressure4, layer_weather_pressure5, layer_weather_pressure6, layer_weather_pressure7, layer_weather_pressure8,
@@ -594,7 +594,7 @@
         <div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
         <div style="position:absolute; bottom:10px; left:12px; width:700px;">
             <img src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
-            <img src="resources/icons/OpenPortGuideLogo_32.png" height="32px" title="<?=$t->tr("OpenPortGuide")?>" onClick="window.open('http://openportguide.org/wiki_/Main_Page')" />
+            <img src="resources/icons/OpenPortGuideLogo_32.png" height="32px" title="<?=$t->tr("OpenPortGuide")?>" onClick="window.open('http://openportguide.de/wiki_/Main_Page')" />
         </div>
         <div id="topmenu" style="position:absolute; top:10px; left:12px;">
             <ul>

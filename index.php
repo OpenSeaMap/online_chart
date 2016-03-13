@@ -876,7 +876,7 @@
                 // Elevation Profile
                 layer_elevation_profile_contours = new OpenLayers.Layer.TMS(
                     'ASTER GDEM Contour Lines (zoom 13-17)',
-                    'http://129.206.74.245:8006/tms_il.ashx?',
+                    'http://korona.geog.uni-heidelberg.de/tiles/asterc/?',
                     {
                         layerId                 : 19,
                         type                    : 'png',
@@ -889,8 +889,8 @@
                     }
                 );
                 layer_elevation_profile_hillshade = new OpenLayers.Layer.TMS(
-                    'ASTER GDEM & SRTM Hillshade (experimental)',
-                    'http://129.206.74.245:8004/tms_hs.ashx?',
+                    'ASTER GDEM & SRTM Hillshade',
+                    'http://korona.geog.uni-heidelberg.de/tiles/asterh/?',
                     {
                         layerId                 : 20,
                         type                    : 'png',
