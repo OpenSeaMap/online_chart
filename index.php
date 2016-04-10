@@ -73,7 +73,7 @@
             var layer_marker;                      // 2
             var layer_seamark;                     // 3
             var layer_sport;                       // 4
-            var layer_gebco_deepshade;             // 5
+//            var layer_gebco_deepshade;             // 5
             var layer_gebco_deeps_gwc;             // 6
             var layer_pois;                        // 7
             var layer_download;                    // 8
@@ -190,7 +190,7 @@
                 layer_grid.setVisibility(gridVisible);
 
                 var gebcoVisible = getCookie("GebcoDepthLayerVisible") === "true"
-                layer_gebco_deepshade.setVisibility(gebcoVisible);
+//                layer_gebco_deepshade.setVisibility(gebcoVisible);
                 layer_gebco_deeps_gwc.setVisibility(gebcoVisible);
 
                 var wikiLayerVisible = getCookie("WikipediaLayerVisible") === "true"
@@ -232,7 +232,7 @@
                 document.getElementById("checkLayerTidalScale").checked             = (layer_tidalscale.getVisibility() === true);
                 document.getElementById("checkLayerSport").checked                  = (layer_sport.getVisibility() === true);
                 document.getElementById("checkLayerGridWGS").checked                = (layer_grid.getVisibility() === true);
-                document.getElementById("checkLayerGebcoDepth").checked             = (layer_gebco_deepshade.getVisibility() === true || layer_gebco_deeps_gwc.getVisibility() === true);
+                document.getElementById("checkLayerGebcoDepth").checked             = (/*layer_gebco_deepshade.getVisibility() === true ||*/ layer_gebco_deeps_gwc.getVisibility() === true);
                 //document.getElementById("checkDownload").checked                    = (layer_download.getVisibility() === true);
                 document.getElementById("checkNauticalRoute").checked               = (layer_nautical_route.getVisibility() === true);
                 document.getElementById("checkLayerWikipedia").checked              = (layer_wikipedia.getVisibility() === true);
@@ -325,12 +325,12 @@
             }
 
             function showGebcoDepth() {
-                if (layer_gebco_deepshade.visibility) {
-                    layer_gebco_deepshade.setVisibility(false);
+                if (layer_gebco_deeps_gwc.visibility) {
+//                    layer_gebco_deepshade.setVisibility(false);
                     layer_gebco_deeps_gwc.setVisibility(false);
                     setCookie("GebcoDepthLayerVisible", "false");
                 } else {
-                    layer_gebco_deepshade.setVisibility(true);
+//                    layer_gebco_deepshade.setVisibility(true);
                     layer_gebco_deeps_gwc.setVisibility(true);
                     setCookie("GebcoDepthLayerVisible", "true");
                 }
@@ -794,12 +794,12 @@
                 layer_sport = new OpenLayers.Layer.TMS("Sport", "http://t1.openseamap.org/sport/",
                     { layerId: 4, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 //GebcoDepth
-                layer_gebco_deepshade = new OpenLayers.Layer.WMS("deepshade", "http:///osm.franken.de:8080/geoserver/wms",
+/*                layer_gebco_deepshade = new OpenLayers.Layer.WMS("deepshade", "http://osm.franken.de:8080/geoserver/gebco/wms",
                     {layers: "gebco:deepshade_2014", projection: new OpenLayers.Projection("EPSG:900913"), format:"image/png", transparent:"true"},
-                    { layerId: 5, isBaseLayer: false, visibility: false, opacity: 0.6, minResolution: 38.22});
+                    { layerId: 5, isBaseLayer: false, visibility: false, opacity: 0.0, minResolution: 76.44});*/
                 layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("deeps_gwc", "http://osm.franken.de:8080/geoserver/gwc/service/wms",
-                    {layers: "gebco_new", format:"image/png"},
-                    { layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.4});
+                    {layers: "gebco_2014", format:"image/png"},
+                    { layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.8});
                 // POI-Layer for harbours
                 layer_pois = new OpenLayers.Layer.Vector("pois", {
                     layerId: 7,
@@ -876,7 +876,7 @@
                 // Elevation Profile
                 layer_elevation_profile_contours = new OpenLayers.Layer.TMS(
                     'ASTER GDEM Contour Lines (zoom 13-17)',
-                    'http://129.206.74.245:8006/tms_il.ashx?',
+                    'http://korona.geog.uni-heidelberg.de/tiles/asterc/?',
                     {
                         layerId                 : 19,
                         type                    : 'png',
@@ -889,8 +889,8 @@
                     }
                 );
                 layer_elevation_profile_hillshade = new OpenLayers.Layer.TMS(
-                    'ASTER GDEM & SRTM Hillshade (experimental)',
-                    'http://129.206.74.245:8004/tms_hs.ashx?',
+                    'ASTER GDEM & SRTM Hillshade',
+                    'http://korona.geog.uni-heidelberg.de/tiles/asterh/?',
                     {
                         layerId                 : 20,
                         type                    : 'png',
@@ -917,7 +917,7 @@
                     layer_bing_aerial,
                     layer_elevation_profile_contours,
                     layer_elevation_profile_hillshade,
-                    layer_gebco_deepshade,
+//                    layer_gebco_deepshade,
                     layer_gebco_deeps_gwc,
                     layer_seamark,
                     layer_grid,
