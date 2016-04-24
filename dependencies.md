@@ -75,12 +75,12 @@ Bing should deliver tiles. (How to test?)
 ## Elevation Profile
 
 ### Contours
-- http://129.206.74.245:8006/tms_il.ashx?x=139&y=84&z=8
+- http://korona.geog.uni-heidelberg.de/tiles/asterc/?x=139&y=84&z=8
 
 Should return an image.
 
 ### Hillshade
-- http://129.206.74.245:8004/tms_hs.ashx?x=139&y=84&z=8
+- http://korona.geog.uni-heidelberg.de/tiles/asterh/?x=139&y=84&z=8
 
 Should return an image.
 
