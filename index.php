@@ -135,7 +135,7 @@
                   // Create Marker, if arguments are given
                   if (mLat != -1 && mLon != -1) {
                       layer_marker = new OpenLayers.Layer.Markers("Marker",{
-                          layerId: 2
+                          layerId: -2 // invalid layerId -> will be ignored by layer visibility setup
                       });
                       map.addLayer(layer_marker);
                       var mtext = he.encode(decodeURIComponent(getArgument("mtext")))
