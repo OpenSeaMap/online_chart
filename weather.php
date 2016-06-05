@@ -594,7 +594,7 @@
         <div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
         <div style="position:absolute; bottom:10px; left:12px; width:700px;">
             <img src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
-            <img src="resources/icons/OpenPortGuideLogo_32.png" height="32px" title="<?=$t->tr("OpenPortGuide")?>" onClick="window.open('http://openportguide.de/wiki_/Main_Page')" />
+            <img src="resources/icons/OpenPortGuideLogo_32.png" height="32px" title="<?=$t->tr("OpenPortGuide")?>" onClick="window.open('http://weather.openportguide.de/')" />
         </div>
         <div id="topmenu" style="position:absolute; top:10px; left:12px;">
             <ul>
