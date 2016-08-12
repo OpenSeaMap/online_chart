@@ -884,7 +884,7 @@
                         displayOutsideMaxExtent : true,
                         isBaseLayer             : false,
                         maxResolution           : 19.109257068634033,
-                        minResolution           : 1.194328566789627,
+//                        minResolution           : 1.194328566789627,
                         visibility              : false
                     }
                 );
@@ -901,6 +901,7 @@
                         visibility              : false
                     }
                 );
+                layer_elevation_profile_hillshade.setOpacity(0.75);
 
                 layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
                     {
