@@ -23,7 +23,18 @@ $utc = new Weather();
 class Weather {
 
     function getWeatherUtc($time) {
-        $value = file_get_contents("http://weather.openportguide.de/tiles/actual/wind_stream/" .$time ."/time.txt");
+      $opts = array(
+        'http'=>array(
+          'method'=>"GET",
+          'header'=>"Referer: http://map.openseamap.org/weather.php"
+        )
+      );
+
+        $value = file_get_contents(
+          "http://weather.openportguide.de/tiles/actual/wind_stream/" .$time ."/time.txt",
+          false,
+          stream_context_create($opts)
+        );
 
         return trim($value);
     }
