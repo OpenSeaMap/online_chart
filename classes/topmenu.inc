@@ -40,7 +40,7 @@
                         <li onClick="showWikipediaLinks(true)"><a><input type="checkbox" id="checkLayerWikipediaThumbnails">&nbsp;Thumbnails</a></li>
                     </ul>
                 </li>
-                <li onClick="showAis()"><a><input type="checkbox" id="checkLayerAis">&nbsp;<?=$t->tr("ais")?></a></li>
+                <li onClick="toggleAis()"><a><input type="checkbox" id="checkLayerAis">&nbsp;<?=$t->tr("ais")?></a></li>
 
                 <li onClick="showWaterDepthTrackPoints(true)">
                   <a onClick="document.getElementById('checkLayerWaterDepthTrackPoints').checked = !document.getElementById('checkLayerWaterDepthTrackPoints').checked">

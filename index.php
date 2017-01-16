@@ -202,7 +202,7 @@
                     map.setBaseLayer(layer_bing_aerial);
                 }
                 if (getCookie("AisLayerVisible") == "true") {
-                    showAis();
+                    toggleAis();
                 }
 
                 var depth10mVisible = getCookie("WaterDepthTrackPointsLayerVisible10m") === "true"
@@ -245,6 +245,7 @@
                 document.getElementById("checkDepthContours").checked                   = (layer_waterdepth_contours.getVisibility() === true);
                 document.getElementById("checkLayerElevationProfile").checked       = (layer_elevation_profile_contours.getVisibility() === true || layer_elevation_profile_hillshade.getVisibility() === true);
 
+                showAis()
                 createPermaLink();
             }
 
@@ -356,15 +357,22 @@
                 }
             }
 
-            function showAis() {
+            function toggleAis() {
                 if (layer_ais.visibility) {
                     layer_ais.setVisibility(false);
-                    document.getElementById("license_marine_traffic").style.display = 'none';
-                    setCookie("AisLayerVisible", "false");
                 } else {
                     layer_ais.setVisibility(true);
+                }
+                showAis()
+            }
+
+            function showAis() {
+                if (layer_ais.visibility) {
                     document.getElementById("license_marine_traffic").style.display = 'inline';
                     setCookie("AisLayerVisible", "true");
+                } else {
+                  document.getElementById("license_marine_traffic").style.display = 'none';
+                  setCookie("AisLayerVisible", "false");
                 }
             }
 
