@@ -80,7 +80,7 @@
                   <a href="http://openseamap.org"><strong>Download</strong></a>
                 </li>
             <li>
-              <a href="http://wiki.openstreetmap.org/wiki/KAP-charts_from_OpenSeaMap" target="_blank">OpenCPN (Kap)</a>
+              <a href="https://downloadlayer--onlinechart-ol3.netlify.com" target="_blank">OpenCPN (Kap)</a>
             </li>
                 <li>
                   <a href="http://wiki.openstreetmap.org/wiki/DE:OpenSeaMap_and_Garmin_nautical_chart_plotter#Download" target="_blank">Garmin</a>
