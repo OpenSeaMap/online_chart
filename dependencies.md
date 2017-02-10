@@ -55,7 +55,7 @@ Should return a ```text/javascript``` file that should call a function ```putTid
 ### Information in the popup
 
 #### Weather
-- http://openportguide.org/cgi-bin/weather/weather.pl/weather.png?var=meteogram&nx=614&ny=750
+- http://weather.openportguide.de/cgi-bin/weather.pl/weather.png?var=meteogram&nx=614&ny=750
 
 Should return a ```image/png```.
 
