@@ -42,7 +42,7 @@ function ajax(url, callback, infotext) {
 }
 
 function nominatim(searchtext) {
-    var url='./api/nominatim.php?q='+searchtext;
+    var url='https://nominatim.openstreetmap.org/search?format=xml&q='+encodeURIComponent(searchtext); 
     ajax(url, nominatim_callback, infotext=searchtext);
 }
 
