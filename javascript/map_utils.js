@@ -113,6 +113,24 @@ function shorter_coord(coord) {
     return Math.round(coord*100000)/100000;
 }
 
+/**
+ * Centers the map to a location the user searched for and selected. The location is marked with a pin.
+ */
+function jumpToSearchedLocation(longitude, latitude) {
+
+    /**
+     *  The user has previously searched and selected a location. A marker already exists on the map for that location.
+     *  I remove that marker.
+     */
+    if (searchedLocationMarker !== null) {
+        layer_marker.removeMarker(searchedLocationMarker);
+    }
+    // I add a market at the location the user searched for.
+    searchedLocationMarker = addMarker(layer_marker, longitude, latitude, -1);
+
+    // I center the map at the searched location.
+    jumpTo(longitude, latitude, zoom)
+}
 
 // Common utilities------------------------------------------------------------
 function jumpTo(lon, lat, zoom) {
@@ -205,6 +223,8 @@ function addMarker(layer, buffLon, buffLat, popupContentHTML) {
         marker.events.register("mousedown", mFeature, markerClick);
         map.addPopup(mFeature.createPopup(mFeature.closeBox));
     }
+
+    return marker;
 }
 
 // Vector layer utilities------------------------------------------------------

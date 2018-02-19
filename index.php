@@ -107,6 +107,9 @@
                 ignoredLayers : ignoredLayers
             });
 
+            // Marker that is pinned at the last location the user searched for and selected.
+            var searchedLocationMarker = null;
+
             // Load map for the first time
             function init() {
                 var buffZoom = parseInt(getCookie("zoom"));
@@ -131,13 +134,14 @@
                     lon = mLon;
                 }
                 drawmap();
+                layer_marker = new OpenLayers.Layer.Markers("Marker",{
+                    layerId: -2 // invalid layerId -> will be ignored by layer visibility setup
+                });
+                map.addLayer(layer_marker);
                 try{
                   // Create Marker, if arguments are given
                   if (mLat != -1 && mLon != -1) {
-                      layer_marker = new OpenLayers.Layer.Markers("Marker",{
-                          layerId: -2 // invalid layerId -> will be ignored by layer visibility setup
-                      });
-                      map.addLayer(layer_marker);
+
                       var mtext = he.encode(decodeURIComponent(getArgument("mtext")))
                                     .replace(/\n/g, '<br/>');
                       mtext = mtext.replace('&#x3C;b&#x3E;', '<b>')
@@ -707,7 +711,7 @@
                     pos = buff.indexOf(",");
                     placeName = buff.substring(0, pos);
                     description = buff.substring(pos +1).trim();
-                    htmlText += "<tr style=\"cursor:pointer;\" onmouseover=\"this.style.backgroundColor = '#ADD8E6';\"onmouseout=\"this.style.backgroundColor = '#FFF';\" onclick=\"jumpTo(" + placeLon + ", " + placeLat + ", " + zoom + ");\"><td  valign=\"top\"><b>" + placeName + "</b></td><td>" + description + "</td></tr>";
+                    htmlText += "<tr style=\"cursor:pointer;\" onmouseover=\"this.style.backgroundColor = '#ADD8E6';\"onmouseout=\"this.style.backgroundColor = '#FFF';\" onclick=\"jumpToSearchedLocation(" + placeLon + ", " + placeLat + ");\"><td  valign=\"top\"><b>" + placeName + "</b></td><td>" + description + "</td></tr>";
                 }
                 htmlText += "<tr><td>&nbsp;</td><td align=\"right\"><br/><input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeActionDialog();\"></td></tr></table>";
                 showActionDialog(htmlText);
