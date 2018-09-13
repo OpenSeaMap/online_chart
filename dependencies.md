@@ -93,7 +93,7 @@ Should return a ```image/png```.
 
 Queries data via api/proxy-wikipedia.php
 
-- https://tools.wmflabs.org/wp-world/marks.php
+- https://tools.wmflabs.org/wp-world/marks.php?LANG=de&thumbs=no&bbox=12.656675230712,52.397588924959,14.056264769288,52.681032976365
 
 Should return a kml file.
 
