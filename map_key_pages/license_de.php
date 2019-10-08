@@ -29,7 +29,7 @@
     </tr>
     <tr>
         <td><img alt="OSM-Logo" src="resources/icons/OpenPortGuideLogo_32.png" height="44" border="0"></td>
-        <td>Alle Wetterinformationen entstammen dem <a href="http://openportguide.org/wiki_/Main_Page" target="_blank">OpenPortGuide-Projekt</a>.</td>
+        <td>Alle Wetterinformationen entstammen dem <a href="http://openportguide.org/index.php/de/" target="_blank">OpenPortGuide-Projekt</a>.</td>
     </tr>
     <tr>
         <td height="5" class="normal" colspan="2">
