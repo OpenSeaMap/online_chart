@@ -80,7 +80,7 @@ function NauticalRoute_DownloadTrack() {
     var mimetype, filename;
 
     if (name=="") {
-        name = "doute";
+        name = "route";
     }
 
     switch (format) {
