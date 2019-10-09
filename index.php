@@ -581,7 +581,7 @@
                 var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
                 htmlText += "<img src=\"./resources/action/info.png\"  width=\"17\" height=\"17\" onClick=\"showMapKey('help-trip-planner');\"/>&nbsp;";
                 htmlText += "<img src=\"./resources/action/close.gif\" onClick=\"closeNauticalRoute();\"/></div>";
-                htmlText += "<h3><?=$t->tr("tripPlanner")?>:</h3><br/>";
+                htmlText += "<h3><?=$t->tr("tripPlanner")?>: <input type=\"text\" id=\"tripName\" size=\"20\"></h3><br/>";
                 htmlText += "<table border=\"0\" width=\"370px\">";
                 htmlText += "<tr><td><?=$t->tr("start")?></td><td id=\"routeStart\">- - -</td></tr>";
                 htmlText += "<tr><td><?=$t->tr("finish")?></td><td id=\"routeEnd\">- - -</td></tr>";

@@ -76,27 +76,32 @@ function NauticalRoute_editMode() {
 
 function NauticalRoute_DownloadTrack() {
     var format = document.getElementById("routeFormat").value;
+    var name   = document.getElementById("tripName").value;
     var mimetype, filename;
+
+    if (name=="") {
+        name = "doute";
+    }
 
     switch (format) {
         case 'CSV':
             mimetype = 'text/csv';
-            filename = 'route.csv';
+            filename = name+'.csv';
             content = NauticalRoute_getRouteCsv(routeTrack);
             break;
         case 'KML':
             mimetype = 'application/vnd.google-earth.kml+xml';
-            filename = 'route.kml';
+            filename = name+'.kml';
             content = NauticalRoute_getRouteKml(routeTrack);
             break;
         case 'GPX':
             mimetype = 'application/gpx+xml';
-            filename = 'route.gpx';
+            filename = name+'.gpx';
             content = NauticalRoute_getRouteGpx(routeObject);
             break;
         case 'GML':
             mimetype = 'application/gml+xml';
-            filename = 'route.gml';
+            filename = name+'.gml';
             content = NauticalRoute_getRouteGml(routeObject);
             break;
     }
