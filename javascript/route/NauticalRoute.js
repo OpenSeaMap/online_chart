@@ -172,7 +172,7 @@ function NauticalRoute_getPoints(points) {
     var latA, latB, lonA, lonB, distance, bearing;
     var totalDistance = 0;
     var distUnits = document.getElementById("distUnits").value;
-    var coordFormat = function(lat,lon) {return (lat >= 0 ? 'N' : 'S') + format2FixedLenght(lat,10,6) + " - " +  (lon >= 0 ? 'E' : 'W') + format2FixedLenght(lon,10,6);}
+    var coordFormat = function(lat,lon) {return (lat >= 0 ? 'N' : 'S') + format2FixedLenght(Math.abs(lat),10,6) + " - " +  (lon >= 0 ? 'E' : 'W') + format2FixedLenght(Math.abs(lon),10,6);}
 
     if (document.getElementById("coordFormat").value == "coordFormatdms") {
         coordFormat = function(lat,lon) {return (lat >= 0 ? 'N' : 'S') + dms(lat) + " - " +  (lon >= 0 ? 'E' : 'W') + dms(lon);}
