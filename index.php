@@ -1159,6 +1159,7 @@
         <div id="actionDialog">
             <br>&nbsp;not found&nbsp;<br>&nbsp;
         </div>
+        <img id="compassRose" src="./resources/map/nautical_compass_rose_geo_north.svg"/>
         <?php include('classes/topmenu.inc'); ?>
         <?php include('classes/footer.inc'); ?>
     </body>

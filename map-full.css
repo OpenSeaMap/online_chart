@@ -36,6 +36,14 @@ img {
     padding: 5px;
 }
 
+#compassRose {
+    position:absolute;
+    top:200px;
+    left:500px;
+    size: 5cm;
+    visibility:hidden;
+}
+
 #routeEditPanel {
     float: left;
     display:block;
