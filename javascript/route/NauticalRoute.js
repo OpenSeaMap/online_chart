@@ -178,8 +178,12 @@ function NauticalRoute_getPoints(points) {
         coordFormat = function(lat,lon) {return (lat >= 0 ? 'N' : 'S') + dms(lat) + " - " +  (lon >= 0 ? 'E' : 'W') + dms(lon);}
     }
 
-    htmlText = "<br/><table>";
-    htmlText += "<tr bgcolor=\"#CCCCCC\"><td width=\"20\" align=\"center\"></td><td width=\"60\" align=\"center\">" + tableTextNauticalRouteCourse + "</td><td width=\"70\" align=\"center\">" + tableTextNauticalRouteDistance + "</td><td width=\"200\" align=\"center\">" + tableTextNauticalRouteCoordinate + "</td></tr>"
+    htmlText = '<table id="routeSegmentList">';
+    htmlText +=
+        '<tr><th/>' +
+        '<th>' + tableTextNauticalRouteCourse + '</th>' +
+        '<th>' + tableTextNauticalRouteDistance + '</th>' +
+        '<th>' + tableTextNauticalRouteCoordinate + '</th></tr>'
     for(i = 0; i < points.length - 1; i++) {
         latA = y2lat(points[i].y);
         lonA = x2lon(points[i].x);
@@ -191,10 +195,10 @@ function NauticalRoute_getPoints(points) {
         }
         bearing = getBearing(latA, latB, lonA, lonB);
         totalDistance += distance;
-        htmlText += "<tr><td width=\"20\" align=\"right\">" + parseInt(i+1) + ". </td>";
-        htmlText += "<td width=\"60\" align=\"right\">" + bearing.toFixed(2) + "°</td>";
-        htmlText += "<td width=\"70\" align=\"right\">" + distance.toFixed(2) + distUnits + "</td>";
-        htmlText += "<td width=\"200\" align=\"right\">" + coordFormat(latB,lonB) + "</td></tr>";
+        htmlText += "<tr><td>" + parseInt(i+1) + ". </td>";
+        htmlText += "<td>" + bearing.toFixed(2) + "°</td>";
+        htmlText += "<td>" + distance.toFixed(2) + ' ' + distUnits + "</td>";
+        htmlText += "<td>" + coordFormat(latB,lonB) + "</td></tr>";
     }
     htmlText += "</table>"
 

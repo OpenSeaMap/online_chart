@@ -22,4 +22,24 @@
     background-color: #ADD8E6;
 }
 
+td#routePoints {
+    overflow-y: scroll;
+    height: 100px;
+}
 
+table#routeSegmentList th {
+    background-color: #CCCCCC;
+    text-align: center;
+}
+
+table#routeSegmentList td {
+    text-align: right;
+}
+
+table#routeSegmentList th,td:nth-child(1) { width: 20; } /* segment # */
+table#routeSegmentList th,td:nth-child(2) { width: 60; } /* course */
+table#routeSegmentList th,td:nth-child(3) { width: 70; } /* distance */
+table#routeSegmentList th,td:nth-child(4) { width: 200; } /* coordinates */
+
+/* even/odd coloring */
+table#routeSegmentList tr:nth-child(even) { background-color: #ececec; }
