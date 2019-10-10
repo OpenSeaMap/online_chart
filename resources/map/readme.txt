@@ -1,0 +1,1 @@
+The file compass rose is reused from https://commons.wikimedia.org/wiki/File:Modern_nautical_compass_rose.svg
