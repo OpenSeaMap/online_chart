@@ -158,28 +158,49 @@ function NauticalRoute_routeModified(event) {
     NauticalRoute_getPoints(routeTrack);
 }
 
+function dms(x)
+{
+    var lat_m = Math.abs(x*60).toFixed(3);
+    var lat_d = Math.floor (lat_m/60);
+    lat_m -= lat_d*60;
+
+    return lat_d + "°" + format2FixedLenght(lat_m, 6, 3) + "'";
+}
+
 function NauticalRoute_getPoints(points) {
-    var htmlText = "<br/><table>";
+    var htmlText;
     var latA, latB, lonA, lonB, distance, bearing;
     var totalDistance = 0;
+    var distUnits = document.getElementById("distUnits").value;
+    var coordFormat = function(lat,lon) {return (lat >= 0 ? 'N' : 'S') + format2FixedLenght(lat,10,6) + " - " +  (lon >= 0 ? 'E' : 'W') + format2FixedLenght(lon,10,6);}
+
+    if (document.getElementById("coordFormat").value == "coordFormatdms") {
+        coordFormat = function(lat,lon) {return (lat >= 0 ? 'N' : 'S') + dms(lat) + " - " +  (lon >= 0 ? 'E' : 'W') + dms(lon);}
+    }
+
+    htmlText = "<br/><table>";
     htmlText += "<tr bgcolor=\"#CCCCCC\"><td width=\"20\" align=\"center\"></td><td width=\"60\" align=\"center\">" + tableTextNauticalRouteCourse + "</td><td width=\"70\" align=\"center\">" + tableTextNauticalRouteDistance + "</td><td width=\"200\" align=\"center\">" + tableTextNauticalRouteCoordinate + "</td></tr>"
-    document.getElementById("routeStart").innerHTML = lat2DegreeMinute(y2lat(points[0].y)) + " - " + lon2DegreeMinute(x2lon(points[0].x));
     for(i = 0; i < points.length - 1; i++) {
         latA = y2lat(points[i].y);
         lonA = x2lon(points[i].x);
         latB = y2lat(points[i + 1].y);
         lonB = x2lon(points[i + 1].x);
-        distance = getDistance(latA, latB, lonA, lonB).toFixed(2);
-        bearing = getBearing(latA, latB, lonA, lonB).toFixed(2);
-        totalDistance += parseFloat(distance);
+        distance = getDistance(latA, latB, lonA, lonB);
+        if (distUnits == "km") {
+            distance = nm2km(distance);
+        }
+        bearing = getBearing(latA, latB, lonA, lonB);
+        totalDistance += distance;
         htmlText += "<tr><td width=\"20\" align=\"right\">" + parseInt(i+1) + ". </td>";
-        htmlText += "<td width=\"60\" align=\"right\">" + bearing + "°</td>";
-        htmlText += "<td width=\"70\" align=\"right\">" + distance + "nm</td>";
-        htmlText += "<td width=\"200\" align=\"right\">" + lat2DegreeMinute(latB) + " - " + lon2DegreeMinute(lonB) + "</td></tr>";
+        htmlText += "<td width=\"60\" align=\"right\">" + bearing.toFixed(2) + "°</td>";
+        htmlText += "<td width=\"70\" align=\"right\">" + distance.toFixed(2) + distUnits + "</td>";
+        htmlText += "<td width=\"200\" align=\"right\">" + coordFormat(latB,lonB) + "</td></tr>";
     }
     htmlText += "</table>"
-    document.getElementById("routeEnd").innerHTML = lat2DegreeMinute(latB) + " - " + lon2DegreeMinute(lonB);
-    document.getElementById("routeDistance").innerHTML = totalDistance.toFixed(2) + "nm";
+
+    document.getElementById("routeStart").innerHTML = coordFormat(y2lat(points[0].y),x2lon(points[0].x));
+    document.getElementById("routeEnd").innerHTML   = coordFormat(y2lat(points[points.length-1].y),x2lon(points[points.length-1].x));
+    document.getElementById("routeDistance").innerHTML = totalDistance.toFixed(2) + distUnits;
     document.getElementById("routePoints").innerHTML = htmlText;
 }
 

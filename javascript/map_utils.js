@@ -86,6 +86,10 @@ function km2nm(a) {
     return a * 0.540;
 }
 
+function nm2km(a) {
+    return a / 0.540;
+}
+
 function lat2DegreeMinute(buffLat) {
     var ns = buffLat >= 0 ? 'N' : 'S';
     var lat_m = Math.abs(buffLat*60).toFixed(3);
