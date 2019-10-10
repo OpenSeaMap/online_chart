@@ -22,9 +22,8 @@
     background-color: #ADD8E6;
 }
 
-td#routePoints {
-    overflow-y: scroll;
-    height: 100px;
+table#routeSegmentList {
+    height:120px; overflow-y:auto;
 }
 
 table#routeSegmentList th {
