@@ -67,11 +67,14 @@
         <li>
             <a><img alt="tools" src="./resources/action/tools.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("tools")?></a>
             <ul class="sub_menu">
-				        <li data-tools="permalink">
+		        <li data-tools="permalink">
                     <a><input type="checkbox" id="checkPermalink">&nbsp;<img alt="permalink" src="./resources/action/permalink-32x.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("permalinks")?></a>
                 </li>
                 <li data-tools="nautical_route">
                     <a><input type="checkbox" id="checkNauticalRoute">&nbsp;<img alt="route" src="./resources/action/route-32px.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("tripPlanner")?></a>
+                </li>
+                <li data-tools="compassRose">
+                    <a><input type="checkbox" id="checkCompassroseGeoNorth">&nbsp;<?=$t->tr("compassRose")?></a>
                 </li>
 <!--                    <li data-tools="download">
                         <a><input type="checkbox" id="checkDownload">&nbsp;<img alt="download" src="./resources/action/download.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("downloadChart")?></a>

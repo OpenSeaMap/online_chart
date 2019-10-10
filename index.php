@@ -224,6 +224,9 @@
                 var profileVisible = getCookie("ElevationProfileLayerVisible") === "true"
                 layer_elevation_profile_contours.setVisibility(profileVisible);
                 layer_elevation_profile_hillshade.setVisibility(profileVisible);
+
+                var compassVisible = getCookie("CompassroseGeoNorthVisible") === "true"
+                document.getElementById("compassRose").style.visibility = (compassVisible ? 'visible':'hidden');
             }
 
             function resetLayerCheckboxes()
@@ -248,6 +251,7 @@
                 setWaterDepthBoxes();
                 document.getElementById("checkDepthContours").checked                   = (layer_waterdepth_contours.getVisibility() === true);
                 document.getElementById("checkLayerElevationProfile").checked       = (layer_elevation_profile_contours.getVisibility() === true || layer_elevation_profile_hillshade.getVisibility() === true);
+                document.getElementById("checkCompassroseGeoNorth").checked         = (document.getElementById("compassRose").style.visibility === 'visible');
 
                 createPermaLink();
             }
@@ -256,6 +260,16 @@
             function showMapKey(item) {
                 legendWindow = window.open("legend.php?lang=" + language + "&page=" + item, "MapKey", "width=760, height=680, status=no, scrollbars=yes, resizable=yes");
                 legendWindow.focus();
+            }
+
+            function toggleCompassrose(show) {
+                if (show) {
+                    document.getElementById("compassRose").style.visibility = 'visible';
+                    setCookie("CompassroseGeoNorthVisible", "true");
+                } else {
+                    document.getElementById("compassRose").style.visibility = 'hidden';
+                    setCookie("CompassroseGeoNorthVisible", "false");
+                }
             }
 
             function showSeamarks() {
@@ -1097,17 +1111,26 @@
                     case 'download':
                         toggleNauticalRoute(false);
                         togglePermalink(false);
+                        toggleCompassrose(false);
                         toggleMapDownload(activate);
                         break;
                     case 'nautical_route':
                         toggleMapDownload(false);
                         togglePermalink(false);
+                        toggleCompassrose(false);
                         toggleNauticalRoute(activate);
                         break;
                     case 'permalink':
                         toggleMapDownload(false);
                         toggleNauticalRoute(false);
+                        toggleCompassrose(false);
                         togglePermalink(activate);
+                        break;
+                    case 'compassRose':
+                        toggleMapDownload(false);
+                        toggleNauticalRoute(false);
+                        togglePermalink(false);
+                        toggleCompassrose(activate);
                         break;
                     default:
                         break;
