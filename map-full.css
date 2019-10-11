@@ -37,10 +37,10 @@ img {
 }
 
 #compassRose {
-    position:absolute;
-    top:200px;
-    left:500px;
-    size: 5cm;
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+    width: 50%;
     visibility:hidden;
 }
 
