@@ -36,12 +36,24 @@ img {
     padding: 5px;
 }
 
+/* geo north image is 301x301, mag north image is 200x200 */
 #compassRose {
     position: absolute;
-    bottom: 10%;
-    right: 10%;
-    width: 50%;
+    bottom: 20%;
+    right:  10%;
+    width: 301px; height: 301px;
     visibility:hidden;
+}
+
+#geoCompassRose {
+/*    width:301; height:301; */
+    position:absolute; left:0px; bottom:0px;
+}
+
+#magCompassRose {
+/*    width:200; height:200; */
+    position: absolute; left:27px; bottom:24px;
+    transform: rotate(0deg);
 }
 
 #routeEditPanel {

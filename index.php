@@ -225,7 +225,7 @@
                 layer_elevation_profile_contours.setVisibility(profileVisible);
                 layer_elevation_profile_hillshade.setVisibility(profileVisible);
 
-                var compassVisible = getCookie("CompassroseGeoNorthVisible") === "true"
+                var compassVisible = getCookie("CompassroseVisible") === "true"
                 document.getElementById("compassRose").style.visibility = (compassVisible ? 'visible':'hidden');
             }
 
@@ -262,13 +262,14 @@
                 legendWindow.focus();
             }
 
+            // this is called toggleXXX for consistency with other code. It does not actually toggle anything.
             function toggleCompassrose(show) {
                 if (show) {
                     document.getElementById("compassRose").style.visibility = 'visible';
-                    setCookie("CompassroseGeoNorthVisible", "true");
+                    setCookie("CompassroseVisible", "true");
                 } else {
                     document.getElementById("compassRose").style.visibility = 'hidden';
-                    setCookie("CompassroseGeoNorthVisible", "false");
+                    setCookie("CompassroseVisible", "false");
                 }
             }
 
@@ -1182,7 +1183,11 @@
         <div id="actionDialog">
             <br>&nbsp;not found&nbsp;<br>&nbsp;
         </div>
-        <img id="compassRose" src="./resources/map/nautical_compass_rose_geo_north.svg"/>
+        <div id="compassRose">
+            <img id="geoCompassRose" src="./resources/map/nautical_compass_rose_geo_north.png">
+            <img id="magCompassRose" src="./resources/map/nautical_compass_rose_mag_north.png">
+        </img>
+        </div>
         <?php include('classes/topmenu.inc'); ?>
         <?php include('classes/footer.inc'); ?>
     </body>
