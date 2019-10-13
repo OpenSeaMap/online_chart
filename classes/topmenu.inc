@@ -74,7 +74,7 @@
                     <a><input type="checkbox" id="checkNauticalRoute">&nbsp;<img alt="route" src="./resources/action/route-32px.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("tripPlanner")?></a>
                 </li>
                 <li data-tools="compassRose">
-                    <a><input type="checkbox" id="checkCompassroseGeoNorth">&nbsp;<?=$t->tr("compassRose")?></a>
+                    <a><input type="checkbox" id="checkCompassroseGeoNorth">&nbsp;<img alt="route" src="./resources/action/nautical_compass_rose_icon.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("compassRose")?></a>
                 </li>
 <!--                    <li data-tools="download">
                         <a><input type="checkbox" id="checkDownload">&nbsp;<img alt="download" src="./resources/action/download.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("downloadChart")?></a>
