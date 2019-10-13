@@ -34,6 +34,7 @@
         <script type="text/javascript" src="./javascript/satpro.js"></script>
         <script type="text/javascript" src="./javascript/lib/he.js"></script>
         <script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script>
+        <script type="text/javascript" src="./javascript/mag_deviation.js"></script>
         <script type="text/javascript">
 
             var map;
@@ -267,6 +268,7 @@
                 if (show) {
                     document.getElementById("compassRose").style.visibility = 'visible';
                     setCookie("CompassroseVisible", "true");
+                    refreshMagdev();
                 } else {
                     document.getElementById("compassRose").style.visibility = 'hidden';
                     setCookie("CompassroseVisible", "false");
@@ -1022,6 +1024,7 @@
                 // Set cookie for remembering lat lon values
                 setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
                 setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
+
                 // Update harbour layer
                 if (layer_pois.getVisibility() === true) {
                     refreshHarbours();
@@ -1029,6 +1032,10 @@
                 // Update tidal scale layer
                 if (layer_tidalscale.getVisibility() === true) {
                     refreshTidalScales();
+                }
+                // Update magnetic deviation
+                if (document.getElementById("compassRose").style.visibility === 'visible') {
+                    refreshMagdev();
                 }
             }
 
