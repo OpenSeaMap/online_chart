@@ -732,7 +732,7 @@
                         permalinkControl,
                         new OpenLayers.Control.Navigation(),
                         //new OpenLayers.Control.LayerSwitcher(), //only for debugging
-                        new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: '40'}),
+                        new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: '40', geodesic: true}),
                         new OpenLayers.Control.MousePositionDM(),
                         new OpenLayers.Control.OverviewMap(),
                         ZoomBar
