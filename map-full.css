@@ -56,6 +56,22 @@ img {
     transform: rotate(0deg);
 }
 
+#magCompassText {
+    position: absolute; left:128px; bottom: 112px;
+    color: #e50083;
+    font-size: 9px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    align-content: center;
+}
+
+#magCompassTextTop {
+    position: relative; left:-50%; bottom: 20px;
+}
+
+#magCompassTextBottom {
+    position: relative; left:-50%; bottom: -20px;
+}
+
 #routeEditPanel {
     float: left;
     display:block;

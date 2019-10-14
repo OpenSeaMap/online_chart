@@ -29,9 +29,23 @@ function setMagdev(p) {
     let latitude = (p.b+p.t)/2;
     let longitude = (p.l+p.r)/2;
 
-    let myGeoMag = geoMag(latitude, longitude);
-    let deviation = -myGeoMag.dec;
-    document.getElementById('magCompassRose').style.transform = 'rotate('+deviation.toFixed(1)+'deg)';
+    // get two dates exactly one year apart
+    const msInYear = 1000*60*60*24*365.25;
+    let now  = new Date();
+    let then = new Date(); then.setTime(now.getTime() + msInYear);
+
+    let myGeoMagNow = geoMag(latitude, longitude, 0, now);
+    let myGeoMagThen = geoMag(latitude, longitude, 0, then);
+    let nextyear = (then.getTime()-now.getTime())/msInYear;
+    let deviation = myGeoMagNow.dec;
+    let change = (myGeoMagThen.dec-myGeoMagNow.dec) / nextyear;
+
+    document.getElementById('magCompassRose').style.transform = 'rotate('+(-deviation).toFixed(1)+'deg)';
+    // EXAMPLE
+    // VAR 3.5°5'E (2015)
+    // ANNUAL DECREASE 8'
+    $('#magCompassTextTop').html("VAR "+deviation.toFixed(1)+(deviation>=0 ? "E":"W")+" ("+now.getFullYear()+")");
+    $('#magCompassTextBottom').html("ANNUAL "+(change >= 0 ? "INCREASE ":"DECREASE ")+(60*change).toFixed(0)+"'");
 }
 
 // Downloads new magnetic deviation(s) from the server. This is called when the map moves.
