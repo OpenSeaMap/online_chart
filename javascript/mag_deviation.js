@@ -26,8 +26,8 @@ let geoMag ;
 function setMagdev(p) {
     // pick the right bottom corner of the map to avoid problems with interpolating
     // across the date boundary
-    let latitude = p.b;
-    let longitude = p.r;
+    let latitude = (p.b+p.t)/2;
+    let longitude = (p.l+p.r)/2;
 
     let myGeoMag = geoMag(latitude, longitude);
     let deviation = -myGeoMag.dec;
