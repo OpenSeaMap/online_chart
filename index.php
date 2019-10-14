@@ -229,7 +229,7 @@
                 layer_elevation_profile_hillshade.setVisibility(profileVisible);
 
                 var compassVisible = getCookie("CompassroseVisible") === "true"
-                document.getElementById("compassRose").style.visibility = (compassVisible ? 'visible':'hidden');
+                toggleCompassrose(compassVisible);
             }
 
             function resetLayerCheckboxes()
