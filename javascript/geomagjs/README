@@ -1,0 +1,34 @@
+Online demo: http://cmweiss.github.io/geomagjs/geomag.htm
+
+Adapted from the geomagc software and World Magnetic Model of the NOAA Satellite and Information Service, National Geophysical Data Center
+http://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+
+geoMagFactory() requires a world magnetic model (WMM) object. The helper function cof2Obj(), available in cof2Obj.js, takes the text of WMM.COF and returns an object suitable for geoMagFactory(). A syncronous XMLHttpRequest to fetch the WMM.COF is recommended in a web environment. The helper function syncXHR(), available in syncXHR.js, takes the url of the WMM.COF file and returns the WMM.COF file as text.
+
+Usage:
+geoMagFactory(wmm) returns a function which can compute the Earth's magnetic field.
+The returned function requires two arguments, latitude and longitude (in decimal degrees), and, optionally, altitude in feet (default is 0), and a date object (default is the current system time).
+
+var cof = syncXHR('http://host/path/WMM.COF'),
+    wmm = cof2Obj(cof),
+    geoMag = geoMagFactory(wmm),
+    latitude = 40.0,                // decimal degrees (north is positive)
+    longitude = -80.0,              // decimal degrees (east is positive)
+    altitude = 0,                   // feet (optional, default is 0)
+    time = new Date(2012, 4, 20),   // optional, default is the current system time
+    myGeoMag = geoMag(latitude,longitude,altitude,time),
+    magneticVariation = myGeoMag.dec,   // Geomagnetic declination (variation)
+                                        // in decimal degrees
+                                        // -- east is positive
+    magneticDip = myGeoMag.dip, // Geomagnetic dip in decimal degrees
+                                // (down is positive)
+    magneticFieldIntensity = myGeoMag.ti,   // Total Intensity of the
+                                            // geomagnetic field in  nanoteslas
+    magneticBH = myGeoMag.bh,   // Horizontal Intensity of the geomagnetic
+                                // field in nT
+    magneticBX = myGeoMag.bx,   // North Component of the geomagnetic field in nT
+    magneticBY = myGeoMag.by,   // East Component of the geomagnetic field in nT
+    magneticBZ = myGeoMag.bz,   // Vertical Component of the geomagnetic field
+                                // (down is positive)
+    lat = myGeoMag.lat, // input latitude
+    lon = myGeoMag.lon; // input longitude
