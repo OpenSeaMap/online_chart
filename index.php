@@ -1193,9 +1193,8 @@
             <br>&nbsp;not found&nbsp;<br>&nbsp;
         </div>
         <div id="compassRose">
-            <img id="geoCompassRose" src="./resources/map/nautical_compass_rose_geo_north.png">
-            <img id="magCompassRose" src="./resources/map/nautical_compass_rose_mag_north.png">
-        </img>
+            <img id="geoCompassRose" src="./resources/map/nautical_compass_rose_geo_north.png"/>
+            <img id="magCompassRose" src="./resources/map/nautical_compass_rose_mag_north.png"/>
         </div>
         <?php include('classes/topmenu.inc'); ?>
         <?php include('classes/footer.inc'); ?>
