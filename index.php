@@ -34,6 +34,8 @@
         <script type="text/javascript" src="./javascript/satpro.js"></script>
         <script type="text/javascript" src="./javascript/lib/he.js"></script>
         <script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script>
+        <script type="text/javascript" src="./javascript/geomagjs/cof2Obj.js"></script>
+        <script type="text/javascript" src="./javascript/geomagjs/geomag.js"></script>
         <script type="text/javascript" src="./javascript/mag_deviation.js"></script>
         <script type="text/javascript">
 
