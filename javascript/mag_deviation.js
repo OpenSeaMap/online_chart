@@ -1,3 +1,4 @@
+"use strict";
 /******************************************************************************
  Copyright 2019 Wolfgang Schildbach
 
@@ -20,29 +21,31 @@
  ******************************************************************************/
 
 // the geomagnetic model. This gets set up at application start
-var geoMag ;
+let geoMag ;
 
 function setMagdev(p) {
-    var latitude = (p.b+p.t)/2;
-    var longitude = (p.l+p.r)/2;
-    myGeoMag = geoMag(latitude, longitude);
-    deviation = -myGeoMag.dec;
+    // pick the right bottom corner of the map to avoid problems with interpolating
+    // across the date boundary
+    let latitude = p.b;
+    let longitude = p.r;
+
+    let myGeoMag = geoMag(latitude, longitude);
+    let deviation = -myGeoMag.dec;
     document.getElementById('magCompassRose').style.transform = 'rotate('+deviation.toFixed(1)+'deg)';
 }
 
-function initModel(data) {
-    var wmm = cof2Obj(data);
-    geoMag = geoMagFactory(wmm);
-    setMagdev($(this)[0]);
-}
-
-// Downloads new magnetic deviation(s) from the server.
+// Downloads new magnetic deviation(s) from the server. This is called when the map moves.
 function refreshMagdev() {
-    bounds = map.getExtent().toArray();
-
-    var params = { "b": y2lat(bounds[1]), "t": y2lat(bounds[3]), "l": y2lat(bounds[0]), "r": y2lat(bounds[2])};
+    let bounds = map.getExtent().toArray();
+    let params = { "b": y2lat(bounds[1]), "t": y2lat(bounds[3]), "l": x2lon(bounds[0]), "r": x2lon(bounds[2])};
 
     if (geoMag == undefined) {
+        function initModel(data) {
+            var wmm = cof2Obj(data);
+            geoMag = geoMagFactory(wmm);
+            setMagdev($(this)[0]);
+        }
+
         /* if the geomagnetic model has not been loaded yet, load it and update the deviation asynchronously */
         jQuery.ajax({
             url:"javascript/geomagjs/WMM.COF",
