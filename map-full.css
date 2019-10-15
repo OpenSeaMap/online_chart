@@ -61,7 +61,8 @@ img {
     color: #e50083;
     font-size: 9px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    align-content: center;
+    width: 100px;
+    text-align: center;
 }
 
 #magCompassTextTop {
