@@ -161,7 +161,7 @@ function NauticalRoute_routeModified(event) {
     NauticalRoute_getPoints(routeTrack);
 }
 
-routeChanged = false;
+let routeChanged = false;
 
 function NauticalRoute_getPoints(points) {
 
