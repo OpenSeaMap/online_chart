@@ -158,14 +158,7 @@ function NauticalRoute_routeModified(event) {
     NauticalRoute_getPoints(routeTrack);
 }
 
-function dms(x)
-{
-    var lat_m = Math.abs(x*60).toFixed(3);
-    var lat_d = Math.floor (lat_m/60);
-    lat_m -= lat_d*60;
 
-    return lat_d + "°" + format2FixedLenght(lat_m, 6, 3) + "'";
-}
 
 function NauticalRoute_getPoints(points) {
     var htmlText;
