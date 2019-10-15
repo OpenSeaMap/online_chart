@@ -202,7 +202,11 @@ $english = array(
     "lock_gate"              => "Lock gate",
     "lock"                   => "Lock",
     "wier_small"             => "Wier (small)",
-    "wier_big"               => "Wier (big)"
+    "wier_big"               => "Wier (big)",
+
+    // Trip planner
+    "confirmDeleteRoute"     => "Do you want to delete this route?",
+    "confirmCloseRoute"      => "Do you want to close this route without saving?"
 );
 
 ?>

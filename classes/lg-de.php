@@ -204,7 +204,11 @@ $german = array(
     "lock_gate"              => "Schleusentor",
     "lock"                   => "Schleuse",
     "wier_small"             => "Wehr (klein)",
-    "wier_big"               => "Wehr (groß)"
+    "wier_big"               => "Wehr (groß)",
+
+    // Trip planner
+    "confirmDeleteRoute"     => "Möchten Sie diese Route löschen?",
+    "confirmCloseRoute"      => "Möchten Sie das Tool schließen, ohne abzuspeichern?"
 );
 
 ?>

@@ -52,6 +52,7 @@ function NauticalRoute_initControls() {
 
 function NauticalRoute_startEditMode() {
     NauticalRoute_initControls();
+    routeChanged = false;
 }
 
 function NauticalRoute_stopEditMode() {
@@ -136,6 +137,8 @@ function NauticalRoute_DownloadTrack() {
     input.value = content;
     div.appendChild(input);
 
+    routeChanged = false;
+
     $('#actionDialog > form').get(0).submit();
 }
 
@@ -158,9 +161,12 @@ function NauticalRoute_routeModified(event) {
     NauticalRoute_getPoints(routeTrack);
 }
 
-
+routeChanged = false;
 
 function NauticalRoute_getPoints(points) {
+
+    routeChanged = true;
+
     var htmlText;
     var latA, latB, lonA, lonB, distance, bearing;
     var totalDistance = 0;
