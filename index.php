@@ -206,9 +206,8 @@
                 if (getCookie("BingAerialLayerVisible") == "true") {
                     map.setBaseLayer(layer_bing_aerial);
                 }
-                if (getCookie("AisLayerVisible") == "true") {
-                    showAis();
-                }
+                var aisVisible = getCookie("AisLayerVisible") === "true"
+                layer_ais.setVisibility(aisVisible)
 
                 var depth10mVisible = getCookie("WaterDepthTrackPointsLayerVisible10m") === "true"
                 layer_waterdepth_trackpoints_10m.setVisibility(depth10mVisible);
