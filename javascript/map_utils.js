@@ -90,31 +90,117 @@ function nm2km(a) {
     return a / 0.540;
 }
 
-function lat2DegreeMinute(buffLat) {
-    var ns = buffLat >= 0 ? 'N' : 'S';
-    var lat_m = Math.abs(buffLat*60).toFixed(3);
-    var lat_d = Math.floor (lat_m/60);
-    lat_m -= lat_d*60;
-
-    return ns + lat_d + "°" + format2FixedLenght(lat_m, 6, 3) + "'";
-}
-
-function lon2DegreeMinute(buffLon) {
-    var we = buffLon >= 0 ? 'E' : 'W';
-    var lon_m = Math.abs(buffLon*60).toFixed(3);
-    var lon_d = Math.floor (lon_m/60);
-    lon_m -= lon_d*60;
-
-    return we + lon_d + "°" + format2FixedLenght(lon_m, 6, 3) + "'";
-}
+let lat2DegreeMinute = (buffLat) => formatCoords(buffLat,"N__°##.####'");
+let lon2DegreeMinute = (buffLon) => formatCoords(buffLon,"W___°##.####'");
 
 function lonLatToMercator(ll) {
     return new OpenLayers.LonLat(lon2x(ll.lon), lat2y(ll.lat));
 }
 
-// shorten coordinate to 5 digits in decimal fraction
-function shorter_coord(coord) {
-    return Math.round(coord*100000)/100000;
+/***
+ * @summary format a datum.
+ * Examples:
+ *  formatCoords(9.75,'N __°##\'##.###"') -> N  9°45'00.000"
+ *  formatCoords(9.75,'N __°')            -> N 10°
+ *  formatCoords(9.75,'W ###°##,#\'')     -> W 009°45,0'
+ *
+ * @coord {number} - the datum, a latitude or a longitude
+ * @format {string} - the format
+ * @throws Will throw exceptions if the format string is malformatted. 
+ */
+function formatCoords(coord, format) {
+    function didf(x,di,df,sep,fill) {
+        let s = x.toFixed(df);
+        s = s.replace(/[.,]/,sep);
+        let z = df+di+(df>0?1:0)-s.length;
+        if (z > 0) {
+            /* need to prepend zeros */
+            s = fill.repeat(z) + s;
+        }
+        return s;
+    }
+
+    // OL2 has a bug (?) where sometimes the coordinates go beyond +-180
+    if (coord> 180) coord -= 360;
+    if (coord<-180) coord += 360;
+
+    let a = Math.abs(coord);
+    let deg = Math.trunc(a);
+    let b = 60*(a-deg);
+    let min = Math.trunc(b);
+    let sec = 60*(b-min);
+
+    let s = '';
+    let i=0;
+
+    let di = 0;
+    let df = 0;
+    let sep = '';
+    let fill = '#';
+
+    do {
+        let c = format.charAt(i);
+        switch (c) {
+        case 'N': case 'S':
+            s += (coord >= 0 ? 'N':'S'); i++; sep = '#';
+            break;
+        case 'W': case 'E':
+            s += (coord >= 0 ? 'E':'W'); i++; sep = '#';
+            break;
+        case ' ':
+            s += ' '; i++; sep = '#';
+            break;
+        case '#':
+        case '_':
+            di = 0;
+            df = 0;
+            fill = (c == '_'?' ':'0');
+            do {
+                di++; i++;
+            } while (format.charAt(i) === c);
+            if (format.charAt(i) == ',' || format.charAt(i) == '.') {
+                sep = format.charAt(i); i++;
+            } else {
+                continue;
+            }
+            while (format.charAt(i) === c) {
+                df++; i++;
+            }
+            break;
+        case '°':
+            if (fill === '#') {
+                throw 'missing format specifier';
+            }
+            /* If decimal places are to be rendered, use the full number.
+               If this is the least significant place, use it to enable rounding */
+            if (df > 0 || !format.includes("'")) {
+                deg = a;
+            }
+            s += didf(deg,di,df,sep,fill) + '°'; i++;
+            break;
+        case '\'':
+                if (fill === '#') {
+                    throw 'missing format specifier';
+                }
+                if (!format.includes("°")) throw "malformed format: missing °"
+                if (df > 0 || !format.includes('"')) {
+                    min = b;
+                }
+                s += didf(min,di,df,sep,fill) + '\''; i++;
+            break;
+        case '"':
+                if (fill === '#') {
+                    throw 'missing format specifier';
+                }
+                if (!format.includes("'")) throw "malformed format: missing '"
+                s += didf(sec,di,df,sep,fill) + '"'; i++;
+            break;
+        default:
+            throw 'error in format string:'+c;
+            break;
+        }
+    } while (i<format.length);
+    return s;
 }
 
 /**
