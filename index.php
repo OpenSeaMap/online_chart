@@ -228,8 +228,10 @@
                 layer_elevation_profile_contours.setVisibility(profileVisible);
                 layer_elevation_profile_hillshade.setVisibility(profileVisible);
 
-                var compassVisible = getCookie("CompassroseVisible") === "true"
-                toggleCompassrose(compassVisible);
+                if (getCookie("CompassroseVisible") === "true") {
+                    document.getElementById("checkCompassrose").checked = true
+                    toggleCompassrose();
+                }
             }
 
             function resetLayerCheckboxes()
@@ -254,7 +256,7 @@
                 setWaterDepthBoxes();
                 document.getElementById("checkDepthContours").checked                   = (layer_waterdepth_contours.getVisibility() === true);
                 document.getElementById("checkLayerElevationProfile").checked       = (layer_elevation_profile_contours.getVisibility() === true || layer_elevation_profile_hillshade.getVisibility() === true);
-                document.getElementById("checkCompassroseGeoNorth").checked         = (document.getElementById("compassRose").style.visibility === 'visible');
+                document.getElementById("checkCompassrose").checked                 = (document.getElementById("compassRose").style.visibility === 'visible');
 
                 createPermaLink();
             }
@@ -265,12 +267,11 @@
                 legendWindow.focus();
             }
 
-            // this is called toggleXXX for consistency with other code. It does not actually toggle anything.
-            function toggleCompassrose(show) {
-                if (show) {
+            function toggleCompassrose() {
+                if (document.getElementById("checkCompassrose").checked) {
+                    refreshMagdev();
                     document.getElementById("compassRose").style.visibility = 'visible';
                     setCookie("CompassroseVisible", "true");
-                    refreshMagdev();
                 } else {
                     document.getElementById("compassRose").style.visibility = 'hidden';
                     setCookie("CompassroseVisible", "false");

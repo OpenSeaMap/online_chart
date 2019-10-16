@@ -41,6 +41,9 @@
                     </ul>
                 </li>
                 <li onClick="showAis()"><a><input type="checkbox" id="checkLayerAis">&nbsp;<?=$t->tr("ais")?></a></li>
+                <li onClick="toggleCompassrose()">
+                    <a><input type="checkbox" id="checkCompassrose">&nbsp;<?=$t->tr("compassRose")?></a>
+                </li>
 
                 <li onClick="showWaterDepthTrackPoints(true)">
                   <a onClick="document.getElementById('checkLayerWaterDepthTrackPoints').checked = !document.getElementById('checkLayerWaterDepthTrackPoints').checked">
@@ -72,9 +75,6 @@
                 </li>
                 <li data-tools="nautical_route">
                     <a><input type="checkbox" id="checkNauticalRoute">&nbsp;<img alt="route" src="./resources/action/route-32px.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("tripPlanner")?></a>
-                </li>
-                <li data-tools="compassRose">
-                    <a><input type="checkbox" id="checkCompassroseGeoNorth">&nbsp;<img alt="route" src="./resources/action/nautical_compass_rose_icon.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("compassRose")?></a>
                 </li>
 <!--                    <li data-tools="download">
                         <a><input type="checkbox" id="checkDownload">&nbsp;<img alt="download" src="./resources/action/download.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("downloadChart")?></a>
