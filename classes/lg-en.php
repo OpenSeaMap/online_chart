@@ -71,7 +71,7 @@ $english = array(
     "water_depth"            => "Water depth",
     "wikiHelp"               => "Help (Wiki)",
     "depth_contours"         => "Depth contours (beta)",
-    "compassRose"            => "compass rose",
+    "compassRose"            => "Compass Rose",
 
     // Weather-------------------------------------------------------
     "weather"                => "Weather",
