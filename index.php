@@ -1147,6 +1147,9 @@
     </head>
     <body onload="init();">
         <div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
+        <noscript>
+            <p id="noJavascript"><?=$t->tr("noJavascript")?></p>
+        </noscript>
         <div style="position:absolute; bottom:48px; left:12px; cursor:pointer;">
             <a id="license_osm"  onClick="showMapKey('license')"><img alt="OSM-Logo" src="resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>"></a>
             <a id="license_ccbysa" onClick="showMapKey('license')"><img alt="CC by SA" src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>"></a>

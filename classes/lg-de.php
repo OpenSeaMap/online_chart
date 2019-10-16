@@ -208,7 +208,10 @@ $german = array(
 
     // Trip planner
     "confirmDeleteRoute"     => "Möchten Sie diese Route löschen?",
-    "confirmCloseRoute"      => "Möchten Sie das Tool schließen, ohne abzuspeichern?"
+    "confirmCloseRoute"      => "Möchten Sie das Tool schließen, ohne abzuspeichern?",
+
+    // other
+    "noJavascript"           => "Entweder Ihr Browser unterstützt kein JavaScript, or Sie haben es ausgeschaltet. OpenSeaMap braucht JavaScript für die Kartenanzeige.",
 );
 
 ?>

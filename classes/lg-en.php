@@ -206,7 +206,10 @@ $english = array(
 
     // Trip planner
     "confirmDeleteRoute"     => "Do you want to delete this route?",
-    "confirmCloseRoute"      => "Do you want to close this route without saving?"
+    "confirmCloseRoute"      => "Do you want to close this route without saving?",
+
+    // other
+    "noJavascript"           => "You are either using a browser that does not support JavaScript, or you have disabled JavaScript. OpenSeaMap uses JavaScript for its maps.",
 );
 
 ?>
