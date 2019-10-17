@@ -177,3 +177,9 @@ img {
 .disaster table {
     margin-top:13px;
 }
+
+p#noJavascript {
+    position: absolute;
+    left:30%; top:50%;
+    width: 30%;
+}
