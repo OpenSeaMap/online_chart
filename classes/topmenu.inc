@@ -77,7 +77,7 @@
                         <a><input type="checkbox" id="checkDownload">&nbsp;<img alt="download" src="./resources/action/download.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("downloadChart")?></a>
                     </li>-->
                 <li>
-                  <a href="http://openseamap.org"><strong>Download</strong></a>
+                  <a href="http://openseamap.org/index.php?id=kartendownload"><strong>Download</strong></a>
                 </li>
             <li>
               <a href="https://downloadlayer--onlinechart-ol3.netlify.com" target="_blank">OpenCPN (Kap)</a>
