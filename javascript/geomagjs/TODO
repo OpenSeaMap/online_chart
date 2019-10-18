@@ -1,0 +1,3 @@
+- Include model metadata in the returned object
+- Warn when computing for dates outside of the epoch
+- Use reference ellipsoids other than WGS 1984

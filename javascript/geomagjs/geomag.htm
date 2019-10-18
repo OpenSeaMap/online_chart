@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Geomag Library Demo and Test</title>
+		<style>
+.labelr {
+	text-align: right;
+}
+
+#testBody td {
+	text-align: right;
+	font-family: sans-serif;
+}
+
+#testBody td:first-child {
+	text-align: left;
+	font-family: serif;
+}
+
+		</style>
+		<script src="newGeomag.js"></script>
+		<script src="cof2Obj.js"></script>
+		<script src="syncXHR.js"></script>
+		<script>
+/*jslint plusplus: true */
+/*global geoMagFactory, cof2Obj, syncXHR, Element */
+function decimalDate2Date(ddate) {
+	'use strict';
+	var year = Math.floor(ddate),
+		daysInYear = 365 +
+			(((year % 400 === 0) || (year % 4 === 0 && (year % 100 > 0))) ? 1 : 0),
+		msInYear = daysInYear * 24 * 60 * 60 * 1000;
+	return new Date((new Date(year, 0)).valueOf() + ((ddate - year) * msInYear));
+}
+
+var pathArr = window.location.href.split("/");
+pathArr.pop();
+var path = pathArr.join("/");
+//var geoMag = geoMagFactory(cof2Obj(syncXHR(path + '/WMM.COF')));
+var cof = syncXHR(path + '/WMM.COF');
+var newGeomag = new Geomag(cof)
+var geoMag = newGeomag.mag;
+function runTest() {
+	'use strict';
+
+	function addAttribute(el, name, value) {
+		el.setAttribute(name, value);
+		return el;
+	}
+
+	var row,
+		calc,
+		i,
+		testValues = (function (valueFile) {
+			var i,
+				lines = valueFile.replace(/\r/g, '').split('\n'),
+				model = lines[0],
+				fields,
+				values = [];
+			for (i = 2; i < lines.length; i++) {
+				fields = lines[i].replace(/^\s+|\s+$/g, "").split(/\s+/);
+				values.push({
+					date: fields[0],
+					alt: fields[1] * 3280.8399,
+					lat: fields[2],
+					lon: fields[3],
+					d: fields[4],
+					i: fields[5],
+					h: fields[6],
+					x: fields[7],
+					y: fields[8],
+					z: fields[9],
+					f: fields[10],
+					gv: fields[11] || null
+				});
+			}
+			return {model: model, values: values};
+		}(syncXHR(path + '/testValues.txt')));
+
+	for (i = 0; i < testValues.values.length; i++) {
+		row = document.createElement("tr");
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode('Expected'));
+		row.appendChild(addAttribute(document.createElement("td"), "rowSpan", 2)).
+			appendChild(document.createTextNode(testValues.values[i].date));
+		row.appendChild(addAttribute(document.createElement("td"), "rowSpan", 2)).
+			appendChild(document.createTextNode(
+				parseFloat(testValues.values[i].alt) / 3280.8399
+			));
+		row.appendChild(addAttribute(document.createElement("td"), "rowSpan", 2)).
+			appendChild(document.createTextNode(testValues.values[i].lat));
+		row.appendChild(addAttribute(document.createElement("td"), "rowSpan", 2)).
+			appendChild(document.createTextNode(testValues.values[i].lon));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(testValues.values[i].d));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(testValues.values[i].i));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(testValues.values[i].h));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(testValues.values[i].x));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(testValues.values[i].y));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(testValues.values[i].z));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(testValues.values[i].f));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(testValues.values[i].gv || ''));
+		document.getElementById("testBody").appendChild(row);
+		calc = geoMag(parseFloat(testValues.values[i].lat),
+			parseFloat(testValues.values[i].lon),
+			parseFloat(testValues.values[i].alt),
+			decimalDate2Date(parseFloat(testValues.values[i].date)));
+		row = document.createElement("tr");
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode('Calculated'));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(calc.dec.toFixed(2)));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(calc.dip.toFixed(2)));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(calc.bh.toFixed(1)));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(calc.bx.toFixed(1)));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(calc.by.toFixed(1)));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(calc.bz.toFixed(1)));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(calc.ti.toFixed(1)));
+		row.appendChild(document.createElement("td")).
+			appendChild(document.createTextNode(
+				calc.gv ? calc.gv.toFixed(2) : ''
+			));
+		document.getElementById("testBody").appendChild(row);
+	}
+}
+
+function calculate() {
+	'use strict';
+	var lat = parseFloat(document.getElementById("lat").value),
+		lon = parseFloat(document.getElementById("lon").value),
+		alt = parseFloat(document.getElementById("alt").value),
+		myGeoMag = geoMag(lat, lon, alt);
+	document.getElementById("var").innerHTML = myGeoMag.dec;
+}
+
+
+function init() {
+	'use strict';
+	document.getElementById('calculate').onclick = calculate;
+	runTest();
+}
+		</script>
+	</head>
+	<body>
+	<h1>Geomag Library Demo and Test</h1>
+	<p>This is a simple page to demonstrate the
+	<a href="geomag.js">geomag.js</a>
+	library which depends on <a href="WMM.COF">a world magnetic model
+	coefficient file</a>.
+	The coefficient file and more information are available at
+	<a href="http://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml">The World
+	Magnetic Model</a> site of NOAA's National Geophysical Data Center.</p>
+	<p>The source code repository for the geomag.js library is at
+	<a href="https://github.com/cmweiss/geomagJS">https://github.com/cmweiss/geomagJS</a>.
+	</p>
+	<table>
+	<tr>
+		<td class="labelr">Latitude:</td>
+		<td><input type="text" id="lat" value="40" /></td>
+		<td>(decimal degrees - north is positive)</td>
+	</tr>
+	<tr>
+		<td class="labelr">Longitude:</td>
+		<td><input type="text" id="lon" value="-80" /></td>
+		<td>(decimal degrees - east is positive)</td>
+	</tr>
+	<tr>
+		<td class="labelr">Altitude:</td>
+		<td><input type="text" id="alt" value="0" /></td>
+		<td>(feet)</td>
+	</tr>
+	<tr>
+		<td class="labelr">Variation:</td>
+		<td id="var"></td>
+		<td>(decimal degrees - east is positive)</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><button id="calculate">Calculate</button></td>
+		<td></td>
+	</tr>
+	</table>
+	<table border style="border-collapse: collapse;">
+	<tr><th colspan="13">Test</th></tr>
+	<tr>
+		<td colspan="13">
+			<a href =
+				"http://www.ngdc.noaa.gov/geomag/WMM/data/WMM2015/WMM2015testvalues.pdf"
+			>World Magnetic Model (WMM2015) - Test values</a> (pdf)
+		</td>
+	</tr>
+	<tr>
+		<th></th>
+		<th>Date</th>
+		<th>Alt (km)</th>
+		<th>Lat (deg)</th>
+		<th>Lon (deg)</th>
+		<th>D (deg)</th>
+		<th>I (deg)</th>
+		<th>H (nT)</th>
+		<th>X (nT)</th>
+		<th>Y (nT)</th>
+		<th>Z (nT)</th>
+		<th>F (nT)</th>
+		<th>GV (deg)</th>
+	</tr>
+	<tbody id="testBody"></tbody>
+	</table>
+	<script>init(); </script>
+	</body>
+</html>

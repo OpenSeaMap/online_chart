@@ -41,6 +41,9 @@
                     </ul>
                 </li>
                 <li onClick="showAis()"><a><input type="checkbox" id="checkLayerAis">&nbsp;<?=$t->tr("ais")?></a></li>
+                <li onClick="toggleCompassrose()">
+                    <a><input type="checkbox" id="checkCompassrose">&nbsp;<?=$t->tr("compassRose")?></a>
+                </li>
 
                 <li onClick="showWaterDepthTrackPoints(true)">
                   <a onClick="document.getElementById('checkLayerWaterDepthTrackPoints').checked = !document.getElementById('checkLayerWaterDepthTrackPoints').checked">
@@ -67,7 +70,7 @@
         <li>
             <a><img alt="tools" src="./resources/action/tools.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("tools")?></a>
             <ul class="sub_menu">
-				        <li data-tools="permalink">
+		        <li data-tools="permalink">
                     <a><input type="checkbox" id="checkPermalink">&nbsp;<img alt="permalink" src="./resources/action/permalink-32x.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("permalinks")?></a>
                 </li>
                 <li data-tools="nautical_route">

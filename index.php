@@ -34,6 +34,9 @@
         <script type="text/javascript" src="./javascript/satpro.js"></script>
         <script type="text/javascript" src="./javascript/lib/he.js"></script>
         <script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script>
+        <script type="text/javascript" src="./javascript/geomagjs/cof2Obj.js"></script>
+        <script type="text/javascript" src="./javascript/geomagjs/geomag.js"></script>
+        <script type="text/javascript" src="./javascript/mag_deviation.js"></script>
         <script type="text/javascript">
 
             var map;
@@ -206,9 +209,8 @@
                 if (getCookie("BingAerialLayerVisible") == "true") {
                     map.setBaseLayer(layer_bing_aerial);
                 }
-                if (getCookie("AisLayerVisible") == "true") {
-                    showAis();
-                }
+                var aisVisible = getCookie("AisLayerVisible") === "true"
+                layer_ais.setVisibility(aisVisible)
 
                 var depth10mVisible = getCookie("WaterDepthTrackPointsLayerVisible10m") === "true"
                 layer_waterdepth_trackpoints_10m.setVisibility(depth10mVisible);
@@ -225,6 +227,11 @@
                 var profileVisible = getCookie("ElevationProfileLayerVisible") === "true"
                 layer_elevation_profile_contours.setVisibility(profileVisible);
                 layer_elevation_profile_hillshade.setVisibility(profileVisible);
+
+                if (getCookie("CompassroseVisible") === "true") {
+                    document.getElementById("checkCompassrose").checked = true
+                    toggleCompassrose();
+                }
             }
 
             function resetLayerCheckboxes()
@@ -249,6 +256,7 @@
                 setWaterDepthBoxes();
                 document.getElementById("checkDepthContours").checked                   = (layer_waterdepth_contours.getVisibility() === true);
                 document.getElementById("checkLayerElevationProfile").checked       = (layer_elevation_profile_contours.getVisibility() === true || layer_elevation_profile_hillshade.getVisibility() === true);
+                document.getElementById("checkCompassrose").checked                 = (document.getElementById("compassRose").style.visibility === 'visible');
 
                 createPermaLink();
             }
@@ -257,6 +265,17 @@
             function showMapKey(item) {
                 legendWindow = window.open("legend.php?lang=" + language + "&page=" + item, "MapKey", "width=760, height=680, status=no, scrollbars=yes, resizable=yes");
                 legendWindow.focus();
+            }
+
+            function toggleCompassrose() {
+                if (document.getElementById("checkCompassrose").checked) {
+                    refreshMagdev();
+                    document.getElementById("compassRose").style.visibility = 'visible';
+                    setCookie("CompassroseVisible", "true");
+                } else {
+                    document.getElementById("compassRose").style.visibility = 'hidden';
+                    setCookie("CompassroseVisible", "false");
+                }
             }
 
             function showSeamarks() {
@@ -1008,6 +1027,7 @@
                 // Set cookie for remembering lat lon values
                 setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
                 setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
+
                 // Update harbour layer
                 if (layer_pois.getVisibility() === true) {
                     refreshHarbours();
@@ -1015,6 +1035,10 @@
                 // Update tidal scale layer
                 if (layer_tidalscale.getVisibility() === true) {
                     refreshTidalScales();
+                }
+                // Update magnetic deviation
+                if (document.getElementById("compassRose").style.visibility === 'visible') {
+                    refreshMagdev();
                 }
             }
 
@@ -1098,17 +1122,26 @@
                     case 'download':
                         toggleNauticalRoute(false);
                         togglePermalink(false);
+                        toggleCompassrose(false);
                         toggleMapDownload(activate);
                         break;
                     case 'nautical_route':
                         toggleMapDownload(false);
                         togglePermalink(false);
+                        toggleCompassrose(false);
                         toggleNauticalRoute(activate);
                         break;
                     case 'permalink':
                         toggleMapDownload(false);
                         toggleNauticalRoute(false);
+                        toggleCompassrose(false);
                         togglePermalink(activate);
+                        break;
+                    case 'compassRose':
+                        toggleMapDownload(false);
+                        toggleNauticalRoute(false);
+                        togglePermalink(false);
+                        toggleCompassrose(activate);
                         break;
                     default:
                         break;
@@ -1159,6 +1192,14 @@
         </div>
         <div id="actionDialog">
             <br>&nbsp;not found&nbsp;<br>&nbsp;
+        </div>
+        <div id="compassRose">
+            <img id="geoCompassRose" src="./resources/map/nautical_compass_rose_geo_north.png"/>
+            <img id="magCompassRose" src="./resources/map/nautical_compass_rose_mag_north.png"/>
+            <div id="magCompassText">
+                <p id="magCompassTextTop">VAR 3.5°5'E (2015)</p>
+                <p id="magCompassTextBottom">ANNUAL DECREASE 8'</p>
+            </div>
         </div>
         <?php include('classes/topmenu.inc'); ?>
         <?php include('classes/footer.inc'); ?>

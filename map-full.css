@@ -36,6 +36,41 @@ img {
     padding: 5px;
 }
 
+/* geo north image is 301x301, mag north image is 200x200 */
+#compassRose {
+    position: absolute;
+    bottom: 25px;
+    right:  0px;
+    width: 261px; height: 261px;
+    visibility:hidden;
+}
+
+#geoCompassRose {
+    position:absolute; left:0px; bottom:0px;
+}
+
+#magCompassRose {
+    position: absolute; left:27px; bottom:24px;
+    transform: rotate(0deg);
+}
+
+#magCompassText {
+    position: absolute; left:128px; bottom: 112px;
+    color: #e50083;
+    font-size: 9px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100px;
+    text-align: center;
+}
+
+#magCompassTextTop {
+    position: relative; left:-50%; bottom: 20px;
+}
+
+#magCompassTextBottom {
+    position: relative; left:-50%; bottom: -20px;
+}
+
 #routeEditPanel {
     float: left;
     display:block;

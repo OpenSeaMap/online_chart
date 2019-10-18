@@ -71,6 +71,7 @@ $german = array(
     "water_depth"            => "Wassertiefen",
     "wikiHelp"               => "Wiki-Hilfe",
     "depth_contours"         => "Tiefenlinien (beta)",
+    "compassRose"            => "Kompassrose",
 
     // Weather-------------------------------------------------------
     "weather"                => "Wetter",
