@@ -69,6 +69,8 @@
             var tableTextNauticalRouteCoordinate = "<?=$t->tr('coordinate')?>";
             var tableTextNauticalRouteCourse = "<?=$t->tr('course')?>";
             var tableTextNauticalRouteDistance = "<?=$t->tr('distance')?>";
+            var confirmDelete = "<?=$t->tr("confirmDeleteRoute")?>";
+            var confirmClose = "<?=$t->tr("confirmCloseRoute")?>";
 
             // Set language
             var language = "<?=$t->getCurrentLanguage()?>";
@@ -599,22 +601,7 @@
 
             function addNauticalRoute() {
                 layer_nautical_route.setVisibility(true);
-                var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
-                htmlText += "<img src=\"./resources/action/delete.png\"  width=\"17\" height=\"17\" onclick=\"if (!routeChanged || confirm('<?=$t->tr("confirmDeleteRoute")?>')) {closeNauticalRoute();addNauticalRoute();}\"/>&nbsp;";
-                htmlText += "<img src=\"./resources/action/info.png\"  width=\"17\" height=\"17\" onClick=\"showMapKey('help-trip-planner');\"/>&nbsp;";
-                htmlText += "<img src=\"./resources/action/close.gif\" onClick=\"if (!routeChanged || confirm('<?=$t->tr("confirmCloseRoute")?>')) {closeNauticalRoute();}\"/></div>";
-                htmlText += "<h3><?=$t->tr("tripPlanner")?>: <input type=\"text\" id=\"tripName\" size=\"20\"></h3><br/>";
-                htmlText += "<table border=\"0\" width=\"370px\">";
-                htmlText += "<tr><td><?=$t->tr("start")?></td><td id=\"routeStart\">- - -</td></tr>";
-                htmlText += "<tr><td><?=$t->tr("finish")?></td><td id=\"routeEnd\">- - -</td></tr>";
-                htmlText += "<tr><td><?=$t->tr("distance")?></td><td id=\"routeDistance\">- - -</td></tr>";
-                htmlText += "<tr><td id=\"routePoints\" colspan = 2> </td></tr>";
-                htmlText += "</table>";
-                htmlText += "<input type=\"button\" id=\"buttonRouteDownloadTrack\" value=\"<?=$t->tr("download")?>\" onclick=\"NauticalRoute_DownloadTrack();\" disabled=\"true\">";
-                htmlText += "<select id=\"routeFormat\"><option value=\"CSV\"/>CSV<option value=\"GML\"/>GML<option value=\"KML\"/>KML</select>&nbsp;";
-                htmlText += "<select id=\"coordFormat\" onchange=\"NauticalRoute_getPoints(routeTrack);\"><option value=\"coordFormatdms\"/>ggg°mm.mmm'<option value=\"coordFormatd_dec\"/>ggg.gggggg</select>&nbsp;";
-                htmlText += "<select id=\"distUnits\" onchange=\"NauticalRoute_getPoints(routeTrack);\"><option value=\"nm\"/>[nm]<option value=\"km\"/>[km]</select>";
-
+                let htmlText= get_nautical_actionDialog();
                 showActionDialog(htmlText);
                 NauticalRoute_startEditMode();
             }

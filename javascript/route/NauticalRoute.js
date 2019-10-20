@@ -75,7 +75,62 @@ function NauticalRoute_editMode() {
     //layer_nautical_route.style = style_green;
 }
 
-function NauticalRoute_DownloadTrack() {
+function get_nautical_actionDialog() {
+    let htmlText = `<div id="actionDialogMenu" class="menu">
+    <ul>
+        <li>File
+            <ul>
+                <li><label for="files">Open...</label><input onchange="NauticalRoute_openTrack();" type="file" id="openfile" accept="application/gpx+xml"/></li>
+                <li><a onclick="NauticalRoute_saveTrack();" id="buttonRouteDownloadTrack">Save
+                    <select id="routeFormat">
+                        <option value="GPX"/>GPX
+                        <option value="CSV"/>CSV
+                        <option value="GML">GML
+                        <option value="KML"/>KML
+                    </select></a></li>
+                <li class="separator"></li>
+                <li><a onClick="if (!routeChanged || confirm('${confirmClose}')) {closeNauticalRoute();}">Close</a></li>
+            </ul>
+        </li>
+        <li>Edit
+            <ul>
+                <li><a onclick="if (!routeChanged || confirm('${confirmDelete}')) {closeNauticalRoute();addNauticalRoute();}"/>Clear route</a></li>
+            </ul>
+        </li>
+        <li>Preferences
+            <ul>
+                <li>Coordinate format <select id="coordFormat" onchange="NauticalRoute_getPoints(routeTrack);">
+                    <option value="coordFormatdms"/>ggg°mm.mmm'
+                    <option value="coordFormatd_dec"/>ggg.gggggg</select>
+                </li>
+                <li>Distance precision <select id="distPrecision" onchange="NauticalRoute_getPoints(routeTrack);">
+                    <option value="0">1
+                    <option value="1">1.2
+                    <option value="2">1.23
+                    <option value="3">1.234</select>
+                </li>
+                <li>Unit <select id="distUnits" onchange="NauticalRoute_getPoints(routeTrack);">
+                    <option value="nm"/>[nm]
+                    <option value="km"/>[km]</select>
+                </li>
+            </ul>
+        </li>
+        <li><a href="#help">?</a>
+        </li>
+    </ul></div>
+
+    <table border="0" width="370px" style="display:block;">
+        <tr><td>Name</td><td><input type="text" id="tripName" size="20"></td>
+        <tr><td>start</td><td id="routeStart">- - -</td></tr>
+        <tr><td>finish</td><td id="routeEnd">- - -</td></tr>
+        <tr><td>distance</td><td id="routeDistance">- - -</td></tr>
+        <tr><td id="routePoints" colspan = 2> </td></tr>
+    </table>
+    `;
+    return htmlText;
+}
+
+function NauticalRoute_saveTrack() {
     var format = document.getElementById("routeFormat").value;
     var name   = document.getElementById("tripName").value;
     var mimetype, filename;
@@ -140,6 +195,54 @@ function NauticalRoute_DownloadTrack() {
     routeChanged = false;
 
     $('#actionDialog > form').get(0).submit();
+}
+
+function NauticalRoute_openTrack() {
+    let fileInput = document.querySelector("#openfile");
+    let files = fileInput.files;
+    let gpxFile = files[0];
+
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        var contents = event.target.result;
+        let parser = new DOMParser();
+        let xmlDoc = parser.parseFromString(contents, "text/xml");
+
+            // change from XPath to other selection syntax?
+    // see https://www.topografix.com/GPX/1/1/#type_rteType
+    // and https://en.wikipedia.org/wiki/GPS_Exchange_Format
+    // and https://developer.mozilla.org/en-US/docs/Web/API/Document
+    // specifically https://developer.mozilla.org/en-US/docs/Web/API/Document/evaluate
+    // and https://developer.mozilla.org/en-US/docs/Web/API/XPathResult
+
+        // get the name of the route
+        let name = xmlDoc.getElementsByTagName("name");
+        $('#tripName').val(name[0].innerHTML)
+
+        let points=[] ;
+        let rte = xmlDoc.getElementsByTagName("rtept");
+        if (rte.length == 0) // if no route contained, use track
+            rte = xmlDoc.getElementsByTagName("trkpt")
+
+        for (const pt of rte) {
+            const lat = $(pt).attr('lat')
+            const lon = $(pt).attr('lon')
+            points.push(new OpenLayers.Geometry.Point(lon2x(lon),lat2y(lat)))
+        }
+
+        // then convert into a feature for OpenLayers
+        let ls = new OpenLayers.Geometry.LineString(points)
+        let feat = new OpenLayers.Feature.Vector(ls,{},style)
+
+        layer_nautical_route.removeAllFeatures({silent:true});
+        layer_nautical_route.addFeatures(feat);
+    };
+
+    reader.onerror = function(event) {
+        console.error("File could not be read! Code " + event.target.error.code);
+    };
+
+    reader.readAsText(gpxFile);
 }
 
 function NauticalRoute_routeAdded(event) {
