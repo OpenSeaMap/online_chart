@@ -1,0 +1,63 @@
+/*
+ * styling for action Dialog menu
+ */
+
+/* remove bullet points for all lists, and any indentation */
+.menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* the first-level menu is surrounded by a border */
+.menu > ul {
+    height:1.1em;      
+    position: relative;
+}
+
+/* on the first level, use horizontal layout */
+.menu > ul > li {
+    float: left;
+}
+
+/* on the second level, use vertical layout, and indent a bit */
+.menu > ul > li > ul > li {
+    display: block;
+    padding-left:1em;
+    padding-right:1em;
+}
+
+/* separators are a line from left to right */
+.menu ul > li > ul > li.separator {
+    border-style: solid;
+    border-width: 1px;
+    height: 1px;
+    border-color: gray;
+}
+
+/* hide submenus by default, unhide them when the parent li is hovered over */
+.menu ul ul { visibility: hidden;}
+.menu ul ul li { visibility: hidden; }
+.menu ul li:hover > ul { visibility: visible; }
+.menu ul li:hover > ul li { visibility: visible; }
+
+/* don't use default styling for anchors in menus */
+.menu a {
+    text-decoration: none;
+}
+
+/* all text is black */
+.menu * {color: black}
+
+/* when I don't hover over an item, it has a normal background */
+.menu ul ul li {
+    background-color: white;
+}
+/* when I hover over a first-level item, it gets highlighted */
+.menu ul li:hover {
+    background-color: #ADD8E6;
+}
+/* when I hover over a second/third level item, it gets highlighted */
+.menu ul ul li:hover {
+    background-color: #6D68E6;
+}
