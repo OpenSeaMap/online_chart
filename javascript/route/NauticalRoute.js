@@ -267,6 +267,8 @@ function NauticalRoute_routeModified(event) {
 let routeChanged = false;
 
 function NauticalRoute_getPoints(points) {
+    if (points == undefined)
+        return ;
 
     routeChanged = true;
 
@@ -364,4 +366,3 @@ function NauticalRoute_getRouteGml(feature) {
 
     return parser.write(feature);
 }
-
