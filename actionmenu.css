@@ -51,11 +51,6 @@ div.menu {
 .menu ul ul { visibility: hidden; display: none;}
 .menu ul li:hover > ul { visibility: visible; display: block;}
 
-/*
-.menu ul li:hover > ul li { visibility: visible; }
-.menu ul ul li { visibility: hidden;  display: none;}
-*/
-
 /* don't use default styling for anchors in menus */
 .menu a {
     text-decoration: none;
