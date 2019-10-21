@@ -42,7 +42,8 @@ div.menu {
 .menu ul > li > ul > li.separator {
     border-style: solid;
     border-width: 1px;
-    height: 1px;
+    height: 0px;
+    padding: 0px;
     border-color: gray;
 }
 
