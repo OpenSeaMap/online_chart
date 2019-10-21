@@ -25,13 +25,23 @@ div.menu {
     float: left;
 }
 
-/* first level padding */
-.menu > ul > li {
+/* first level styling */
+
+.menu > ul > li > span {
     padding-right: 0.2em;
     padding-left: 0.2em;
+    border-right: 1px solid #333;
+}
+
+.menu > ul > li:last-child > span {
+    border-right: none;
 }
 
 /* on the second level, use vertical layout, and indent a bit */
+.menu > ul > li > ul {
+    position: absolute;
+}
+
 .menu > ul > li > ul > li {
     display: block;
     padding-left:1em;
@@ -60,13 +70,19 @@ div.menu {
 .menu * {color: black}
 
 /* when I don't hover over an item, it has a normal background */
-.menu ul li {
-    background-color: white;
+.menu ul ul li {
+    background-color: #F6F6F6;
 }
 /* when I hover over a first-level item, it gets highlighted */
 .menu > ul > li:hover > span {
     background-color: #ADD8E6;
 }
+
+/* when I hover over a first-level item, the list dropdown */
+/*.menu > ul > li:hover {
+    background-color: #F6F6F6;
+}*/
+
 /* when I hover over a second/third level item, it gets highlighted */
 .menu > ul ul > li:hover {
     background-color: #ADD8E6;
