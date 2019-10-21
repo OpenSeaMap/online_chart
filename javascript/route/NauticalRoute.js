@@ -147,12 +147,27 @@ function get_nautical_actionDialog() {
         </div>
     </div>
 
-    <table border="0" width="370px" style="display:block;">
-        <tr><td>Name</td><td><input type="text" id="tripName" size="20"></td>
-        <tr><td>start</td><td id="routeStart">- - -</td></tr>
-        <tr><td>finish</td><td id="routeEnd">- - -</td></tr>
-        <tr><td>distance</td><td id="routeDistance">- - -</td></tr>
-        <tr><td id="routePoints" colspan = 2> </td></tr>
+    <table id="tripSummary">
+        <thead>
+            <tr><th>Start</th><th>Finish</th><th>Distance</th></tr>
+        </thead>
+        <tbody>
+            <tr><td id="routeStart">--</td><td id="routeEnd">--</td><td id="routeDistance">--</td></tr>
+        </tbody>
+    </table>
+
+    <table id="segmentList">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>${tableTextNauticalRouteCourse}</th>
+                <th>${tableTextNauticalRouteDistance}</th>
+                <th>Name</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody id="routePoints">
+        </tbody>
     </table>
     `;
     return htmlText;
@@ -316,12 +331,7 @@ function NauticalRoute_getPoints(points) {
         coordFormat = function(lat,lon) {return formatCoords(lat,'N __°##\'##"') + " - " + formatCoords(lon,'W___°##\'##"');}
     }
 
-    htmlText = '<table id="routeSegmentList">';
-    htmlText +=
-        '<tr><th/>' +
-        '<th>' + tableTextNauticalRouteCourse + '</th>' +
-        '<th>' + tableTextNauticalRouteDistance + '</th>' +
-        '<th>' + tableTextNauticalRouteCoordinate + '</th></tr>'
+    htmlText = '';
     for(i = 0; i < points.length - 1; i++) {
         latA = y2lat(points[i].y);
         lonA = x2lon(points[i].x);
@@ -338,9 +348,9 @@ function NauticalRoute_getPoints(points) {
             '<td>' + parseInt(i+1) + '.</td>' +
             '<td>' + bearing.toFixed(2) + '°</td>' +
             '<td>' + distance.toFixed(2) + ' ' + distUnits + '</td>' +
-            '<td>' + coordFormat(latB,lonB) + '</td></tr>'
+            '<td>' + coordFormat(latB,lonB) + '</td>' +
+            '<td>' + 'O' + '</td></tr>'
     }
-    htmlText += '</table>'
 
     document.getElementById("routeStart").innerHTML = coordFormat(y2lat(points[0].y),x2lon(points[0].x));
     document.getElementById("routeEnd").innerHTML   = coordFormat(y2lat(points[points.length-1].y),x2lon(points[points.length-1].x));

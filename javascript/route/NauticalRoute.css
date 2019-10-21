@@ -42,23 +42,49 @@ div#actionDialogMenu {
     background-color: #ADD8E6;
 }
 
-table#routeSegmentList {
-    height:120px; overflow-y:auto;
+#tripSummary {
+    margin: 5px;
 }
 
-table#routeSegmentList th {
+#segmentList {
+    margin: 5px;
+}
+
+#segmentList thead {
+    width: 400px;
+}
+
+#segmentList thead tr {
+     display: block;
+}
+
+#segmentList tbody {
+    display: block;
+    height:120px;
+    overflow-y:auto;
+    width: 400px;
+}
+
+#segmentList th {
     background-color: #CCCCCC;
     text-align: center;
 }
 
-table#routeSegmentList td {
+#segmentList td {
     text-align: right;
 }
 
-table#routeSegmentList th,td:nth-child(1) { width: 20; } /* segment # */
-table#routeSegmentList th,td:nth-child(2) { width: 60; } /* course */
-table#routeSegmentList th,td:nth-child(3) { width: 70; } /* distance */
-table#routeSegmentList th,td:nth-child(4) { width: 200; } /* coordinates */
+#segmentList td:nth-child(1) { width: 1em; } /* segment # */
+#segmentList td:nth-child(2) { width: 4em; } /* course */
+#segmentList td:nth-child(3) { width: 5em; } /* distance */
+#segmentList td:nth-child(4) { width: 11em; } /* coordinates */
+#segmentList td:nth-child(5) { width: 2em; } /* type */
+
+#segmentList th:nth-child(1) { width: 1em; } /* segment # */
+#segmentList th:nth-child(2) { width: 4em; } /* course */
+#segmentList th:nth-child(3) { width: 5em; } /* distance */
+#segmentList th:nth-child(4) { width: 11em; } /* coordinates */
+#segmentList th:nth-child(5) { width: 2em; } /* type */
 
 /* even/odd coloring */
-table#routeSegmentList tr:nth-child(even) { background-color: #ececec; }
+#segmentList tbody tr:nth-child(even) { background-color: #ececec; }
