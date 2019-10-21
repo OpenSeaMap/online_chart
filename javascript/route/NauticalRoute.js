@@ -93,7 +93,7 @@ function get_nautical_actionDialog() {
                 <li><a onclick="if (!routeChanged || confirm('${confirmDelete}')) {closeNauticalRoute();addNauticalRoute();}"/>Clear route</a></li>
             </ul>
         </li>
-        <li><span><a href="#help">?</a></span>
+        <li><span><a href="#help">Help</a></span>
         </li>
     </ul></div>
 
