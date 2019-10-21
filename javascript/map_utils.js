@@ -154,7 +154,7 @@ function formatCoords(coord, format) {
         case '_':
             di = 0;
             df = 0;
-            fill = (c == '_'?' ':'0');
+            fill = (c == '_'?'&nbsp;':'0');
             do {
                 di++; i++;
             } while (format.charAt(i) === c);
