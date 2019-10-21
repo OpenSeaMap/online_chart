@@ -20,6 +20,12 @@
     float: left;
 }
 
+/* on the first level, use horizontal layout */
+.menu > ul > li {
+    padding-right: 0.2em;
+    padding-left: 0.2em;
+}
+
 /* on the second level, use vertical layout, and indent a bit */
 .menu > ul > li > ul > li {
     display: block;
@@ -36,10 +42,13 @@
 }
 
 /* hide submenus by default, unhide them when the parent li is hovered over */
-.menu ul ul { visibility: hidden;}
-.menu ul ul li { visibility: hidden; }
-.menu ul li:hover > ul { visibility: visible; }
+.menu ul ul { visibility: hidden; display: none;}
+.menu ul li:hover > ul { visibility: visible; display: block;}
+
+/*
 .menu ul li:hover > ul li { visibility: visible; }
+.menu ul ul li { visibility: hidden;  display: none;}
+*/
 
 /* don't use default styling for anchors in menus */
 .menu a {
@@ -50,7 +59,7 @@
 .menu * {color: black}
 
 /* when I don't hover over an item, it has a normal background */
-.menu ul ul li {
+.menu ul li {
     background-color: white;
 }
 /* when I hover over a first-level item, it gets highlighted */
@@ -59,5 +68,5 @@
 }
 /* when I hover over a second/third level item, it gets highlighted */
 .menu ul ul li:hover {
-    background-color: #6D68E6;
+    background-color: #ADD8E6;
 }
