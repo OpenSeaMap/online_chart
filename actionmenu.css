@@ -64,10 +64,10 @@ div.menu {
     background-color: white;
 }
 /* when I hover over a first-level item, it gets highlighted */
-.menu ul li:hover {
+.menu > ul > li:hover > span {
     background-color: #ADD8E6;
 }
 /* when I hover over a second/third level item, it gets highlighted */
-.menu ul ul li:hover {
+.menu > ul ul > li:hover {
     background-color: #ADD8E6;
 }

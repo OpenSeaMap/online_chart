@@ -78,7 +78,7 @@ function NauticalRoute_editMode() {
 function get_nautical_actionDialog() {
     let htmlText = `<div id="actionDialogMenu" class="menu">
     <ul>
-        <li>File
+        <li><span>File</span>
             <ul>
                 <li><label for="files">Open...</label><input onchange="NauticalRoute_openTrack();" type="file" id="openfile" accept="application/gpx+xml"/></li>
                 <li><a onclick="NauticalRoute_saveTrack();" id="buttonRouteDownloadTrack">Save
@@ -92,12 +92,12 @@ function get_nautical_actionDialog() {
                 <li><a onClick="if (!routeChanged || confirm('${confirmClose}')) {closeNauticalRoute();}">Close</a></li>
             </ul>
         </li>
-        <li>Edit
+        <li><span>Edit</span>
             <ul>
                 <li><a onclick="if (!routeChanged || confirm('${confirmDelete}')) {closeNauticalRoute();addNauticalRoute();}"/>Clear route</a></li>
             </ul>
         </li>
-        <li>Preferences
+        <li><span><a href="#help">?</a></span>
             <ul>
                 <li>Coordinate format <select id="coordFormat" onchange="NauticalRoute_getPoints(routeTrack);">
                     <option value="coordFormatdms"/>ggg°mm.mmm'
@@ -114,10 +114,8 @@ function get_nautical_actionDialog() {
                     <option value="km"/>[km]</select>
                 </li>
             </ul>
-        </li>
-        <li><a href="#help">?</a>
-        </li>
-    </ul></div>
+        </div>
+    </div>
 
     <table border="0" width="370px" style="display:block;">
         <tr><td>Name</td><td><input type="text" id="tripName" size="20"></td>
