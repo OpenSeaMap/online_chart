@@ -1,3 +1,9 @@
+input[type="text"] {
+    border-width: 0px;
+    border-bottom-width: 1px;
+    border-style: solid;
+}
+
 div#actionDialogMenu {
     display:block;
 }
