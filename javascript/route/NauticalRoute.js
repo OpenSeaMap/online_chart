@@ -80,14 +80,10 @@ function get_nautical_actionDialog() {
     <ul>
         <li><span>File</span>
             <ul>
-                <li><label for="files">Open...</label><input onchange="NauticalRoute_openTrack();" type="file" id="openfile" accept="application/gpx+xml"/></li>
-                <li><a onclick="NauticalRoute_saveTrack();" id="buttonRouteDownloadTrack">Save
-                    <select id="routeFormat">
-                        <option value="GPX"/>GPX
-                        <option value="CSV"/>CSV
-                        <option value="GML">GML
-                        <option value="KML"/>KML
-                    </select></a></li>
+                <li><a onclick="toggleOpenFileDialog();">Open...</a></li>
+                <li><a onclick="toggleSaveFileDialog();">Save...</a></li>
+                <li class="separator"></li>
+                <li onclick="togglePrefDialog();">Preferences...</li>
                 <li class="separator"></li>
                 <li><a onClick="if (!routeChanged || confirm('${confirmClose}')) {closeNauticalRoute();}">Close</a></li>
             </ul>
@@ -98,6 +94,40 @@ function get_nautical_actionDialog() {
             </ul>
         </li>
         <li><span><a href="#help">?</a></span>
+        </li>
+    </ul></div>
+
+    <div class="modal" id="openfiledialog">
+        <div class="modal-content">
+            <span class="close-button" onclick="toggleOpenFileDialog();">×</span>
+            <h1>Open File</h1>
+            <input type="file" id="openfilename" accept="application/gpx+xml"/> Choose file<br>
+            <input type="radio" id="useTrack"> use track information<br>
+            <input type="radio" id="useRoute"> use route information<br>
+            <button class="trigger" onclick="toggleOpenFileDialog();NauticalRoute_openTrack();">Load</button>
+            <button class="trigger" onclick="toggleOpenFileDialog();">Cancel</button>
+        </div>
+    </div>
+
+    <div class="modal" id="savefiledialog">
+        <div class="modal-content">
+            <span class="close-button" onclick="toggleSaveFileDialog();">×</span>
+            <h1>Save File</h1>
+            Format <select id="routeFormat">
+                <option value="GPX"/>GPX
+                <option value="CSV"/>CSV
+                <option value="GML">GML
+                <option value="KML"/>KML
+            </select>
+            <button class="trigger" onclick="toggleSaveFileDialog();NauticalRoute_saveTrack();">Download</button>
+            <button class="trigger" onclick="toggleSaveFileDialog();">Cancel</button>
+        </div>
+    </div>
+
+    <div class="modal" id="preferences">
+        <div class="modal-content">
+            <span class="close-button" onclick="togglePrefDialog();">×</span>
+            <h1>Preferences</h1>
             <ul>
                 <li>Coordinate format <select id="coordFormat" onchange="NauticalRoute_getPoints(routeTrack);">
                     <option value="coordFormatdms"/>ggg°mm.mmm'
@@ -127,6 +157,13 @@ function get_nautical_actionDialog() {
     `;
     return htmlText;
 }
+
+function toggleOpenFileDialog() {
+    let o=$('#openfiledialog');
+    o.toggleClass('show-modal');
+}
+function togglePrefDialog() {$('#preferences').toggleClass('show-modal');}
+function toggleSaveFileDialog() {$('#savefiledialog').toggleClass('show-modal');}
 
 function NauticalRoute_saveTrack() {
     var format = document.getElementById("routeFormat").value;
@@ -196,7 +233,7 @@ function NauticalRoute_saveTrack() {
 }
 
 function NauticalRoute_openTrack() {
-    let fileInput = document.querySelector("#openfile");
+    let fileInput = document.querySelector("#openfilename");
     let files = fileInput.files;
     let gpxFile = files[0];
 
@@ -252,7 +289,6 @@ function NauticalRoute_routeAdded(event) {
     NauticalRoute_getPoints(routeTrack);
     // Select element for editing
     routeEdit.selectFeature(routeObject);
-    document.getElementById('buttonRouteDownloadTrack').disabled=false;
 }
 
 function NauticalRoute_routeModified(event) {
