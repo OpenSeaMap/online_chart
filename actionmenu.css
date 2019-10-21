@@ -3,8 +3,11 @@
  */
 
 div.menu {
+    width: (100%-10px);
+}
+
+.menu > ul {
     position: absolute;
-    width: 95%;
 }
 
 /* remove bullet points for all lists, and any indentation */
