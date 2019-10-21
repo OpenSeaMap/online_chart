@@ -2,6 +2,11 @@
  * styling for action Dialog menu
  */
 
+div.menu {
+    position: absolute;
+    width: 95%;
+}
+
 /* remove bullet points for all lists, and any indentation */
 .menu ul {
     list-style-type: none;
