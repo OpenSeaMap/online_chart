@@ -75,16 +75,25 @@ div#actionDialogMenu {
 }
 
 #segmentList td:nth-child(1) { width: 1em; } /* segment # */
-#segmentList td:nth-child(2) { width: 4em; } /* course */
+#segmentList td:nth-child(2) { width: 3em; } /* course */
 #segmentList td:nth-child(3) { width: 5em; } /* distance */
 #segmentList td:nth-child(4) { width: 11em; } /* coordinates */
-#segmentList td:nth-child(5) { width: 2em; } /* type */
+#segmentList td:nth-child(5) { width: 1em; } /* type */
 
 #segmentList th:nth-child(1) { width: 1em; } /* segment # */
-#segmentList th:nth-child(2) { width: 4em; } /* course */
+#segmentList th:nth-child(2) { width: 3em; } /* course */
 #segmentList th:nth-child(3) { width: 5em; } /* distance */
 #segmentList th:nth-child(4) { width: 11em; } /* coordinates */
-#segmentList th:nth-child(5) { width: 2em; } /* type */
+#segmentList th:nth-child(5) { width: 1em; } /* type */
 
 /* even/odd coloring */
 #segmentList tbody tr:nth-child(even) { background-color: #ececec; }
+
+#tripSummary th, #tripSummary td {
+    font-size: 80%;
+}
+
+#tripSummary tbody tr td {
+    border: 0px solid black;
+    border-top-width: 1px;
+}
