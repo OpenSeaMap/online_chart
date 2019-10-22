@@ -66,12 +66,6 @@
             var linkTextHydrographCurve = "<?=$t->tr('hydrographCurve')?>";
             var linkTextMeasuringValue = "<?=$t->tr('measuringValue')?>";
             var linkTextTendency = "<?=$t->tr('tendency')?>";
-            // FIXME: Work around for accessing translations from NauticalRoute.js
-            var tableTextNauticalRouteCoordinate = "<?=$t->tr('coordinate')?>";
-            var tableTextNauticalRouteCourse = "<?=$t->tr('course')?>";
-            var tableTextNauticalRouteDistance = "<?=$t->tr('distance')?>";
-            var confirmDelete = "<?=$t->tr("confirmDeleteRoute")?>";
-            var confirmClose = "<?=$t->tr("confirmCloseRoute")?>";
 
             // Set language
             var language = "<?=$t->getCurrentLanguage()?>";
@@ -542,13 +536,13 @@
 
             // Show dialog window
             function showActionDialog(htmlText) {
-                document.getElementById("actionDialog").style.visibility = 'visible';
-                document.getElementById("actionDialog").innerHTML=""+ htmlText +"";
+                $('#actionDialog').toggle(true);
+                $('#actionDialog').html(""+htmlText+"")
             }
 
             // Hide dialog window
             function closeActionDialog() {
-                document.getElementById("actionDialog").style.visibility = 'hidden';
+                $('#actionDialog').toggle(false);
             }
 
             function addMapDownload() {
@@ -602,14 +596,17 @@
 
             function addNauticalRoute() {
                 layer_nautical_route.setVisibility(true);
-                let htmlText= get_nautical_actionDialog();
-                showActionDialog(htmlText);
+                $('#routeEditActionDialog').show();
+                $('#actionDialog').show();
+
                 NauticalRoute_startEditMode();
             }
 
             function closeNauticalRoute() {
                 layer_nautical_route.setVisibility(false);
-                closeActionDialog();
+                $('#routeEditActionDialog').hide();
+                $('#actionDialog').hide();
+
                 NauticalRoute_stopEditMode();
             }
 
@@ -1179,8 +1176,10 @@
             <a id="license_marine_traffic" onClick="showMapKey('license')" style="display:none"><img alt="Marine Traffic" src="resources/icons/MarineTrafficLogo.png" height="30px"></a>
             <a id="license_waterdepth" onClick="showMapKey('license')" style="display:none"><img alt="Water Depth" src="resources/icons/depth.jpg" height="32px"></a>
         </div>
-        <div id="actionDialog">
-            <br>&nbsp;not found&nbsp;<br>&nbsp;
+        <div id="actionDialog" style="display:none">
+            <div id="routeEditActionDialog" style="display:none">
+                <?php include('routeEditActionDialog.inc'); ?>
+            </div>
         </div>
         <div id="compassRose">
             <img id="geoCompassRose" src="./resources/map/nautical_compass_rose_geo_north.png"/>

@@ -15,6 +15,7 @@ $german = array(
     "descrOpenPortGuide"     => "Meteogramm",
 
     // Buttons-------------------------------------------------------
+    "open"                   => "Öffnen",
     "save"                   => "Speichern",
     "ok"                     => "OK",
     "cancel"                 => "Abbrechen",
@@ -29,10 +30,12 @@ $german = array(
     "logout"                 => "Abmelden",
     "createAccount"          => "Benutzerkonto erstellen",
     "language"               => "Sprache",
+    "preferences"            => "Einstellungen",
 
     // Map-----------------------------------------------------------
     "coordinate"             => "Koordinate",
     "coordinateGrid"         => "Koordinatengitter",
+    "coordinateFormat"       => "Koordinatenformat",
     "copynpaste"             => "URL (Kopieren mit Strg/Cmd + C)",
     "course"                 => "Kurs",
     "distance"               => "Distanz",
@@ -55,7 +58,7 @@ $german = array(
     "help-online"            => "Onlinehilfe",
     "help-tidal-scale"       => "Pegel",
     "help-website-int"       => "Webseite",
-    "hydrographCurve"        => "Gangline",
+    "hydrographCurve"        => "Ganglinie",
     "markset"                => "Marker wird durch Klick in die Karte gesetzt.",
     "measuringValue"         => "Messwert",
     "permalinks"             => "Permalinks",
@@ -210,6 +213,10 @@ $german = array(
     // Trip planner
     "confirmDeleteRoute"     => "Möchten Sie diese Route löschen?",
     "confirmCloseRoute"      => "Möchten Sie das Tool schließen, ohne abzuspeichern?",
+    "units"                  => "Einheiten",
+    "name"                   => "Name",
+    "file"                   => "Datei",
+    "deleteRoute"            => "Route löschen",
 
     // other
     "noJavascript"           => "Entweder Ihr Browser unterstützt kein JavaScript, or Sie haben es ausgeschaltet. OpenSeaMap braucht JavaScript für die Kartenanzeige.",

@@ -27,7 +27,7 @@ img {
     position:absolute;
     top:50px;
     left:60px;
-    visibility:hidden;
+    display: none;
     border: 2px solid #000080;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
