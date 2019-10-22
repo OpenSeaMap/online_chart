@@ -316,9 +316,6 @@ function NauticalRoute_routeModified(event) {
 let routeChanged = false;
 
 function NauticalRoute_getPoints(points) {
-    if (points == undefined)
-        return ;
-
     routeChanged = true;
 
     var htmlText;
@@ -332,30 +329,36 @@ function NauticalRoute_getPoints(points) {
     }
 
     htmlText = '';
-    for(i = 0; i < points.length - 1; i++) {
-        latA = y2lat(points[i].y);
-        lonA = x2lon(points[i].x);
-        latB = y2lat(points[i + 1].y);
-        lonB = x2lon(points[i + 1].x);
-        distance = getDistance(latA, latB, lonA, lonB);
-        if (distUnits == "km") {
-            distance = nm2km(distance);
+    if (points != undefined) {
+        for(i = 0; i < points.length - 1; i++) {
+            latA = y2lat(points[i].y);
+            lonA = x2lon(points[i].x);
+            latB = y2lat(points[i + 1].y);
+            lonB = x2lon(points[i + 1].x);
+            distance = getDistance(latA, latB, lonA, lonB);
+            if (distUnits == "km") {
+                distance = nm2km(distance);
+            }
+            bearing = getBearing(latA, latB, lonA, lonB);
+            totalDistance += distance;
+            htmlText +=
+                '<tr>' +
+                '<td>' + parseInt(i+1) + '.</td>' +
+                '<td>' + bearing.toFixed(2) + '°</td>' +
+                '<td>' + distance.toFixed(2) + ' ' + distUnits + '</td>' +
+                '<td>' + coordFormat(latB,lonB) + '</td>' +
+                '<td>' + 'O' + '</td></tr>'
         }
-        bearing = getBearing(latA, latB, lonA, lonB);
-        totalDistance += distance;
-        htmlText +=
-            '<tr>' +
-            '<td>' + parseInt(i+1) + '.</td>' +
-            '<td>' + bearing.toFixed(2) + '°</td>' +
-            '<td>' + distance.toFixed(2) + ' ' + distUnits + '</td>' +
-            '<td>' + coordFormat(latB,lonB) + '</td>' +
-            '<td>' + 'O' + '</td></tr>'
+        document.getElementById("routeStart").innerHTML = coordFormat(y2lat(points[0].y),x2lon(points[0].x));
+        document.getElementById("routeEnd").innerHTML   = coordFormat(y2lat(points[points.length-1].y),x2lon(points[points.length-1].x));
+        document.getElementById("routeDistance").innerHTML = totalDistance.toFixed(2) + ' ' + distUnits;
+        document.getElementById("routePoints").innerHTML = htmlText;
+    } else {
+        document.getElementById("routeStart").innerHTML = '--';
+        document.getElementById("routeEnd").innerHTML   = '--';
+        document.getElementById("routeDistance").innerHTML = '--';
+        document.getElementById("routePoints").innerHTML = '';
     }
-
-    document.getElementById("routeStart").innerHTML = coordFormat(y2lat(points[0].y),x2lon(points[0].x));
-    document.getElementById("routeEnd").innerHTML   = coordFormat(y2lat(points[points.length-1].y),x2lon(points[points.length-1].x));
-    document.getElementById("routeDistance").innerHTML = totalDistance.toFixed(2) + ' ' + distUnits;
-    document.getElementById("routePoints").innerHTML = htmlText;
 }
 
 function NauticalRoute_getRouteCsv(points) {
