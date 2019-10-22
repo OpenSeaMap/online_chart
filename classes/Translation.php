@@ -112,6 +112,58 @@ class Translation {
         $text .= '</ul>'."\n";
         return $text;
     }
+
+    /*
+     * Erstelle eine Tabelle mit allen keys und den Übersetzungen in alle Sprachen
+     */
+    function makeTranslationTable() {
+        $allkeys = array();
+
+        foreach ($this->languages as $lang => $tab) {
+            foreach ($tab as $key => $val) {
+
+                if (! (array_key_exists($key, $allkeys))) {
+                    $allkeys[$key] = array();
+                }
+                $allkeys[$key][$lang] = $val;
+            }
+        }
+        unset($allkeys['langCode']);
+
+        $text = '<table style="display:none"><thead><tr><th>key</th>';
+        foreach ($this->languages as $lang => $tab) {
+            $text .= '<th>'.$lang.'</th>';
+        }
+        $text .= '</tr></thead>'."\n";
+
+        $text .= '<tbody>';
+        foreach ($allkeys as $key => $val) {
+            $text .= '<tr><td>'.$key.'</td>';
+            foreach ($this->languages as $lang => $foo) {
+                $text .= '<td>'.$val[$lang].'</td>';
+            }
+            $text .= '</tr>'."\n";
+        }
+        $text .= '</tbody></table>';
+
+        $text .= '<p>{| border="1" style="border-collapse:collapse"<br>!key<br>'."\n";
+        foreach ($this->languages as $lang => $tab) {
+            $text .= '!'.$lang."<br>\n";
+        }
+        foreach ($allkeys as $key => $val) {
+            $text .= "|-<br>\n|".$key."<br>\n";
+            foreach ($this->languages as $lang => $foo) {
+                if (key_exists($lang,$val)) {
+                    $text .= '|'.$val[$lang]."<br>\n";
+                } else {
+                    $text .= '|'."'''(missing)'''<br>\n";
+                }
+            }
+        }
+
+        $text .= '|}</p>';
+        return $text;
+    }
     /*
      * Parsed die vom Browser gesendeten bevorzugten Sprachen und gibt sie als Array mit Gewichtigkeit zurück
      */
