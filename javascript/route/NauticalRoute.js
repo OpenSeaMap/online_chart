@@ -129,9 +129,7 @@ function get_nautical_actionDialog() {
             <span class="close-button" onclick="togglePrefDialog();">×</span>
             <h1>Preferences</h1>
             <ul>
-                <li>Coordinate format <select id="coordFormat" onchange="NauticalRoute_getPoints(routeTrack);">
-                    <option value="coordFormatdms"/>ggg°mm.mmm'
-                    <option value="coordFormatd_dec"/>ggg.gggggg</select>
+                <li>Coordinate format <input type="text" size="4em" id="coordFormat" onchange="NauticalRoute_getPoints(routeTrack);" value="N __°##.#'">
                 </li>
                 <li>Unit <select id="distUnits" onchange="NauticalRoute_getPoints(routeTrack);">
                     <option value="nm"/>[nm]
@@ -322,11 +320,10 @@ function NauticalRoute_getPoints() {
     var htmlText;
     var latA, latB, lonA, lonB, distance, bearing;
     let totalDistance = 0;
-    var coordFormat = function(lat,lon) {return formatCoords(lat,'N __.___°') + " - " + formatCoords(lon,'W___.___°');}
 
-    if (document.getElementById("coordFormat").value == "coordFormatdms") {
-        coordFormat = function(lat,lon) {return formatCoords(lat,'N __°##\'##"') + " - " + formatCoords(lon,'W___°##\'##"');}
-    }
+    let latFormat = $('#coordFormat').val();
+    let lonFormat = $('#coordFormat').val().replace(/[NS]/,'W');
+    let coordFormat = function(lat,lon) {return formatCoords(lat, latFormat) + " - " + formatCoords(lon, lonFormat);}
 
     document.getElementById("routeStart").innerHTML = '--';
     document.getElementById("routeEnd").innerHTML   = '--';
