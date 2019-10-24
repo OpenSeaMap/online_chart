@@ -903,12 +903,12 @@
 
                 // Elevation Profile
                 layer_elevation_profile_contours = new OpenLayers.Layer.TMS(
-                    'ASTER GDEM Contour Lines (zoom 13-17)',
-                    'http://korona.geog.uni-heidelberg.de/tiles/asterc/?',
+                    'MapSurfer ASTER GDEM contour lines (layer 13-17)',
+                    'https://maps.heigit.org/openmapsurfer/tiles/asterc/webmercator/',
                     {
                         layerId                 : 19,
                         type                    : 'png',
-                        getURL                  : getTileURLAsParams,
+                        getURL                  : getTileURL,
                         displayOutsideMaxExtent : true,
                         isBaseLayer             : false,
                         maxResolution           : 19.109257068634033,
@@ -917,12 +917,12 @@
                     }
                 );
                 layer_elevation_profile_hillshade = new OpenLayers.Layer.TMS(
-                    'ASTER GDEM & SRTM Hillshade',
-                    'http://korona.geog.uni-heidelberg.de/tiles/asterh/?',
+                    'Mapsurfer ASTER GDEM and SRTM Hillshade',
+                    'https://maps.heigit.org/openmapsurfer/tiles/asterh/webmercator/',
                     {
                         layerId                 : 20,
                         type                    : 'png',
-                        getURL                  : getTileURLAsParams,
+                        getURL                  : getTileURL,
                         displayOutsideMaxExtent : true,
                         isBaseLayer             : false,
                         minResolution           : 19.109257068634033,
