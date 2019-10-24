@@ -903,7 +903,7 @@
                 // Elevation Profile
                 layer_elevation_profile_contours = new OpenLayers.Layer.TMS(
                     'MapSurfer ASTER GDEM contour lines (layer 13-17)',
-                    'http://maps.heigit.org/openmapsurfer/tiles/asterc/webmercator/',
+                    'https://maps.heigit.org/openmapsurfer/tiles/asterc/webmercator/',
                     {
                         layerId                 : 19,
                         type                    : 'png',
