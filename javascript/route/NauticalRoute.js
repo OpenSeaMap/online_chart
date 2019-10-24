@@ -43,7 +43,7 @@ var style_edit = {
 function NauticalRoute_initControls() {
     editPanel = new OpenLayers.Control.Panel();
     routeDraw = new OpenLayers.Control.DrawFeature(layer_nautical_route, OpenLayers.Handler.Path, {title: 'Draw line'});
-    routeEdit = new OpenLayers.Control.ModifyFeature(layer_nautical_route, {title: 'Edit feature'}),
+    routeEdit = new OpenLayers.Control.ModifyFeature(layer_nautical_route, {title: 'Edit feature',clickout:false}),
     editPanel.addControls([routeDraw, routeEdit]);
     editPanel.defaultControl = routeDraw;
     map.addControl(editPanel);
