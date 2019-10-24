@@ -743,6 +743,7 @@
             }
 
             function drawmap() {
+                let scaleLineSize = Math.max(0.2*$(window).width(),0.2*$(window).height()).toFixed(0);
                 map = new OpenLayers.Map('map', {
                     numZoomLevels     : 19,
                     projection        : projMerc,
@@ -757,7 +758,7 @@
                         permalinkControl,
                         new OpenLayers.Control.Navigation(),
                         //new OpenLayers.Control.LayerSwitcher(), //only for debugging
-                        new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: '40', geodesic: true}),
+                        new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: scaleLineSize, geodesic: true}),
                         new OpenLayers.Control.MousePositionDM(),
                         new OpenLayers.Control.OverviewMap(),
                         ZoomBar
