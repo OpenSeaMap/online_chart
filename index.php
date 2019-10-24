@@ -917,7 +917,7 @@
                 );
                 layer_elevation_profile_hillshade = new OpenLayers.Layer.TMS(
                     'Mapsurfer ASTER GDEM and SRTM Hillshade',
-                    'http://maps.heigit.org/openmapsurfer/tiles/asterh/webmercator/',
+                    'https://maps.heigit.org/openmapsurfer/tiles/asterh/webmercator/',
                     {
                         layerId                 : 20,
                         type                    : 'png',
