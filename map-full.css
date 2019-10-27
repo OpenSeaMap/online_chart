@@ -47,10 +47,12 @@ img {
 
 #geoCompassRose {
     position:absolute; left:0px; bottom:0px;
+    width:245px; height:calc(247px*110/104);
 }
 
 #magCompassRose {
-    position: absolute; left:27px; bottom:24px;
+    position: absolute; left:-7px; bottom:-11px;
+    width:261px; height:calc(261px*1163/1103);
     transform: rotate(0deg);
 }
 
