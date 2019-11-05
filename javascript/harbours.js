@@ -44,8 +44,8 @@ function make_harbour_request(params) {
         url += (url.indexOf("?") > -1) ? "&" : "?";
         url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
     }
-    // Example: http://dev.openseamap.org/website/map/api/getHarbours.php?b=43.16098&t=43.46375&l=16.23863&r=17.39219&ucid=0&maxSize=5&zoom=11
-    var skgUrl="http://dev.openseamap.org/website/map/api/getHarbours.php"+url;
+    // Example: http://harbour.openseamap.org/getHarbours.php?b=43.16098&t=43.46375&l=16.23863&r=17.39219&ucid=0&maxSize=5&zoom=11
+    var skgUrl="http://harbour.openseamap.org/getHarbours.php"+url;
 
     var script = document.createElement("script");
     script.src = skgUrl;
