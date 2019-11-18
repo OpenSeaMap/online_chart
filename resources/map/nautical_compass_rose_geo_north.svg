@@ -10,12 +10,14 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.0"
+   width="1163"
+   height="1163"
+   viewBox="-581 581 1162 1162"
    id="svg1901"
-   viewport="0 0 104.75478 110.30477"
    sodipodi:docname="nautical_compass_rose_geo_north.svg"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <metadata
-     id="metadata1063">
+     id="metadata1460">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -35,26 +37,24 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="2560"
-     inkscape:window-height="1346"
-     id="namedview1061"
+     inkscape:window-width="1920"
+     inkscape:window-height="986"
+     id="namedview1458"
      showgrid="false"
-     inkscape:zoom="10.496991"
-     inkscape:cx="53.214512"
-     inkscape:cy="64.46383"
-     inkscape:window-x="1717"
-     inkscape:window-y="187"
+     inkscape:zoom="0.42"
+     inkscape:cx="551.5"
+     inkscape:cy="581.5"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1901"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
+     showguides="true"
+     inkscape:guide-bbox="true" />
   <defs
      id="defs1903" />
   <g
-     id="g2491"
-     transform="matrix(0.1,0,0,0.1,-2.625,-1.278125)">
+     id="g2087"
+     transform="translate(-550,571)">
     <path
        style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:semi-condensed;font-size:18px;line-height:125%;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Semi-Condensed';text-align:center;writing-mode:lr-tb;text-anchor:middle;display:inline;overflow:visible;visibility:visible;fill:none;stroke:#e50083;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
        id="path6011"
