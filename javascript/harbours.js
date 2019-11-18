@@ -44,8 +44,8 @@ function make_harbour_request(params) {
         url += (url.indexOf("?") > -1) ? "&" : "?";
         url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
     }
-    // Example: http://dev.openseamap.org/website/map/api/getHarbours.php?b=43.16098&t=43.46375&l=16.23863&r=17.39219&ucid=0&maxSize=5&zoom=11
-    var skgUrl="http://dev.openseamap.org/website/map/api/getHarbours.php"+url;
+    // Example: https://harbour.openseamap.org/getHarbours.php?b=43.16098&t=43.46375&l=16.23863&r=17.39219&ucid=0&maxSize=5&zoom=11
+    var skgUrl="https://harbour.openseamap.org/getHarbours.php"+url;
 
     var script = document.createElement("script");
     script.src = skgUrl;
@@ -71,7 +71,7 @@ function putHarbourMarker(id, lon, lat, names, link, type) {
         if (link != '') {
             popupText += "<br/><br/><a href='" + link + "' target='blank'>" + linkTextSkipperGuide + "</a>";
         }
-        popupText += "<br/><a href='http://weather.openportguide.de/cgi-bin/weather.pl/weather.png?var=meteogram&nx=614&ny=750&lat=" + lat + "&lon=" + lon + "&lang=" + language + "&unit=metric&label=" + convert2Locode(name[0]) + "' target='blank'>" + linkTextWeatherHarbour + "</a>";
+        popupText += "<br/><a href='https://weather.openportguide.de/cgi-bin/weather.pl/weather.png?var=meteogram&nx=614&ny=750&lat=" + lat + "&lon=" + lon + "&lang=" + language + "&unit=metric&label=" + convert2Locode(name[0]) + "' target='blank'>" + linkTextWeatherHarbour + "</a>";
         create_harbour_marker(lon2x(lon), lat2y(lat), popupText, type);
 
         var harbour = {id: id, name: names, lat: lat, lon: lon, type: type, feature: null};
