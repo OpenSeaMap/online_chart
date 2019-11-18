@@ -40,7 +40,7 @@ function setMagdev(p) {
     let deviation = myGeoMagNow.dec;
     let change = (myGeoMagThen.dec-myGeoMagNow.dec) / nextyear;
 
-    document.getElementById('magCompassRose').style.transform = 'rotate('+(-deviation).toFixed(1)+'deg)';
+    document.getElementById('magCompassRose').style.transform = 'rotate('+deviation.toFixed(1)+'deg)';
     // EXAMPLE
     // VAR 3.5°5'E (2015)
     // ANNUAL DECREASE 8'
