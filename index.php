@@ -39,6 +39,12 @@
         <script type="text/javascript" src="./javascript/mag_deviation.js"></script>
         <script type="text/javascript">
 
+            <?php
+                $tempval = parse_ini_file("/var/lib/online-chart/online_chart.ini");
+                $osm_server = $tempval['osmserver'];
+                echo "var OsmTileServer = ", "\"", $osm_server, "\""
+            ?>
+
             var map;
 
             // Position and zoomlevel of the map (will be overriden with permalink parameters or cookies)
@@ -113,6 +119,25 @@
 
             // Marker that is pinned at the last location the user searched for and selected.
             var searchedLocationMarker = null;
+
+            // return array of osm tile server
+            function GetOsmServer()
+            {
+
+              var retv;
+
+              if (OsmTileServer == "BRAVO")
+              {
+                retv=['http://213.209.102.17/tile/${z}/${x}/${y}.png'];
+              }
+              else{
+                retv=['http://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
+                      'http://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
+                      'http://c.tile.openstreetmap.org/${z}/${x}/${y}.png'];
+              }
+
+              return retv;
+            }
 
             // Load map for the first time
             function init() {
@@ -808,15 +833,13 @@
                 });
 
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
+
                 // Mapnik (Base map)
-                layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik', [
-                    'http://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
-                    'http://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
-                    'http://c.tile.openstreetmap.org/${z}/${x}/${y}.png'
-                ],{
-                    layerId      : 1,
-                    wrapDateLine : true
-                });
+                layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik',
+                                                        GetOsmServer(),
+                                                        { layerId      : 1,
+                                                          wrapDateLine : true
+                                                        });
                 // Seamark
                 layer_seamark = new OpenLayers.Layer.TMS("seamarks", "http://t1.openseamap.org/seamark/",
                     { layerId: 3, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
