@@ -128,7 +128,7 @@
 
               if (OsmTileServer == "BRAVO")
               {
-                retv=['http://213.209.102.17/tile/${z}/${x}/${y}.png'];
+                retv=['http://t2.openseamap.org/tile/${z}/${x}/${y}.png'];
               }
               else{
                 retv=['http://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
