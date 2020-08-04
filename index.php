@@ -128,12 +128,12 @@
 
               if (OsmTileServer == "BRAVO")
               {
-                retv=['http://t2.openseamap.org/tile/${z}/${x}/${y}.png'];
+                retv=['https://t2.openseamap.org/tile/${z}/${x}/${y}.png'];
               }
               else{
-                retv=['http://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
-                      'http://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
-                      'http://c.tile.openstreetmap.org/${z}/${x}/${y}.png'];
+                retv=['https://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
+                      'https://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
+                      'https://c.tile.openstreetmap.org/${z}/${x}/${y}.png'];
               }
 
               return retv;
@@ -604,7 +604,7 @@
                 } else {
                     format = "." + format
                 }
-                var url = "http://sourceforge.net/projects/opennautical/files/Maps" + downloadLink + "ONC-" + downloadName + format + "/download";
+                var url = "https://sourceforge.net/projects/opennautical/files/Maps" + downloadLink + "ONC-" + downloadName + format + "/download";
 
                 downloadWindow = window.open(url);
             }
@@ -841,10 +841,10 @@
                                                           wrapDateLine : true
                                                         });
                 // Seamark
-                layer_seamark = new OpenLayers.Layer.TMS("seamarks", "http://t1.openseamap.org/seamark/",
+                layer_seamark = new OpenLayers.Layer.TMS("seamarks", "https://t1.openseamap.org/seamark/",
                     { layerId: 3, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
                 // Sport
-                layer_sport = new OpenLayers.Layer.TMS("Sport", "http://t1.openseamap.org/sport/",
+                layer_sport = new OpenLayers.Layer.TMS("Sport", "https://t1.openseamap.org/sport/",
                     { layerId: 4, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 //GebcoDepth
 /*                layer_gebco_deepshade = new OpenLayers.Layer.WMS("deepshade", "http://osm.franken.de:8080/geoserver/gebco/wms",
@@ -1210,7 +1210,7 @@
         <div style="position:absolute; bottom:48px; left:12px; cursor:pointer;">
             <a id="license_osm"  onClick="showMapKey('license')"><img alt="OSM-Logo" src="resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>"></a>
             <a id="license_ccbysa" onClick="showMapKey('license')"><img alt="CC by SA" src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>"></a>
-            <a id="license_bing" href="http://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none"><img alt="bing" src="resources/icons/bing.png" height="29px"></a>
+            <a id="license_bing" href="https://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none"><img alt="bing" src="resources/icons/bing.png" height="29px"></a>
             <a id="license_marine_traffic" onClick="showMapKey('license')" style="display:none"><img alt="Marine Traffic" src="resources/icons/MarineTrafficLogo.png" height="30px"></a>
             <a id="license_waterdepth" onClick="showMapKey('license')" style="display:none"><img alt="Water Depth" src="resources/icons/depth.jpg" height="32px"></a>
         </div>
