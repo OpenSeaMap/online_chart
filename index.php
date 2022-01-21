@@ -97,8 +97,8 @@
             var layer_tidalscale;                  // 16
             var layer_permalink;                   // 17
             var layer_waterdepth_trackpoints_100m;      // 18
-            var layer_waterdepth_trackpoints_10m;      // 19
-            var layer_waterdepth_contours;        // 20
+            var layer_waterdepth_trackpoints_10m;      // 21
+            var layer_waterdepth_contours;        // 22
 
             // To not change the permalink layer order, every removed
             // layer keeps its number. The ArgParser compares the
