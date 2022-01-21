@@ -97,8 +97,6 @@
             var layer_tidalscale;                  // 16
             var layer_permalink;                   // 17
             var layer_waterdepth_trackpoints_100m;      // 18
-            var layer_elevation_profile_contours;  // 19
-            var layer_elevation_profile_hillshade; // 20
             var layer_waterdepth_trackpoints_10m;      // 21
             var layer_waterdepth_contours;        // 22
 
@@ -249,10 +247,6 @@
                 document.getElementById('checkLayerWaterDepthTrackPoints').checked = depth10mVisible || depth100mVisible
                 showWaterDepthTrackPoints();
 
-                var profileVisible = getCookie("ElevationProfileLayerVisible") === "true"
-                layer_elevation_profile_contours.setVisibility(profileVisible);
-                layer_elevation_profile_hillshade.setVisibility(profileVisible);
-
                 if (getCookie("CompassroseVisible") === "true") {
                     document.getElementById("checkCompassrose").checked = true
                     toggleCompassrose();
@@ -280,7 +274,6 @@
                 //document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisibility() === true);
                 setWaterDepthBoxes();
                 document.getElementById("checkDepthContours").checked                   = (layer_waterdepth_contours.getVisibility() === true);
-                document.getElementById("checkLayerElevationProfile").checked       = (layer_elevation_profile_contours.getVisibility() === true || layer_elevation_profile_hillshade.getVisibility() === true);
                 document.getElementById("checkCompassrose").checked                 = (document.getElementById("compassRose").style.visibility === 'visible');
 
                 createPermaLink();
@@ -500,18 +493,6 @@
               var visibleNew = !layer_waterdepth_contours.visibility
               layer_waterdepth_contours.setVisibility(visibleNew);
               setCookie("WaterDepthContoursVisible", visibleNew);
-            }
-
-            function showElevationProfile() {
-                if (layer_elevation_profile_contours.visibility) {
-                    layer_elevation_profile_contours.setVisibility(false);
-                    layer_elevation_profile_hillshade.setVisibility(false);
-                    setCookie("ElevationProfileLayerVisible", "false");
-                } else {
-                    layer_elevation_profile_contours.setVisibility(true);
-                    layer_elevation_profile_hillshade.setVisibility(true);
-                    setCookie("ElevationProfileLayerVisible", "true");
-                }
             }
 
             // Show Wikipedia layer
@@ -924,36 +905,6 @@
                 });
                 layer_waterdepth_trackpoints_100m = waterDepthTrackPoints100m.getLayer();
 
-                // Elevation Profile
-                layer_elevation_profile_contours = new OpenLayers.Layer.TMS(
-                    'MapSurfer ASTER GDEM contour lines (layer 13-17)',
-                    'https://maps.heigit.org/openmapsurfer/tiles/asterc/webmercator/',
-                    {
-                        layerId                 : 19,
-                        type                    : 'png',
-                        getURL                  : getTileURL,
-                        displayOutsideMaxExtent : true,
-                        isBaseLayer             : false,
-                        maxResolution           : 19.109257068634033,
-//                        minResolution           : 1.194328566789627,
-                        visibility              : false
-                    }
-                );
-                layer_elevation_profile_hillshade = new OpenLayers.Layer.TMS(
-                    'Mapsurfer ASTER GDEM and SRTM Hillshade',
-                    'https://maps.heigit.org/openmapsurfer/tiles/asterh/webmercator/',
-                    {
-                        layerId                 : 20,
-                        type                    : 'png',
-                        getURL                  : getTileURL,
-                        displayOutsideMaxExtent : true,
-                        isBaseLayer             : false,
-                        minResolution           : 19.109257068634033,
-                        visibility              : false
-                    }
-                );
-                layer_elevation_profile_hillshade.setOpacity(0.75);
-
                 layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
                     {
                       layers: ['contour','contour2'],
@@ -967,8 +918,6 @@
                 map.addLayers([
                     layer_mapnik,
                     layer_bing_aerial,
-                    layer_elevation_profile_contours,
-                    layer_elevation_profile_hillshade,
 //                    layer_gebco_deepshade,
                     layer_gebco_deeps_gwc,
                     layer_seamark,
