@@ -37,6 +37,21 @@
         </td>
     </tr>
     <tr>
+        <td height="5" class="normal" colspan="2">
+            <hr>
+        </td>
+    </tr>
+    <tr>
+        <td><img alt="GEBCO Logo" src="resources/icons/gebco-logo.svg" height="32" border="0"></td>
+        <td>
+        Data Attributation: Derived product from the GEBCO 2021 Grid,<br>
+        made with OpenStreetMap by OpenDEM: Download data<br>
+        <br>
+        Click in the map to get derived depth classes & coordinates.<br>
+        Contours at scaleline < 10km, resolution GEBCO 2021 15 arc-seconds<br>
+        </td>
+    </tr>
+    <tr>
         <td><img alt="Water Depth Logo" src="resources/icons/depth.jpg" height="32" border="0"></td>
         <td>
             <span>The depth data are from the following sources:</span>
