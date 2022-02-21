@@ -828,11 +828,8 @@
                 layer_sport = new OpenLayers.Layer.TMS("Sport", "https://t1.openseamap.org/sport/",
                     { layerId: 4, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 //GebcoDepth
-/*                layer_gebco_deepshade = new OpenLayers.Layer.WMS("deepshade", "http://osm.franken.de:8080/geoserver/gebco/wms",
-                    {layers: "gebco:deepshade_2014", projection: new OpenLayers.Projection("EPSG:900913"), format:"image/png", transparent:"true"},
-                    { layerId: 5, isBaseLayer: false, visibility: false, opacity: 0.0, minResolution: 76.44});*/
-                layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("deeps_gwc", "http://osm.franken.de:8080/geoserver/gwc/service/wms",
-                    {layers: "gebco_2014", format:"image/png"},
+                layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("gebco_2021", "https://depth.openseamap.org/geoserver/gwc/service/wms",
+                    {layers: "gebco2021:gebco_2021", format:"image/png"},
                     { layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.8});
                 // POI-Layer for harbours
                 layer_pois = new OpenLayers.Layer.Vector("pois", {
