@@ -5,12 +5,10 @@ The following external sites/services are used to display the various layers.
 ## OSM base layer
 
 ### OpenStreetMap server
-- http://a.tile.openstreetmap.org/11/1088/657.png
-- http://b.tile.openstreetmap.org/11/1088/657.png
-- http://c.tile.openstreetmap.org/11/1088/657.png
+- https://tile.openstreetmap.org/11/1088/657.png
 
 ### Our tile server (Bravo)
-- http://osm1.wtnet.de/tiles/base/11/1088/657.png
+- https://t2.openseamap.org/tile/11/1088/657.png
 
 
 All should return a png tile with the size 256x256 px.
@@ -19,18 +17,18 @@ All should return a png tile with the size 256x256 px.
 t1.openseamap.org
 
 ### Examples
-- http://t1.openseamap.org/seamark/14/8384/5405.png
+- https://t1.openseamap.org/seamark/14/8384/5405.png
 
 Should return a png tile with the size 256x256 px.
 
 ## Harbours
 
-Fetches data from http://dev.openseamap.org
+Fetches data from https://harbour.openseamap.org/
 
 (The php scripts queries a local database with seems to run on dev.openseamap.org)
 
 ### Examples
-- http://dev.openseamap.org/website/map/api/getHarbours.php?b=43.16098&t=43.46375&l=16.23863&r=17.39219&ucid=0&maxSize=5&zoom=11
+- https://harbour.openseamap.org/getHarbours.php?b=43.16098&t=43.46375&l=16.23863&r=17.39219&ucid=0&maxSize=5&zoom=11
 
 Should return a ```text/html``` file with some content like:
 ```
