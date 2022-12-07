@@ -104,7 +104,7 @@
             // layer keeps its number. The ArgParser compares the
             // count of layers with the layers argument length. So we
             // have to let him know, how many layers are removed.
-            var ignoredLayers = 2;
+            var ignoredLayers = 4;
 
             // Select controls
             var selectControl;
