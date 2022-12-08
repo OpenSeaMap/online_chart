@@ -820,10 +820,10 @@
                                                           wrapDateLine : true
                                                         });
                 // Seamark
-                layer_seamark = new OpenLayers.Layer.TMS("seamarks", "https://t1.openseamap.org/seamark/",
+                layer_seamark = new OpenLayers.Layer.TMS("seamarks", "https://tiles.openseamap.org/seamark/",
                     { layerId: 3, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
                 // Sport
-                layer_sport = new OpenLayers.Layer.TMS("Sport", "https://t1.openseamap.org/sport/",
+                layer_sport = new OpenLayers.Layer.TMS("Sport", "https://tiles.openseamap.org/sport/",
                     { layerId: 4, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 //GebcoDepth
                 layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("gebco_2021", "https://depth.openseamap.org/geoserver/gwc/service/wms",

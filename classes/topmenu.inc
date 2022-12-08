@@ -83,7 +83,7 @@
                   <a href="http://openseamap.org/index.php?id=kartendownload"><strong>Download</strong></a>
                 </li>
             <li>
-              <a href="https://alpha.openseamap.org/#/download/.*/null?lat=35.0245&lon=-63.2636&zoom=3&layers=A10001011000&lang=en" target="_blank">OpenCPN (Kap)</a>
+              <a href="https://map2.openseamap.org/#/download/.*/null?lat=35.0245&lon=-63.2636&zoom=3&layers=A10001011000&lang=en" target="_blank">OpenCPN (Kap)</a>
             </li>
                 <li>
                   <a href="http://wiki.openstreetmap.org/wiki/DE:OpenSeaMap_and_Garmin_nautical_chart_plotter#Download" target="_blank">Garmin</a>
