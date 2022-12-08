@@ -97,6 +97,8 @@
             var layer_tidalscale;                  // 16
             var layer_permalink;                   // 17
             var layer_waterdepth_trackpoints_100m;      // 18
+            // var layer_elevation_profile_contours;  // 19
+            // var layer_elevation_profile_hillshade;  //20
             var layer_waterdepth_trackpoints_10m;      // 21
             var layer_waterdepth_contours;        // 22
 
@@ -104,7 +106,7 @@
             // layer keeps its number. The ArgParser compares the
             // count of layers with the layers argument length. So we
             // have to let him know, how many layers are removed.
-            var ignoredLayers = 2;
+            var ignoredLayers = 4;
 
             // Select controls
             var selectControl;
