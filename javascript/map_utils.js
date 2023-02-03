@@ -20,8 +20,8 @@
 var earthRadius = 6371.221; //Km
 
 // Projections-----------------------------------------------------------------
-var projMerc = new OpenLayers.Projection("EPSG:900913");
-var proj4326 = new OpenLayers.Projection("EPSG:4326");
+var projMerc = ol.proj.get('EPSG:3857');
+var proj4326 = ol.proj.get("EPSG:4326");
 
 // Zoom------------------------------------------------------------------------
 var zoomUnits= [
@@ -224,9 +224,8 @@ function jumpToSearchedLocation(longitude, latitude) {
 
 // Common utilities------------------------------------------------------------
 function jumpTo(lon, lat, zoom) {
-    var lonlat = new OpenLayers.LonLat(lon, lat);
-    lonlat.transform(proj4326, projMerc);
-    map.setCenter(lonlat, zoom);
+    map.getView().setCenter(ol.proj.fromLonLat([lon,lat]));
+    map.getView().setZoom(zoom);
 }
 
 function getTileURL(bounds) {
@@ -281,40 +280,47 @@ function getTileURLAsParams(bounds) {
     }
 }
 
-function addMarker(layer, buffLon, buffLat, popupContentHTML) {
-    var pos = new OpenLayers.LonLat(buffLon, buffLat);
-    pos.transform(proj4326, projMerc);
-    var mFeature = new OpenLayers.Feature(layer, pos);
-    mFeature.closeBox = true;
-    mFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {minSize: new OpenLayers.Size(260, 100) } );
-    mFeature.data.popupContentHTML = popupContentHTML;
 
-    var size = new OpenLayers.Size(32,32);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    var icon = new OpenLayers.Icon('resources/icons/Needle_Red_32.png', size, offset);
+const markerStyle = new ol.style.Style({
+    image: new ol.style.Icon({
+        src: 'resources/icons/Needle_Red_32.png',
+        size: [32, 32],
+        anchor: [0.5, 1],
+    })
+})
 
-    var marker = new OpenLayers.Marker(pos, icon);
-    marker.feature = mFeature;
+function addMarker(layer, lon, lat, popupContentHTML) {
+    const coord = ol.proj.fromLonLat([buffLon, buffLat]);
+    var feature = new ol.Feature(new ol.geom.Point(coord));
+    // mFeature.closeBox = true;
 
-    var markerClick = function(evt) {
-        if (this.popup == null) {
-            this.popup = this.createPopup(this.closeBox);
-            map.addPopup(this.popup);
-            this.popup.show();
-        } else {
-            this.popup.toggle();
-        }
-        OpenLayers.Event.stop(evt);
-    };
+    // TODO oli
+    // mFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {minSize: new OpenLayers.Size(260, 100) } );
+    // mFeature.data.popupContentHTML = popupContentHTML;
 
 
-    layer.addMarker(marker);
-    if (popupContentHTML != -1) {
-        marker.events.register("mousedown", mFeature, markerClick);
-        map.addPopup(mFeature.createPopup(mFeature.closeBox));
-    }
+    // TODO oli
+    // var markerClick = function(evt) {
+    //     if (this.popup == null) {
+    //         this.popup = this.createPopup(this.closeBox);
+    //         map.addPopup(this.popup);
+    //         this.popup.show();
+    //     } else {
+    //         this.popup.toggle();
+    //     }
+    //     OpenLayers.Event.stop(evt);
+    // };
+    feature.setStyle(markerStyle);
 
-    return marker;
+    layer.getSource().addFeature(feature);
+
+    // TODO oli
+    // if (popupContentHTML != -1) {
+    //     marker.events.register("mousedown", mFeature, markerClick);
+    //     map.addPopup(mFeature.createPopup(mFeature.closeBox));
+    // }
+
+    return feature;
 }
 
 // Vector layer utilities------------------------------------------------------

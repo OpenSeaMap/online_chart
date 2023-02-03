@@ -17,13 +17,15 @@
         <link rel="stylesheet" type="text/css" href="topmenu.css">
         <link rel="stylesheet" type="text/css" href="javascript/route/NauticalRoute.css">
         <script type="text/javascript" src="./javascript/lib/jquery.js"></script>
-        <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
+        <!-- <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
         <script type="text/javascript" src="./javascript/translation-<?=$t->getCurrentLanguageSafe()?>.js"></script>
         <script type="text/javascript" src="./javascript/permalink.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>
         <script type="text/javascript" src="./javascript/countries.js"></script>
         <script type="text/javascript" src="./javascript/map_utils.js"></script>
-        <script type="text/javascript" src="./javascript/harbours.js"></script>
+        <!--script type="text/javascript" src="./javascript/harbours.js"></script>
         <script type="text/javascript" src="./javascript/nominatim.js"></script>
         <script type="text/javascript" src="./javascript/tidal_scale.js"></script>
         <script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script>
@@ -36,7 +38,7 @@
         <script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script>
         <script type="text/javascript" src="./javascript/geomagjs/cof2Obj.js"></script>
         <script type="text/javascript" src="./javascript/geomagjs/geomag.js"></script>
-        <script type="text/javascript" src="./javascript/mag_deviation.js"></script>
+        <script type="text/javascript" src="./javascript/mag_deviation.js"></script> -->
         <script type="text/javascript">
 
             <?php
@@ -112,30 +114,16 @@
             var selectControl;
 
             // Controls
-            var ZoomBar          = new OpenLayers.Control.PanZoomBar();
-            var permalinkControl = new OpenSeaMap.Control.Permalink(null, null, {
-                ignoredLayers : ignoredLayers
-            });
+            var ZoomBar          = new ol.control.ZoomSlider();
+
+            // TODO
+            // var permalinkControl = new OpenSeaMap.Control.Permalink(null, null, {
+            //     ignoredLayers : ignoredLayers
+            // });
 
             // Marker that is pinned at the last location the user searched for and selected.
             var searchedLocationMarker = null;
 
-            // return array of osm tile server
-            function GetOsmServer()
-            {
-
-              var retv;
-
-              if (OsmTileServer == "BRAVO")
-              {
-                retv=['https://t2.openseamap.org/tile/${z}/${x}/${y}.png'];
-            }
-              else{
-                retv=['https://tile.openstreetmap.org/${z}/${x}/${y}.png'];
-              }
-
-              return retv;
-            }
 
             // Load map for the first time
             function init() {
@@ -161,8 +149,12 @@
                     lon = mLon;
                 }
                 drawmap();
-                layer_marker = new OpenLayers.Layer.Markers("Marker",{
-                    layerId: -2 // invalid layerId -> will be ignored by layer visibility setup
+                layer_marker = new ol.layer.Vector({
+                    source: new ol.source.Vector(),
+                    properties:{
+                        name: "Marker",
+                        layerId: -2 // invalid layerId -> will be ignored by layer visibility setup
+                    }
                 });
                 map.addLayer(layer_marker);
                 try{
@@ -176,14 +168,14 @@
                                     .replace('&#x3C;/b&#x3E;', '</b>');
                       addMarker(layer_marker, mLon, mLat, mtext);
                   }
-                }catch(err) {
+                } catch(err) {
                     console.log(err)
                 }
-                readLayerCookies();
-                resetLayerCheckboxes();
-                initMenuTools();
+                // readLayerCookies();
+                // resetLayerCheckboxes();
+                // initMenuTools();
                 // Set current language for internationalization
-                OpenLayers.Lang.setCode(language);
+                // OpenLayers.Lang.setCode(language);
             }
 
             function readLayerCookies() {
@@ -258,22 +250,22 @@
                 // This method is separated from readLayerCookies because
                 // the permalink control also will set the visibility of
                 // layers.
-                document.getElementById("checkLayerSeamark").checked                = (layer_seamark.getVisibility() === true);
-                document.getElementById("checkLayerHarbour").checked                = (layer_pois.getVisibility() === true);
-                document.getElementById("checkLayerTidalScale").checked             = (layer_tidalscale.getVisibility() === true);
-                document.getElementById("checkLayerSport").checked                  = (layer_sport.getVisibility() === true);
-                document.getElementById("checkLayerGridWGS").checked                = (layer_grid.getVisibility() === true);
-                document.getElementById("checkLayerGebcoDepth").checked             = (/*layer_gebco_deepshade.getVisibility() === true ||*/ layer_gebco_deeps_gwc.getVisibility() === true);
-                //document.getElementById("checkDownload").checked                    = (layer_download.getVisibility() === true);
-                document.getElementById("checkNauticalRoute").checked               = (layer_nautical_route.getVisibility() === true);
-                document.getElementById("checkLayerWikipedia").checked              = (layer_wikipedia.getVisibility() === true);
-                document.getElementById("checkLayerWikipediaThumbnails").checked    = (layer_wikipedia.getVisibility() === true && wikipediaThumbs === true);
+                document.getElementById("checkLayerSeamark").checked                = (layer_seamark.getVisible() === true);
+                document.getElementById("checkLayerHarbour").checked                = (layer_pois.getVisible() === true);
+                document.getElementById("checkLayerTidalScale").checked             = (layer_tidalscale.getVisible() === true);
+                document.getElementById("checkLayerSport").checked                  = (layer_sport.getVisible() === true);
+                document.getElementById("checkLayerGridWGS").checked                = (layer_grid.getVisible() === true);
+                document.getElementById("checkLayerGebcoDepth").checked             = (/*layer_gebco_deepshade.getVisible() === true ||*/ layer_gebco_deeps_gwc.getVisible() === true);
+                //document.getElementById("checkDownload").checked                    = (layer_download.getVisible() === true);
+                document.getElementById("checkNauticalRoute").checked               = (layer_nautical_route.getVisible() === true);
+                document.getElementById("checkLayerWikipedia").checked              = (layer_wikipedia.getVisible() === true);
+                document.getElementById("checkLayerWikipediaThumbnails").checked    = (layer_wikipedia.getVisible() === true && wikipediaThumbs === true);
                 document.getElementById("checkLayerBingAerial").checked             = (map.baseLayer == layer_bing_aerial);
-                document.getElementById("checkLayerAis").checked                    = (layer_ais.getVisibility() === true);
-                document.getElementById("checkPermalink").checked                   = (layer_permalink.getVisibility() === true);
-                //document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisibility() === true);
+                document.getElementById("checkLayerAis").checked                    = (layer_ais.getVisible() === true);
+                document.getElementById("checkPermalink").checked                   = (layer_permalink.getVisible() === true);
+                //document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisible() === true);
                 setWaterDepthBoxes();
-                document.getElementById("checkDepthContours").checked                   = (layer_waterdepth_contours.getVisibility() === true);
+                document.getElementById("checkDepthContours").checked                   = (layer_waterdepth_contours.getVisible() === true);
                 document.getElementById("checkCompassrose").checked                 = (document.getElementById("compassRose").style.visibility === 'visible');
 
                 createPermaLink();
@@ -505,7 +497,7 @@
 
                 } else {
                   // toggle wiki layer
-                  setWikiLayer(!layer_wikipedia.getVisibility())
+                  setWikiLayer(!layer_wikipedia.getVisible())
                 }
             }
 
@@ -750,223 +742,291 @@
 
             function drawmap() {
                 let scaleLineSize = Math.max(0.2*$(window).width(),0.2*$(window).height()).toFixed(0);
-                map = new OpenLayers.Map('map', {
-                    numZoomLevels     : 19,
-                    projection        : projMerc,
-                    displayProjection : proj4326,
-                    eventListeners: {
-                        moveend     : mapEventMove,
-                        zoomend     : mapEventZoom,
-                        click       : mapEventClick,
-                        changelayer : mapChangeLayer
-                    },
-                    controls: [
-                        permalinkControl,
-                        new OpenLayers.Control.Navigation(),
-                        //new OpenLayers.Control.LayerSwitcher(), //only for debugging
-                        new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: scaleLineSize, geodesic: true}),
-                        new OpenLayers.Control.MousePositionDM(),
-                        new OpenLayers.Control.OverviewMap(),
-                        ZoomBar
-                    ]
+                map = new ol.Map({
+                    target: 'map',
+                    view: new ol.View({
+                    maxZoom     : 19,
+                        // displayProjection : proj4326,
+                        // eventListeners: {
+                        //     moveend     : mapEventMove,
+                        //     zoomend     : mapEventZoom,
+                        //     click       : mapEventClick,
+                        //     changelayer : mapChangeLayer
+                        // },
+                    // controls:[...ol.control.defaults(), ZoomBar]
+                        // controls: [
+                            // permalinkControl,
+                            // new OpenLayers.Control.Navigation(),
+                            // //new OpenLayers.Control.LayerSwitcher(), //only for debugging
+                            // new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: scaleLineSize, geodesic: true}),
+                            // new OpenLayers.Control.MousePositionDM(),
+                            // new OpenLayers.Control.OverviewMap(),
+                            // ZoomBar
+                        // ]
+                    }),
                 });
 
-                var bboxStrategyWikipedia = new OpenLayers.Strategy.BBOX( {
-                    ratio : 1.1,
-                    resFactor: 1
-                });
+                map.addControl(ZoomBar);
+                map.on('moveend', mapEventMove);
+                map.on('moveend', mapEventZoom);
+                map.on('singleclick', mapEventClick);
+                map.on('change:layerGroup', mapChangeLayer);
 
-                var poiLayerWikipediaHttp = new OpenLayers.Protocol.HTTP({
-                    url: 'api/proxy-wikipedia.php?',
-                    params: {
-                        'LANG' : language,
-                        'thumbs' : 'no'
-                    },
-                    format: new OpenLayers.Format.KML({
-                        extractStyles: true,
-                        extractAttributes: true
-                    })
-                });
+                // TODO oli
+                // var bboxStrategyWikipedia = new OpenLayers.Strategy.BBOX( {
+                //     ratio : 1.1,
+                //     resFactor: 1
+                // });
+
+                // TODO oli
+                // var poiLayerWikipediaHttp = new OpenLayers.Protocol.HTTP({
+                //     url: 'api/proxy-wikipedia.php?',
+                //     params: {
+                //         'LANG' : language,
+                //         'thumbs' : 'no'
+                //     },
+                //     format: new OpenLayers.Format.KML({
+                //         extractStyles: true,
+                //         extractAttributes: true
+                //     })
+                // });
 
                 // Select feature ---------------------------------------------------------------------------------------------------------
                 // (only one SelectFeature per map is allowed)
-                selectControl = new OpenLayers.Control.SelectFeature([],{
-                    hover:true,
-                    popup:null,
-                    addLayer:function(layer){
-                        var layers = this.layers;
-                        if (layers) {
-                            layers.push(layer);
-                        } else {
-                            layers = [
-                                layer
-                            ];
-                        }
-                        this.setLayer(layers);
-                    },
-                    removePopup:function(){
-                        if (this.popup) {
-                            this.map.removePopup(this.popup);
-                            this.popup.destroy();
-                            this.popup = null;
-                        }
-                    }
-                });
+                // TODO oli
+                // selectControl = new OpenLayers.Control.SelectFeature([],{
+                //     hover:true,
+                //     popup:null,
+                //     addLayer:function(layer){
+                //         var layers = this.layers;
+                //         if (layers) {
+                //             layers.push(layer);
+                //         } else {
+                //             layers = [
+                //                 layer
+                //             ];
+                //         }
+                //         this.setLayer(layers);
+                //     },
+                //     removePopup:function(){
+                //         if (this.popup) {
+                //             this.map.removePopup(this.popup);
+                //             this.popup.destroy();
+                //             this.popup = null;
+                //         }
+                //     }
+                // });
 
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
 
                 // Mapnik (Base map)
-                layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik',
-                                                        GetOsmServer(),
-                                                        { layerId      : 1,
-                                                          wrapDateLine : true
-                                                        });
+                // TODO oli
+                // layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik',
+                //                                         GetOsmServer(),
+                //                                         { layerId      : 1,
+                //                                           wrapDateLine : true
+                //                                         });
+                console.log()
+
+            // return array of osm tile server
+            // function GetOsmServer() {
+            //   var retv;
+            //   if (OsmTileServer == "BRAVO")       {
+            //     retv=['https://t2.openseamap.org/tile/${z}/${x}/${y}.png'];
+            //   } else{
+            //     retv=['https://tile.openstreetmap.org/${z}/${x}/${y}.png'];
+            //   }
+
+            //   return retv;
+            // }
+                const osmUrl = OsmTileServer == "BRAVO" ? 'https://t2.openseamap.org/tile/{z}/{x}/{y}.png' : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+                layer_mapnik = new ol.layer.Tile({
+                    source: new ol.source.OSM({
+                        url: osmUrl
+                    }),
+                });
                 // Seamark
-                layer_seamark = new OpenLayers.Layer.TMS("seamarks", "https://tiles.openseamap.org/seamark/",
-                    { layerId: 3, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
+                // TODO oli
+                // layer_seamark = new OpenLayers.Layer.TMS("seamarks", "https://tiles.openseamap.org/seamark/",
+                //     { layerId: 3, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
+                
                 // Sport
-                layer_sport = new OpenLayers.Layer.TMS("Sport", "https://tiles.openseamap.org/sport/",
-                    { layerId: 4, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+                // TODO oli
+                // layer_sport = new OpenLayers.Layer.TMS("Sport", "https://tiles.openseamap.org/sport/",
+                //     { layerId: 4, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
+                
                 //GebcoDepth
-                layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("gebco_2021", "https://depth.openseamap.org/geoserver/gwc/service/wms",
-                    {layers: "gebco2021:gebco_2021", format:"image/png"},
-                    { layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.8});
+                // TODO oli
+                // layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("gebco_2021", "https://depth.openseamap.org/geoserver/gwc/service/wms",
+                //     {layers: "gebco2021:gebco_2021", format:"image/png"},
+                //     { layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.8});
+                
                 // POI-Layer for harbours
-                layer_pois = new OpenLayers.Layer.Vector("pois", {
-                    layerId: 7,
-                    visibility: true,
-                    projection: proj4326,
-                    displayOutsideMaxExtent:true
-                });
+                // TODO oli
+                // layer_pois = new OpenLayers.Layer.Vector("pois", {
+                //     layerId: 7,
+                //     visibility: true,
+                //     projection: proj4326,
+                //     displayOutsideMaxExtent:true
+                // });
+                
                 // Bing
-                layer_bing_aerial = new Bing({
-                    layerId: 12,
-                    name: 'Aerial photo',
-                    key: 'AuA1b41REXrEohfokJjbHgCSp1EmwTcW8PEx_miJUvZERC0kbRnpotPTzGsPjGqa',
-                    type: 'Aerial',
-                    isBaseLayer: true,
-                    displayOutsideMaxExtent: true,
-                    wrapDateLine: true
-                });
+                // TODO oli
+                // layer_bing_aerial = new Bing({
+                //     layerId: 12,
+                //     name: 'Aerial photo',
+                //     key: 'AuA1b41REXrEohfokJjbHgCSp1EmwTcW8PEx_miJUvZERC0kbRnpotPTzGsPjGqa',
+                //     type: 'Aerial',
+                //     isBaseLayer: true,
+                //     displayOutsideMaxExtent: true,
+                //     wrapDateLine: true
+                // });
+                
                 // Map download
-                layer_download = new OpenLayers.Layer.Vector("Map Download", {
-                    layerId: 8,
-                    visibility: false
-                });
+                // TODO oli
+                // layer_download = new OpenLayers.Layer.Vector("Map Download", {
+                //     layerId: 8,
+                //     visibility: false
+                // });
+
                 // Trip planner
-                layer_nautical_route = new OpenLayers.Layer.Vector("Trip Planner",
-                    { layerId: 9, styleMap: routeStyle, visibility: false, eventListeners: {"featuresadded": NauticalRoute_routeAdded, "featuremodified": NauticalRoute_routeModified}});
+                // TODO oli
+                // layer_nautical_route = new OpenLayers.Layer.Vector("Trip Planner",
+                //     { layerId: 9, styleMap: routeStyle, visibility: false, eventListeners: {"featuresadded": NauticalRoute_routeAdded, "featuremodified": NauticalRoute_routeModified}});
+                
                 // Grid WGS
-                layer_grid = new OpenLayers.Layer.GridWGS("coordinateGrid", {
-                    layerId: 10,
-                    visibility: true,
-                    zoomUnits: zoomUnits
-                });
-                layer_wikipedia = new OpenLayers.Layer.Vector("Wikipedia World", {
-                    layerId: 11,
-                    visibility: false,
-                    projection: proj4326,
-                    strategies: [bboxStrategyWikipedia],
-                    protocol: poiLayerWikipediaHttp
-                });
-                layer_ais = new OpenLayers.Layer.TMS("Marinetraffic", "https://tiles.marinetraffic.com/ais_helpers/shiptilesingle.aspx?output=png&sat=1&grouping=shiptype&tile_size=512&legends=1&zoom=${z}&X=${x}&Y=${y}",
-                    { layerId: 13, numZoomLevels: 19, type: 'png', getURL:getTileURLMarine, isBaseLayer:false, displayOutsideMaxExtent:true, tileSize    : new OpenLayers.Size(512,512)
-                  });
+                // TODO oli
+                // layer_grid = new OpenLayers.Layer.GridWGS("coordinateGrid", {
+                //     layerId: 10,
+                //     visibility: true,
+                //     zoomUnits: zoomUnits
+                // });
+
+                // TODO oli
+                // layer_wikipedia = new OpenLayers.Layer.Vector("Wikipedia World", {
+                //     layerId: 11,
+                //     visibility: false,
+                //     projection: proj4326,
+                //     strategies: [bboxStrategyWikipedia],
+                //     protocol: poiLayerWikipediaHttp
+                // });
+
+                // TODO oli
+                // layer_ais = new OpenLayers.Layer.TMS("Marinetraffic", "https://tiles.marinetraffic.com/ais_helpers/shiptilesingle.aspx?output=png&sat=1&grouping=shiptype&tile_size=512&legends=1&zoom=${z}&X=${x}&Y=${y}",
+                //     { layerId: 13, numZoomLevels: 19, type: 'png', getURL:getTileURLMarine, isBaseLayer:false, displayOutsideMaxExtent:true, tileSize    : new OpenLayers.Size(512,512)
+                //   });
+
                 // SatPro
-                satPro = new SatPro(map, selectControl, {
-                    layerId: 14
-                });
-                layer_satpro = satPro.getLayer();
+                // TODO oli
+                // satPro = new SatPro(map, selectControl, {
+                //     layerId: 14
+                // });
+                // layer_satpro = satPro.getLayer();                
                 // Disaster (15)
+
                 // POI-Layer for tidal scales
-                layer_tidalscale = new OpenLayers.Layer.Vector("tidalscale", {
-                    layerId: 16,
-                    visibility: false,
-                    projection: proj4326,
-                    displayOutsideMaxExtent:true
-                });
+                // TODO oli
+                // layer_tidalscale = new OpenLayers.Layer.Vector("tidalscale", {
+                //     layerId: 16,
+                //     visibility: false,
+                //     projection: proj4326,
+                //     displayOutsideMaxExtent:true
+                // });
+
                 // Permalink
-                layer_permalink = new OpenLayers.Layer.Markers("Permalink", {
-                    layerId: 17,
-                    visibility: false,
-                    projection: proj4326
-                });
+                // TODO oli
+                // layer_permalink = new OpenLayers.Layer.Markers("Permalink", {
+                //     layerId: 17,
+                //     visibility: false,
+                //     projection: proj4326
+                // });
+
                 // Water Depth
-                waterDepthTrackPoints10m = new WaterDepthTrackPoints10m(map, selectControl, {
-                    layerId: 21
-                });
-                layer_waterdepth_trackpoints_10m = waterDepthTrackPoints10m.getLayer();
+                // TODO oli
+                // waterDepthTrackPoints10m = new WaterDepthTrackPoints10m(map, selectControl, {
+                //     layerId: 21
+                // });
+                // layer_waterdepth_trackpoints_10m = waterDepthTrackPoints10m.getLayer();
 
-                waterDepthTrackPoints100m = new WaterDepthTrackPoints100m(map, selectControl, {
-                    layerId: 18
-                });
-                layer_waterdepth_trackpoints_100m = waterDepthTrackPoints100m.getLayer();
+                // waterDepthTrackPoints100m = new WaterDepthTrackPoints100m(map, selectControl, {
+                //     layerId: 18
+                // });
+                // layer_waterdepth_trackpoints_100m = waterDepthTrackPoints100m.getLayer();
 
-                layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
-                    {
-                      layers: ['contour','contour2'],
-                      numZoomLevels: 22,
-                      projection: this.projectionMercator,
-                      type: 'png',
+                // layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
+                //     {
+                //       layers: ['contour','contour2'],
+                //       numZoomLevels: 22,
+                //       projection: this.projectionMercator,
+                //       type: 'png',
 
-                      transparent: true},
-                    { layerId: 22, isBaseLayer: false, visibility: false,tileSize: new OpenLayers.Size(1024,1024), });
+                //       transparent: true},
+                //     { layerId: 22, isBaseLayer: false, visibility: false,tileSize: new OpenLayers.Size(1024,1024), });
 
-                map.addLayers([
+                [
                     layer_mapnik,
-                    layer_bing_aerial,
+                    // layer_bing_aerial,
 //                    layer_gebco_deepshade,
-                    layer_gebco_deeps_gwc,
-                    layer_seamark,
-                    layer_grid,
-                    layer_pois,
-                    layer_tidalscale,
-                    layer_wikipedia,
-                    layer_nautical_route,
-                    layer_sport,
-                    layer_ais,
-                    layer_satpro,
-                    layer_download,
-                    layer_permalink,
-                    layer_waterdepth_trackpoints_10m,
-                    layer_waterdepth_trackpoints_100m,
-                    layer_waterdepth_contours,
-                ]);
-
-                layer_mapnik.events.register("loadend", null, function(evt) {
-                    // The Bing layer will only be displayed correctly after the
-                    // base layer is loaded.
-                    window.setTimeout(correctBingVisibility, 10);
+                    // layer_gebco_deeps_gwc,
+                    // layer_seamark,
+                    // layer_grid,
+                    // layer_pois,
+                    // layer_tidalscale,
+                    // layer_wikipedia,
+                    // layer_nautical_route,
+                    // layer_sport,
+                    // layer_ais,
+                    // layer_satpro,
+                    // layer_download,
+                    // layer_permalink,
+                    // layer_waterdepth_trackpoints_10m,
+                    // layer_waterdepth_trackpoints_100m,
+                    // layer_waterdepth_contours,
+                ].forEach((layer)=> {
+                    map.addLayer(layer);
                 });
 
-                if (!map.getCenter()) {
+                // TODO oli
+                // layer_mapnik.events.register("loadend", null, function(evt) {
+                //     // The Bing layer will only be displayed correctly after the
+                //     // base layer is loaded.
+                //     window.setTimeout(correctBingVisibility, 10);
+                // });
+
+                if (!map.getView().getCenter()) {
                     jumpTo(lon, lat, zoom);
                 }
-                // Register featureselect for download tool
-                selectControl.addLayer(layer_download);
-                layer_download.events.register("featureselected", layer_download, selectedMap);
-                // Register featureselect for poi layers
-                selectControl.addLayer(layer_nautical_route);
-                layer_nautical_route.events.register("featureselected", layer_nautical_route, onFeatureSelectPoiLayers);
-                selectControl.addLayer(layer_pois);
-                layer_pois.events.register("featureselected", layer_pois, onFeatureSelectPoiLayers);
-                selectControl.addLayer(layer_tidalscale);
-                layer_tidalscale.events.register("featureselected", layer_tidalscale, onFeatureSelectPoiLayers);
-                selectControl.addLayer(layer_wikipedia);
-                layer_wikipedia.events.register("featureselected", layer_wikipedia, onFeatureSelectPoiLayers);
-                // Activate select control
-                map.addControl(selectControl);
-                selectControl.activate();
+
+                // // TODO oli
+                // // Register featureselect for download tool
+                // selectControl.addLayer(layer_download);
+                // layer_download.events.register("featureselected", layer_download, selectedMap);
+                // // Register featureselect for poi layers
+                // selectControl.addLayer(layer_nautical_route);
+                // layer_nautical_route.events.register("featureselected", layer_nautical_route, onFeatureSelectPoiLayers);
+                // selectControl.addLayer(layer_pois);
+                // layer_pois.events.register("featureselected", layer_pois, onFeatureSelectPoiLayers);
+                // selectControl.addLayer(layer_tidalscale);
+                // layer_tidalscale.events.register("featureselected", layer_tidalscale, onFeatureSelectPoiLayers);
+                // selectControl.addLayer(layer_wikipedia);
+                // layer_wikipedia.events.register("featureselected", layer_wikipedia, onFeatureSelectPoiLayers);
+                // // Activate select control
+                // map.addControl(selectControl);
+                // selectControl.activate();
             }
 
             function clearPoiLayer() {
                 harbours = [];
-                layer_pois.removeAllFeatures();
+                if (layer_pois) {
+                  layer_pois.removeAllFeatures();
+                }
             }
 
             function clearTidalScaleLayer() {
                 arrayTidalScales = [];
-                layer_tidalscale.removeAllFeatures();
+                if (layer_tidalscale) {
+                  layer_tidalscale.removeAllFeatures();
+                }
             }
 
             function onFeatureSelectPoiLayers(event) {
@@ -995,15 +1055,15 @@
             // Map event listener moved
             function mapEventMove(event) {
                 // Set cookie for remembering lat lon values
-                setCookie("lat", y2lat(map.getCenter().lat).toFixed(5));
-                setCookie("lon", x2lon(map.getCenter().lon).toFixed(5));
+                setCookie("lat", y2lat(map.getView().getCenter()[1]).toFixed(5));
+                setCookie("lon", x2lon(map.getView().getCenter()[0]).toFixed(5));
 
                 // Update harbour layer
-                if (layer_pois.getVisibility() === true) {
+                if (layer_pois && layer_pois.getVisible() === true) {
                     refreshHarbours();
                 }
                 // Update tidal scale layer
-                if (layer_tidalscale.getVisibility() === true) {
+                if (layer_tidalscale && layer_tidalscale.getVisible() === true) {
                     refreshTidalScales();
                 }
                 // Update magnetic deviation
@@ -1014,16 +1074,16 @@
 
             // Map event listener Zoomed
             function mapEventZoom(event) {
-                zoom = map.getZoom();
+                zoom = map.getView().getZoom();
                 // Set cookie for remembering zoomlevel
                 setCookie("zoom",zoom);
+                if(oldZoom != zoom) {
+                    oldZoom = zoom;
+                }
                 // Clear POI layer
                 clearPoiLayer();
                 clearTidalScaleLayer();
-                if(oldZoom!=zoom) {
-                    oldZoom=zoom;
-                }
-                if (layer_download.getVisibility() === true) {
+                if (layer_download && layer_download.getVisible() === true) {
                     closeMapDownload();
                     addMapDownload();
                 }
@@ -1123,13 +1183,13 @@
                 // settings. Unfortunately the action dialog will not
                 // be generated. This workaround guarantees, that the
                 // corresponding action dialog will be generated.
-                if (layer_download.getVisibility() === true) {
+                if (layer_download.getVisible() === true) {
                     switchMenuTools('download', true);
                 }
-                if (layer_nautical_route.getVisibility() === true) {
+                if (layer_nautical_route.getVisible() === true) {
                     switchMenuTools('nautical_route', true);
                 }
-                if (layer_permalink.getVisibility() === true) {
+                if (layer_permalink.getVisible() === true) {
                     switchMenuTools('permalink', true);
                 }
 
