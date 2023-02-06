@@ -91,7 +91,7 @@ function refreshTidalScales() {
     } else {
         ++refreshTidalScales.call_count;
     }
-    bounds = map.getExtent().toArray();
+    bounds = map.getView().calculateExtent();
     b = y2lat(bounds[1]).toFixed(5);
     t = y2lat(bounds[3]).toFixed(5);
     l = x2lon(bounds[0]).toFixed(5);
@@ -112,19 +112,22 @@ function tidal_scale_exist(id) {
     return false;
 }
 
+var tiddalScaleStyle = new ol.style.Style({
+    image: new ol.style.Icon({
+        src: 'resources/places/tidal_scale_24.png',
+        imgSize:[32, 32],
+        size: [32, 32],
+        scale: 24/32
+
+    })
+});
+
 function createTidalScaleMarker(x, y, popupText) {
-    var layer_poi_icon_style = OpenLayers.Util.extend({});
-    var TidalScale_marker = new OpenLayers.Geometry.Point(x, y);
-
-    layer_poi_icon_style.externalGraphic = './resources/places/tidal_scale_24.png';
-    layer_poi_icon_style.graphicWidth = 24;
-    layer_poi_icon_style.graphicHeight = 24;
-
-    if(zoom >= 5 ||refreshTidalScales.call_count > 0) {
-        var pointFeature = new OpenLayers.Feature.Vector(TidalScale_marker, null, layer_poi_icon_style);
-        pointFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
-        pointFeature.data.popupContentHTML = popupText;
-        layer_tidalscale.addFeatures([pointFeature]);
+    if(zoom >= 5 || refreshTidalScales.call_count > 0) {
+        var pointFeature = new ol.Feature(new ol.geom.Point([x,y]));
+        pointFeature.setStyle(tiddalScaleStyle);
+        pointFeature.set('popupContentHTML',popupText);
+        layer_tidalscale.getSource().addFeature(pointFeature);
     }
 }
 

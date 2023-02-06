@@ -228,6 +228,7 @@ function jumpTo(lon, lat, zoom) {
     map.getView().setZoom(zoom);
 }
 
+// old fucntions, replaced by getTileUrlFunction
 function getTileURL(bounds) {
     var res = this.map.getResolution();
     var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
@@ -240,6 +241,23 @@ function getTileURL(bounds) {
         x = ((x % limit) + limit) % limit;
         url = this.url;
         path= z + "/" + x + "/" + y + "." + this.type;
+        if (url instanceof Array) {
+            url = this.selectUrl(path, url);
+        }
+        return url+path;
+    }
+}
+function getTileUrlFunction(url, type, coordinates) {
+    var x = coordinates[1];
+    var y = coordinates[2];
+    var z = coordinates[0];
+    var limit = Math.pow(2, z);
+    if (y < 0 || y >= limit) {
+        return null;
+    } else {
+        x = ((x % limit) + limit) % limit;
+        
+        path= z + "/" + x + "/" + y + "." + type;
         if (url instanceof Array) {
             url = this.selectUrl(path, url);
         }

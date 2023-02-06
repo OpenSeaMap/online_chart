@@ -72,7 +72,9 @@ function putHarbourMarker(id, lon, lat, names, link, type) {
             popupText += "<br/><br/><a href='" + link + "' target='blank'>" + linkTextSkipperGuide + "</a>";
         }
         popupText += "<br/><a href='https://weather.openportguide.de/cgi-bin/weather.pl/weather.png?var=meteogram&nx=614&ny=750&lat=" + lat + "&lon=" + lon + "&lang=" + language + "&unit=metric&label=" + convert2Locode(name[0]) + "' target='blank'>" + linkTextWeatherHarbour + "</a>";
-        create_harbour_marker(lon2x(lon), lat2y(lat), popupText, type);
+        
+        const xy = ol.proj.fromLonLat([lon, lat])
+        create_harbour_marker(xy[0], xy[1], popupText, type);
 
         var harbour = {id: id, name: names, lat: lat, lon: lon, type: type, feature: null};
         harbours.push(harbour);
@@ -90,7 +92,7 @@ function refreshHarbours() {
     } else {
         ++refreshHarbours.call_count;
     }
-    bounds = map.getExtent().toArray();
+    bounds = map.getView().calculateExtent();
     var b = y2lat(bounds[1]).toFixed(5);
     var t = y2lat(bounds[3]).toFixed(5);
     var l = x2lon(bounds[0]).toFixed(5);
@@ -169,28 +171,29 @@ function get_harbour(id,type) {
 }
 
 function create_harbour_marker(x, y, popupText, type) {
-    var layer_poi_icon_style = OpenLayers.Util.extend({});
-    var harbour_marker = new OpenLayers.Geometry.Point(x, y);
     var maxType = getHarbourVisibility(zoom);
 
-    if(type <= maxType){
+    if(type <= maxType && (zoom >= 5 || refreshHarbours.call_count > 0)) {
+        var imageSrc = 'resources/places/marina_32.png';
         if (isWPI(type)) {
-            layer_poi_icon_style.externalGraphic = './resources/places/harbour_32.png';
-        } else {
-            if (type == 6) {
-                layer_poi_icon_style.externalGraphic = './resources/places/anchorage_32.png';
-            } else {
-                layer_poi_icon_style.externalGraphic = './resources/places/marina_32.png';
-            }
+            imageSrc = 'resources/places/harbour_32.png';
+        } else if (type == 6) {
+            imageSrc = 'resources/places/anchorage_32.png';
         }
-        layer_poi_icon_style.graphicWidth = 24;
-        layer_poi_icon_style.graphicHeight = 24;
 
-        if(zoom>=5 ||refreshHarbours.call_count>0) {
-            var pointFeature = new OpenLayers.Feature.Vector(harbour_marker, null, layer_poi_icon_style);
-            pointFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud);
-            pointFeature.data.popupContentHTML = popupText;
-            layer_pois.addFeatures([pointFeature]);
-        }
+        var layer_poi_icon_style = new ol.style.Style({
+            image: new ol.style.Icon({
+                src: imageSrc,
+                imgSize:[32, 32],
+                size: [32, 32],
+                scale: 24/32
+
+            })
+        });
+
+        var pointFeature = new ol.Feature(new ol.geom.Point([x, y]));
+        pointFeature.setStyle(layer_poi_icon_style);
+        pointFeature.set('popupContentHTML', popupText);
+        layer_pois.getSource().addFeature(pointFeature);
     }
 }

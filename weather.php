@@ -132,6 +132,7 @@
                     'http://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
                     'http://c.tile.openstreetmap.org/${z}/${x}/${y}.png'
                 ]);
+                
                 // Wind layers
                 layer_weather_wind1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/wind_stream/5/",
                 { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
