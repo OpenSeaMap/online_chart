@@ -426,7 +426,7 @@
             function setWaterDepthBoxes(fromClick){
 
               var checked = document.getElementById("checkLayerWaterDepthTrackPoints").checked;
-console.log(checked);
+
               if(!checked){ 
                 layer_waterdepth_trackpoints_10m.setVisible(false);
                 layer_waterdepth_trackpoints_100m.setVisible(false);
@@ -459,7 +459,6 @@ console.log(checked);
             function showWikipediaLinks(sub) {
                 if (sub) {
                   var checked = document.getElementById("checkLayerWikipediaThumbnails").checked
-                  console.log(checked);
 
                   if (checked) {
                    setWikiLayer(checked);
