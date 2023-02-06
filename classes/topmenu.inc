@@ -34,10 +34,10 @@
                 <li onClick="showGridWGS()"><a><input type="checkbox" id="checkLayerGridWGS">&nbsp;<?=$t->tr("coordinateGrid")?></a></li>
                 <li onClick="showElevationProfile()"><a><input type="checkbox" id="checkLayerElevationProfile">&nbsp;<?=$t->tr("elevationProfile")?></a></li>
                 <li onClick="showGebcoDepth()"><a><input type="checkbox" id="checkLayerGebcoDepth">&nbsp;<?=$t->tr("gebcoDepth")?></a></li>
-                <li onClick="showWikipediaLinks(false)">
-                    <a><input type="checkbox" id="checkLayerWikipedia">&nbsp;Wikipedia-Links</a>
+                <li >
+                    <a ><input type="checkbox" id="checkLayerWikipedia" onClick="showWikipediaLinks(false)"/><label for="checkLayerWikipedia">&nbsp;Wikipedia-Links</label></a>
                     <ul class="sub_menu">
-                        <li onClick="showWikipediaLinks(true)"><a><input type="checkbox" id="checkLayerWikipediaThumbnails">&nbsp;Thumbnails</a></li>
+                        <li ><a><input type="checkbox" id="checkLayerWikipediaThumbnails" onClick="showWikipediaLinks(true)"><label for="checkLayerWikipediaThumbnails">&nbsp;Thumbnails</label></a></li>
                     </ul>
                 </li>
                 <li onClick="showAis()"><a><input type="checkbox" id="checkLayerAis">&nbsp;<?=$t->tr("ais")?></a></li>
@@ -45,15 +45,15 @@
                     <a><input type="checkbox" id="checkCompassrose">&nbsp;<?=$t->tr("compassRose")?></a>
                 </li>
 
-                <li onClick="showWaterDepthTrackPoints(true)">
-                  <a onClick="document.getElementById('checkLayerWaterDepthTrackPoints').checked = !document.getElementById('checkLayerWaterDepthTrackPoints').checked">
-                    <input type="checkbox" id="checkLayerWaterDepthTrackPoints" />&nbsp;<?=$t->tr("water_depth")?></input>
+                <li >
+                  <a onClick="showWaterDepthTrackPoints(true)">
+                    <input type="checkbox" id="checkLayerWaterDepthTrackPoints"/><label for="checkLayerWaterDepthTrackPoints">&nbsp;<?=$t->tr("water_depth")?></label>
                   </a>
                     <ul class="sub_menu">
-                        <li onClick="layer_waterdepth_trackpoints_10m.setVisibility(true);layer_waterdepth_trackpoints_100m.setVisibility(false)">
+                        <li onClick="layer_waterdepth_trackpoints_10m.setVisible(true);">
                           <a><input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints10m" />&nbsp;10 m</a>
                         </li>
-                            <li onClick="layer_waterdepth_trackpoints_10m.setVisibility(false);layer_waterdepth_trackpoints_100m.setVisibility(true)">
+                            <li onClick="layer_waterdepth_trackpoints_100m.setVisible(true)">
                               <a><input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints100m" />&nbsp;100 m</a>
                             </li>
                     </ul>

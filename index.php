@@ -182,11 +182,6 @@
                 if (getArgument('layers') != -1) {
                     // There is a 'layers' url param -> ignore cookies
 
-                    // activate checkbox for deth points if one sublayer is selected
-                      if (layer_waterdepth_trackpoints_10m.getVisible() ||
-                          layer_waterdepth_trackpoints_100m.getVisible())
-                          document.getElementById('checkLayerWaterDepthTrackPoints').checked = true
-
                     return;
                 }
                 // Set Layer visibility from cookie
@@ -225,7 +220,6 @@
                 if (getCookie("BingAerialLayerVisible") == "true") {
                     layer_bing_aerial.setVisible(true);
                     layer_mapnik.setVisible(false);
-                    map.baseLayer = layer_bing_aerial;
                 }
                 var aisVisible = getCookie("AisLayerVisible") === "true"
                 layer_ais.setVisible(aisVisible)
@@ -239,7 +233,6 @@
                 var contoursVisible = getCookie("WaterDepthContoursVisible") === "true"
                 layer_waterdepth_contours.setVisible(contoursVisible);
 
-                document.getElementById('checkLayerWaterDepthTrackPoints').checked = depth10mVisible || depth100mVisible
                 showWaterDepthTrackPoints();
 
                 if (getCookie("CompassroseVisible") === "true") {
@@ -377,23 +370,15 @@
                 if (layer_bing_aerial.getVisible()) {
                     layer_bing_aerial.setVisible(false);
                     layer_mapnik.setVisible(true);
-                    map.baseLayer = layer_mapnik;
-                    setCookie("BingAerialLayerVisible", "false");
                 } else {
                     layer_mapnik.setVisible(false);
                     layer_bing_aerial.setVisible(true);
-                    map.baseLayer === layer_bing_aerial;
-                    setCookie("BingAerialLayerVisible", "true");
                 }
-                correctBingVisibility();
             }
 
             function correctBingVisibility() {
-                if (map.baseLayer == layer_bing_aerial) {
-                    document.getElementById("license_bing").style.display = 'inline';
-                } else {
-                    document.getElementById("license_bing").style.display = 'none';
-                }
+                document.getElementById("license_bing").style.display = layer_bing_aerial.getVisible() ? 'inline' : 'none';
+                setCookie("BingAerialLayerVisible", '' + layer_bing_aerial.getVisible());
             }
 
             function showAis() {
@@ -439,106 +424,65 @@
 
             /// update visual elements based onlayer visibility
             function setWaterDepthBoxes(fromClick){
-              // overwrite checkbox.checked if not comming from an mouse click
-              if(fromClick !== true){
-                document.getElementById('checkLayerWaterDepthTrackPoints').checked = layer_waterdepth_trackpoints_10m.getVisible() ||                          layer_waterdepth_trackpoints_100m.getVisible()
-              }
 
               var checked = document.getElementById("checkLayerWaterDepthTrackPoints").checked;
-
-              if(!checked){
+console.log(checked);
+              if(!checked){ 
                 layer_waterdepth_trackpoints_10m.setVisible(false);
                 layer_waterdepth_trackpoints_100m.setVisible(false);
-                document.getElementById("license_waterdepth").style.display = 'none';
-              }else{
-                if (!layer_waterdepth_trackpoints_10m.getVisible() &&
-                    !layer_waterdepth_trackpoints_100m.getVisible())
-                    layer_waterdepth_trackpoints_10m.setVisible(true);
-
-                document.getElementById("license_waterdepth").style.display = 'inline';
+              } else if (
+                !layer_waterdepth_trackpoints_10m.getVisible() &&
+                !layer_waterdepth_trackpoints_100m.getVisible()
+              ) {
+                layer_waterdepth_trackpoints_10m.setVisible(true);
               }
 
-              document.getElementById("checkLayerWaterDepthTrackPoints10m").checked = layer_waterdepth_trackpoints_10m.getVisible()
-              document.getElementById("checkLayerWaterDepthTrackPoints100m").checked = layer_waterdepth_trackpoints_100m.getVisible()
-            }
+             }
 
             function showWaterDepthTrackPoints(fromClick) {
-              setWaterDepthBoxes(fromClick)
-              showWaterDepthTrackPoints10m();
-              showWaterDepthTrackPoints100m();
+              setWaterDepthBoxes(fromClick);
             }
 
             function showWaterDepthTrackPoints10m() {
-                if (!layer_waterdepth_trackpoints_10m.getVisible()) {
-                    layer_waterdepth_trackpoints_10m.setVisible(false);
-                    setCookie("WaterDepthTrackPointsLayerVisible10m", "false");
-                } else {
-                    layer_waterdepth_trackpoints_10m.setVisible(true);
-                    setCookie("WaterDepthTrackPointsLayerVisible10m", "true");
-                }
+                layer_waterdepth_trackpoints_10m.setVisible(!layer_waterdepth_trackpoints_10m.getVisible());
             }
+
             function showWaterDepthTrackPoints100m() {
-                if (!layer_waterdepth_trackpoints_100m.getVisible()) {
-                    layer_waterdepth_trackpoints_100m.setVisible(false);
-                    setCookie("WaterDepthTrackPointsLayerVisible100m", "false");
-                } else {
-                    layer_waterdepth_trackpoints_100m.setVisible(true);
-                    setCookie("WaterDepthTrackPointsLayerVisible100m", "true");
-                }
+               layer_waterdepth_trackpoints_100m.setVisible(!layer_waterdepth_trackpoints_100m.getVisible());
             }
 
             function showContours() {
-              var visibleNew = !layer_waterdepth_contours.getVisible()
-              layer_waterdepth_contours.setVisible(visibleNew);
-              setCookie("WaterDepthContoursVisible", visibleNew);
+              layer_waterdepth_contours.setVisible(!layer_waterdepth_contours.getVisible());
             }
 
             // Show Wikipedia layer
             function showWikipediaLinks(sub) {
                 if (sub) {
                   var checked = document.getElementById("checkLayerWikipediaThumbnails").checked
-                  setWikiLayer(false); // will be toggled by parent <li onClick>
-                  // toggle thumb display
-                  setWikiThumbs(!checked)
+                  console.log(checked);
+
+                  if (checked) {
+                   setWikiLayer(checked);
+                  } 
+
+                  wikipediaThumbs = checked;
+                  layer_wikipedia.getSource().refresh();
 
                 } else {
                   // toggle wiki layer
-                  setWikiLayer(!layer_wikipedia.getVisible())
+                  setWikiLayer(!layer_wikipedia.getVisible());
+                  layer_wikipedia.getSource().refresh();
                 }
-            }
-
-            function setWikiThumbs(active){
-              wikipediaThumbs = active
-              setWikiProtocol();
             }
 
             function setWikiLayer(visible){
               layer_wikipedia.setVisible(visible);
-              setCookie("WikipediaLayerVisible", visible);
-              if(!visible) {
+              if (!visible) {
                 selectControl?.getFeatures().clear();
-              }else{
-                setWikiProtocol()
               }
-
-            }
-
-            function setWikiProtocol(){
-              setCookie("WikipediaLayerThumbs", wikipediaThumbs);
-            //   var displayThumbs = wikipediaThumbs ? 'yes' : 'no';
-            //   var iconsProtocol = new OpenLayers.Protocol.HTTP({
-            //             url: 'api/proxy-wikipedia.php?',
-            //       params: {
-            //           'LANG' : language,
-            //           'thumbs' : displayThumbs
-            //       },
-            //       format: new OpenLayers.Format.KML({
-            //           extractStyles: true,
-            //           extractAttributes: true
-            //       })
-            //   });
               layer_wikipedia.getSource().refresh();
             }
+
 
             // Show dialog window
             function showActionDialog(htmlText) {
@@ -831,6 +775,8 @@
                     }
                 });
 
+                
+
                 // Seamark
                 // TODO oli
                 // layer_seamark = new OpenLayers.Layer.TMS("seamarks",
@@ -860,6 +806,11 @@
                     }
                 });
 
+                layer_seamark.on("change:visible", (evt) => {
+                    document.getElementById("checkLayerSeamark").checked = evt.target.getVisible();
+                    setCookie("SeamarkLayerVisible", evt.target.getVisible());
+                });
+
                 // Sport
                 // TODO oli
                 // layer_sport = new OpenLayers.Layer.TMS("Sport", "https://tiles.openseamap.org/sport/",
@@ -883,6 +834,10 @@
                         }
                     }),
                 });
+                layer_sport.on("change:visible", (evt) => {
+                    document.getElementById("checkLayerSport").checked = evt.target.getVisible();
+                    setCookie("SportLayerVisible", evt.target.getVisible());
+                });
 
                 //GebcoDepth
                 // TODO oli
@@ -904,6 +859,10 @@
                         serverType: 'geoserver',
                     }),
                 }),
+                layer_gebco_deeps_gwc.on("change:visible", (evt) => {
+                    document.getElementById("checkLayerGebcoDepth").checked = evt.target.getVisible();
+                    setCookie("GebcoDepthLayerVisible", evt.target.getVisible());
+                });
                 
                 // POI-Layer for harbours
                 // TODO oli
@@ -922,6 +881,10 @@
                     source: new ol.source.Vector({
                         features: [],
                     }),
+                });
+                layer_pois.on("change:visible", (evt) => {
+                    document.getElementById("checkLayerHarbour").checked = evt.target.getVisible();
+                    setCookie("HarbourLayerVisible", evt.target.getVisible());
                 });
                 
                 // Bing
@@ -950,7 +913,13 @@
                         // "no photos at this zoom level" tiles
                         maxZoom: 19
                     }),
+                });
 
+                layer_bing_aerial.on('change:visible', (evt) => {
+                    correctBingVisibility();
+                    document.getElementById("checkLayerBingAerial").checked = evt.target.getVisible();
+                    setCookie("BingAerialLayerVisible", evt.target.getVisible());
+                
                 });
                 
                 // Map download
@@ -981,6 +950,10 @@
                     },
                     source: new ol.source.Vector({features:[]}),
                 });
+                layer_nautical_route.on("change:visible", (evt) => {
+                    document.getElementById("checkNauticalRoute").checked = evt.target.getVisible();
+                    setCookie("NauticalRouteLayerVisible", evt.target.getVisible());
+                });
 
                 // Grid WGS
                 // TODO oli
@@ -989,6 +962,25 @@
                 //     visibility: true,
                 //     zoomUnits: zoomUnits
                 // });
+                layer_grid = new ol.layer.Graticule({
+                    visible: true,
+                    properties: {
+                        name: "coordinateGrid",
+                        layerId: 10,
+                    },
+                    // the style to use for the lines, optional.
+                    strokeStyle: new ol.style.Stroke({
+                        color: 'rgba(0,0,0,1)',
+                        width: 1,
+                        // lineDash: [0.5, 4],
+                    }),
+                    showLabels: true,
+                    wrapX: true,
+                });
+                layer_grid.on("change:visible", (evt) => {
+                    document.getElementById("checkLayerGridWGS").checked = evt.target.getVisible();
+                    setCookie("GridWGSLayerVisible", evt.target.getVisible());
+                });
 
                 // TODO oli
                 // var poiLayerWikipediaHttp = new OpenLayers.Protocol.HTTP({
@@ -1022,7 +1014,9 @@
                             extractStyles: true,
                         }),
                         loader: function(extent, resolution, projection, success, failure) {
-                            console.log('icic');
+                            document.getElementById("checkLayerWikipediaThumbnails").checked = wikipediaThumbs;
+                            setCookie("WikipediaLayerThumbs", wikipediaThumbs);
+               
                             const proj = projection.getCode();
                             const bbox = ol.proj.transformExtent(extent, map.getView().getProjection(), 'EPSG:4326');
                             // Beforee it used the api/prox-wikipedia.php but i seems to work without the proxy
@@ -1048,11 +1042,37 @@
                         },
                     }),
                 });
+                layer_wikipedia.on("change:visible", (evt) => {
+                    document.getElementById("checkLayerWikipedia").checked = evt.target.getVisible();
+                    setCookie("WikipediaLayerVisible", evt.target.getVisible());
+
+                    if (!evt.target.getVisible()) {
+                        document.getElementById("checkLayerWikipediaThumbnails").checked = false;
+                        setCookie("WikipediaLayerThumbs", false);               
+                    }
+                });
 
                 // TODO oli
                 // layer_ais = new OpenLayers.Layer.TMS("Marinetraffic", "https://tiles.marinetraffic.com/ais_helpers/shiptilesingle.aspx?output=png&sat=1&grouping=shiptype&tile_size=512&legends=1&zoom=${z}&X=${x}&Y=${y}",
                 //     { layerId: 13, numZoomLevels: 19, type: 'png', getURL:getTileURLMarine, isBaseLayer:false, displayOutsideMaxExtent:true, tileSize    : new OpenLayers.Size(512,512)
                 //   });
+                layer_ais = new ol.layer.Tile({
+                    visible: false,
+                    maxZom: 19,
+                    properties: {
+                        name: 'Marinetraffic',
+                        layerId: 13,
+                    },
+                    source: new ol.source.XYZ({
+                       tileUrlFunction: function(coordinate) {
+                            return getTileURLMarine("https://tiles.marinetraffic.com/ais_helpers/shiptilesingle.aspx?output=png&sat=1&grouping=shiptype&tile_size=256&legends=1&zoom=${z}&X=${x}&Y=${y}", coordinate);
+                        },
+                    }),
+                });
+                layer_ais.on("change:visible", (evt) => {
+                    document.getElementById("checkLayerAis").checked = evt.target.getVisible();
+                    setCookie("AisLayerVisible", evt.target.getVisible());
+                });
 
                 // SatPro
                 // TODO oli
@@ -1078,6 +1098,10 @@
                     },
                     source: new ol.source.Vector({features:[]}),
                 });
+                layer_tidalscale.on("change:visible", (evt) => {
+                    document.getElementById("checkLayerTidalScale").checked = evt.target.getVisible();
+                    setCookie("TidalScaleLayerVisible", evt.target.getVisible());
+                });
 
 
                 // Permalink
@@ -1094,12 +1118,96 @@
                 //     layerId: 21
                 // });
                 // layer_waterdepth_trackpoints_10m = waterDepthTrackPoints10m.getLayer();
+                layer_waterdepth_trackpoints_10m = new ol.layer.Tile({
+                    visible: false,
+                    properties:{
+                        name: 'Water Depth Track Points',
+                        layerId: 21,
+                    },
+                    source: new ol.source.TileWMS({
+                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi',
+                        params: {
+                            'TRANSPARENT': 'TRUE',
+                            'LAYERS': [
+                                'trackpoints_cor1_test_dbs_10',
+                                'trackpoints_cor1_test_10',
+                                'test_zoom_10_cor_1_points_10',
+                                'test_zoom_9_cor_1_points_10',
+                                'test_zoom_8_cor_1_points_10',
+                                'test_zoom_7_cor_1_points_10',
+                                'test_zoom_6_cor_1_points_10',
+                                'test_zoom_5_cor_1_points_10',
+                                'test_zoom_4_cor_1_points_10',
+                                'test_zoom_3_cor_1_points_10',
+                                'test_zoom_2_cor_1_points_10',
+                            ].join(','), 'VERSION':'1.1.1'},
+                        ratio: 1,
+                        serverType: 'mapserver',
+                        tileLoadFunction:(imageTile, src) => {
+                            imageTile.getImage().src = src.replace('3857', '900913');
+                        }
+                    }),
+                });
+
+                layer_waterdepth_trackpoints_10m.on('change:visible', (evt) => {
+                    if (evt.target.getVisible()) {
+                        layer_waterdepth_trackpoints_100m.setVisible(false);
+                        const parentCheckbox = document.getElementById('checkLayerWaterDepthTrackPoints');
+                        if (!parentCheckbox.checked) {
+                          parentCheckbox.checked = true;
+                        }
+                    }
+                    document.getElementById("checkLayerWaterDepthTrackPoints10m").checked = evt.target.getVisible();
+                    setCookie("WaterDepthTrackPointsLayerVisible10m", evt.target.getVisible());
+                });
 
                 // waterDepthTrackPoints100m = new WaterDepthTrackPoints100m(map, selectControl, {
                 //     layerId: 18
                 // });
                 // layer_waterdepth_trackpoints_100m = waterDepthTrackPoints100m.getLayer();
-
+                layer_waterdepth_trackpoints_100m = new ol.layer.Tile({
+                    visible: false,
+                    properties:{
+                        name: 'Water Depth Track Points',
+                        layerId: 18,
+                    },
+                    source: new ol.source.TileWMS({
+                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
+                        params: {
+                            'TRANSPARENT': 'TRUE',
+                            'LAYERS': [
+                                'trackpoints_cor1_test_dbs',
+                                'trackpoints_cor1_test',
+                                'test_zoom_10_cor_1_points',
+                                'test_zoom_9_cor_1_points',
+                                'test_zoom_8_cor_1_points',
+                                'test_zoom_7_cor_1_points',
+                                'test_zoom_6_cor_1_points',
+                                'test_zoom_5_cor_1_points',
+                                'test_zoom_4_cor_1_points',
+                                'test_zoom_3_cor_1_points',
+                                'test_zoom_2_cor_1_points'
+                            ].join(','),
+                            'VERSION':'1.3.0'},
+                        ratio: 1,
+                        serverType: 'mapserver',
+                        tileLoadFunction:(imageTile, src) => {
+                            imageTile.getImage().src = src.replace('3857', '900913');
+                        }
+                    }),
+                });
+                layer_waterdepth_trackpoints_100m.on('change:visible', (evt)=>{
+                    if (evt.target.getVisible()) {
+                        layer_waterdepth_trackpoints_10m.setVisible(false);
+                        const parentCheckbox = document.getElementById('checkLayerWaterDepthTrackPoints');
+                        if (!parentCheckbox.checked) {
+                          parentCheckbox.checked = true;
+                        }
+                    }
+                    document.getElementById("checkLayerWaterDepthTrackPoints100m").checked = evt.target.getVisible();
+                    setCookie("WaterDepthTrackPointsLayerVisible100m", evt.target.getVisible());
+                });
+               
                 // layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
                 //     {
                 //       layers: ['contour','contour2'],
@@ -1109,6 +1217,41 @@
 
                 //       transparent: true},
                 //     { layerId: 22, isBaseLayer: false, visibility: false,tileSize: new OpenLayers.Size(1024,1024), });
+                layer_waterdepth_contours =new ol.layer.Tile({
+                    visible: false,
+                    maxZoom: 22,
+                    properties:{
+                        name: 'Contours',
+                        layerId: 22,
+                    },
+                    source: new ol.source.TileWMS({
+                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
+                        params: {
+                            'TRANSPARENT': 'TRUE',
+                            'LAYERS': [
+                                'contour','contour2'
+                            ].join(','),
+                            'VERSION':'1.3.0'},
+                        ratio: 1,
+                        serverType: 'mapserver',
+                        tileLoadFunction:(imageTile, src) => {
+                            imageTile.getImage().src = src.replace('3857', '900913');
+                        }
+                    }),
+                });
+                layer_waterdepth_contours.on("change:visible", (evt) => {
+                    document.getElementById("checkDepthContours").checked = evt.target.getVisible();
+                    setCookie("WaterDepthContoursVisible", evt.target.getVisible());
+                })
+
+                const waterDepthLayers = [layer_waterdepth_trackpoints_100m, layer_waterdepth_trackpoints_10m,layer_waterdepth_contours];
+                waterDepthLayers.forEach((layer)=> {
+                    layer.on('change:visible', () => {
+                        const showCopyright = waterDepthLayers.find((l) => l.getVisible());
+                        document.getElementById("license_waterdepth").style.display = showCopyright ? 'inline' : 'none';
+                        
+                    })
+                });
 
                 [
                     layer_mapnik,
@@ -1116,19 +1259,19 @@
 //                    layer_gebco_deepshade,
                     layer_gebco_deeps_gwc,
                     layer_seamark,
-                    // layer_grid,
+                    layer_grid,
                     layer_pois,
                     layer_tidalscale,
                     layer_wikipedia,
                     // layer_nautical_route,
                     layer_sport,
-                    // layer_ais,
+                    layer_ais,
                     // layer_satpro,
                     layer_download,
                     // layer_permalink,
-                    // layer_waterdepth_trackpoints_10m,
-                    // layer_waterdepth_trackpoints_100m,
-                    // layer_waterdepth_contours,
+                    layer_waterdepth_trackpoints_10m,
+                    layer_waterdepth_trackpoints_100m,
+                    layer_waterdepth_contours,
                 ].forEach((layer)=> {
                     map.addLayer(layer);
                 });

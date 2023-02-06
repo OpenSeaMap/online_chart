@@ -264,17 +264,16 @@ function getTileUrlFunction(url, type, coordinates) {
         return url+path;
     }
 }
-function getTileURLMarine(bounds) {
-    var res = this.map.getResolution();
-    var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
-    var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
-    var z = this.map.getZoom();
+function getTileURLMarine(url, coordinates) {
+    var x = coordinates[1];
+    var y = coordinates[2];
+    var z = coordinates[0];
     var limit = Math.pow(2, z);
     if (y < 0 || y >= limit) {
         return null;
     } else {
         x = ((x % limit) + limit) % limit;
-        url = this.url
+        url = url
                   .replace('${z}', String(z))
                   .replace('${y}', String(y))
                   .replace('${x}', String(x))

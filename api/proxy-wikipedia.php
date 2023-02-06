@@ -25,7 +25,7 @@ curl_setopt($session, CURLOPT_USERAGENT, "php-proxy for map.openseamap.org");
 $xml = curl_exec($session);
 
 // The web service returns XML. Set the Content-Type appropriately
-header("Content-Type: text/xml");
+// header("Content-Type: text/xml");
 
 echo $xml;
 curl_close($session);
