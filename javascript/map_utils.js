@@ -314,7 +314,7 @@ function addMarker(layer, lon, lat, popupContentHTML) {
     // TODO oli
     // mFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {minSize: new OpenLayers.Size(260, 100) } );
     // mFeature.data.popupContentHTML = popupContentHTML;
-
+    mFeature.set('popupContentHTML', popupContentHTML);
 
     // TODO oli
     // var markerClick = function(evt) {
@@ -362,11 +362,15 @@ function getLineSegmentLength(segment) {
     return Math.sqrt( Math.pow((segment.x2 -segment.x1),2) + Math.pow((segment.y2 -segment.y1),2) );
 }
 
+function toDeg(x) { return x*180/Math.PI; };
+
+function toRad(x) { return x*Math.PI/180; };
+
 function getDistance(latA, latB, lonA, lonB) {
-    var dLat = OpenLayers.Util.rad(latB - latA);
-    var dLon = OpenLayers.Util.rad(lonB - lonA);
-    var lat1 = OpenLayers.Util.rad(latA);
-    var lat2 = OpenLayers.Util.rad(latB);
+    var dLat = toRad(latB - latA);
+    var dLon = toRad(lonB - lonA);
+    var lat1 = toRad(latA);
+    var lat2 = toRad(latB);
 
     var a = Math.PI/2-lat2;
     var b = Math.PI/2-lat1;
@@ -377,15 +381,15 @@ function getDistance(latA, latB, lonA, lonB) {
 }
 
 function getBearing(latA, latB, lonA, lonB) {
-    var dLat = OpenLayers.Util.rad(latB-latA);
-    var dLon = OpenLayers.Util.rad(lonB-lonA);
-    var lat1 = OpenLayers.Util.rad(latA);
-    var lat2 = OpenLayers.Util.rad(latB);
+    var dLat = toRad(latB-latA);
+    var dLon = toRad(lonB-lonA);
+    var lat1 = toRad(latA);
+    var lat2 = toRad(latB);
 
     var y = Math.sin(dLon) * Math.cos(lat2);
     var x = Math.cos(lat1)*Math.sin(lat2) -
         Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
-    var brng = OpenLayers.Util.deg(Math.atan2(y, x));
+    var brng = toDeg(Math.atan2(y, x));
 
     return (brng + 360) % 360;
 }

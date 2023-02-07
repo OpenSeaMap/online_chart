@@ -16,7 +16,7 @@
         <link rel="stylesheet" type="text/css" href="map-full.css">
         <link rel="stylesheet" type="text/css" href="topmenu.css">
         <link rel="stylesheet" type="text/css" href="javascript/route/NauticalRoute.css">
-        <script type="text/javascript" src="./javascript/lib/jquery.js"></script>
+        <!-- <script type="text/javascript" src="./javascript/lib/jquery.js"></script> -->
         <!-- <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
@@ -28,17 +28,17 @@
         <script type="text/javascript" src="./javascript/harbours.js"></script>
         <script type="text/javascript" src="./javascript/nominatim.js"></script>
         <script type="text/javascript" src="./javascript/tidal_scale.js"></script>
-        <!-- <script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script> -->
+        <script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script>
         <!--script type="text/javascript" src="./javascript/mouseposition_dm.js"></script>
         <script type="text/javascript" src="./javascript/grid_wgs.js"></script>
         <script type="text/javascript" src="./javascript/bing.js"></script>
-        <script type="text/javascript" src="./javascript/ais.js"></script>
-        <script type="text/javascript" src="./javascript/satpro.js"></script>
-        <script type="text/javascript" src="./javascript/lib/he.js"></script>
-        <script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script>
+        <script type="text/javascript" src="./javascript/ais.js"></script-->
+        <!-- <script type="text/javascript" src="./javascript/satpro.js"></script> -->
+        <!--script type="text/javascript" src="./javascript/lib/he.js"></script>
+        <script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script-->
         <script type="text/javascript" src="./javascript/geomagjs/cof2Obj.js"></script>
         <script type="text/javascript" src="./javascript/geomagjs/geomag.js"></script>
-        <script type="text/javascript" src="./javascript/mag_deviation.js"></script> -->
+        <script type="text/javascript" src="./javascript/mag_deviation.js"></script>
         <script type="text/javascript">
 
             <?php
@@ -48,6 +48,12 @@
             ?>
 
             var map;
+
+            // popup
+            var popup;
+            var content;
+            var closer;
+            var overlay;
 
             // Position and zoomlevel of the map (will be overriden with permalink parameters or cookies)
             var lon = 11.6540;
@@ -146,14 +152,6 @@
                     lon = mLon;
                 }
                 drawmap();
-                layer_marker = new ol.layer.Vector({
-                    source: new ol.source.Vector(),
-                    properties:{
-                        name: "Marker",
-                        layerId: -2 // invalid layerId -> will be ignored by layer visibility setup
-                    }
-                });
-                map.addLayer(layer_marker);
                 try{
                   // Create Marker, if arguments are given
                   if (mLat != -1 && mLon != -1) {
@@ -168,9 +166,9 @@
                 } catch(err) {
                     console.log(err)
                 }
-                // readLayerCookies();
-                // resetLayerCheckboxes();
-                // initMenuTools();
+                readLayerCookies();
+                resetLayerCheckboxes();
+                initMenuTools();
                 // Set current language for internationalization
                 // OpenLayers.Lang.setCode(language);
             }
@@ -205,14 +203,14 @@
 
                 layer_grid.setVisible(gridVisible);
 
-                var gebcoVisible = getCookie("GebcoDepthLayerVisible") === "true"
+                var gebcoVisible = getCookie("GebcoDepthLayerVisible") === "true";
 //                layer_gebco_deepshade.setVisible(gebcoVisible);
                 layer_gebco_deeps_gwc.setVisible(gebcoVisible);
 
-                var wikiLayerVisible = getCookie("WikipediaLayerVisible") === "true"
-                var wikiThumbsVisible = getCookie("WikipediaLayerThumbs") === "true"
-                setWikiThumbs(wikiThumbsVisible)
-                setWikiLayer(wikiLayerVisible)
+                var wikiLayerVisible = getCookie("WikipediaLayerVisible") === "true";
+                var wikiThumbsVisible = getCookie("WikipediaLayerThumbs") === "true";
+                wikipediaThumbs = wikiThumbsVisible;
+                setWikiLayer(wikiLayerVisible);
 
                 if (getCookie("BingAerialLayerVisible") == "true") {
                     layer_bing_aerial.setVisible(true);
@@ -256,12 +254,14 @@
                 document.getElementById("checkLayerBingAerial").checked             = (layer_bing_aerial.getVisible() === true);
                 document.getElementById("checkLayerAis").checked                    = (layer_ais.getVisible() === true);
                 document.getElementById("checkPermalink").checked                   = (layer_permalink.getVisible() === true);
-                //document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisible() === true);
+                
+                // document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisible() === true);
                 setWaterDepthBoxes();
                 document.getElementById("checkDepthContours").checked                   = (layer_waterdepth_contours.getVisible() === true);
                 document.getElementById("checkCompassrose").checked                 = (document.getElementById("compassRose").style.visibility === 'visible');
 
-                createPermaLink();
+                // TODO oli
+                //createPermaLink();
             }
 
             // Show popup window for help
@@ -282,37 +282,15 @@
             }
 
             function showSeamarks() {
-                if (layer_seamark.getVisible()) {
-                    layer_seamark.setVisible(false);
-                    setCookie("SeamarkLayerVisible", "false");
-                } else {
-                    layer_seamark.setVisible(true);
-                    setCookie("SeamarkLayerVisible", "true");
-                }
+                layer_seamark.setVisible(!layer_seamark.getVisible());
             }
 
             function showHarbours() {
-                if (layer_pois.getVisible()) {
-                    clearPoiLayer();
-                    layer_pois.setVisible(false);
-                    setCookie("HarbourLayerVisible", "false");
-                } else {
-                    layer_pois.setVisible(true);
-                    setCookie("HarbourLayerVisible", "true");
-                    refreshHarbours();
-                }
+                layer_pois.setVisible(!layer_pois.getVisible());
             }
 
             function showTidalScale() {
-                if (layer_tidalscale.getVisible()) {
-                    clearTidalScaleLayer();
-                    layer_tidalscale.setVisible(false);
-                    setCookie("TidalScaleLayerVisible", "false");
-                } else {
-                    layer_tidalscale.setVisible(true);
-                    setCookie("TidalScaleLayerVisible", "true");
-                    refreshTidalScales();
-                }
+                layer_tidalscale.setVisible(!layer_tidalscale.getVisible());
             }
 
             function toggleNauticalRoute(show) {
@@ -332,35 +310,16 @@
             }
 
             function showSport() {
-                if (layer_sport.getVisible()) {
-                    layer_sport.setVisible(false);
-                    setCookie("SportLayerVisible", "false");
-                } else {
-                    layer_sport.setVisible(true);
-                    setCookie("SportLayerVisible", "true");
-                }
+                layer_sport.setVisible(!layer_sport.getVisible());
             }
 
             function showGridWGS() {
-                if (layer_grid.getVisible()) {
-                    layer_grid.setVisible(false);
-                    setCookie("GridWGSLayerVisible", "false");
-                } else {
-                    layer_grid.setVisible(true);
-                    setCookie("GridWGSLayerVisible", "true");
-                }
+                layer_grid.setVisible(!layer_grid.getVisible());
             }
 
             function showGebcoDepth() {
-                if (layer_gebco_deeps_gwc.getVisible()) {
-//                    layer_gebco_deepshade.setVisible(false);
-                    layer_gebco_deeps_gwc.setVisible(false);
-                    setCookie("GebcoDepthLayerVisible", "false");
-                } else {
-//                    layer_gebco_deepshade.setVisible(true);
-                    layer_gebco_deeps_gwc.setVisible(true);
-                    setCookie("GebcoDepthLayerVisible", "true");
-                }
+                layer_gebco_deeps_gwc.setVisible(!layer_gebco_deeps_gwc.getVisible());
+                setCookie("GebcoDepthLayerVisible", layer_gebco_deeps_gwc.getVisible());
             }
 
             function showBingAerial() {
@@ -379,33 +338,19 @@
             }
 
             function showAis() {
-                if (layer_ais.getVisible()) {
-                    layer_ais.setVisible(false);
-                    document.getElementById("license_marine_traffic").style.display = 'none';
-                    setCookie("AisLayerVisible", "false");
-                } else {
-                    layer_ais.setVisible(true);
-                    document.getElementById("license_marine_traffic").style.display = 'inline';
-                    setCookie("AisLayerVisible", "true");
-                }
+                layer_ais.setVisible(!layer_ais.getVisible());
             }
 
             function showSatPro() {
-                if (layer_satpro.getVisible()) {
-                    layer_satpro.setVisible(false);
-                    setCookie("SatProLayerVisible", "false");
-                } else {
-                    layer_satpro.setVisible(true);
-                    setCookie("SatProLayerVisible", "true");
-                }
+                layer_satpro.setVisible(!layer_satpro.getVisible());
             }
 
             function showDisaster() {
-                if (layer_disaster.getVisible()) {
-                    layer_disaster.setVisible(false);
+                layer_disaster.setVisible(!layer_disaster.getVisible());
+           
+                if (!layer_disaster.getVisible()) {
                     setCookie("DisasterLayerVisible", "false");
                 } else {
-                    layer_disaster.setVisible(true);
                     setCookie("DisasterLayerVisible", "true");
                 }
             }
@@ -508,7 +453,7 @@
             function closeMapDownload() {
                 selectControl.hover = true;
                 layer_download.setVisible(false);
-                layer_download.removeAllFeatures();
+                layer_download.getSource().clear();
                 closeActionDialog();
             }
 
@@ -531,8 +476,8 @@
             function selectedMap (event) {
                 var feature = event.feature;
 
-                downloadName = feature.attributes.name;
-                downloadLink = feature.attributes.link;
+                downloadName = feature.get('name');
+                downloadLink = feature.get('link');
 
                 var mapName = downloadName;
 
@@ -592,10 +537,10 @@
                 lon_m -= lon_d*60;
                 lat_m -= lat_d*60;
                 // Write the specified content inside
-                OpenLayers.Util.getElement("markerpos").innerHTML = ns + lat_d + "°" + format2FixedLenght(lat_m,6,3) + "'" + " " + we + lon_d + "°" + format2FixedLenght(lon_m,6,3) + "'";
-
-                $("#markerpos").data("lat", lonlat.lat.toFixed(5))
-                $("#markerpos").data("lon", lonlat.lon.toFixed(5))
+                const markerpos = document.getElementById('markerpos');
+                markerpos.innerHTML = ns + lat_d + "°" + format2FixedLenght(lat_m,6,3) + "'" + " " + we + lon_d + "°" + format2FixedLenght(lon_m,6,3) + "'";
+                markerpos.lat = lonlat.lat.toFixed(5);
+                markerpos.lon = lonlat.lon.toFixed(5);
 
                 createPermaLink();
               }
@@ -617,14 +562,15 @@
                 userURL += "&lat=" + y2lat(map.getCenter().lat).toFixed(5); // add map zoom to string
                 userURL += "&lon=" + x2lon(map.getCenter().lon).toFixed(5); // add map zoom to string
 
-                var lat = $("#markerpos").data("lat")
+                const markerpos = document.getElementById('markerpos');
+                var lat = markerpos.lat;
                 if(lat)
                   userURL += "&mlat=" + lat; // add latitude
 
-                var lon = $("#markerpos").data("lon")
-                if(lon)
-                  userURL += "&mlon=" + $("#markerpos").data("lon"); // add longitude
-
+                var lon = markerpos.lon;
+                if(lon) {
+                  userURL += "&mlon=" + lon; // add longitude
+                }
                 var mText = encodeURIComponent(document.getElementById("markerText").value)
                 if(mText != "")
                   userURL += "&mtext=" + mText; // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
@@ -652,7 +598,7 @@
 
                 showActionDialog(htmlText);
 
-                $('#markerText').on('keyup', function(evt) {
+                document.getElementById('markerText').addEventListener("keyup",function(evt) {
                   createPermaLink()
                 });
 
@@ -687,11 +633,29 @@
             }
 
             function drawmap() {
-                let scaleLineSize = Math.max(0.2*$(window).width(),0.2*$(window).height()).toFixed(0);
+                popup = document.getElementById('popup');
+                content = document.getElementById('popup-content');
+                closer = document.getElementById('popup-closer');
+                overlay = new ol.Overlay({
+                    element: popup,
+                    autoPan: {
+                        animation: {
+                            duration: 250,
+                        },
+                    },  
+                });
+                // close the popup
+                closer.onclick = function () {
+                    overlay.setPosition(undefined);
+                    closer.blur();
+                    return false;
+                };
+
                 map = new ol.Map({
                     target: 'map',
+                    overlays: [overlay],
                     view: new ol.View({
-                    maxZoom     : 19,
+                        maxZoom     : 19,
                         // displayProjection : proj4326,
                         // eventListeners: {
                         //     moveend     : mapEventMove,
@@ -708,7 +672,7 @@
                             //     bottomOutUnits: "km",
                             //     topInUnits: 'nmi', 
                             //     bottomInUnits: 'km', 
-                            //     maxWidth: scaleLineSize, 
+                            //     maxWidth: Math.max(0.2*$(window).width(),0.2*$(window).height()).toFixed(0), 
                             //     geodesic: true
                             // }),
                             // new OpenLayers.Control.MousePositionDM(),
@@ -743,6 +707,7 @@
                 }));
                 map.on('moveend', mapEventMove);
                 map.on('moveend', mapEventZoom);
+                map.on('pointermove', mapEventPointerMove);
                 map.on('singleclick', mapEventClick);
 
                 // TODO oli
@@ -909,6 +874,12 @@
                 layer_pois.on("change:visible", (evt) => {
                     document.getElementById("checkLayerHarbour").checked = evt.target.getVisible();
                     setCookie("HarbourLayerVisible", evt.target.getVisible());
+
+                    if (!evt.target.getVisible()) {
+                        clearPoiLayer();
+                    } else {
+                        refreshHarbours();
+                    }
                 });
                 
                 // Bing
@@ -1105,6 +1076,101 @@
                 // });
                 // layer_satpro = satPro.getLayer();                
                 // Disaster (15)
+                layer_satpro = new ol.layer.Vector({
+                    visible: false,
+                    properties: {
+                        name: "SatPro",
+                        layerId: 14,
+                    },
+                    source: new ol.source.Vector({
+                        features: [],
+                        strategy: ol.loadingstrategy.bbox,
+                        loader: function(extent, resolution, projection, success, failure) {               
+                            const proj = projection.getCode();
+                            const bbox = ol.proj.transformExtent(extent, map.getView().getProjection(), 'EPSG:4326');
+                            // Beforee it used the api/prox-wikipedia.php but i seems to work without the proxy
+                            const url = 'api/getSatPro.php?' + 'bbox=' + bbox.join(',');
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('GET', url);
+                            const vectorSource = this;
+                            const onError = function() {
+                                vectorSource.removeLoadedExtent(extent);
+                                failure();
+                            };
+                            xhr.onerror = onError;
+                            xhr.onload = function() {
+                                if (xhr.status == 200) {
+                                    var lines = xhr.responseText.split('\n');
+                                    var features = [];
+                                    var trackPoints = [];
+                                    var actualName = '';
+                                    for (var i = 0; i < lines.length; i++) {
+                                        var line = lines[i];
+                                        var vals = line.split('\t');
+                                        if (vals.length === 1) {
+                                            // New vessel, but process previous vessel first
+                                            if (trackPoints.length > 1) {
+                                                // Track line
+                                                const lineArr = trackPoints.map((trackPoint)=> {
+                                                    return ol.proj.fromLonLat([trackPoint.lon, trackPoint.lat]);
+                                                });
+                                                const lineFeature = new ol.Feature(new ol.geom.LineString(lineArr));
+                                                lineFeature.set('type','line');                                                
+                                                features.push(lineFeature);
+
+                                                // Track points (ignore first)
+                                                for (var j = 1; j < trackPoints.length; j++) {
+                                                    const point = new ol.geom.Point(ol.proj.fromLonLat([trackPoints[j].lon, trackPoints[j].lat]));
+                                                    const pointFeature = new ol.Feature(point);
+                                                    pointFeature.setProperties(trackPoints[j]);
+                                                    pointFeature.set('type', 'point');
+                                                    features.push(pointFeature);
+                                                    lineArr.push(point.clone());
+                                                }
+
+                                                // Vessel                                             
+                                                const vessel = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([trackPoints[0].lon, trackPoints[0].lat])));
+                                                vessel.setProperties(attributes);
+                                                vessel.set('type', 'actual');
+                                                features.push(vessel);
+                                            }
+                                            actualName = vals[0];
+                                            trackPoints = [];
+                                        } else if (vals.length === 10) {
+                                            // Tracks for vessel
+                                            var attributes = {
+                                                name            : actualName,
+                                                lat             : parseFloat(vals[0]),
+                                                lon             : parseFloat(vals[1]),
+                                                terminal        : vals[2],
+                                                datum           : vals[3],
+                                                uhrzeit         : vals[4],
+                                                breite          : parseFloat(vals[0]),
+                                                laenge          : parseFloat(vals[1]),
+                                                hoehe           : vals[5],
+                                                temperatur      : vals[6],
+                                                batterie        : vals[7],
+                                                geschwindigkeit : vals[8],
+                                                richtung        : vals[9]
+                                            };
+                                            trackPoints.push(attributes);
+                                        }
+                                    }
+                                    vectorSource.addFeatures(features);
+                                    success(features);
+                                } else {
+                                    onError();
+                                }
+                            }
+                            xhr.send();
+                        },
+                    }),
+                });
+                layer_satpro.on("change:visible", (evt) => {
+                    document.getElementById("checkLayerSatPro").checked = evt.target.getVisible();
+                    setCookie("SatProLayerVisible", evt.target.getVisible());
+                });
+
 
                 // POI-Layer for tidal scales
                 // TODO oli
@@ -1125,6 +1191,11 @@
                 layer_tidalscale.on("change:visible", (evt) => {
                     document.getElementById("checkLayerTidalScale").checked = evt.target.getVisible();
                     setCookie("TidalScaleLayerVisible", evt.target.getVisible());
+                    if (!evt.target.getVisible()) {
+                        clearTidalScaleLayer();
+                    } else {
+                        refreshTidalScales();
+                    }
                 });
 
 
@@ -1135,6 +1206,14 @@
                 //     visibility: false,
                 //     projection: proj4326
                 // });
+                layer_permalink = new ol.layer.Vector({
+                    visible: false,
+                    source: new ol.source.Vector(),
+                    properties:{
+                        name: "Permalink",
+                        layerId: 17 // invalid layerId -> will be ignored by layer visibility setup
+                    }
+                });
 
                 // Water Depth
                 // TODO oli
@@ -1277,6 +1356,14 @@
                     })
                 });
 
+                layer_marker = new ol.layer.Vector({
+                    source: new ol.source.Vector(),
+                    properties:{
+                        name: "Marker",
+                        layerId: -2 // invalid layerId -> will be ignored by layer visibility setup
+                    }
+                });
+
                 [
                     layer_mapnik,
                     layer_bing_aerial,
@@ -1287,15 +1374,16 @@
                     layer_pois,
                     layer_tidalscale,
                     layer_wikipedia,
-                    // layer_nautical_route,
+                    layer_nautical_route,
                     layer_sport,
                     layer_ais,
-                    // layer_satpro,
+                    layer_satpro,
                     layer_download,
-                    // layer_permalink,
+                    layer_permalink,
                     layer_waterdepth_trackpoints_10m,
                     layer_waterdepth_trackpoints_100m,
                     layer_waterdepth_contours,
+                    layer_marker,
                 ].forEach((layer)=> {
                     map.addLayer(layer);
                 });
@@ -1403,9 +1491,44 @@
                 }
             }
 
-            function mapEventClick(event) {
-                selectControl?.getFeatures().clear();
+            function openPopup(feature, coordinate) {
+                let html = feature.get('popupContentHTML');
+
+                if (feature.get('name')) {
+                    content = '<b>'+feature.get('name') +'</b><br>'+ feature.get('description');
+                }
+
+                content.innerHTML = html;
+                overlay.setPosition(coordinate);
             }
+
+            function getFeaturesAtPixel(pixel) {
+                const features = map.getFeaturesAtPixel(pixel, {
+                    layerFilter: (layer) => layer.getSource()?.getFeaturesAtCoordinate,
+                    hitTolerance: 5,
+                }).filter((feature)=> {
+                    return feature.get('popupContentHTML') || feature.get('name');
+                });
+                
+                return features;
+            }
+
+            function mapEventPointerMove(event) {
+                const features = getFeaturesAtPixel(event.pixel);
+                map.getTargetElement().style.cursor = features.length ? 'pointer' : 'default';
+            }
+
+            function mapEventClick(event) {
+                const features = getFeaturesAtPixel(event.pixel);
+
+                if (features.length) {   
+                    openPopup(features[features.length-1], event.coordinate);
+                } else {
+                    overlay.setPosition();
+                }
+            }
+
+
 
             function addDownloadlayer(xmlMaps) {
                 var xmlDoc=loadXMLDoc("./gml/map_download.xml");
@@ -1442,12 +1565,18 @@
                             alert("Error (load): " + e);
                             return -1;
                         }
-                        var bounds = new OpenLayers.Bounds(w, s, e, n);
-                        bounds.transform(new OpenLayers.Projection("EPSG:4326"), new
-                        OpenLayers.Projection("EPSG:900913"));
+                        var bounds = ol.proj.transformExtent([w, s, e, n], "EPSG:4326", map.getView().getProjection());
                         var name = item.getElementsByTagName("name")[0].childNodes[0].nodeValue.trim();
                         var link = item.getElementsByTagName("link")[0].childNodes[0].nodeValue.trim();
-                        var box  = new OpenLayers.Feature.Vector(bounds.toGeometry(), {
+                        const [minX, minY, maxX, maxY] = bounds;
+                        var box  = new ol.Feature(new ol.geom.Polygon([[
+                            [minX, minY],
+                            [minX, maxY],
+                            [maxX, maxY],
+                            [maxX, minY],
+                            [minX, minY],
+                        ]]));
+                        box.setProperties({
                             name: name,
                             link: link
                         });
@@ -1465,9 +1594,9 @@
                         toggleMapDownload(activate);
                         break;
                     case 'nautical_route':
-                        toggleMapDownload(false);
-                        togglePermalink(false);
-                        toggleCompassrose(false);
+                        // toggleMapDownload(false);
+                        // togglePermalink(false);
+                        // toggleCompassrose(false);
                         toggleNauticalRoute(activate);
                         break;
                     case 'permalink':
@@ -1492,26 +1621,29 @@
                 // settings. Unfortunately the action dialog will not
                 // be generated. This workaround guarantees, that the
                 // corresponding action dialog will be generated.
-                if (layer_download.getVisible() === true) {
+                if (layer_download.getVisible()) {
                     switchMenuTools('download', true);
                 }
-                if (layer_nautical_route.getVisible() === true) {
+                console.log(layer_nautical_route.getVisible());
+                if (layer_nautical_route.getVisible()) {
                     switchMenuTools('nautical_route', true);
                 }
-                if (layer_permalink.getVisible() === true) {
+                if (layer_permalink.getVisible()) {
                     switchMenuTools('permalink', true);
                 }
 
-                $('#topmenu2').find('[data-tools]').click(function(evt) {
-                    var layerName       = $(evt.currentTarget).data('tools');
-                    var checked         = $(evt.currentTarget).find('input').is(':checked');
-                    var checkboxClicked = $(evt.target).is('input');
+                document.querySelectorAll('#topmenu2 [data-tools]').forEach((elt) => {
+                    elt.addEventListener('click', function(evt) {
+                        var layerName       = evt.currentTarget.getAttribute('data-tools');
+                        var checked         = evt.currentTarget.querySelector('input').checked;
+                        var checkboxClicked = evt.target.nodeName === 'INPUT';
 
-                    if (checkboxClicked) {
-                        switchMenuTools(layerName, checked);
-                    } else {
-                        switchMenuTools(layerName, !checked);
-                    }
+                        if (checkboxClicked) {
+                            switchMenuTools(layerName, checked);
+                        } else {
+                            switchMenuTools(layerName, !checked);
+                        }
+                    });
                 });
             }
 
@@ -1539,6 +1671,10 @@
                 <p id="magCompassTextTop">VAR 3.5°5'E (2015)</p>
                 <p id="magCompassTextBottom">ANNUAL DECREASE 8'</p>
             </div>
+        </div>
+        <div id="popup" class="ol-popup">
+            <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+            <div id="popup-content"></div>
         </div>
         <?php include('classes/topmenu.inc'); ?>
         <?php include('classes/footer.inc'); ?>

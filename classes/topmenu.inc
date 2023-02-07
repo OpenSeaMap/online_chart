@@ -34,7 +34,8 @@
                 <li onClick="showGridWGS()"><a><input type="checkbox" id="checkLayerGridWGS">&nbsp;<?=$t->tr("coordinateGrid")?></a></li>
                 <li onClick="showElevationProfile()"><a><input type="checkbox" id="checkLayerElevationProfile">&nbsp;<?=$t->tr("elevationProfile")?></a></li>
                 <li onClick="showGebcoDepth()"><a><input type="checkbox" id="checkLayerGebcoDepth">&nbsp;<?=$t->tr("gebcoDepth")?></a></li>
-                <li >
+                <!--li onClick="showSatPro()"><a><input type="checkbox" id="checkLayerSatPro">&nbsp;<?=$t->tr("satPro")?></a></li-->
+               <li >
                     <a ><input type="checkbox" id="checkLayerWikipedia" onClick="showWikipediaLinks(false)"/><label for="checkLayerWikipedia">&nbsp;Wikipedia-Links</label></a>
                     <ul class="sub_menu">
                         <li ><a><input type="checkbox" id="checkLayerWikipediaThumbnails" onClick="showWikipediaLinks(true)"><label for="checkLayerWikipediaThumbnails">&nbsp;Thumbnails</label></a></li>

@@ -44,26 +44,26 @@ function setMagdev(p) {
     // EXAMPLE
     // VAR 3.5°5'E (2015)
     // ANNUAL DECREASE 8'
-    $('#magCompassTextTop').html("VAR "+deviation.toFixed(1)+(deviation>=0 ? "E":"W")+" ("+now.getFullYear()+")");
-    $('#magCompassTextBottom').html("ANNUAL "+(change >= 0 ? "INCREASE ":"DECREASE ")+(60*change).toFixed(0)+"'");
+    document.getElementById('magCompassTextTop').innerHTML = "VAR "+deviation.toFixed(1)+(deviation>=0 ? "E":"W")+" ("+now.getFullYear()+")";
+    document.getElementById('magCompassTextBottom').innerHTML = "ANNUAL "+(change >= 0 ? "INCREASE ":"DECREASE ")+(60*change).toFixed(0)+"'";
 }
 
 // Downloads new magnetic deviation(s) from the server. This is called when the map moves.
 function refreshMagdev() {
-    let bounds = map.getExtent().toArray();
-    let params = { "b": y2lat(bounds[1]), "t": y2lat(bounds[3]), "l": x2lon(bounds[0]), "r": x2lon(bounds[2])};
+    let bounds = map.getView().calculateExtent();
+  let params = { "b": y2lat(bounds[1]), "t": y2lat(bounds[3]), "l": x2lon(bounds[0]), "r": x2lon(bounds[2])};
 
     if (geoMag == undefined) {
         function initModel(data) {
             var wmm = cof2Obj(data);
             geoMag = geoMagFactory(wmm);
-            setMagdev($(this)[0]);
+            setMagdev(params);
         }
 
         /* if the geomagnetic model has not been loaded yet, load it and update the deviation asynchronously */
-        jQuery.ajax({
-            url:"javascript/geomagjs/WMM.COF",
-            context:params}).done(initModel);
+        fetch("javascript/geomagjs/WMM.COF?" + "b="+ params.b + "&t=" + params.t + "&l=" + params.l + "&r=" + params.r)
+            .then(response => response.text())
+            .then((initModel));
     } else {
         /* else, synchronous update */
         setMagdev(params);

@@ -20,12 +20,12 @@
  Version 0.1.1  15.10.2011
  ******************************************************************************/
 
-var defaultStyle = {strokeColor: "blue", strokeOpacity: "0.8", strokeWidth: 3, fillColor: "blue", pointRadius: 3, cursor: "pointer"};
-var style = OpenLayers.Util.applyDefaults(defaultStyle, OpenLayers.Feature.Vector.style["default"]);
-var routeStyle = new OpenLayers.StyleMap({
-    'default': style,
-    'select': {strokeColor: "red", fillColor: "red"}
-});
+// var defaultStyle = {strokeColor: "blue", strokeOpacity: "0.8", strokeWidth: 3, fillColor: "blue", pointRadius: 3, cursor: "pointer"};
+// var style = OpenLayers.Util.applyDefaults(defaultStyle, OpenLayers.Feature.Vector.style["default"]);
+// var routeStyle = new OpenLayers.StyleMap({
+//     'default': style,
+//     'select': {strokeColor: "red", fillColor: "red"}
+// });
 
 var editPanel;
 var routeDraw;
@@ -39,40 +39,63 @@ var style_edit = {
     strokeWidth: 3,
     pointRadius: 4
 };
+const modifyStyle = new ol.style.Style({
+    image: new ol.style.Circle({
+        radius: 3,
+        fill: new ol.style.Fill({
+            color: 'blue', 
+        }),
+        stroke: new ol.style.Stroke({
+            width: 3,
+            color: "rgba(0,0,255,0.8)"
+        }),
+    }),
+    stroke: new ol.style.Stroke({
+        width: 3,
+        color: "red"
+    }),
+    geometry: (feature) => {
+        const line = feature.getGeometry();
+        const multipoint = new ol.geom.MultiPoint(line.getCoordinates());
+        const geomColl = new ol.geom.GeometryCollection([
+            line,
+            multipoint,
+        ]);
+        return geomColl;
+    }
+});
 
-function NauticalRoute_initControls() {
-    editPanel = new OpenLayers.Control.Panel();
-    routeDraw = new OpenLayers.Control.DrawFeature(layer_nautical_route, OpenLayers.Handler.Path, {title: 'Draw line'});
-    routeEdit = new OpenLayers.Control.ModifyFeature(layer_nautical_route, {title: 'Edit feature',clickout:false}),
-    editPanel.addControls([routeDraw, routeEdit]);
-    editPanel.defaultControl = routeDraw;
-    map.addControl(editPanel);
-    routeEdit.standalone = true;
-}
 
 function NauticalRoute_startEditMode() {
-    NauticalRoute_initControls();
-    routeChanged = false;
+    routeDraw = new ol.interaction.Draw({
+        type: 'LineString',
+        source: layer_nautical_route.getSource()
+    });
+    routeDraw.on('drawend', NauticalRoute_routeAdded);
+    routeEdit = new ol.interaction.Modify({
+        source: layer_nautical_route.getSource(),
+        style: modifyStyle
+    });
+    routeEdit.on('modifyend', NauticalRoute_routeModified);
+    map.addInteraction(routeDraw);
+    map.addInteraction(routeEdit);
+    routeDraw.setActive(true);
+    routeEdit.setActive(false);
+    layer_nautical_route.setStyle((feature)=> {
+        return modifyStyle;
+    });
 }
 
 function NauticalRoute_stopEditMode() {
     if (!routeDraw) {
         return;
     }
-    routeDraw.deactivate();
-    routeEdit.deactivate();
-    layer_nautical_route.removeAllFeatures();
-}
-
-function NauticalRoute_addMode() {
-    routeDraw.activate();
-    routeEdit.deactivate();
-}
-
-function NauticalRoute_editMode() {
-    routeDraw.deactivate();
-    routeEdit.activate();
-    //layer_nautical_route.style = style_green;
+    layer_nautical_route.un('addfeature', NauticalRoute_routeAdded);
+    routeDraw.setActive(false);
+    routeEdit.setActive(false);
+    map.removeInteraction(routeEdit);
+    map.removeInteraction(routeDraw);
+    layer_nautical_route.getSource().clear();
 }
 
 function NauticalRoute_DownloadTrack() {
@@ -93,7 +116,7 @@ function NauticalRoute_DownloadTrack() {
         case 'KML':
             mimetype = 'application/vnd.google-earth.kml+xml';
             filename = name+'.kml';
-            content = NauticalRoute_getRouteKml(routeTrack);
+            content = NauticalRoute_getRouteKml(routeObject);
             break;
         case 'GPX':
             mimetype = 'application/gpx+xml';
@@ -103,12 +126,12 @@ function NauticalRoute_DownloadTrack() {
         case 'GML':
             mimetype = 'application/gml+xml';
             filename = name+'.gml';
-            content = NauticalRoute_getRouteGml(routeObject);
+            content = NauticalRoute_getRouteGml(routeTrack);
             break;
     }
 
     // Remove previous added forms
-    $('#actionDialog > form').remove();
+    document.querySelector('#actionDialog > form')?.remove();
 
     form = document.createElement('form');
     form.id = this.id + '_export_form';
@@ -137,36 +160,27 @@ function NauticalRoute_DownloadTrack() {
     input.value = content;
     div.appendChild(input);
 
-    routeChanged = false;
+    document.querySelector('#actionDialog > form').submit();
 
-    $('#actionDialog > form').get(0).submit();
+    routeChanged = false;
 }
 
 function NauticalRoute_routeAdded(event) {
-    routeObject = event.object.features[0];
-
-    routeTrack = routeObject.geometry.getVertices();
-    routeDraw.deactivate();
-    routeEdit.activate();
-    NauticalRoute_getPoints(routeTrack);
-    // Select element for editing
-    routeEdit.selectFeature(routeObject);
-    document.getElementById('buttonRouteDownloadTrack').disabled=false;
+    routeChanged = true;
+    routeDraw.setActive(false);
+    routeEdit.setActive(true);
+    NauticalRoute_routeModified(event);
 }
 
 function NauticalRoute_routeModified(event) {
-    var routeObject = event.object.features[0];
-
-    routeTrack = routeObject.geometry.getVertices();
+    routeObject = event.feature || event.features.item(0);
+    routeTrack = routeObject.getGeometry().getCoordinates().map(([x,y])=>({x,y}));
     NauticalRoute_getPoints(routeTrack);
+    document.getElementById('buttonRouteDownloadTrack').disabled=false;
 }
 
-let routeChanged = false;
 
 function NauticalRoute_getPoints(points) {
-
-    routeChanged = true;
-
     var htmlText;
     var latA, latB, lonA, lonB, distance, bearing;
     var totalDistance = 0;
@@ -228,37 +242,61 @@ function NauticalRoute_getRouteCsv(points) {
     return convert2Text(buffText);
 }
 
-function NauticalRoute_getRouteKml(points) {
-    var latA, lonA;
-    var buffText = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n";
-    buffText += "<Folder>\n<name>OpenSeaMap Route</name>\n<description>test</description>";
-    buffText += "<Placemark>\n<name>OpenSeaMap</name>\n<description>No description available</description>";
-    buffText += "<LineString>\n<coordinates>\n";
-    for(i = 0; i < points.length; i++) {
-        latA = y2lat(points[i].y);
-        lonA = x2lon(points[i].x);
-        buffText += lonA + "," + latA + " ";
-    }
-    buffText += "\n</coordinates>\n</LineString>\n</Placemark>\n</Folder>\n</kml>";
+function NauticalRoute_getRouteKml(feature) {
+    // var latA, lonA;
+    // var buffText = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n";
+    // buffText += "<Folder>\n<name>OpenSeaMap Route</name>\n<description>test</description>";
+    // buffText += "<Placemark>\n<name>OpenSeaMap</name>\n<description>No description available</description>";
+    // buffText += "<LineString>\n<coordinates>\n";
+    // for(i = 0; i < points.length; i++) {
+    //     latA = y2lat(points[i].y);
+    //     lonA = x2lon(points[i].x);
+    //     buffText += lonA + "," + latA + " ";
+    // }
+    // buffText += "\n</coordinates>\n</LineString>\n</Placemark>\n</Folder>\n</kml>";
 
-    return buffText;
+    // return buffText;
+
+    var parser = new ol.format.KML();
+    return parser.writeFeatures([feature], {
+        featureProjection: map.getView().getProjection(),
+        dataProjection: 'EPSG:4326'
+    });
 }
 
 function NauticalRoute_getRouteGpx(feature) {
-    var parser = new OpenLayers.Format.GPX({
-        internalProjection: map.projection,
-        externalProjection: proj4326
+    var parser = new ol.format.GPX();
+    return parser.writeFeatures([feature], {
+        featureProjection: map.getView().getProjection(),
+        dataProjection: 'EPSG:4326'
     });
-
-    return parser.write(feature);
 }
 
-function NauticalRoute_getRouteGml(feature) {
-    var parser = new OpenLayers.Format.GML.v2({
-        internalProjection: map.projection,
-        externalProjection: proj4326
-    });
+function NauticalRoute_getRouteGml(points) {
 
-    return parser.write(feature);
+    // GML2 parser is not implmented in ol7 and GML3 doesn not work.  
+    // var parser = new ol.format.GML32();
+    // return parser.writeFeatures([feature], {
+    //     featureProjection: map.getView().getProjection(),
+    //     dataProjection: 'EPSG:4326'
+    // });
+    let coordText = '';
+    for(i = 0; i < points.length; i++) {
+        const latA = y2lat(points[i].y);
+        const lonA = x2lon(points[i].x);
+        coordText += lonA + "," + latA + " ";
+    }
+    const gml = `
+<gml:featureMember xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/gml http://schemas.opengis.net/gml/2.1.2/feature.xsd">
+    <gml:null>
+        <gml:geometry>
+            <gml:LineString>
+                <gml:coordinates decimal="." cs="," ts=" ">${coordText}</gml:coordinates>
+            </gml:LineString>
+        </gml:geometry>
+    </gml:null>
+</gml:featureMember>
+`;
+    return gml;
 }
 
