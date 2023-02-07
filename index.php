@@ -1594,9 +1594,9 @@
                         toggleMapDownload(activate);
                         break;
                     case 'nautical_route':
-                        // toggleMapDownload(false);
-                        // togglePermalink(false);
-                        // toggleCompassrose(false);
+                        toggleMapDownload(false);
+                        togglePermalink(false);
+                        toggleCompassrose(false);
                         toggleNauticalRoute(activate);
                         break;
                     case 'permalink':
