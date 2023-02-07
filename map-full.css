@@ -80,17 +80,36 @@ img {
     width: 102px;
 }
 
-.olControlMousePositionDM {
-    bottom: 0.5em;
-    right: 0.5em;
+.ol-mouse-position {
+    top: unset!important;
+    bottom: 20px !important;
+    right: 5px !important;
     border: 1px solid #000080;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 6px;
     border-radius: 6px 6px 6px 6px;
     background-color: #FFF;
     margin: 0;
-    padding: 1px;
+    padding: 5px;
     font-family: monospace;
+    height: auto;
+}
+
+.ol-scale-line-metric, .ol-scale-line-nautical {
+    display: block;
+    position: absolute;
+    left: 10px;
+    font-size: xx-small;
+    text-align: center;
+    border: 2px solid black;
+}
+
+.ol-scale-line-metric {
+    bottom: 20px;    
+    border-bottom: none;
+}
+
+.ol-scale-line-nautical {
+    bottom: 30px;    
+    border-top: none;
 }
 
 .olControlPermalink {

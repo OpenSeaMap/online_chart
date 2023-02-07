@@ -26,7 +26,7 @@
         <script type="text/javascript" src="./javascript/countries.js"></script>
         <script type="text/javascript" src="./javascript/map_utils.js"></script>
         <script type="text/javascript" src="./javascript/harbours.js"></script>
-        <!--script type="text/javascript" src="./javascript/nominatim.js"></script-->
+        <script type="text/javascript" src="./javascript/nominatim.js"></script>
         <script type="text/javascript" src="./javascript/tidal_scale.js"></script>
         <!-- <script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script> -->
         <!--script type="text/javascript" src="./javascript/mouseposition_dm.js"></script>
@@ -112,9 +112,6 @@
 
             // Select controls
             var selectControl;
-
-            // Controls
-            var ZoomBar          = new ol.control.ZoomSlider();
 
             // TODO
             // var permalinkControl = new OpenSeaMap.Control.Permalink(null, null, {
@@ -702,12 +699,18 @@
                         //     click       : mapEventClick,
                         //     changelayer : mapChangeLayer
                         // },
-                    // controls:[...ol.control.defaults(), ZoomBar]
                         // controls: [
                             // permalinkControl,
                             // new OpenLayers.Control.Navigation(),
                             // //new OpenLayers.Control.LayerSwitcher(), //only for debugging
-                            // new OpenLayers.Control.ScaleLine({topOutUnits : "nmi", bottomOutUnits: "km", topInUnits: 'nmi', bottomInUnits: 'km', maxWidth: scaleLineSize, geodesic: true}),
+                            // new OpenLayers.Control.ScaleLine({
+                            //     topOutUnits : "nmi",
+                            //     bottomOutUnits: "km",
+                            //     topInUnits: 'nmi', 
+                            //     bottomInUnits: 'km', 
+                            //     maxWidth: scaleLineSize, 
+                            //     geodesic: true
+                            // }),
                             // new OpenLayers.Control.MousePositionDM(),
                             // new OpenLayers.Control.OverviewMap(),
                             // ZoomBar
@@ -715,11 +718,32 @@
                     }),
                 });
 
-                map.addControl(ZoomBar);
+                map.addControl(new ol.control.ScaleLine({
+                    className: 'ol-scale-line-metric'
+                }));
+                map.addControl(new ol.control.ScaleLine({
+                    className: 'ol-scale-line-nautical',
+                    units: "nautical",
+                }));
+                map.addControl(new ol.control.ZoomSlider());
+                map.addControl(new ol.control.MousePosition({
+                    coordinateFormat: (coordinate) => {
+                        const [lon, lat] = ol.proj.toLonLat(coordinate);
+                        var ns = lat >= 0 ? 'N' : 'S';
+                        var we = lon >= 0 ? 'E' : 'W';
+                        var lon_m = Math.abs(lon*60).toFixed(3);
+                        var lat_m = Math.abs(lat*60).toFixed(3);
+                        var lon_d = Math.floor (lon_m/60);
+                        var lat_d = Math.floor (lat_m/60);
+                        lon_m -= lon_d*60;
+                        lat_m -= lat_d*60;
+                        return "Zoom:" + map.getView().getZoom().toFixed(0) + " " + ns + lat_d + "&#176;" + format2FixedLenght(lat_m,6,3) + "'" + "&#160;" +
+                            we + lon_d + "&#176;" + format2FixedLenght(lon_m,6,3) + "'" ;
+                    },
+                }));
                 map.on('moveend', mapEventMove);
                 map.on('moveend', mapEventZoom);
                 map.on('singleclick', mapEventClick);
-                map.on('change:layerGroup', mapChangeLayer);
 
                 // TODO oli
                 // var bboxStrategyWikipedia = new OpenLayers.Strategy.BBOX( {
@@ -752,6 +776,7 @@
                 //         }
                 //     }
                 // });
+                selectControl = new ol.interaction.Select();
 
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
 
@@ -1382,11 +1407,6 @@
                 selectControl?.getFeatures().clear();
             }
 
-            // Map event listener changelayer
-            function mapChangeLayer(event) {
-                resetLayerCheckboxes();
-            }
-
             function addDownloadlayer(xmlMaps) {
                 var xmlDoc=loadXMLDoc("./gml/map_download.xml");
 
@@ -1502,7 +1522,7 @@
         <noscript>
             <p id="noJavascript"><?=$t->tr("noJavascript")?></p>
         </noscript>
-        <div style="position:absolute; bottom:48px; left:12px; cursor:pointer;">
+        <div style="position:absolute; bottom:48px; left:5px; cursor:pointer;">
             <a id="license_osm"  onClick="showMapKey('license')"><img alt="OSM-Logo" src="resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>"></a>
             <a id="license_ccbysa" onClick="showMapKey('license')"><img alt="CC by SA" src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>"></a>
             <a id="license_bing" href="https://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none"><img alt="bing" src="resources/icons/bing.png" height="29px"></a>
