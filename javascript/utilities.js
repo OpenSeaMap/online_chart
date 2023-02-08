@@ -32,7 +32,7 @@ function getCookie(argument) {
         }
     }
 
-    return "-1";
+    return NaN;
 }
 
 function getArgument(argument) {
@@ -46,9 +46,9 @@ function getArgument(argument) {
                 return a[1];
             }
         }
-        return "-1";
+        return NaN;
     }
-    return "-1";
+    return NaN;
 }
 
 function checkKeyReturn(e) {

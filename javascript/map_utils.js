@@ -307,36 +307,11 @@ const markerStyle = new ol.style.Style({
 })
 
 function addMarker(layer, lon, lat, popupContentHTML) {
-    const coord = ol.proj.fromLonLat([buffLon, buffLat]);
+    const coord = ol.proj.fromLonLat([lon, lat]);
     var feature = new ol.Feature(new ol.geom.Point(coord));
-    // mFeature.closeBox = true;
-
-    // TODO oli
-    // mFeature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {minSize: new OpenLayers.Size(260, 100) } );
-    // mFeature.data.popupContentHTML = popupContentHTML;
-    mFeature.set('popupContentHTML', popupContentHTML);
-
-    // TODO oli
-    // var markerClick = function(evt) {
-    //     if (this.popup == null) {
-    //         this.popup = this.createPopup(this.closeBox);
-    //         map.addPopup(this.popup);
-    //         this.popup.show();
-    //     } else {
-    //         this.popup.toggle();
-    //     }
-    //     OpenLayers.Event.stop(evt);
-    // };
+    feature.set('popupContentHTML', popupContentHTML);
     feature.setStyle(markerStyle);
-
     layer.getSource().addFeature(feature);
-
-    // TODO oli
-    // if (popupContentHTML != -1) {
-    //     marker.events.register("mousedown", mFeature, markerClick);
-    //     map.addPopup(mFeature.createPopup(mFeature.closeBox));
-    // }
-
     return feature;
 }
 

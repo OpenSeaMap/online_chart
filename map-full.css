@@ -112,8 +112,12 @@ img {
     border-top: none;
 }
 
-.olControlPermalink {
-    padding: 10px;
+.olControlPermalink, .ol-permalink {
+    right: 5px;
+    bottom: 50px;
+    display: block;
+    position: absolute;
+    font-size: smaller;
 }
 
 .olImageLoadError {

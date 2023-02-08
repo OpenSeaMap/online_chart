@@ -21,7 +21,7 @@
         <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
         <script type="text/javascript" src="./javascript/translation-<?=$t->getCurrentLanguageSafe()?>.js"></script>
-        <!-- <script type="text/javascript" src="./javascript/permalink.js"></script> -->
+        <script type="text/javascript" src="./javascript/permalink.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>
         <script type="text/javascript" src="./javascript/countries.js"></script>
         <script type="text/javascript" src="./javascript/map_utils.js"></script>
@@ -34,8 +34,8 @@
         <script type="text/javascript" src="./javascript/bing.js"></script>
         <script type="text/javascript" src="./javascript/ais.js"></script-->
         <!-- <script type="text/javascript" src="./javascript/satpro.js"></script> -->
-        <!--script type="text/javascript" src="./javascript/lib/he.js"></script>
-        <script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script-->
+        <script type="text/javascript" src="./javascript/lib/he.js"></script>
+        <!--script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script-->
         <script type="text/javascript" src="./javascript/geomagjs/cof2Obj.js"></script>
         <script type="text/javascript" src="./javascript/geomagjs/geomag.js"></script>
         <script type="text/javascript" src="./javascript/mag_deviation.js"></script>
@@ -59,10 +59,6 @@
             var lon = 11.6540;
             var lat = 54.1530;
             var zoom = 10;
-
-            // marker position
-            var mLat = -1;
-            var mLon = -1;
 
             //last zoomlevel of the map
             var oldZoom = 0;
@@ -116,8 +112,6 @@
             // have to let him know, how many layers are removed.
             var ignoredLayers = 4;
 
-            // Select controls
-            var selectControl;
 
             // TODO
             // var permalinkControl = new OpenSeaMap.Control.Permalink(null, null, {
@@ -130,105 +124,87 @@
 
             // Load map for the first time
             function init() {
-                var buffZoom = parseInt(getCookie("zoom"));
-                var buffLat = parseFloat(getCookie("lat"));
-                var buffLon = parseFloat(getCookie("lon"));
-                mLat  = getArgument("mlat");
-                mLon  = getArgument("mlon");
-                mZoom = getArgument("zoom");
-
-                if (buffZoom != -1) {
-                    zoom = buffZoom;
-                }
-                if (mZoom != -1) {
-                    zoom = mZoom;
-                }
-                if (buffLat != -1 && buffLon != -1) {
-                    lat = buffLat;
-                    lon = buffLon;
-                }
-                if (mLat != -1 && mLon != -1) {
-                    lat = mLat;
-                    lon = mLon;
-                }
-                drawmap();
-                try{
-                  // Create Marker, if arguments are given
-                  if (mLat != -1 && mLon != -1) {
-
-                      var mtext = he.encode(decodeURIComponent(getArgument("mtext")))
-                                    .replace(/\n/g, '<br/>');
-                      mtext = mtext.replace('&#x3C;b&#x3E;', '<b>')
-                                    .replace('&#x3C;%2Fb&#x3E;', '</b>')
-                                    .replace('&#x3C;/b&#x3E;', '</b>');
-                      addMarker(layer_marker, mLon, mLat, mtext);
-                  }
-                } catch(err) {
-                    console.log(err)
-                }
+                initMap();
+                readPermalink();
                 readLayerCookies();
-                resetLayerCheckboxes();
+                initLayerCheckboxes();
                 initMenuTools();
                 // Set current language for internationalization
                 // OpenLayers.Lang.setCode(language);
             }
 
-            function readLayerCookies() {
-                if (getArgument('layers') != -1) {
-                    // There is a 'layers' url param -> ignore cookies
+            // Apply the url parameters or cookies or default values
+            function readPermalink() {
 
+                // Read zoom, lat, lon
+                var cookieZoom = parseInt(getCookie("zoom"), 10);
+                var cookieLat = parseFloat(getCookie("lat"));
+                var cookieLon = parseFloat(getCookie("lon"));
+                var permalinkLat = parseFloat(getArgument("lat"));
+                var permalinkLon = parseFloat(getArgument("lon"));
+                var permalinkZoom = parseInt(getArgument("zoom"), 10);
+                var markerLat  = parseFloat(getArgument("mlat"));
+                var markerLon  = parseFloat(getArgument("mlon"));
+
+                zoom = permalinkZoom || cookieZoom || zoom;
+                lat = markerLat || permalinkLat || cookieLat || lat;
+                lon = markerLon || permalinkLon || cookieLon || lon;
+
+                // Zoom to coordinates from marker/permalink/cookie or default values. 
+                jumpTo(lon, lat, zoom);
+
+                // Add marker from permalink
+                if (markerLat && markerLon) {
+                    try{
+                        var mtext = he.encode(decodeURIComponent(getArgument("mtext")))
+                                    .replace(/\n/g, '<br/>');
+                        mtext = mtext.replace('&#x3C;b&#x3E;', '<b>')
+                                    .replace('&#x3C;%2Fb&#x3E;', '</b>')
+                                    .replace('&#x3C;/b&#x3E;', '</b>');
+                        const feature = addMarker(layer_marker, markerLon, markerLat, mtext);
+                        openPopup(feature);
+                    } catch(err) {
+                        console.log(err)
+                    }
+                }
+
+                // Apply layers visiblity from permalink
+                const permalinkLayers = getArgument("layers");
+                if (permalinkLayers) {
+                    console.log(permalinkLayers);
+                    const layers = map.getLayers().getArray();
+                    [...permalinkLayers].forEach((visibility, index) => {
+                        const layer = layers.find((l) => {
+                          return l.get('layerId') === index + 1;
+                        });
+                        if (layer) {
+                            console.log(visibility, layer.get('name'), layer.get('layerId'), /^(B|T)$/.test(visibility));
+                            layer.setVisible(/^(B|T)$/.test(visibility));
+                        }
+                    });
+                }
+            }
+
+            
+
+            function readLayerCookies() {
+                if (getArgument('layers')) {
+                    // There is a 'layers' url param -> ignore cookies
                     return;
                 }
-                // Set Layer visibility from cookie
-                var seamarkVisible = getCookie("SeamarkLayerVisible") === "true"
-                if(getCookie("SeamarkLayerVisible") === "-1")
-                  seamarkVisible = true; // default to visible
-                layer_seamark.setVisible(seamarkVisible);
 
-                var poisVisible = getCookie("HarbourLayerVisible") === "true"
-                layer_pois.setVisible(poisVisible);
+                map.getLayers().forEach((layer)=> {
+                    const cookieKey = layer.get('cookieKey');
+                    const cookieValue =  getCookie(cookieKey);
+                    if (cookieKey && cookieValue) {
+                      layer.setVisible((cookieValue === 'true'));
+                    }
+                });
 
-                var tidalVisible = getCookie("TidalScaleLayerVisible") === "true"
-                layer_tidalscale.setVisible(tidalVisible);
-                if(layer_tidalscale.getVisible()) {
-                  refreshTidalScales();
+                if (getCookie("WikipediaLayerThumbs") === "true") {
+                    wikipediaThumbs = true;
+                    layer_wikipedia.setVisible(true);
                 }
-
-                var sportVisible = getCookie("SportLayerVisible") === "true"
-                layer_sport.setVisible(sportVisible);
-
-                var gridVisible = getCookie("GridWGSLayerVisible") === "true"
-                if(getCookie("GridWGSLayerVisible") === "-1")
-                  gridVisible = true; // default to visible
-
-                layer_grid.setVisible(gridVisible);
-
-                var gebcoVisible = getCookie("GebcoDepthLayerVisible") === "true";
-//                layer_gebco_deepshade.setVisible(gebcoVisible);
-                layer_gebco_deeps_gwc.setVisible(gebcoVisible);
-
-                var wikiLayerVisible = getCookie("WikipediaLayerVisible") === "true";
-                var wikiThumbsVisible = getCookie("WikipediaLayerThumbs") === "true";
-                wikipediaThumbs = wikiThumbsVisible;
-                setWikiLayer(wikiLayerVisible);
-
-                if (getCookie("BingAerialLayerVisible") == "true") {
-                    layer_bing_aerial.setVisible(true);
-                    layer_mapnik.setVisible(false);
-                }
-                var aisVisible = getCookie("AisLayerVisible") === "true"
-                layer_ais.setVisible(aisVisible)
-
-                var depth10mVisible = getCookie("WaterDepthTrackPointsLayerVisible10m") === "true"
-                layer_waterdepth_trackpoints_10m.setVisible(depth10mVisible);
-
-                var depth100mVisible = getCookie("WaterDepthTrackPointsLayerVisible100m") === "true"
-                layer_waterdepth_trackpoints_100m.setVisible(depth100mVisible);
-
-                var contoursVisible = getCookie("WaterDepthContoursVisible") === "true"
-                layer_waterdepth_contours.setVisible(contoursVisible);
-
-                showWaterDepthTrackPoints();
 
                 if (getCookie("CompassroseVisible") === "true") {
                     document.getElementById("checkCompassrose").checked = true
@@ -236,32 +212,18 @@
                 }
             }
 
-            function resetLayerCheckboxes()
+            // Initialize the layers checkboxes on page load
+            function initLayerCheckboxes()
             {
-                // This method is separated from readLayerCookies because
-                // the permalink control also will set the visibility of
-                // layers.
-                document.getElementById("checkLayerSeamark").checked                = (layer_seamark.getVisible() === true);
-                document.getElementById("checkLayerHarbour").checked                = (layer_pois.getVisible() === true);
-                document.getElementById("checkLayerTidalScale").checked             = (layer_tidalscale.getVisible() === true);
-                document.getElementById("checkLayerSport").checked                  = (layer_sport.getVisible() === true);
-                document.getElementById("checkLayerGridWGS").checked                = (layer_grid.getVisible() === true);
-                document.getElementById("checkLayerGebcoDepth").checked             = (/*layer_gebco_deepshade.getVisible() === true ||*/ layer_gebco_deeps_gwc.getVisible() === true);
-                //document.getElementById("checkDownload").checked                    = (layer_download.getVisible() === true);
-                document.getElementById("checkNauticalRoute").checked               = (layer_nautical_route.getVisible() === true);
-                document.getElementById("checkLayerWikipedia").checked              = (layer_wikipedia.getVisible() === true);
-                document.getElementById("checkLayerWikipediaThumbnails").checked    = (layer_wikipedia.getVisible() === true && wikipediaThumbs === true);
-                document.getElementById("checkLayerBingAerial").checked             = (layer_bing_aerial.getVisible() === true);
-                document.getElementById("checkLayerAis").checked                    = (layer_ais.getVisible() === true);
-                document.getElementById("checkPermalink").checked                   = (layer_permalink.getVisible() === true);
-                
-                // document.getElementById("checkLayerSatPro").checked                = (layer_satpro.getVisible() === true);
-                setWaterDepthBoxes();
-                document.getElementById("checkDepthContours").checked                   = (layer_waterdepth_contours.getVisible() === true);
-                document.getElementById("checkCompassrose").checked                 = (document.getElementById("compassRose").style.visibility === 'visible');
+                map.getLayers().forEach((layer)=> {
+                    const checkboxId = layer.get('checkboxId');
+                    const checkbox = document.getElementById(checkboxId);
+                    if (checkbox) {
+                        checkbox.checked = layer.getVisible();
+                    }
 
-                // TODO oli
-                //createPermaLink();
+                })
+                document.getElementById("checkCompassrose").checked = (document.getElementById("compassRose").style.visibility === 'visible');
             }
 
             // Show popup window for help
@@ -303,9 +265,9 @@
 
             function togglePermalink(show) {
                 if (show) {
-                    addPermalink();
+                    openPermalinkDialog();
                 } else {
-                    closePermalink();
+                    closePermalinkDialog();
                 }
             }
 
@@ -319,7 +281,6 @@
 
             function showGebcoDepth() {
                 layer_gebco_deeps_gwc.setVisible(!layer_gebco_deeps_gwc.getVisible());
-                setCookie("GebcoDepthLayerVisible", layer_gebco_deeps_gwc.getVisible());
             }
 
             function showBingAerial() {
@@ -330,11 +291,6 @@
                     layer_mapnik.setVisible(false);
                     layer_bing_aerial.setVisible(true);
                 }
-            }
-
-            function correctBingVisibility() {
-                document.getElementById("license_bing").style.display = layer_bing_aerial.getVisible() ? 'inline' : 'none';
-                setCookie("BingAerialLayerVisible", '' + layer_bing_aerial.getVisible());
             }
 
             function showAis() {
@@ -357,10 +313,9 @@
 
             function toggleMapDownload(show) {
                 if (show) {
-                    addMapDownload();
-                    selectControl.removePopup();
+                    openMapDownloadDialog();
                 } else {
-                    closeMapDownload();
+                    closeMapDownloadDialog();
                 }
             }
 
@@ -436,21 +391,21 @@
                 document.getElementById("actionDialog").style.visibility = 'hidden';
             }
 
-            function addMapDownload() {
+            function openMapDownloadDialog() {
                 selectControl.hover = false;
                 addDownloadlayer();
                 layer_download.setVisible(true);
-                var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\"><img src=\"./resources/action/close.gif\" onClick=\"closeMapDownload();\"/></div>";
+                var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\"><img src=\"./resources/action/close.gif\" onClick=\"closeMapDownloadDialog();\"/></div>";
                 htmlText += "<h3><?=$t->tr("downloadChart")?>:</h3><br/>";
                 htmlText += "<table border=\"0\" width=\"240px\">";
                 htmlText += "<tr><td>Name:</td><td><div id=\"info_dialog\">&nbsp;<?=$t->tr("pleaseSelect")?><br/></div></td></tr>";
                 htmlText += "<tr><td><?=$t->tr("format")?>:</td><td><select id=\"mapFormat\"><option value=\"unknown\"/><?=$t->tr("unknown")?><option value=\"png\"/>png<option value=\"cal\"/>cal<option value=\"kap\"/>kap<option value=\"WCI\"/>WCI<option value=\"kmz\"/>kmz<option value=\"jpr\"/>jpr</select></td></tr>";
-                htmlText += "<tr><td><br/><input type=\"button\" id=\"buttonMapDownload\" value=\"<?=$t->tr("download")?>\" onclick=\"downloadMap()\" disabled=\"true\"></td><td align=\"right\"><br/><input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeMapDownload()\"></td></tr>";
+                htmlText += "<tr><td><br/><input type=\"button\" id=\"buttonMapDownload\" value=\"<?=$t->tr("download")?>\" onclick=\"downloadMap()\" disabled=\"true\"></td><td align=\"right\"><br/><input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeMapDownloadDialog()\"></td></tr>";
                 htmlText += "</table>";
                 showActionDialog(htmlText);
             }
 
-            function closeMapDownload() {
+            function closeMapDownloadDialog() {
                 selectControl.hover = true;
                 layer_download.setVisible(false);
                 layer_download.getSource().clear();
@@ -513,76 +468,64 @@
                 NauticalRoute_stopEditMode();
             }
 
-            function onAddMarker(e) {
-                // Marker Init
-                var size = new OpenLayers.Size(32, 32); // size of the marker
-                var offset = new OpenLayers.Pixel(-(size.w/2), -size.h); // offset to get the pinpoint of the needle to mouse pos
-                var icon = new OpenLayers.Icon('./resources/icons/Needle_Red_32.png', size, offset); // Init of icon
+            function addPermalinkMarker(coordinate) {
+                layer_permalink.getSource().clear(); // clear all markers to only keep one marker at a time on the map
+                const feature = new ol.Feature(new ol.geom.Point(coordinate));
+                layer_permalink.getSource().addFeature(feature);
 
-                // Adding of Marker
-                layer_permalink.clearMarkers(); // clear all markers to only keep one marker at a time on the map
-                var position = this.events.getMousePosition(e); // get position of mouse click
-                var lonlat = map.getLonLatFromLayerPx(position); // get Lon/Lat from position
-                layer_permalink.addMarker(new OpenLayers.Marker(lonlat, icon)); // add maker
+                const [lon, lat] = ol.proj.toLonLat(coordinate);
 
-                // Display Marker Position
-                lonlat.transform(projMerc, proj4326);
                 // Code from mousepostion_dm.js - redundant, try to reuse
-                var ns = lonlat.lat >= 0 ? 'N' : 'S';
-                var we = lonlat.lon >= 0 ? 'E' : 'W';
-                var lon_m = Math.abs(lonlat.lon*60).toFixed(3);
-                var lat_m = Math.abs(lonlat.lat*60).toFixed(3);
+                var ns = lat >= 0 ? 'N' : 'S';
+                var we = lon >= 0 ? 'E' : 'W';
+                var lon_m = Math.abs(lon*60).toFixed(3);
+                var lat_m = Math.abs(lat*60).toFixed(3);
                 var lon_d = Math.floor(lon_m/60);
                 var lat_d = Math.floor(lat_m/60);
                 lon_m -= lon_d*60;
                 lat_m -= lat_d*60;
+
                 // Write the specified content inside
                 const markerpos = document.getElementById('markerpos');
                 markerpos.innerHTML = ns + lat_d + "°" + format2FixedLenght(lat_m,6,3) + "'" + " " + we + lon_d + "°" + format2FixedLenght(lon_m,6,3) + "'";
-                markerpos.lat = lonlat.lat.toFixed(5);
-                markerpos.lon = lonlat.lon.toFixed(5);
+                markerpos.lat = lat.toFixed(5);
+                markerpos.lon = lon.toFixed(5);
 
                 createPermaLink();
               }
 
               function createPermaLink(){
-                if(!layer_permalink.getVisible())
+                if(!layer_permalink.getVisible()) {
                   return;
-                if(!OpenLayers.Util.getElement("permalinkDialog"))
-                  return
+                }
 
-                // Create Permalink for Layers
-                var layersPermalink = permalinkControl.getLayerString();
-                layersPermalink = permalinkControl.setFlag(layersPermalink, 'F', layer_permalink.layerId);
+                if(!document.getElementById("permalinkDialog")){
+                  return;
+                }
 
-                // Generate Permalink for copy and paste
-                var url = window.location.href;
-                var userURL = url.substr(0, url.lastIndexOf('/')+1)
-                userURL += "?zoom=" + map.getZoom(); // add map zoom to string
-                userURL += "&lat=" + y2lat(map.getCenter().lat).toFixed(5); // add map zoom to string
-                userURL += "&lon=" + x2lon(map.getCenter().lon).toFixed(5); // add map zoom to string
-
+                const params = {};
                 const markerpos = document.getElementById('markerpos');
+
                 var lat = markerpos.lat;
                 if(lat)
-                  userURL += "&mlat=" + lat; // add latitude
+                    params.mlat = lat; // add latitude
 
                 var lon = markerpos.lon;
                 if(lon) {
-                  userURL += "&mlon=" + lon; // add longitude
+                    params.mlon = lon; // add longitude
                 }
+
                 var mText = encodeURIComponent(document.getElementById("markerText").value)
                 if(mText != "")
-                  userURL += "&mtext=" + mText; // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
+                    params.mtext = mText; // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
 
-                userURL += "&layers=" + layersPermalink; // add encoded layers
-                OpenLayers.Util.getElement("userURL").innerHTML = userURL; // write contents of userURL to textarea
+                document.getElementById("userURL").innerHTML = getPermalink(params); // write contents of userURL to textarea
             }
 
-            function addPermalink() {
+            function openPermalinkDialog() {
                 layer_permalink.setVisible(true);
                 var htmlText = "<div id='permalinkDialog' style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
-                htmlText += "<img src=\"./resources/action/close.gif\" onClick=\"closePermalink();\"/></div>";
+                htmlText += "<img src=\"./resources/action/close.gif\" onClick=\"closePermalinkDialog();\"/></div>";
                 htmlText += "<h3><?=$t->tr("permalinks")?>:</h3><br/>"; // reference to translation.php
                 htmlText += "<p><?=$t->tr("markset")?></p>"
                 htmlText += "<br /><hr /><br />"
@@ -599,15 +542,18 @@
                 showActionDialog(htmlText);
 
                 document.getElementById('markerText').addEventListener("keyup",function(evt) {
-                  createPermaLink()
+                  createPermaLink() 
                 });
 
-                map.events.register("click", layer_permalink, onAddMarker);
+                // TODO oli
+                // map.events.register("click", layer_permalink, onAddMarker);
                 createPermaLink();
             }
 
-            function closePermalink() {
-                map.events.unregister("click", layer_permalink, onAddMarker);
+            function closePermalinkDialog() {
+
+                // TODO oli
+                // map.events.unregister("click", layer_permalink, onAddMarker);
                 layer_permalink.setVisible(false);
                 closeActionDialog();
             }
@@ -632,7 +578,7 @@
                 showActionDialog(htmlText);
             }
 
-            function drawmap() {
+            function initMap() {
                 popup = document.getElementById('popup');
                 content = document.getElementById('popup-content');
                 closer = document.getElementById('popup-closer');
@@ -682,6 +628,7 @@
                     }),
                 });
 
+                map.addControl(new Permalink());
                 map.addControl(new ol.control.ScaleLine({
                     className: 'ol-scale-line-metric'
                 }));
@@ -743,6 +690,20 @@
                 // });
                 selectControl = new ol.interaction.Select();
 
+                function updateCheckboxAndCookie(layer) {
+                    const checkboxId = layer.get("checkboxId");
+                    const cookieKey = layer.get("cookieKey");
+                    const checkbox = document.getElementById(checkboxId);
+
+                    if (checkbox) {
+                        checkbox.checked = layer.getVisible();
+                    }
+
+                    if (cookieKey) {               
+                        setCookie(cookieKey, layer.getVisible());
+                    }
+                }
+
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
 
                 // Mapnik (Base map)
@@ -773,7 +734,6 @@
                 //     { layerId: 3, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
                 layer_seamark = new ol.layer.Tile({
                     visible: true,
-                    minZoom: 9,
                     maxZom: 19,
                     source: new ol.source.XYZ({
                         // url: "https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"
@@ -784,20 +744,15 @@
                         }
                     }),
                     properties: {
-                        name: 'seamarks',
+                        name: "seamarks",
                         layerId: 3,
-                        wrapDateLine:true,
-                        numZoomLevels: 19, 
-                        type: 'png', 
-                        getURL:getTileURL, 
-                        isBaseLayer:false, 
-                        displayOutsideMaxExtent:true
+                        cookieKey: "SeamarkLayerVisible",
+                        checkboxId: "checkLayerSeamark",
                     }
                 });
 
                 layer_seamark.on("change:visible", (evt) => {
-                    document.getElementById("checkLayerSeamark").checked = evt.target.getVisible();
-                    setCookie("SeamarkLayerVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
                 });
 
                 // Sport
@@ -810,9 +765,8 @@
                     properties: {
                         name: 'Sport',
                         layerId: 4,
-                        numZoomLevels: 19,
-                        isBaseLayer:false,
-                        displayOutsideMaxExtent:true
+                        checkboxId: "checkLayerSport",
+                        cookieKey: "SportLayerVisible",
                     },
                     source: new ol.source.XYZ({
                         // url: "https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"
@@ -824,8 +778,7 @@
                     }),
                 });
                 layer_sport.on("change:visible", (evt) => {
-                    document.getElementById("checkLayerSport").checked = evt.target.getVisible();
-                    setCookie("SportLayerVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
                 });
 
                 //GebcoDepth
@@ -840,6 +793,8 @@
                         name:"gebco_2021",
                         layerId: 6,
                         isBaseLayer: false,
+                        checkboxId: "checkLayerGebcoDepth",
+                        cookieKey: "GebcoDepthLayerVisible",
                     },
                     source: new ol.source.TileWMS({
                         url: 'https://depth.openseamap.org/geoserver/gwc/service/wms',
@@ -849,8 +804,7 @@
                     }),
                 }),
                 layer_gebco_deeps_gwc.on("change:visible", (evt) => {
-                    document.getElementById("checkLayerGebcoDepth").checked = evt.target.getVisible();
-                    setCookie("GebcoDepthLayerVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
                 });
                 
                 // POI-Layer for harbours
@@ -866,14 +820,15 @@
                     properties: {
                         name: "pois",
                         layerId: 7,
+                        checkboxId: "checkLayerHarbour",
+                        cookieKey: "HarbourLayerVisible",
                     },
                     source: new ol.source.Vector({
                         features: [],
                     }),
                 });
                 layer_pois.on("change:visible", (evt) => {
-                    document.getElementById("checkLayerHarbour").checked = evt.target.getVisible();
-                    setCookie("HarbourLayerVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
 
                     if (!evt.target.getVisible()) {
                         clearPoiLayer();
@@ -900,6 +855,8 @@
                         name: 'Aerial photo',
                         layerId: 12,
                         isBaseLayer: true,
+                        checkboxId: "checkLayerBingAerial",
+                        cookieKey: "BingAerialLayerVisible",
                     },
                     source: new ol.source.BingMaps({
                         key: 'AuA1b41REXrEohfokJjbHgCSp1EmwTcW8PEx_miJUvZERC0kbRnpotPTzGsPjGqa',
@@ -911,10 +868,8 @@
                 });
 
                 layer_bing_aerial.on('change:visible', (evt) => {
-                    correctBingVisibility();
-                    document.getElementById("checkLayerBingAerial").checked = evt.target.getVisible();
-                    setCookie("BingAerialLayerVisible", evt.target.getVisible());
-                
+                    document.getElementById("license_bing").style.display = layer_bing_aerial.getVisible() ? 'inline' : 'none';
+                    updateCheckboxAndCookie(evt.target);
                 });
                 
                 // Map download
@@ -942,12 +897,13 @@
                     properties: {
                         name: 'Trip Planner',
                         layerId: 9,
+                        checkboxId: "checkNauticalRoute",
+                        cookieKey: "NauticalRouteLayerVisible",
                     },
                     source: new ol.source.Vector({features:[]}),
                 });
                 layer_nautical_route.on("change:visible", (evt) => {
-                    document.getElementById("checkNauticalRoute").checked = evt.target.getVisible();
-                    setCookie("NauticalRouteLayerVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
                 });
 
                 // Grid WGS
@@ -962,6 +918,8 @@
                     properties: {
                         name: "coordinateGrid",
                         layerId: 10,
+                        checkboxId: "checkLayerGridWGS",
+                        cookieKey: "GridWGSLayerVisible",
                     },
                     // the style to use for the lines, optional.
                     strokeStyle: new ol.style.Stroke({
@@ -973,8 +931,7 @@
                     wrapX: true,
                 });
                 layer_grid.on("change:visible", (evt) => {
-                    document.getElementById("checkLayerGridWGS").checked = evt.target.getVisible();
-                    setCookie("GridWGSLayerVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
                 });
 
                 // TODO oli
@@ -1001,6 +958,8 @@
                     properties: {
                         name: "Wikipedia World",
                         layerId: 11,
+                        checkboxId: "checkLayerWikipedia",
+                        cookieKey: "WikipediaLayerVisible",
                     },
                     source: new ol.source.Vector({
                         features: [],
@@ -1038,8 +997,7 @@
                     }),
                 });
                 layer_wikipedia.on("change:visible", (evt) => {
-                    document.getElementById("checkLayerWikipedia").checked = evt.target.getVisible();
-                    setCookie("WikipediaLayerVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
 
                     if (!evt.target.getVisible()) {
                         document.getElementById("checkLayerWikipediaThumbnails").checked = false;
@@ -1057,6 +1015,8 @@
                     properties: {
                         name: 'Marinetraffic',
                         layerId: 13,
+                        checkboxId: "checkLayerAis",
+                        cookieKey: "AisLayerVisible",
                     },
                     source: new ol.source.XYZ({
                        tileUrlFunction: function(coordinate) {
@@ -1065,8 +1025,7 @@
                     }),
                 });
                 layer_ais.on("change:visible", (evt) => {
-                    document.getElementById("checkLayerAis").checked = evt.target.getVisible();
-                    setCookie("AisLayerVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
                 });
 
                 // SatPro
@@ -1081,6 +1040,8 @@
                     properties: {
                         name: "SatPro",
                         layerId: 14,
+                        checkboxId: "checkLayerSatPro",
+                        cookieKey: "SatProLayerVisible",
                     },
                     source: new ol.source.Vector({
                         features: [],
@@ -1112,7 +1073,7 @@
                                             if (trackPoints.length > 1) {
                                                 // Track line
                                                 const lineArr = trackPoints.map((trackPoint)=> {
-                                                    return ol.proj.fromLonLat([trackPoint.lon, trackPoint.lat]);
+                                                    return ol.proj.fromarkerLonLat([trackPoint.lon, trackPoint.lat]);
                                                 });
                                                 const lineFeature = new ol.Feature(new ol.geom.LineString(lineArr));
                                                 lineFeature.set('type','line');                                                
@@ -1120,7 +1081,7 @@
 
                                                 // Track points (ignore first)
                                                 for (var j = 1; j < trackPoints.length; j++) {
-                                                    const point = new ol.geom.Point(ol.proj.fromLonLat([trackPoints[j].lon, trackPoints[j].lat]));
+                                                    const point = new ol.geom.Point(ol.proj.fromarkerLonLat([trackPoints[j].lon, trackPoints[j].lat]));
                                                     const pointFeature = new ol.Feature(point);
                                                     pointFeature.setProperties(trackPoints[j]);
                                                     pointFeature.set('type', 'point');
@@ -1129,7 +1090,7 @@
                                                 }
 
                                                 // Vessel                                             
-                                                const vessel = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([trackPoints[0].lon, trackPoints[0].lat])));
+                                                const vessel = new ol.Feature(new ol.geom.Point(ol.proj.fromarkerLonLat([trackPoints[0].lon, trackPoints[0].lat])));
                                                 vessel.setProperties(attributes);
                                                 vessel.set('type', 'actual');
                                                 features.push(vessel);
@@ -1167,8 +1128,7 @@
                     }),
                 });
                 layer_satpro.on("change:visible", (evt) => {
-                    document.getElementById("checkLayerSatPro").checked = evt.target.getVisible();
-                    setCookie("SatProLayerVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
                 });
 
 
@@ -1185,12 +1145,14 @@
                     properties: {
                         name: 'tidalscale',
                         layerId: 16,
+                        checkboxId: "checkLayerTidalScale",
+                        cookieKey: "TidalScaleLayerVisible",
                     },
                     source: new ol.source.Vector({features:[]}),
                 });
                 layer_tidalscale.on("change:visible", (evt) => {
-                    document.getElementById("checkLayerTidalScale").checked = evt.target.getVisible();
-                    setCookie("TidalScaleLayerVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
+
                     if (!evt.target.getVisible()) {
                         clearTidalScaleLayer();
                     } else {
@@ -1212,7 +1174,14 @@
                     properties:{
                         name: "Permalink",
                         layerId: 17 // invalid layerId -> will be ignored by layer visibility setup
-                    }
+                    },
+                    style: new ol.style.Style({
+                        image: new ol.style.Icon({
+                            src: 'resources/icons/Needle_Red_32.png',
+                            size: [32, 32],
+                            anchor: [0.5, 1]
+                        })
+                    })
                 });
 
                 // Water Depth
@@ -1226,6 +1195,8 @@
                     properties:{
                         name: 'Water Depth Track Points',
                         layerId: 21,
+                        checkboxId: "checkLayerWaterDepthTrackPoints10m",
+                        cookieKey: "WaterDepthTrackPointsLayerVisible10m",
                     },
                     source: new ol.source.TileWMS({
                         url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi',
@@ -1260,8 +1231,7 @@
                           parentCheckbox.checked = true;
                         }
                     }
-                    document.getElementById("checkLayerWaterDepthTrackPoints10m").checked = evt.target.getVisible();
-                    setCookie("WaterDepthTrackPointsLayerVisible10m", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
                 });
 
                 // waterDepthTrackPoints100m = new WaterDepthTrackPoints100m(map, selectControl, {
@@ -1273,6 +1243,8 @@
                     properties:{
                         name: 'Water Depth Track Points',
                         layerId: 18,
+                        checkboxId: "checkLayerWaterDepthTrackPoints100m",
+                        cookieKey: "WaterDepthTrackPointsLayerVisible100m",
                     },
                     source: new ol.source.TileWMS({
                         url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
@@ -1307,8 +1279,7 @@
                           parentCheckbox.checked = true;
                         }
                     }
-                    document.getElementById("checkLayerWaterDepthTrackPoints100m").checked = evt.target.getVisible();
-                    setCookie("WaterDepthTrackPointsLayerVisible100m", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
                 });
                
                 // layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
@@ -1326,6 +1297,8 @@
                     properties:{
                         name: 'Contours',
                         layerId: 22,
+                        checkboxId: "checkDepthContours",
+                        cookieKey: "WaterDepthContoursVisible",
                     },
                     source: new ol.source.TileWMS({
                         url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
@@ -1343,8 +1316,7 @@
                     }),
                 });
                 layer_waterdepth_contours.on("change:visible", (evt) => {
-                    document.getElementById("checkDepthContours").checked = evt.target.getVisible();
-                    setCookie("WaterDepthContoursVisible", evt.target.getVisible());
+                    updateCheckboxAndCookie(evt.target);
                 })
 
                 const waterDepthLayers = [layer_waterdepth_trackpoints_100m, layer_waterdepth_trackpoints_10m,layer_waterdepth_contours];
@@ -1352,7 +1324,6 @@
                     layer.on('change:visible', () => {
                         const showCopyright = waterDepthLayers.find((l) => l.getVisible());
                         document.getElementById("license_waterdepth").style.display = showCopyright ? 'inline' : 'none';
-                        
                     })
                 });
 
@@ -1387,17 +1358,6 @@
                 ].forEach((layer)=> {
                     map.addLayer(layer);
                 });
-
-                // TODO oli
-                // layer_mapnik.events.register("loadend", null, function(evt) {
-                //     // The Bing layer will only be displayed correctly after the
-                //     // base layer is loaded.
-                //     window.setTimeout(correctBingVisibility, 10);
-                // });
-
-                if (!map.getView().getCenter()) {
-                    jumpTo(lon, lat, zoom);
-                }
 
                 // // TODO oli
                 // // Register featureselect for download tool
@@ -1486,8 +1446,8 @@
                 clearPoiLayer();
                 clearTidalScaleLayer();
                 if (layer_download && layer_download.getVisible() === true) {
-                    closeMapDownload();
-                    addMapDownload();
+                    closeMapDownloadDialog();
+                    openMapDownloadDialog();
                 }
             }
 
@@ -1495,11 +1455,12 @@
                 let html = feature.get('popupContentHTML');
 
                 if (feature.get('name')) {
-                    content = '<b>'+feature.get('name') +'</b><br>'+ feature.get('description');
+                    html = '<b>'+feature.get('name') +'</b><br>'+ feature.get('description');
                 }
 
                 content.innerHTML = html;
-                overlay.setPosition(coordinate);
+                // The feature must have a point geometry
+                overlay.setPosition(coordinate || feature.getGeometry().getCoordinates());
             }
 
             function getFeaturesAtPixel(pixel) {
@@ -1519,12 +1480,18 @@
             }
 
             function mapEventClick(event) {
-                const features = getFeaturesAtPixel(event.pixel);
-
-                if (features.length) {   
-                    openPopup(features[features.length-1], event.coordinate);
+                // If permalink dialog is open we add a marker on click
+                if (layer_permalink.getVisible()) {
+                    addPermalinkMarker(event.coordinate);
                 } else {
-                    overlay.setPosition();
+                    // Otherwise we search for feature with popup content to display.
+                    const features = getFeaturesAtPixel(event.pixel);
+
+                    if (features.length) {   
+                        openPopup(features[features.length-1], event.coordinate);
+                    } else {
+                        overlay.setPosition();
+                    }
                 }
             }
 
@@ -1624,7 +1591,6 @@
                 if (layer_download.getVisible()) {
                     switchMenuTools('download', true);
                 }
-                console.log(layer_nautical_route.getVisible());
                 if (layer_nautical_route.getVisible()) {
                     switchMenuTools('nautical_route', true);
                 }

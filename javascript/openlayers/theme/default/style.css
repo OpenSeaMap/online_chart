@@ -66,9 +66,9 @@ div.olLayerDiv {
    text-align: center;
 }
 
-.olControlPermalink {
+.olControlPermalink, .ol-permalink {
     right: 3px;
-    bottom: 1.5em;
+    bottom: 2em;
     display: block;
     position: absolute;
     font-size: smaller;
