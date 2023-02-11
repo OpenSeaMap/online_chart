@@ -7,6 +7,8 @@ body {
     padding: 0;
     overflow: hidden;
     color: #000000;
+    font-family: arial;
+    font-size: 14px;
 }
 
 img {
@@ -132,7 +134,7 @@ img {
     cursor: pointer
 }
 
-#timemenu ul li.selected {
+#timemenu li.selected, #topmenu li.selected {
     background-color: #ADD8E6;
 }
 

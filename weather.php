@@ -52,7 +52,7 @@
                 initMap();
                 readPermalinkOrCookies();
                 showWind();
-                document.getElementById("timeLayer1").style.background = "#ADD8E6";
+                document.getElementById("timeLayer0").className = "selected";
                 document.getElementById("checkPressure").checked = false;
                 document.getElementById("checkAirTemperature").checked = false;
                 document.getElementById("checkPrecipitation").checked = false;
@@ -102,6 +102,7 @@
                 }
             }
 
+            var layerId = 1;
             function createWeatherXYZLayer(type, number) {
                 return new ol.layer.Tile({
                     visible: false,
@@ -110,7 +111,10 @@
                             return getTileUrlFunction(`http://weather.openportguide.de/tiles/actual/${type}/${number}/`, 'png', coordinate);
 
                         }
-                    })
+                    }),
+                    properties: {
+                        layerId: layerId++,
+                    }
                 });
             }
 
@@ -135,7 +139,10 @@
 
                 // Mapnik
                 var layer_mapnik = new ol.layer.Tile({
-                    source: new ol.source.OSM()
+                    source: new ol.source.OSM(),
+                    properties: {
+                        layerId: layerId++,
+                    }
                 });
 
                 const numbers = [
@@ -192,12 +199,13 @@
                 if (!showWindLayer) {
                     document.getElementById("checkWind").checked = true;
                     document.getElementById("comment").style.visibility = "visible";
-                    document.getElementById("buttonWind").style.background = "#ADD8E6";
+                    document.getElementById("buttonWind").className = "selected";
                     setWindLayerVisible();
                     showWindLayer = true;
                 } else {
                     document.getElementById("checkWind").checked = false;
                     document.getElementById("comment").style.visibility = "hidden";
+                    document.getElementById("buttonWind").className = "";
                     clearWindLayerVisibility();
                     showWindLayer = false;
                 }
@@ -270,13 +278,11 @@
 
                 var oldDate = "00";
                 var html = "<b><?=$t->tr("time")?> (UTC)</b><br/><br/>";
-                var layer = 1;
 
                 for(i = 0; i < arrayTimeValues.length; i++) {
                     var values = arrayTimeValues[i].split(" ");
                     var date = values[0];
                     var time = values[1];
-                    layer = i + 1;
                     if (oldDate != date) {
                         if (oldDate != "00") {
                             html += "</ul>";
@@ -286,9 +292,9 @@
                         oldDate = date;
                     }
                     html += `
-                    <li id="timeLayer${layer}"
-                        className="${layerNumber === layer ? 'selected' : ''}"
-                        onClick="setLayerVisible(${layer})">${time}</li>
+                    <li id="timeLayer${i}"
+                        className="${layerNumber === i ? 'selected' : ''}"
+                        onClick="setLayerVisible(${i})">${time}</li>
                     `;
                 }
                 html += "</ul>";
@@ -296,9 +302,9 @@
             }
 
             function setLayerVisible(number) {
-                document.getElementById("timeLayer" + layerNumber).style.background = "#FFFFFF";
+                document.getElementById("timeLayer" + layerNumber).className = "";
                 layerNumber = number;
-                document.getElementById("timeLayer" + layerNumber).style.background = "#ADD8E6";
+                document.getElementById("timeLayer" + layerNumber).className = "selected";
 
                 if (showWindLayer) {
                     setWindLayerVisible();
