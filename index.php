@@ -163,14 +163,12 @@
                 // Apply layers visiblity from permalink
                 const permalinkLayers = getArgument("layers");
                 if (permalinkLayers) {
-                    console.log(permalinkLayers);
                     const layers = map.getLayers().getArray();
                     [...permalinkLayers].forEach((visibility, index) => {
                         const layer = layers.find((l) => {
                           return l.get('layerId') === index + 1;
                         });
                         if (layer) {
-                            console.log(visibility, layer.get('name'), layer.get('layerId'), /^(B|T)$/.test(visibility));
                             layer.setVisible(/^(B|T)$/.test(visibility));
                         }
                     });
