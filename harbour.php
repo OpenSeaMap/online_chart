@@ -1,7 +1,7 @@
 <!--updated 2012-06-02-->
 <table border="0" cellpadding="5">
     <tr>
-        <td><img alt="harbour" src="./resources/places/harbour_32.png" width="32" height="32" border="0"></td>
+        <td><img alt="harbour" src="./resources/places/harbour_32.png" width="32" height="32" border="0"/></td>
         <td><?=$t->tr("harbour")?></td>
     </tr>
     <tr>

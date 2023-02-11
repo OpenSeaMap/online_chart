@@ -5,9 +5,10 @@ class Pages {
     var $defaultPage;
     var $defaultPageLink;
 
-    function Pages($currentPage) {
+    function __construct($currentPage) {
         $this->setCurrentPage($currentPage);
     }
+
     function addPage($id,$name,$file,$headerFile = "") {
         $this->pages[$id] = array("name"=>$name,"file"=>$file,"headerFile"=>$headerFile);
     }
@@ -60,7 +61,16 @@ class Pages {
             $link = $this->defaultPageLink;
         $text = '<ul>'."\n";
         foreach ($this->pages as $key => $value) {
-            $text .= '<li '.($this->getCurrentPage() == $key ? "id=\"selected\"" : "").'><a href="'.$link.'page='.$key.'" >'.$value['name'].'</a></li>'."\n";
+            $isDivider = preg_match("/divider/i", $key);
+            $text .= '<li '.($this->getCurrentPage() == $key ? "id=\"selected\"" : "").'>';
+            if (!$isDivider) {
+              $text .= '<a href="'.$link.'page='.$key.'" >';
+            }
+            $text .= $value['name'];
+            if (!$isDivider) {
+              $text .= '</a>';
+            }
+            $text .= '</li>'."\n";
         }
         $text .= '</ul>'."\n";
         return $text;

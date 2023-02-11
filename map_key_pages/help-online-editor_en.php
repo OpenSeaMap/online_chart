@@ -1,7 +1,7 @@
-<iframe src="./api/help-proxy/index.php?q=http://wiki.openseamap.org/wiki/Online-Editor" width="540" height="670" frameborder="0">
+<iframe src="https://wiki.openseamap.org/wiki/Online-Editor" width="540" height="670" frameborder="0">
 <p>Your browser can not show embedded frames:
 You may view the embedded site over the following
 Call reference:
-  http://wiki.openseamap.org/wiki/Online-Editor
+  https://wiki.openseamap.org/wiki/Online-Editor
   </p>
 </iframe>

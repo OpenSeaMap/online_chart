@@ -37,11 +37,14 @@ img {
     padding: 0;
 }
 
+#menu ul li b, #menu ul li a {
+    padding: 4px 0 4px 12px;
+}
+
 #menu ul li a {
     color: #000;
     display: block;
     margin: 0 0 0 0;
-    padding: 4px 0 4px 12px;
     text-decoration: none;
 }
 
@@ -58,7 +61,16 @@ img {
     top:2px;
     left:200px;
     clear: both;
-    padding: 0px 0 0px 20px;
+    margin: 0px 0 0px 20px;
+    overflow-x: hidden;
+}
+
+/* hide sidebar and top navigation */
+#content iframe[src*="https://wiki.openseamap"]{
+    margin-left: -170px;
+    /* margin-top: -82px; */
+    width: 710px;
+    height: 670px;
 }
 
 

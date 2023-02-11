@@ -769,12 +769,13 @@
                         cookieKey: "SportLayerVisible",
                     },
                     source: new ol.source.XYZ({
-                        // url: "https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"
+                        url: "https://tiles.openseamap.org/sport/{z}/{x}/{y}.png",
                         tileUrlFunction: function(coordinate) {
                             return getTileUrlFunction("https://tiles.openseamap.org/sport/", 'png', coordinate);
                             // return "https://tiles.openseamap.org/seamark/" + coordinate[0] + '/' +
                             //     coordinate[1] + '/' + (-coordinate[2] - 1) + '.png';
                         }
+                        
                     }),
                 });
                 layer_sport.on("change:visible", (evt) => {
