@@ -33,6 +33,7 @@
 
             // Selected time layer
             var layerNumber = 0;
+            var numbers = ['5', '7', '9' , '11', '15', '19', '23', '27'];
 
             // Layer visibility
             var showWindLayer = false;
@@ -48,7 +49,7 @@
 
             // Load page for the first time
             function init() {
-                fillTimeDiv();
+                buildTimeMenu();
                 initMap();
                 readPermalinkOrCookies();
                 showWind();
@@ -144,10 +145,6 @@
                         layerId: layerId++,
                     }
                 });
-
-                const numbers = [
-                    '5', '7', '9' , '11', '15', '19', '23', '27'
-                ];
                 
                 // Wind layers
                 layers_weather_wind = numbers.map((number)=> {
@@ -214,11 +211,13 @@
             function showPressure() {
                 if (!showPressureLayer) {
                     document.getElementById("checkPressure").checked = true;
-                    document.getElementById("buttonPressure").style.background = "#ADD8E6";
+                    document.getElementById("buttonPressure").className = "selected";
+                    setWindLayerVisible();
                     setPressureLayerVisible();
                     showPressureLayer = true;
                 } else {
                     document.getElementById("checkPressure").checked = false;
+                    document.getElementById("buttonPressure").className = "";
                     clearPressureLayerVisibility();
                     showPressureLayer = false;
                 }
@@ -227,11 +226,12 @@
             function showAirTemperature() {
                 if (!showAirTemperatureLayer) {
                     document.getElementById("checkAirTemperature").checked = true;
-                    document.getElementById("buttonAirTemperature").style.background = "#ADD8E6";
+                    document.getElementById("buttonAirTemperature").className = "selected";
                     setAirTemperatureLayerVisible();
                     showAirTemperatureLayer = true;
                 } else {
                     document.getElementById("checkAirTemperature").checked = false;
+                    document.getElementById("buttonAirTemperature").className = "";
                     clearAirTemperatureLayerVisibility();
                     showAirTemperatureLayer = false;
                 }
@@ -240,11 +240,12 @@
             function showPrecipitation() {
                 if (!showPrecipitationLayer) {
                     document.getElementById("checkPrecipitation").checked = true;
-                    document.getElementById("buttonPrecipitation").style.background = "#ADD8E6";
+                    document.getElementById("buttonPrecipitation").className = "selected";
                     setPrecipitationLayerVisible();
                     showPrecipitationLayer = true;
                 } else {
                     document.getElementById("checkPrecipitation").checked = false;
+                    document.getElementById("buttonPrecipitation").className = "";
                     clearPrecipitationLayerVisibility();
                     showPrecipitationLayer = false;
                 }
@@ -253,18 +254,19 @@
             function showSignificantWaveHeight() {
                 if (!showSignificantWaveHeightLayer) {
                     document.getElementById("checkSignificantWaveHeight").checked = true;
-                    document.getElementById("buttonSignificantWaveHeight").style.background = "#ADD8E6";
+                    document.getElementById("buttonSignificantWaveHeight").className = "selected";
                     setSignificantWaveHeightLayerVisible();
                     showSignificantWaveHeightLayer = true;
                 } else {
                     document.getElementById("checkSignificantWaveHeight").checked = false;
+                    document.getElementById("buttonSignificantWaveHeight").className = "";
                     clearSignificantWaveHeightLayerVisibility();
                     showSignificantWaveHeightLayer = false;
                 }
             }
 
             // Read time files from server and create the menu
-            function fillTimeDiv() {
+            function buildTimeMenu() {
                 var arrayTimeValues = [
                     "<?=$utc->getWeatherUtc('5')?>",
                     "<?=$utc->getWeatherUtc('7')?>",
