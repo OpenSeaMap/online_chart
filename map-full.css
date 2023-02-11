@@ -39,10 +39,12 @@ img {
 /* geo north image is 301x301, mag north image is 200x200 */
 #compassRose {
     position: absolute;
-    bottom: 2.5em;
-    right:  18px;
+    bottom: 58px;
+    right:  10px;
     width: 261px; height: 261px;
     visibility:hidden;
+    border-radius: 50%;
+    background-color:white;
 }
 
 #geoCompassRose {

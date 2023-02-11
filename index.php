@@ -695,7 +695,7 @@
                 //                                         { layerId      : 1,
                 //                                           wrapDateLine : true
                 //                                         });
-                const osmUrl = OsmTileServer == "BRAVO" ? 'https://t2.openseamap.org/tile/{z}/{x}/{y}.png' : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+                const osmUrl = OsmTileServer !== "BRAVO" ? 'https://t2.openseamap.org/tile/{z}/{x}/{y}.png' : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
                 layer_mapnik = new ol.layer.Tile({
                     source: new ol.source.OSM({
                         url: osmUrl
