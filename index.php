@@ -10,14 +10,13 @@
         <meta name="AUTHOR" content="Olaf Hannemann">
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
         <meta http-equiv="content-language" content="<?= $t->getCurrentLanguage()?>">
-        <meta http-equiv="X-UA-Compatible" content="IE=9">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <meta name="date" content="2012-06-02">
         <link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png">
         <link rel="stylesheet" type="text/css" href="map-full.css">
         <link rel="stylesheet" type="text/css" href="topmenu.css">
         <link rel="stylesheet" type="text/css" href="javascript/route/NauticalRoute.css">
-        <!-- <script type="text/javascript" src="./javascript/lib/jquery.js"></script> -->
-        <!-- <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
         <script type="text/javascript" src="./javascript/translation-<?=$t->getCurrentLanguageSafe()?>.js"></script>
@@ -29,13 +28,7 @@
         <script type="text/javascript" src="./javascript/nominatim.js"></script>
         <script type="text/javascript" src="./javascript/tidal_scale.js"></script>
         <script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script>
-        <!--script type="text/javascript" src="./javascript/mouseposition_dm.js"></script>
-        <script type="text/javascript" src="./javascript/grid_wgs.js"></script>
-        <script type="text/javascript" src="./javascript/bing.js"></script>
-        <script type="text/javascript" src="./javascript/ais.js"></script-->
-        <!-- <script type="text/javascript" src="./javascript/satpro.js"></script> -->
         <script type="text/javascript" src="./javascript/lib/he.js"></script>
-        <!--script type="text/javascript" src="./javascript/waterdepth-trackpoints.js"></script-->
         <script type="text/javascript" src="./javascript/geomagjs/cof2Obj.js"></script>
         <script type="text/javascript" src="./javascript/geomagjs/geomag.js"></script>
         <script type="text/javascript" src="./javascript/mag_deviation.js"></script>
@@ -125,8 +118,7 @@
             // Load map for the first time
             function init() {
                 initMap();
-                readPermalink();
-                readLayerCookies();
+                readPermalinkOrCookies();
                 initLayerCheckboxes();
                 initMenuTools();
                 // Set current language for internationalization
@@ -134,7 +126,7 @@
             }
 
             // Apply the url parameters or cookies or default values
-            function readPermalink() {
+            function readPermalinkOrCookies() {
 
                 // Read zoom, lat, lon
                 var cookieZoom = parseInt(getCookie("zoom"), 10);
@@ -182,32 +174,24 @@
                             layer.setVisible(/^(B|T)$/.test(visibility));
                         }
                     });
+                } else {
+                    map.getLayers().forEach((layer)=> {
+                        const cookieKey = layer.get('cookieKey');
+                        const cookieValue =  getCookie(cookieKey);
+                        if (cookieKey && cookieValue) {
+                        layer.setVisible((cookieValue === 'true'));
+                        }
+                    });
                 }
-            }
 
-            
-
-            function readLayerCookies() {
-                if (getArgument('layers')) {
-                    // There is a 'layers' url param -> ignore cookies
-                    return;
-                }
-
-                map.getLayers().forEach((layer)=> {
-                    const cookieKey = layer.get('cookieKey');
-                    const cookieValue =  getCookie(cookieKey);
-                    if (cookieKey && cookieValue) {
-                      layer.setVisible((cookieValue === 'true'));
-                    }
-                });
-
-                if (getCookie("WikipediaLayerThumbs") === "true") {
+                if (layer_wikipedia && getCookie("WikipediaLayerThumbs") === "true") {
                     wikipediaThumbs = true;
-                    layer_wikipedia.setVisible(true);
+                    layer_wikipedia?.setVisible(true);
                 }
 
-                if (getCookie("CompassroseVisible") === "true") {
-                    document.getElementById("checkCompassrose").checked = true
+                const compass = document.getElementById("checkCompassrose");
+                if (compass && getCookie("CompassroseVisible") === "true") {
+                    compass.checked = true
                     toggleCompassrose();
                 }
             }
