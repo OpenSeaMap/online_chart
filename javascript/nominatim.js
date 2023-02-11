@@ -118,10 +118,11 @@ function getJOSMVersion() {
 }
 
 function josm_call() {
-    var left    = x2lon( map.getExtent().left   ).toFixed(5);
-    var right   = x2lon( map.getExtent().right  ).toFixed(5);
-    var top    = y2lat( map.getExtent().top    ).toFixed(5);
-    var bottom  = y2lat( map.getExtent().bottom ).toFixed(5);
+    const [minX, minY, maxX, maxY] = ol.proj.transformExtent(map.getView().calculateExtent(), map.getView().getProjection(), "EPSG:4326");
+    var left    = minX.toFixed(5);
+    var right   = maxX.toFixed(5);
+    var top    = maxY.toFixed(5);
+    var bottom  = minY.toFixed(5);
     var baseUrl = 'http://127.0.0.1:8111/load_and_zoom?left='+left+'&right='+right+'&top='+top+'&bottom='+bottom;
     // IE 9 + localhost ajax GEHT NICHT, daher Fallback:
     //window.open (baseUrl);
