@@ -105,12 +105,6 @@
             // have to let him know, how many layers are removed.
             var ignoredLayers = 4;
 
-
-            // TODO
-            // var permalinkControl = new OpenSeaMap.Control.Permalink(null, null, {
-            //     ignoredLayers : ignoredLayers
-            // });
-
             // Marker that is pinned at the last location the user searched for and selected.
             var searchedLocationMarker = null;
 
@@ -124,6 +118,7 @@
                 // Set current language for internationalization
                 // OpenLayers.Lang.setCode(language);
             }
+
 
             // Apply the url parameters or cookies or default values
             function readPermalinkOrCookies() {
@@ -206,6 +201,14 @@
 
                 })
                 document.getElementById("checkCompassrose").checked = (document.getElementById("compassRose").style.visibility === 'visible');
+            }
+
+            function refreshWeatherAppLink() {
+                const view = map.getView();
+                const zoom = view.getZoom();
+                const [lon, lat] = ol.proj.toLonLat(view.getCenter());
+                const link = document.getElementById('weatherAppLink');
+                link.href = "weather.php?zoom=" + zoom.toFixed(2) + "&lon=" + lon.toFixed(5) + "&lat=" + lat.toFixed(5); 
             }
 
             // Show popup window for help
@@ -527,15 +530,10 @@
                   createPermaLink() 
                 });
 
-                // TODO oli
-                // map.events.register("click", layer_permalink, onAddMarker);
                 createPermaLink();
             }
 
             function closePermalinkDialog() {
-
-                // TODO oli
-                // map.events.unregister("click", layer_permalink, onAddMarker);
                 layer_permalink.setVisible(false);
                 closeActionDialog();
             }
@@ -639,37 +637,6 @@
                 map.on('pointermove', mapEventPointerMove);
                 map.on('singleclick', mapEventClick);
 
-                // TODO oli
-                // var bboxStrategyWikipedia = new OpenLayers.Strategy.BBOX( {
-                //     ratio : 1.1,
-                //     resFactor: 1
-                // });
-
-                // Select feature ---------------------------------------------------------------------------------------------------------
-                // (only one SelectFeature per map is allowed)
-                // TODO oli
-                // selectControl = new OpenLayers.Control.SelectFeature([],{
-                //     hover:true,
-                //     popup:null,
-                //     addLayer:function(layer){
-                //         var layers = this.layers;
-                //         if (layers) {
-                //             layers.push(layer);
-                //         } else {
-                //             layers = [
-                //                 layer
-                //             ];
-                //         }
-                //         this.setLayer(layers);
-                //     },
-                //     removePopup:function(){
-                //         if (this.popup) {
-                //             this.map.removePopup(this.popup);
-                //             this.popup.destroy();
-                //             this.popup = null;
-                //         }
-                //     }
-                // });
                 selectControl = new ol.interaction.Select();
 
                 function updateCheckboxAndCookie(layer) {
@@ -689,16 +656,20 @@
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
 
                 // Mapnik (Base map)
-                // TODO oli
+                // old definition
                 // layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik',
                 //                                         GetOsmServer(),
                 //                                         { layerId      : 1,
                 //                                           wrapDateLine : true
                 //                                         });
-                const osmUrl = OsmTileServer !== "BRAVO" ? 'https://t2.openseamap.org/tile/{z}/{x}/{y}.png' : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+                const osmUrl = 
+                    OsmTileServer === "BRAVO" ?
+                        'https://t2.openseamap.org/tile/{z}/{x}/{y}.png' :
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
                 layer_mapnik = new ol.layer.Tile({
                     source: new ol.source.OSM({
-                        url: osmUrl
+                        url: osmUrl,
+                        crossOrigin: null,
                     }),
                     properties: {
                         name: 'Mapnik',
@@ -710,7 +681,7 @@
                 
 
                 // Seamark
-                // TODO oli
+                // old definition
                 // layer_seamark = new OpenLayers.Layer.TMS("seamarks",
                 // "https://tiles.openseamap.org/seamark/",
                 //     { layerId: 3, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, displayOutsideMaxExtent:true});
@@ -738,7 +709,7 @@
                 });
 
                 // Sport
-                // TODO oli
+                // old definition
                 // layer_sport = new OpenLayers.Layer.TMS("Sport", "https://tiles.openseamap.org/sport/",
                 //     { layerId: 4, numZoomLevels: 19, type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
                 layer_sport = new ol.layer.Tile({
@@ -765,7 +736,7 @@
                 });
 
                 //GebcoDepth
-                // TODO oli
+                // old definition
                 // layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("gebco_2021", "https://depth.openseamap.org/geoserver/gwc/service/wms",
                 //     {layers: "gebco2021:gebco_2021", format:"image/png"},
                 //     { layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.8});
@@ -791,7 +762,7 @@
                 });
                 
                 // POI-Layer for harbours
-                // TODO oli
+                // old definition
                 // layer_pois = new OpenLayers.Layer.Vector("pois", {
                 //     layerId: 7,
                 //     visibility: true,
@@ -821,7 +792,7 @@
                 });
                 
                 // Bing
-                // TODO oli
+                // old definition
                 // layer_bing_aerial = new Bing({
                 //     layerId: 12,
                 //     name: 'Aerial photo',
@@ -856,7 +827,7 @@
                 });
                 
                 // Map download
-                // TODO oli
+                // old definition
                 // layer_download = new OpenLayers.Layer.Vector("Map Download", {
                 //     layerId: 8,
                 //     visibility: false
@@ -871,7 +842,7 @@
                 });
 
                 // Trip planner
-                // TODO oli
+                // old definition
                 // layer_nautical_route = new OpenLayers.Layer.Vector("Trip Planner",
                 //     { layerId: 9, styleMap: routeStyle, visibility: false, eventListeners: {"featuresadded": NauticalRoute_routeAdded, "featuremodified": NauticalRoute_routeModified}});
                 
@@ -890,7 +861,7 @@
                 });
 
                 // Grid WGS
-                // TODO oli
+                // old definition
                 // layer_grid = new OpenLayers.Layer.GridWGS("coordinateGrid", {
                 //     layerId: 10,
                 //     visibility: true,
@@ -917,7 +888,7 @@
                     updateCheckboxAndCookie(evt.target);
                 });
 
-                // TODO oli
+                // old definition
                 // var poiLayerWikipediaHttp = new OpenLayers.Protocol.HTTP({
                 //     url: 'api/proxy-wikipedia.php?',
                 //     params: {
@@ -988,7 +959,7 @@
                     }
                 });
 
-                // TODO oli
+                // old definition
                 // layer_ais = new OpenLayers.Layer.TMS("Marinetraffic", "https://tiles.marinetraffic.com/ais_helpers/shiptilesingle.aspx?output=png&sat=1&grouping=shiptype&tile_size=512&legends=1&zoom=${z}&X=${x}&Y=${y}",
                 //     { layerId: 13, numZoomLevels: 19, type: 'png', getURL:getTileURLMarine, isBaseLayer:false, displayOutsideMaxExtent:true, tileSize    : new OpenLayers.Size(512,512)
                 //   });
@@ -1012,7 +983,7 @@
                 });
 
                 // SatPro
-                // TODO oli
+                // old definition
                 // satPro = new SatPro(map, selectControl, {
                 //     layerId: 14
                 // });
@@ -1116,7 +1087,7 @@
 
 
                 // POI-Layer for tidal scales
-                // TODO oli
+                // old definition
                 // layer_tidalscale = new OpenLayers.Layer.Vector("tidalscale", {
                 //     layerId: 16,
                 //     visibility: false,
@@ -1145,7 +1116,7 @@
 
 
                 // Permalink
-                // TODO oli
+                // old definition
                 // layer_permalink = new OpenLayers.Layer.Markers("Permalink", {
                 //     layerId: 17,
                 //     visibility: false,
@@ -1168,7 +1139,7 @@
                 });
 
                 // Water Depth
-                // TODO oli
+                // old definition
                 // waterDepthTrackPoints10m = new WaterDepthTrackPoints10m(map, selectControl, {
                 //     layerId: 21
                 // });
@@ -1341,23 +1312,6 @@
                 ].forEach((layer)=> {
                     map.addLayer(layer);
                 });
-
-                // // TODO oli
-                // // Register featureselect for download tool
-                // selectControl.addLayer(layer_download);
-                // layer_download.events.register("featureselected", layer_download, selectedMap);
-                // // Register featureselect for poi layers
-                // selectControl.addLayer(layer_nautical_route);
-                // layer_nautical_route.events.register("featureselected", layer_nautical_route, onFeatureSelectPoiLayers);
-                // selectControl.addLayer(layer_pois);
-                // layer_pois.events.register("featureselected", layer_pois, onFeatureSelectPoiLayers);
-                // selectControl.addLayer(layer_tidalscale);
-                // layer_tidalscale.events.register("featureselected", layer_tidalscale, onFeatureSelectPoiLayers);
-                // selectControl.addLayer(layer_wikipedia);
-                // layer_wikipedia.events.register("featureselected", layer_wikipedia, onFeatureSelectPoiLayers);
-                // // Activate select control
-                // map.addControl(selectControl);
-                // selectControl.activate();
             }
 
             function clearPoiLayer() {
@@ -1415,6 +1369,8 @@
                 if (document.getElementById("compassRose").style.visibility === 'visible') {
                     refreshMagdev();
                 }
+
+                refreshWeatherAppLink();
             }
 
             // Map event listener Zoomed
@@ -1432,6 +1388,7 @@
                     closeMapDownloadDialog();
                     openMapDownloadDialog();
                 }
+                refreshWeatherAppLink();
             }
 
             function openPopup(feature, coordinate) {

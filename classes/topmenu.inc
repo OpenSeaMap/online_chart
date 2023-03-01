@@ -25,7 +25,7 @@
         <li>
             <a><img alt="view" src="./resources/action/view.png" width="22" height="22" border="0">&nbsp;<?=$t->tr("view")?></a>
             <ul class="sub_menu">
-                <li><a href="weather.php"><img alt="weather" src="./resources/map/weather.png" width="24" height="24" border="0">&nbsp;<?=$t->tr("weather")?></a></li>
+                <li><a id="weatherAppLink" href="weather.php"><img alt="weather" src="./resources/map/weather.png" width="24" height="24" border="0">&nbsp;<?=$t->tr("weather")?></a></li>
                 <li onClick="showSeamarks()"><a><input type="checkbox" id="checkLayerSeamark">&nbsp;<?=$t->tr("Seezeichen")?></a></li>
                 <li onClick="showHarbours()"><a><input type="checkbox" id="checkLayerHarbour">&nbsp;<?=$t->tr("harbours")?></a></li>
                 <li onClick="showTidalScale()"><a><input type="checkbox" id="checkLayerTidalScale">&nbsp;<?=$t->tr("tidalScale")?></a></li>

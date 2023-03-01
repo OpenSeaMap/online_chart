@@ -117,9 +117,6 @@
                 });
             }
 
-            // Set current language for internationalization
-            // OpenLayers.Lang.setCode("<?= $t->getCurrentLanguage() ?>");
-
             function initMap() {
                 map = new ol.Map({
                     target: 'map',
