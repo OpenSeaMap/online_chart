@@ -115,8 +115,6 @@
                 readPermalinkOrCookies();
                 initLayerCheckboxes();
                 initMenuTools();
-                // Set current language for internationalization
-                // OpenLayers.Lang.setCode(language);
             }
 
 
@@ -278,6 +276,12 @@
                 }
             }
 
+            function showElevationProfile() {
+                // elevation layers are not avialable
+                // see layer's definiton in old commit:
+                // https://github.com/OpenSeaMap/online_chart/commit/32378f1c8655593e2e6701cd4ba2eb8fd10352b1
+            }
+
             function showAis() {
                 layer_ais.setVisible(!layer_ais.getVisible());
             }
@@ -383,7 +387,7 @@
                 var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\"><img src=\"./resources/action/close.gif\" onClick=\"closeMapDownloadDialog();\"/></div>";
                 htmlText += "<h3><?=$t->tr("downloadChart")?>:</h3><br/>";
                 htmlText += "<table border=\"0\" width=\"240px\">";
-                htmlText += "<tr><td>Name:</td><td><div id=\"info_dialog\">&nbsp;<?=$t->tr("pleaseSelect")?><br/></div></td></tr>";
+                htmlText += "<tr><td>Name:</td><td><div id=\"info_dialog\"><?=$t->tr("pleaseSelect")?><br/></div></td></tr>";
                 htmlText += "<tr><td><?=$t->tr("format")?>:</td><td><select id=\"mapFormat\"><option value=\"unknown\"/><?=$t->tr("unknown")?><option value=\"png\"/>png<option value=\"cal\"/>cal<option value=\"kap\"/>kap<option value=\"WCI\"/>WCI<option value=\"kmz\"/>kmz<option value=\"jpr\"/>jpr</select></td></tr>";
                 htmlText += "<tr><td><br/><input type=\"button\" id=\"buttonMapDownload\" value=\"<?=$t->tr("download")?>\" onclick=\"downloadMap()\" disabled=\"true\"></td><td align=\"right\"><br/><input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeMapDownloadDialog()\"></td></tr>";
                 htmlText += "</table>";
@@ -428,8 +432,8 @@
             function addNauticalRoute() {
                 layer_nautical_route.setVisible(true);
                 var htmlText = "<div style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
-                htmlText += "<img src=\"./resources/action/delete.png\"  width=\"17\" height=\"17\" onclick=\"if (!routeChanged || confirm('<?=$t->tr("confirmDeleteRoute")?>')) {closeNauticalRoute();addNauticalRoute();}\"/>&nbsp;";
-                htmlText += "<img src=\"./resources/action/info.png\"  width=\"17\" height=\"17\" onClick=\"showMapKey('help-trip-planner');\"/>&nbsp;";
+                htmlText += "<img src=\"./resources/action/delete.png\"  width=\"17\" height=\"17\" onclick=\"if (!routeChanged || confirm('<?=$t->tr("confirmDeleteRoute")?>')) {closeNauticalRoute();addNauticalRoute();}\"/>";
+                htmlText += "<img src=\"./resources/action/info.png\"  width=\"17\" height=\"17\" onClick=\"showMapKey('help-trip-planner');\"/>";
                 htmlText += "<img src=\"./resources/action/close.gif\" onClick=\"if (!routeChanged || confirm('<?=$t->tr("confirmCloseRoute")?>')) {closeNauticalRoute();}\"/></div>";
                 htmlText += "<h3><?=$t->tr("tripPlanner")?>: <input type=\"text\" id=\"tripName\" size=\"20\"></h3><br/>";
                 htmlText += "<table border=\"0\" width=\"370px\">";
@@ -439,8 +443,8 @@
                 htmlText += "<tr><td id=\"routePoints\" colspan = 2> </td></tr>";
                 htmlText += "</table>";
                 htmlText += "<input type=\"button\" id=\"buttonRouteDownloadTrack\" value=\"<?=$t->tr("download")?>\" onclick=\"NauticalRoute_DownloadTrack();\" disabled=\"true\">";
-                htmlText += "<select id=\"routeFormat\"><option value=\"CSV\"/>CSV<option value=\"GML\"/>GML<option value=\"KML\"/>KML<option value=\"GPX\"/>GPX</select>&nbsp;";
-                htmlText += "<select id=\"coordFormat\" onchange=\"NauticalRoute_getPoints(routeTrack);\"><option value=\"coordFormatdms\"/>ggg°mm.mmm'<option value=\"coordFormatd_dec\"/>ggg.gggggg</select>&nbsp;";
+                htmlText += "<select id=\"routeFormat\"><option value=\"CSV\"/>CSV<option value=\"GML\"/>GML<option value=\"KML\"/>KML<option value=\"GPX\"/>GPX</select>";
+                htmlText += "<select id=\"coordFormat\" onchange=\"NauticalRoute_getPoints(routeTrack);\"><option value=\"coordFormatdms\"/>ggg°mm.mmm'<option value=\"coordFormatd_dec\"/>ggg.gggggg</select>";
                 htmlText += "<select id=\"distUnits\" onchange=\"NauticalRoute_getPoints(routeTrack);\"><option value=\"nm\"/>[nm]<option value=\"km\"/>[km]</select>";
 
                 showActionDialog(htmlText);
@@ -554,7 +558,7 @@
                     description = buff.substring(pos +1).trim();
                     htmlText += "<tr style=\"cursor:pointer;\" onmouseover=\"this.style.backgroundColor = '#ADD8E6';\"onmouseout=\"this.style.backgroundColor = '#FFF';\" onclick=\"jumpToSearchedLocation(" + placeLon + ", " + placeLat + ");\"><td  valign=\"top\"><b>" + placeName + "</b></td><td>" + description + "</td></tr>";
                 }
-                htmlText += "<tr><td>&nbsp;</td><td align=\"right\"><br/><input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeActionDialog();\"></td></tr></table>";
+                htmlText += "<tr><td></td><td align=\"right\"><br/><input type=\"button\" id=\"buttonMapClose\" value=\"<?=$t->tr("close")?>\" onclick=\"closeActionDialog();\"></td></tr></table>";
                 showActionDialog(htmlText);
             }
 
@@ -940,6 +944,13 @@
                             xhr.onload = function() {
                                 if (xhr.status == 200) {
                                     const features = vectorSource.getFormat().readFeatures(xhr.responseText, {featureProjection: "EPSG:3857"});
+                                    // Dont' display poi name.
+                                    features.forEach((feature) => {
+                                        console.log(feature.getProperties(), feature.getStyle()(feature));
+                                        const style = feature.getStyle()(feature);
+                                        style.getText().setText(null);
+                                        feature.setStyle(style);
+                                    });
                                     vectorSource.addFeatures(features);
                                     success(features);
                                 } else {
@@ -1127,7 +1138,9 @@
                     source: new ol.source.Vector(),
                     properties:{
                         name: "Permalink",
-                        layerId: 17 // invalid layerId -> will be ignored by layer visibility setup
+                        layerId: 17, // invalid layerId -> will be ignored by layer visibility setup
+                        checkboxId: "checkPermalink",
+                        cookieKey: "PermalinkLayerVisible",
                     },
                     style: new ol.style.Style({
                         image: new ol.style.Icon({
@@ -1136,6 +1149,9 @@
                             anchor: [0.5, 1]
                         })
                     })
+                });
+                layer_permalink.on("change:visible", (evt) => {
+                    updateCheckboxAndCookie(evt.target);
                 });
 
                 // Water Depth
@@ -1538,7 +1554,7 @@
                     switchMenuTools('permalink', true);
                 }
 
-                document.querySelectorAll('#topmenu2 [data-tools]').forEach((elt) => {
+                document.querySelectorAll('#topmenu [data-tools]').forEach((elt) => {
                     elt.addEventListener('click', function(evt) {
                         var layerName       = evt.currentTarget.getAttribute('data-tools');
                         var checked         = evt.currentTarget.querySelector('input').checked;
@@ -1568,7 +1584,7 @@
             <a id="license_waterdepth" onClick="showMapKey('license')" style="display:none"><img alt="Water Depth" src="resources/icons/depth.jpg" height="32px"></a>
         </div>
         <div id="actionDialog">
-            <br>&nbsp;not found&nbsp;<br>&nbsp;
+            <br>not found<br>
         </div>
         <div class="unselectable" draggable="false" unselectable="on" id="compassRose">
             <img id="geoCompassRose" draggable="false" unselectable="on" src="./resources/map/nautical_compass_rose_geo_north.svg"/>
@@ -1582,7 +1598,210 @@
             <a href="#" id="popup-closer" class="ol-popup-closer"></a>
             <div id="popup-content"></div>
         </div>
-        <?php include('classes/topmenu.inc'); ?>
+        <iframe id="josm_call_iframe" src="#" style="visibility:hidden;"></iframe>
+        <div id="topmenu" class="menu">
+            <ul>
+                <li>
+                    <a href="http://openseamap.org/" target="blank">
+                        <img alt="OpenSeaMapLogo" src="./resources/icons/OpenSeaMapLogo_32.png" width="24" height="24" border="0">
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <img alt="search" src="./resources/action/find.png" width="22" height="22" border="0"  onClick="nominatim(document.getElementById('searchinputbox').value)">
+                        <input id="searchinputbox" name="searchtext" type="text"
+                            size="10" maxlength="40"
+                            style="height: 18px; border: 1px solid Black"
+                            onKeyPress="if (event.keyCode==13 || event.which==13) {nominatim(this.value);}"
+                        >
+                    </a>
+                </li>
+                <li>
+                    <a><img alt="edit" src="./resources/action/edit.png" width="22" height="22" border="0"><?=$t->tr("edit")?></a>
+                    <ul>
+                        <li>
+                            <label onclick="josm_call()"><?=$t->tr("editMapJOSM")?></label></li>
+                    </ul>
+                </li>
+                <li>
+                    <img alt="view" src="./resources/action/view.png" width="22" height="22">
+                    <label><?=$t->tr("view")?></label>
+                    <ul>
+                        <li>
+                            <a id="weatherAppLink" href="weather.php">
+                                <img alt="weather" src="./resources/map/weather.png" width="24" height="24" border="0">
+                                <label><?=$t->tr("weather")?></label>
+                            </a>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="checkLayerSeamark" onClick="showSeamarks()">
+                            <label for="checkLayerSeamark"><?=$t->tr("Seezeichen")?></label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="checkLayerHarbour" onClick="showHarbours()">
+                            <label for="checkLayerHarbour"><?=$t->tr("harbours")?></label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="checkLayerTidalScale" onClick="showTidalScale()">
+                            <label for="checkLayerTidalScale"><?=$t->tr("tidalScale")?></label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="checkLayerSport" nClick="showSport()">
+                            <label for="checkLayerSport">Sport</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="checkLayerBingAerial" onClick="showBingAerial()">
+                            <label for="checkLayerBingAerial"><?=$t->tr("bingaerial")?></label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="checkLayerGridWGS" onClick="showGridWGS()">
+                            <label for="checkLayerGridWGS"><?=$t->tr("coordinateGrid")?></label>
+                        </li>
+                        <!-- <li>
+                            <input type="checkbox" id="checkLayerElevationProfile" disabled onClick="showElevationProfile()">
+                            <label><?=$t->tr("elevationProfile")?></label>
+                        </li> -->
+                        <li>
+                            <input type="checkbox" id="checkLayerGebcoDepth" onClick="showGebcoDepth()">
+                            <label><?=$t->tr("gebcoDepth")?></label>
+                        </li>
+                        <!--li>
+                            <input type="checkbox" id="checkLayerSatPro" onClick="showSatPro()">
+                            <label for="checkLayerSatPro"><?=$t->tr("satPro")?></label>
+                        </li-->
+                        <li>
+                            <input type="checkbox" id="checkLayerWikipedia" onClick="showWikipediaLinks(false)"/>
+                            <label for="checkLayerWikipedia">Wikipedia-Links</label>
+                            <ul>
+                                <li>
+                                    <input type="checkbox" id="checkLayerWikipediaThumbnails" onClick="showWikipediaLinks(true)">
+                                    <label for="checkLayerWikipediaThumbnails">Thumbnails</label>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="checkLayerAis" onClick="showAis()">
+                            <label for="checkLayerAis"><?=$t->tr("ais")?></label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="checkCompassrose" onClick="toggleCompassrose()" >
+                            <label for="checkCompassrose"><?=$t->tr("compassRose")?></label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="checkLayerWaterDepthTrackPoints" onClick="showWaterDepthTrackPoints(true)"/>
+                            <label for="checkLayerWaterDepthTrackPoints"><?=$t->tr("water_depth")?></label>
+                            
+                            <ul>
+                                <li>
+                                    <input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints10m" onClick="layer_waterdepth_trackpoints_10m.setVisible(true);"/>
+                                    <label for="checkLayerWaterDepthTrackPoints10m">10 m</label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints100m" onClick="layer_waterdepth_trackpoints_100m.setVisible(true)"/>
+                                    <label for="checkLayerWaterDepthTrackPoints100m">100 m</label>
+                                </li>
+                            </ul>
+                        </li>
+                        <li >
+                            <input type="checkbox" id="checkDepthContours" onClick="showContours()" />
+                            <label for="checkDepthContours"><?=$t->tr("depth_contours")?></label>
+                        </li>
+                        <li>
+                            <img alt="dev" src="./resources/map/development_32px.png" width="24" height="24" border="0">
+                            <label><?=$t->tr("development")?></label>
+                            <ul>
+                                <li>
+                                    <a href="https://depth.openseamap.org/" target="_blank"><?=$t->tr("water_depth")?></a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a>
+                        <img alt="tools" src="./resources/action/tools.png" width="22" height="22" border="0"><?=$t->tr("tools")?>
+                    </a>
+                    <ul>
+                        <li data-tools="permalink">
+                            <input type="checkbox" id="checkPermalink">
+                            <img alt="permalink" src="./resources/action/permalink-32x.png" width="22" height="22">
+                            <label><?=$t->tr("permalinks")?></label>
+                        </li>
+                        <li data-tools="nautical_route">
+                            <input type="checkbox" id="checkNauticalRoute">
+                            <img alt="route" src="./resources/action/route-32px.png" width="22" height="22">
+                            <label><?=$t->tr("tripPlanner")?></label>
+                        </li>
+        <!--            <li data-tools="download">
+                            <input type="checkbox" id="checkDownload">
+                            <img alt="download" src="./resources/action/download.png" width="22" height="22" border="0">
+                            <label><?=$t->tr("downloadChart")?></label>
+                        </li>-->
+                        <li>
+                            <a href="http://openseamap.org/index.php?id=kartendownload"><strong>Download</strong></a>
+                        </li>
+                        <li>
+                            <a href="https://map2.openseamap.org/#/download/.*/null?lat=35.0245&lon=-63.2636&zoom=3&layers=A10001011000&lang=en" target="_blank">OpenCPN (Kap)</a>
+                        </li>
+                        <li>
+                            <a href="http://wiki.openstreetmap.org/wiki/DE:OpenSeaMap_and_Garmin_nautical_chart_plotter#Download" target="_blank">Garmin</a>
+                        </li>
+                        <li>
+                            <a href="http://wiki.openstreetmap.org/wiki/AT5-OpenSeaMap-Chart_for_Lowrance_Simrad_B%26G" target="_blank">Navico (Lowrance, Simrad, B&amp;G)</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <img alt="help" src="./resources/action/help.png" width="22" height="22" border="0">
+                    <label><?=$t->tr("help")?></label>
+                    <ul>
+                        <li>
+                            <a><img alt="help" src="./resources/action/help.png" width="22" height="22" border="0"><?=$t->tr("help")?></a>
+                            <ul>
+                                <li onClick="showMapKey('help-josm')">
+                                    <a><?=$t->tr("help-josm")?></a>
+                                </li>
+                                <li onClick="showMapKey('help-tidal-scale')">
+                                    <a><?=$t->tr("help-tidal-scale")?></a>
+                                </li>
+                                <li onClick="showMapKey('help-trip-planner')">
+                                    <a><?=$t->tr("tripPlanner")?></a>
+                                </li>
+                                <li onClick="showMapKey('help-website')">
+                                    <a><?=$t->tr("help-website-int")?></a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a><img alt="info" src="./resources/action/info.png" width="22" height="22" border="0"><?=$t->tr("Legende")?></a>
+                            <ul>
+                                <li onClick="showMapKey('harbour')">
+                                    <a><?=$t->tr("harbour")?></a>
+                                </li>
+                                <li onClick="showMapKey('seamark')">
+                                    <a><?=$t->tr("Seezeichen")?></a>
+                                </li>
+                                <li onClick="showMapKey('light')">
+                                    <a><?=$t->tr("Leuchtfeuer")?></a>
+                                </li>
+                                <li onClick="showMapKey('lock')">
+                                    <a><?=$t->tr("BrückenSchleusen")?></a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="http://forum.openseamap.org" target='blank'>
+                                <img alt="forum" src="./resources/action/forum.png" width="22" height="22" border="0">Forum
+                            </a>
+                        </li>
+                        <li onClick="showMapKey('license')">
+                            <a><img alt="CC by SA" src="./resources/action/Cc-sa-32px.png" width="22" height="22" border="0"><?=$t->tr("license")?></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
         <?php include('classes/footer.inc'); ?>
     </body>
 </html>
