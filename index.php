@@ -480,15 +480,11 @@
                 markerpos.lat = lat.toFixed(5);
                 markerpos.lon = lon.toFixed(5);
 
-                createPermaLink();
+                updatePermaLinkInDialog();
               }
 
-              function createPermaLink(){
-                if(!layer_permalink.getVisible()) {
-                  return;
-                }
-
-                if(!document.getElementById("permalinkDialog")){
+              function updatePermaLinkInDialog(){
+                if(!layer_permalink.getVisible() || !document.getElementById("permalinkDialog")) {
                   return;
                 }
 
@@ -531,10 +527,10 @@
                 showActionDialog(htmlText);
 
                 document.getElementById('markerText').addEventListener("keyup",function(evt) {
-                  createPermaLink() 
+                    updatePermaLinkInDialog() 
                 });
 
-                createPermaLink();
+                updatePermaLinkInDialog();
             }
 
             function closePermalinkDialog() {
@@ -1327,7 +1323,14 @@
                     layer_marker,
                 ].forEach((layer)=> {
                     map.addLayer(layer);
+
+                    layer.on('change:visible', () => {
+                        // Update permailnk in permalink tool dialog.
+                        updatePermaLinkInDialog();
+                    })
                 });
+
+
             }
 
             function clearPoiLayer() {
@@ -1387,6 +1390,7 @@
                 }
 
                 refreshWeatherAppLink();
+                updatePermaLinkInDialog();
             }
 
             // Map event listener Zoomed
@@ -1405,6 +1409,7 @@
                     openMapDownloadDialog();
                 }
                 refreshWeatherAppLink();
+                updatePermaLinkInDialog();
             }
 
             function openPopup(feature, coordinate) {
@@ -1620,7 +1625,8 @@
                     <a><img alt="edit" src="./resources/action/edit.png" width="22" height="22" border="0"><?=$t->tr("edit")?></a>
                     <ul>
                         <li>
-                            <label onclick="josm_call()"><?=$t->tr("editMapJOSM")?></label></li>
+                            <label onclick="josm_call()"><?=$t->tr("editMapJOSM")?></label>
+                        </li>
                     </ul>
                 </li>
                 <li>
@@ -1801,7 +1807,5 @@
                 </li>
             </ul>
         </div>
-
-        <?php include('classes/footer.inc'); ?>
     </body>
 </html>
