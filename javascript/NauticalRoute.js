@@ -212,10 +212,12 @@ function NauticalRoute_getPoints(points) {
     tableTextNauticalRouteCoordinate +
     "</th></tr>";
   for (i = 0; i < points.length - 1; i++) {
-    latA = y2lat(points[i].y);
-    lonA = x2lon(points[i].x);
-    latB = y2lat(points[i + 1].y);
-    lonB = x2lon(points[i + 1].x);
+    const [lon0, lat0] = ol.proj.toLonLat([points[i].x, points[i].y]);
+    const [lon1, lat1] = ol.proj.toLonLat([points[i + 1].x, points[i + 1].y]);
+    latA = lat0;
+    lonA = lon0;
+    latB = lat1;
+    lonB = lon1;
     distance = getDistance(latA, latB, lonA, lonB);
     if (distUnits == "km") {
       distance = nm2km(distance);
@@ -241,14 +243,14 @@ function NauticalRoute_getPoints(points) {
   }
   htmlText += "</table>";
 
-  document.getElementById("routeStart").innerHTML = coordFormat(
-    y2lat(points[0].y),
-    x2lon(points[0].x)
-  );
-  document.getElementById("routeEnd").innerHTML = coordFormat(
-    y2lat(points[points.length - 1].y),
-    x2lon(points[points.length - 1].x)
-  );
+  const [lon0, lat0] = ol.proj.toLonLat([points[0].x, points[0].y]);
+  const [lon1, lat1] = ol.proj.toLonLat([
+    points[points.length - 1].x,
+    points[points.length - 1].y,
+  ]);
+
+  document.getElementById("routeStart").innerHTML = coordFormat(lat0, lon0);
+  document.getElementById("routeEnd").innerHTML = coordFormat(lat1, lon1);
   document.getElementById("routeDistance").innerHTML =
     totalDistance.toFixed(2) + " " + distUnits;
   document.getElementById("routePoints").innerHTML = htmlText;
@@ -267,10 +269,12 @@ function NauticalRoute_getRouteCsv(points) {
   var totalDistance = 0;
 
   for (i = 0; i < points.length - 1; i++) {
-    latA = y2lat(points[i].y);
-    lonA = x2lon(points[i].x);
-    latB = y2lat(points[i + 1].y);
-    lonB = x2lon(points[i + 1].x);
+    const [lon0, lat0] = ol.proj.toLonLat([points[i].x, points[i].y]);
+    const [lon1, lat1] = ol.proj.toLonLat([points[i + 1].x, points[i + 1].y]);
+    latA = lat0;
+    lonA = lon0;
+    latB = lat1;
+    lonB = lon1;
     distance = getDistance(latA, latB, lonA, lonB).toFixed(2);
     bearing = getBearing(latA, latB, lonA, lonB).toFixed(2);
     totalDistance += parseFloat(distance);
@@ -330,8 +334,7 @@ function NauticalRoute_getRouteGml(points) {
   // });
   let coordText = "";
   for (i = 0; i < points.length; i++) {
-    const latA = y2lat(points[i].y);
-    const lonA = x2lon(points[i].x);
+    const [lonA, latA] = ol.proj.toLonLat([points[i].x, points[i].y]);
     coordText += lonA + "," + latA + " ";
   }
   const gml = `

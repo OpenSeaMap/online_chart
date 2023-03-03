@@ -19,75 +19,6 @@
 // Constants-------------------------------------------------------------------
 var earthRadius = 6371.221; //Km
 
-// Projections-----------------------------------------------------------------
-var projMerc = ol.proj.get("EPSG:3857");
-var proj4326 = ol.proj.get("EPSG:4326");
-
-// Zoom------------------------------------------------------------------------
-var zoomUnits = [
-  30 * 3600, // zoom=0
-  30 * 3600,
-  15 * 3600,
-  10 * 3600,
-  5 * 3600,
-  5 * 3600,
-  2 * 3600,
-  1 * 3600,
-  30 * 60,
-  20 * 60,
-  10 * 60, // zoom=10
-  5 * 60,
-  2 * 60,
-  1 * 60,
-  30,
-  30,
-  12,
-  6,
-  6,
-  3, // zoom=19
-];
-
-// Transformations-------------------------------------------------------------
-function Lon2Merc(value) {
-  return (20037508.34 * value) / 180;
-}
-
-function Lat2Merc(value) {
-  var PI = 3.14159265358979323846;
-  lat = Math.log(Math.tan(((90 + value) * PI) / 360)) / (PI / 180);
-  return (20037508.34 * value) / 180;
-}
-
-function plusfacteur(a) {
-  return a * (20037508.34 / 180);
-}
-
-function moinsfacteur(a) {
-  return a / (20037508.34 / 180);
-}
-
-function y2lat(a) {
-  return (
-    (180 / Math.PI) *
-    (2 * Math.atan(Math.exp((moinsfacteur(a) * Math.PI) / 180)) - Math.PI / 2)
-  );
-}
-
-function lat2y(a) {
-  return plusfacteur(
-    (180 / Math.PI) *
-      Math.log(Math.tan(Math.PI / 4 + (a * (Math.PI / 180)) / 2))
-  );
-}
-
-function x2lon(a) {
-  return moinsfacteur(a);
-}
-
-function lon2x(a) {
-  return plusfacteur(a);
-}
-
 function km2nm(a) {
   return a * 0.54;
 }
@@ -98,10 +29,6 @@ function nm2km(a) {
 
 let lat2DegreeMinute = (buffLat) => formatCoords(buffLat, "N__°##.####'");
 let lon2DegreeMinute = (buffLon) => formatCoords(buffLon, "W___°##.####'");
-
-function lonLatToMercator(ll) {
-  return new OpenLayers.LonLat(lon2x(ll.lon), lat2y(ll.lat));
-}
 
 /***
  * @summary format a datum.
@@ -247,29 +174,6 @@ function jumpTo(lon, lat, zoom) {
   map.getView().setZoom(zoom);
 }
 
-// old fucntions, replaced by getTileUrlFunction
-function getTileURL(bounds) {
-  var res = this.map.getResolution();
-  var x = Math.round(
-    (bounds.left - this.maxExtent.left) / (res * this.tileSize.w)
-  );
-  var y = Math.round(
-    (this.maxExtent.top - bounds.top) / (res * this.tileSize.h)
-  );
-  var z = this.map.getZoom();
-  var limit = Math.pow(2, z);
-  if (y < 0 || y >= limit) {
-    return null;
-  } else {
-    x = ((x % limit) + limit) % limit;
-    url = this.url;
-    path = z + "/" + x + "/" + y + "." + this.type;
-    if (url instanceof Array) {
-      url = this.selectUrl(path, url);
-    }
-    return url + path;
-  }
-}
 function getTileUrlFunction(url, type, coordinates) {
   var x = coordinates[1];
   var y = coordinates[2];
@@ -287,6 +191,7 @@ function getTileUrlFunction(url, type, coordinates) {
     return url + path;
   }
 }
+
 function getTileURLMarine(url, coordinates) {
   var x = coordinates[1];
   var y = coordinates[2];
@@ -301,26 +206,6 @@ function getTileURLMarine(url, coordinates) {
       .replace("${y}", String(y))
       .replace("${x}", String(x));
     return url;
-  }
-}
-
-function getTileURLAsParams(bounds) {
-  var res = this.map.getResolution();
-  var x = Math.round(
-    (bounds.left - this.maxExtent.left) / (res * this.tileSize.w)
-  );
-  var y = Math.round(
-    (this.maxExtent.top - bounds.top) / (res * this.tileSize.h)
-  );
-  var z = this.map.getZoom();
-
-  var limit = Math.pow(2, z);
-
-  if (y < 0 || y >= limit) {
-    return OpenLayers.Util.getImagesLocation() + "404.png";
-  } else {
-    x = ((x % limit) + limit) % limit;
-    return this.url + "x=" + x + "&y=" + y + "&z=" + z;
   }
 }
 
@@ -340,32 +225,6 @@ function addMarker(layer, lon, lat, popupContentHTML) {
   feature.setStyle(markerStyle);
   layer.getSource().addFeature(feature);
   return feature;
-}
-
-// Vector layer utilities------------------------------------------------------
-function getLineSegments(line) {
-  var numSegments = line.components.length - 1;
-  var segments = new Array(numSegments),
-    point1,
-    point2;
-  for (var i = 0; i < numSegments; ++i) {
-    point1 = line.components[i];
-    point2 = line.components[i + 1];
-    segments[i] = {
-      x1: point1.x,
-      y1: point1.y,
-      x2: point2.x,
-      y2: point2.y,
-    };
-  }
-
-  return segments;
-}
-
-function getLineSegmentLength(segment) {
-  return Math.sqrt(
-    Math.pow(segment.x2 - segment.x1, 2) + Math.pow(segment.y2 - segment.y1, 2)
-  );
 }
 
 function toDeg(x) {

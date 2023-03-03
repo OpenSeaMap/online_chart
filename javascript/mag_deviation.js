@@ -21,51 +21,80 @@
  ******************************************************************************/
 
 // the geomagnetic model. This gets set up at application start
-let geoMag ;
+let geoMag;
 
 function setMagdev(p) {
-    // pick the right bottom corner of the map to avoid problems with interpolating
-    // across the date boundary
-    let latitude = (p.b+p.t)/2;
-    let longitude = (p.l+p.r)/2;
+  // pick the right bottom corner of the map to avoid problems with interpolating
+  // across the date boundary
+  let latitude = (p.b + p.t) / 2;
+  let longitude = (p.l + p.r) / 2;
 
-    // get two dates exactly one year apart
-    const msInYear = 1000*60*60*24*365.25;
-    let now  = new Date();
-    let then = new Date(); then.setTime(now.getTime() + msInYear);
+  // get two dates exactly one year apart
+  const msInYear = 1000 * 60 * 60 * 24 * 365.25;
+  let now = new Date();
+  let then = new Date();
+  then.setTime(now.getTime() + msInYear);
 
-    let myGeoMagNow = geoMag(latitude, longitude, 0, now);
-    let myGeoMagThen = geoMag(latitude, longitude, 0, then);
-    let nextyear = (then.getTime()-now.getTime())/msInYear;
-    let deviation = myGeoMagNow.dec;
-    let change = (myGeoMagThen.dec-myGeoMagNow.dec) / nextyear;
+  let myGeoMagNow = geoMag(latitude, longitude, 0, now);
+  let myGeoMagThen = geoMag(latitude, longitude, 0, then);
+  let nextyear = (then.getTime() - now.getTime()) / msInYear;
+  let deviation = myGeoMagNow.dec;
+  let change = (myGeoMagThen.dec - myGeoMagNow.dec) / nextyear;
 
-    document.getElementById('magCompassRose').style.transform = 'rotate('+deviation.toFixed(1)+'deg)';
-    // EXAMPLE
-    // VAR 3.5°5'E (2015)
-    // ANNUAL DECREASE 8'
-    document.getElementById('magCompassTextTop').innerHTML = "VAR "+deviation.toFixed(1)+(deviation>=0 ? "E":"W")+" ("+now.getFullYear()+")";
-    document.getElementById('magCompassTextBottom').innerHTML = "ANNUAL "+(change >= 0 ? "INCREASE ":"DECREASE ")+(60*change).toFixed(0)+"'";
+  document.getElementById("magCompassRose").style.transform =
+    "rotate(" + deviation.toFixed(1) + "deg)";
+  // EXAMPLE
+  // VAR 3.5°5'E (2015)
+  // ANNUAL DECREASE 8'
+  document.getElementById("magCompassTextTop").innerHTML =
+    "VAR " +
+    deviation.toFixed(1) +
+    (deviation >= 0 ? "E" : "W") +
+    " (" +
+    now.getFullYear() +
+    ")";
+  document.getElementById("magCompassTextBottom").innerHTML =
+    "ANNUAL " +
+    (change >= 0 ? "INCREASE " : "DECREASE ") +
+    (60 * change).toFixed(0) +
+    "'";
 }
 
 // Downloads new magnetic deviation(s) from the server. This is called when the map moves.
 function refreshMagdev() {
-    let bounds = map.getView().calculateExtent();
-  let params = { "b": y2lat(bounds[1]), "t": y2lat(bounds[3]), "l": x2lon(bounds[0]), "r": x2lon(bounds[2])};
+  let bounds = map.getView().calculateExtent();
 
-    if (geoMag == undefined) {
-        function initModel(data) {
-            var wmm = cof2Obj(data);
-            geoMag = geoMagFactory(wmm);
-            setMagdev(params);
-        }
+  const [lon0, lat0] = ol.proj.toLonLat([bounds[0], bounds[1]]);
+  const [lon1, lat1] = ol.proj.toLonLat([bounds[2], bounds[3]]);
+  var b = lat0.toFixed(5);
+  var t = lat1.toFixed(5);
+  var l = lon0.toFixed(5);
+  var r = lon1.toFixed(5);
+  let params = { b, t, l, r };
 
-        /* if the geomagnetic model has not been loaded yet, load it and update the deviation asynchronously */
-        fetch("javascript/geomagjs/WMM.COF?" + "b="+ params.b + "&t=" + params.t + "&l=" + params.l + "&r=" + params.r)
-            .then(response => response.text())
-            .then((initModel));
-    } else {
-        /* else, synchronous update */
-        setMagdev(params);
+  if (geoMag == undefined) {
+    function initModel(data) {
+      var wmm = cof2Obj(data);
+      geoMag = geoMagFactory(wmm);
+      setMagdev(params);
     }
+
+    /* if the geomagnetic model has not been loaded yet, load it and update the deviation asynchronously */
+    fetch(
+      "javascript/geomagjs/WMM.COF?" +
+        "b=" +
+        params.b +
+        "&t=" +
+        params.t +
+        "&l=" +
+        params.l +
+        "&r=" +
+        params.r
+    )
+      .then((response) => response.text())
+      .then(initModel);
+  } else {
+    /* else, synchronous update */
+    setMagdev(params);
+  }
 }

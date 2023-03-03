@@ -1370,9 +1370,10 @@
 
             // Map event listener moved
             function mapEventMove(event) {
+                const [lon, lat] = ol.proj.toLonLat(map.getView().getCenter());
                 // Set cookie for remembering lat lon values
-                setCookie("lat", y2lat(map.getView().getCenter()[1]).toFixed(5));
-                setCookie("lon", x2lon(map.getView().getCenter()[0]).toFixed(5));
+                setCookie("lat", lat.toFixed(5));
+                setCookie("lon", lon.toFixed(5));
 
                 // Update harbour layer
                 if (layer_pois && layer_pois.getVisible() === true) {
