@@ -509,6 +509,7 @@
 
             function openPermalinkDialog() {
                 layer_permalink.setVisible(true);
+                document.getElementById('checkPermalink').checked = true;
                 var htmlText = "<div id='permalinkDialog' style=\"position:absolute; top:5px; right:5px; cursor:pointer;\">";
                 htmlText += "<img src=\"./resources/action/close.gif\" onClick=\"closePermalinkDialog();\"/></div>";
                 htmlText += "<h3><?=$t->tr("permalinks")?>:</h3><br/>"; // reference to translation.php
@@ -535,6 +536,7 @@
 
             function closePermalinkDialog() {
                 layer_permalink.setVisible(false);
+                document.getElementById('checkPermalink').checked = false;
                 closeActionDialog();
             }
 
@@ -1135,7 +1137,7 @@
                     properties:{
                         name: "Permalink",
                         layerId: 17, // invalid layerId -> will be ignored by layer visibility setup
-                        checkboxId: "checkPermalink",
+                        // checkboxId: "checkPermalink",
                         cookieKey: "PermalinkLayerVisible",
                     },
                     style: new ol.style.Style({
@@ -1556,7 +1558,7 @@
                     switchMenuTools('nautical_route', true);
                 }
                 if (layer_permalink.getVisible()) {
-                    switchMenuTools('permalink', true);
+                    // switchMenuTools('permalink', true);
                 }
 
                 document.querySelectorAll('#topmenu [data-tools]').forEach((elt) => {
