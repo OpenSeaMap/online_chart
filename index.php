@@ -28,7 +28,6 @@
         <script type="text/javascript" src="./javascript/nominatim.js"></script>
         <script type="text/javascript" src="./javascript/tidal_scale.js"></script>
         <script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script>
-        <script type="text/javascript" src="./javascript/lib/he.js"></script>
         <script type="text/javascript" src="./javascript/geomagjs/cof2Obj.js"></script>
         <script type="text/javascript" src="./javascript/geomagjs/geomag.js"></script>
         <script type="text/javascript" src="./javascript/mag_deviation.js"></script>
@@ -141,9 +140,9 @@
                 // Add marker from permalink
                 if (markerLat && markerLon) {
                     try{
-                        var mtext = he.encode(decodeURIComponent(getArgument("mtext")))
-                                    .replace(/\n/g, '<br/>');
-                        mtext = mtext.replace('&#x3C;b&#x3E;', '<b>')
+                        console.log(getArgument("mtext"));
+                        var mtext = decodeURIComponent(getArgument("mtext"))
+                                    .replace(/\n/g, '<br/>').replace('&#x3C;b&#x3E;', '<b>')
                                     .replace('&#x3C;%2Fb&#x3E;', '</b>')
                                     .replace('&#x3C;/b&#x3E;', '</b>');
                         const feature = addMarker(layer_marker, markerLon, markerLat, mtext);
@@ -500,7 +499,7 @@
                     params.mlon = lon; // add longitude
                 }
 
-                var mText = encodeURIComponent(document.getElementById("markerText").value)
+                var mText = document.getElementById("markerText").value;
                 if(mText != "")
                     params.mtext = mText; // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
 
@@ -1137,7 +1136,6 @@
                     properties:{
                         name: "Permalink",
                         layerId: 17, // invalid layerId -> will be ignored by layer visibility setup
-                        // checkboxId: "checkPermalink",
                         cookieKey: "PermalinkLayerVisible",
                     },
                     style: new ol.style.Style({
