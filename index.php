@@ -1553,9 +1553,6 @@
                 if (layer_nautical_route.getVisible()) {
                     switchMenuTools('nautical_route', true);
                 }
-                if (layer_permalink.getVisible()) {
-                    // switchMenuTools('permalink', true);
-                }
 
                 document.querySelectorAll('#topmenu [data-tools]').forEach((elt) => {
                     elt.addEventListener('click', function(evt) {

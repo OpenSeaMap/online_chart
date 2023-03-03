@@ -42,6 +42,10 @@ a {
   user-select: none;
 }
 
+#searchinputbox {
+  padding-left: 5px;
+}
+
 /**
  * -----------------------------------------------------------------------------
  * Map CSS
@@ -421,35 +425,36 @@ a {
  * -----------------------------------------------------------------------------
  */
 #routeAddLine {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 #routeAddLine:hover {
-  background-color: #ADD8E6;
+  background-color: #add8e6;
 }
 
 #routeEditLine {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 #routeEditLine:hover {
-  background-color: #ADD8E6;
+  background-color: #add8e6;
 }
 
 #routeNavigate {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 #routeNavigate:hover {
-  background-color: #ADD8E6;
+  background-color: #add8e6;
 }
 
 table#routeSegmentList {
-  height:120px; overflow-y:auto;
+  height: 120px;
+  overflow-y: auto;
 }
 
 table#routeSegmentList th {
-  background-color: #CCCCCC;
+  background-color: #cccccc;
   text-align: center;
 }
 
@@ -457,11 +462,24 @@ table#routeSegmentList td {
   text-align: right;
 }
 
-table#routeSegmentList th,td:nth-child(1) { width: 20; } /* segment # */
-table#routeSegmentList th,td:nth-child(2) { width: 60; } /* course */
-table#routeSegmentList th,td:nth-child(3) { width: 70; } /* distance */
-table#routeSegmentList th,td:nth-child(4) { width: 200; } /* coordinates */
+table#routeSegmentList th,
+td:nth-child(1) {
+  width: 20;
+} /* segment # */
+table#routeSegmentList th,
+td:nth-child(2) {
+  width: 60;
+} /* course */
+table#routeSegmentList th,
+td:nth-child(3) {
+  width: 70;
+} /* distance */
+table#routeSegmentList th,
+td:nth-child(4) {
+  width: 200;
+} /* coordinates */
 
 /* even/odd coloring */
-table#routeSegmentList tr:nth-child(even) { background-color: #ececec; }
-
+table#routeSegmentList tr:nth-child(even) {
+  background-color: #ececec;
+}
