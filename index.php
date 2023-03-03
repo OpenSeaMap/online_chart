@@ -138,7 +138,6 @@
                 // Add marker from permalink
                 if (markerLat && markerLon) {
                     try{
-                        console.log(getArgument("mtext"));
                         var mtext = decodeURIComponent(getArgument("mtext"))
                                     .replace(/\n/g, '<br/>').replace('&#x3C;b&#x3E;', '<b>')
                                     .replace('&#x3C;%2Fb&#x3E;', '</b>')
@@ -941,7 +940,6 @@
                                     const features = vectorSource.getFormat().readFeatures(xhr.responseText, {featureProjection: "EPSG:3857"});
                                     // Dont' display poi name.
                                     features.forEach((feature) => {
-                                        console.log(feature.getProperties(), feature.getStyle()(feature));
                                         const style = feature.getStyle()(feature);
                                         style.getText().setText(null);
                                         feature.setStyle(style);
@@ -1608,17 +1606,18 @@
                     </a>
                 </li>
                 <li>
-                    <a>
-                        <img alt="search" src="./resources/action/find.png" width="22" height="22" border="0"  onClick="nominatim(document.getElementById('searchinputbox').value)">
-                        <input id="searchinputbox" name="searchtext" type="text"
-                            size="10" maxlength="40"
-                            style="height: 18px; border: 1px solid Black"
-                            onKeyPress="if (event.keyCode==13 || event.which==13) {nominatim(this.value);}"
-                        >
-                    </a>
+                    
+                    <img alt="search" src="./resources/action/find.png" width="22" height="22" border="0"  onClick="nominatim(document.getElementById('searchinputbox').value)">
+                    <input id="searchinputbox" name="searchtext" type="text"
+                        size="10" maxlength="40"
+                        style="height: 18px; border: 1px solid Black"
+                        onKeyPress="if (event.keyCode==13 || event.which==13) {nominatim(this.value);}"
+                    >
+                    
                 </li>
                 <li>
-                    <a><img alt="edit" src="./resources/action/edit.png" width="22" height="22" border="0"><?=$t->tr("edit")?></a>
+                    <img alt="edit" src="./resources/action/edit.png" width="22" height="22" border="0">
+                    <label><?=$t->tr("edit")?></label>
                     <ul>
                         <li>
                             <label onclick="josm_call()"><?=$t->tr("editMapJOSM")?></label>
@@ -1665,7 +1664,7 @@
                         </li> -->
                         <li>
                             <input type="checkbox" id="checkLayerGebcoDepth" onClick="showGebcoDepth()">
-                            <label><?=$t->tr("gebcoDepth")?></label>
+                            <label for="checkLayerGebcoDepth"><?=$t->tr("gebcoDepth")?></label>
                         </li>
                         <!--li>
                             <input type="checkbox" id="checkLayerSatPro" onClick="showSatPro()">
@@ -1720,9 +1719,8 @@
                     </ul>
                 </li>
                 <li>
-                    <a>
-                        <img alt="tools" src="./resources/action/tools.png" width="22" height="22" border="0"><?=$t->tr("tools")?>
-                    </a>
+                    <img alt="tools" src="./resources/action/tools.png" width="22" height="22" border="0">
+                    <label><?=$t->tr("tools")?></label>
                     <ul>
                         <li data-tools="permalink">
                             <input type="checkbox" id="checkPermalink">
