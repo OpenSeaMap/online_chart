@@ -232,7 +232,7 @@ function jumpToSearchedLocation(longitude, latitude) {
    *  I remove that marker.
    */
   if (searchedLocationMarker !== null) {
-    layer_marker.removeMarker(searchedLocationMarker);
+    layer_marker.getSource().clear();
   }
   // I add a market at the location the user searched for.
   searchedLocationMarker = addMarker(layer_marker, longitude, latitude);
