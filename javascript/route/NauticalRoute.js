@@ -35,258 +35,306 @@ var routeTrack;
 var routeObject;
 
 var style_edit = {
-    strokeColor: "#CD3333",
-    strokeWidth: 3,
-    pointRadius: 4
+  strokeColor: "#CD3333",
+  strokeWidth: 3,
+  pointRadius: 4,
 };
 const modifyStyle = new ol.style.Style({
-    image: new ol.style.Circle({
-        radius: 3,
-        fill: new ol.style.Fill({
-            color: 'blue', 
-        }),
-        stroke: new ol.style.Stroke({
-            width: 3,
-            color: "rgba(0,0,255,0.8)"
-        }),
+  image: new ol.style.Circle({
+    radius: 3,
+    fill: new ol.style.Fill({
+      color: "blue",
     }),
     stroke: new ol.style.Stroke({
-        width: 3,
-        color: "red"
+      width: 3,
+      color: "rgba(0,0,255,0.8)",
     }),
-    geometry: (feature) => {
-        const line = feature.getGeometry();
-        const multipoint = new ol.geom.MultiPoint(line.getCoordinates());
-        const geomColl = new ol.geom.GeometryCollection([
-            line,
-            multipoint,
-        ]);
-        return geomColl;
-    }
+  }),
+  stroke: new ol.style.Stroke({
+    width: 3,
+    color: "red",
+  }),
+  geometry: (feature) => {
+    const line = feature.getGeometry();
+    const multipoint = new ol.geom.MultiPoint(line.getCoordinates());
+    const geomColl = new ol.geom.GeometryCollection([line, multipoint]);
+    return geomColl;
+  },
 });
 
-
 function NauticalRoute_startEditMode() {
-    routeDraw = new ol.interaction.Draw({
-        type: 'LineString',
-        source: layer_nautical_route.getSource()
-    });
-    routeDraw.on('drawend', NauticalRoute_routeAdded);
-    routeEdit = new ol.interaction.Modify({
-        source: layer_nautical_route.getSource(),
-        style: modifyStyle
-    });
-    routeEdit.on('modifyend', NauticalRoute_routeModified);
-    map.addInteraction(routeDraw);
-    map.addInteraction(routeEdit);
-    routeDraw.setActive(true);
-    routeEdit.setActive(false);
-    layer_nautical_route.setStyle((feature)=> {
-        return modifyStyle;
-    });
+  routeDraw = new ol.interaction.Draw({
+    type: "LineString",
+    source: layer_nautical_route.getSource(),
+  });
+  routeDraw.on("drawend", NauticalRoute_routeAdded);
+  routeEdit = new ol.interaction.Modify({
+    source: layer_nautical_route.getSource(),
+    style: modifyStyle,
+  });
+  routeEdit.on("modifyend", NauticalRoute_routeModified);
+  map.addInteraction(routeDraw);
+  map.addInteraction(routeEdit);
+  routeDraw.setActive(true);
+  routeEdit.setActive(false);
+  layer_nautical_route.setStyle((feature) => {
+    return modifyStyle;
+  });
 }
 
 function NauticalRoute_stopEditMode() {
-    if (!routeDraw) {
-        return;
-    }
-    layer_nautical_route.un('addfeature', NauticalRoute_routeAdded);
-    routeDraw.setActive(false);
-    routeEdit.setActive(false);
-    map.removeInteraction(routeEdit);
-    map.removeInteraction(routeDraw);
-    layer_nautical_route.getSource().clear();
+  if (!routeDraw) {
+    return;
+  }
+  layer_nautical_route.un("addfeature", NauticalRoute_routeAdded);
+  routeDraw.setActive(false);
+  routeEdit.setActive(false);
+  map.removeInteraction(routeEdit);
+  map.removeInteraction(routeDraw);
+  layer_nautical_route.getSource().clear();
 }
 
 function NauticalRoute_DownloadTrack() {
-    var format = document.getElementById("routeFormat").value;
-    var name   = document.getElementById("tripName").value;
-    var mimetype, filename;
+  var format = document.getElementById("routeFormat").value;
+  var name = document.getElementById("tripName").value;
+  var mimetype, filename;
 
-    if (name=="") {
-        name = "route";
-    }
+  if (name == "") {
+    name = "route";
+  }
 
-    switch (format) {
-        case 'CSV':
-            mimetype = 'text/csv';
-            filename = name+'.csv';
-            content = NauticalRoute_getRouteCsv(routeTrack);
-            break;
-        case 'KML':
-            mimetype = 'application/vnd.google-earth.kml+xml';
-            filename = name+'.kml';
-            content = NauticalRoute_getRouteKml(routeObject);
-            break;
-        case 'GPX':
-            mimetype = 'application/gpx+xml';
-            filename = name+'.gpx';
-            content = NauticalRoute_getRouteGpx(routeObject);
-            break;
-        case 'GML':
-            mimetype = 'application/gml+xml';
-            filename = name+'.gml';
-            content = NauticalRoute_getRouteGml(routeTrack);
-            break;
-    }
+  switch (format) {
+    case "CSV":
+      mimetype = "text/csv";
+      filename = name + ".csv";
+      content = NauticalRoute_getRouteCsv(routeTrack);
+      break;
+    case "KML":
+      mimetype = "application/vnd.google-earth.kml+xml";
+      filename = name + ".kml";
+      content = NauticalRoute_getRouteKml(routeObject);
+      break;
+    case "GPX":
+      mimetype = "application/gpx+xml";
+      filename = name + ".gpx";
+      content = NauticalRoute_getRouteGpx(routeObject);
+      break;
+    case "GML":
+      mimetype = "application/gml+xml";
+      filename = name + ".gml";
+      content = NauticalRoute_getRouteGml(routeTrack);
+      break;
+  }
 
-    // Remove previous added forms
-    document.querySelector('#actionDialog > form')?.remove();
+  // Remove previous added forms
+  document.querySelector("#actionDialog > form")?.remove();
 
-    form = document.createElement('form');
-    form.id = this.id + '_export_form';
-    form.method = 'post';
-    form.action = './api/export.php';
-    document.getElementById('actionDialog').appendChild(form);
-    div = document.createElement('div');
-    div.className = this.displayClass + "Control";
-    form.appendChild(div);
-    input = document.createElement('input');
-    input.id = this.id + '_export_input_mimetype';
-    input.name = 'mimetype';
-    input.type = 'hidden';
-    input.value = mimetype;
-    div.appendChild(input);
-    input = document.createElement('input');
-    input.id = this.id + '_export_input_filename';
-    input.name = 'filename';
-    input.type = 'hidden';
-    input.value = filename;
-    div.appendChild(input);
-    input = document.createElement('input');
-    input.id = this.id + '_export_input_content';
-    input.name = 'content';
-    input.type = 'hidden';
-    input.value = content;
-    div.appendChild(input);
+  form = document.createElement("form");
+  form.id = this.id + "_export_form";
+  form.method = "post";
+  form.action = "./api/export.php";
+  document.getElementById("actionDialog").appendChild(form);
+  div = document.createElement("div");
+  div.className = this.displayClass + "Control";
+  form.appendChild(div);
+  input = document.createElement("input");
+  input.id = this.id + "_export_input_mimetype";
+  input.name = "mimetype";
+  input.type = "hidden";
+  input.value = mimetype;
+  div.appendChild(input);
+  input = document.createElement("input");
+  input.id = this.id + "_export_input_filename";
+  input.name = "filename";
+  input.type = "hidden";
+  input.value = filename;
+  div.appendChild(input);
+  input = document.createElement("input");
+  input.id = this.id + "_export_input_content";
+  input.name = "content";
+  input.type = "hidden";
+  input.value = content;
+  div.appendChild(input);
 
-    document.querySelector('#actionDialog > form').submit();
+  document.querySelector("#actionDialog > form").submit();
 
-    routeChanged = false;
+  routeChanged = false;
 }
 
 function NauticalRoute_routeAdded(event) {
-    routeChanged = true;
-    routeDraw.setActive(false);
-    routeEdit.setActive(true);
-    NauticalRoute_routeModified(event);
+  routeChanged = true;
+  routeDraw.setActive(false);
+  routeEdit.setActive(true);
+  NauticalRoute_routeModified(event);
 }
 
 function NauticalRoute_routeModified(event) {
-    routeObject = event.feature || event.features.item(0);
-    routeTrack = routeObject.getGeometry().getCoordinates().map(([x,y])=>({x,y}));
-    NauticalRoute_getPoints(routeTrack);
-    document.getElementById('buttonRouteDownloadTrack').disabled=false;
+  routeObject = event.feature || event.features.item(0);
+  routeTrack = routeObject
+    .getGeometry()
+    .getCoordinates()
+    .map(([x, y]) => ({ x, y }));
+  NauticalRoute_getPoints(routeTrack);
+  document.getElementById("buttonRouteDownloadTrack").disabled = false;
 }
 
-
 function NauticalRoute_getPoints(points) {
-    var htmlText;
-    var latA, latB, lonA, lonB, distance, bearing;
-    var totalDistance = 0;
-    var distUnits = document.getElementById("distUnits").value;
-    var coordFormat = function(lat,lon) {return formatCoords(lat,'N __.___°') + " - " + formatCoords(lon,'W___.___°');}
+  var htmlText;
+  var latA, latB, lonA, lonB, distance, bearing;
+  var totalDistance = 0;
+  var distUnits = document.getElementById("distUnits").value;
+  var coordFormat = function (lat, lon) {
+    return (
+      formatCoords(lat, "N __.___°") + " - " + formatCoords(lon, "W___.___°")
+    );
+  };
 
-    if (document.getElementById("coordFormat").value == "coordFormatdms") {
-        coordFormat = function(lat,lon) {return formatCoords(lat,'N __°##\'##"') + " - " + formatCoords(lon,'W___°##\'##"');}
+  if (document.getElementById("coordFormat").value == "coordFormatdms") {
+    coordFormat = function (lat, lon) {
+      return (
+        formatCoords(lat, "N __°##'##\"") +
+        " - " +
+        formatCoords(lon, "W___°##'##\"")
+      );
+    };
+  }
+
+  htmlText = '<table id="routeSegmentList">';
+  htmlText +=
+    "<tr><th/>" +
+    "<th>" +
+    tableTextNauticalRouteCourse +
+    "</th>" +
+    "<th>" +
+    tableTextNauticalRouteDistance +
+    "</th>" +
+    "<th>" +
+    tableTextNauticalRouteCoordinate +
+    "</th></tr>";
+  for (i = 0; i < points.length - 1; i++) {
+    latA = y2lat(points[i].y);
+    lonA = x2lon(points[i].x);
+    latB = y2lat(points[i + 1].y);
+    lonB = x2lon(points[i + 1].x);
+    distance = getDistance(latA, latB, lonA, lonB);
+    if (distUnits == "km") {
+      distance = nm2km(distance);
     }
-
-    htmlText = '<table id="routeSegmentList">';
+    bearing = getBearing(latA, latB, lonA, lonB);
+    totalDistance += distance;
     htmlText +=
-        '<tr><th/>' +
-        '<th>' + tableTextNauticalRouteCourse + '</th>' +
-        '<th>' + tableTextNauticalRouteDistance + '</th>' +
-        '<th>' + tableTextNauticalRouteCoordinate + '</th></tr>'
-    for(i = 0; i < points.length - 1; i++) {
-        latA = y2lat(points[i].y);
-        lonA = x2lon(points[i].x);
-        latB = y2lat(points[i + 1].y);
-        lonB = x2lon(points[i + 1].x);
-        distance = getDistance(latA, latB, lonA, lonB);
-        if (distUnits == "km") {
-            distance = nm2km(distance);
-        }
-        bearing = getBearing(latA, latB, lonA, lonB);
-        totalDistance += distance;
-        htmlText +=
-            '<tr>' +
-            '<td>' + parseInt(i+1) + '.</td>' +
-            '<td>' + bearing.toFixed(2) + '°</td>' +
-            '<td>' + distance.toFixed(2) + ' ' + distUnits + '</td>' +
-            '<td>' + coordFormat(latB,lonB) + '</td></tr>'
-    }
-    htmlText += '</table>'
+      "<tr>" +
+      "<td>" +
+      parseInt(i + 1) +
+      ".</td>" +
+      "<td>" +
+      bearing.toFixed(2) +
+      "°</td>" +
+      "<td>" +
+      distance.toFixed(2) +
+      " " +
+      distUnits +
+      "</td>" +
+      "<td>" +
+      coordFormat(latB, lonB) +
+      "</td></tr>";
+  }
+  htmlText += "</table>";
 
-    document.getElementById("routeStart").innerHTML = coordFormat(y2lat(points[0].y),x2lon(points[0].x));
-    document.getElementById("routeEnd").innerHTML   = coordFormat(y2lat(points[points.length-1].y),x2lon(points[points.length-1].x));
-    document.getElementById("routeDistance").innerHTML = totalDistance.toFixed(2) + ' ' + distUnits;
-    document.getElementById("routePoints").innerHTML = htmlText;
+  document.getElementById("routeStart").innerHTML = coordFormat(
+    y2lat(points[0].y),
+    x2lon(points[0].x)
+  );
+  document.getElementById("routeEnd").innerHTML = coordFormat(
+    y2lat(points[points.length - 1].y),
+    x2lon(points[points.length - 1].x)
+  );
+  document.getElementById("routeDistance").innerHTML =
+    totalDistance.toFixed(2) + " " + distUnits;
+  document.getElementById("routePoints").innerHTML = htmlText;
 }
 
 function NauticalRoute_getRouteCsv(points) {
-    var buffText = ";" + tableTextNauticalRouteCourse + ";" + tableTextNauticalRouteDistance + ";" + tableTextNauticalRouteCoordinate + "\n";
-    var latA, latB, lonA, lonB, distance, bearing;
-    var totalDistance = 0;
+  var buffText =
+    ";" +
+    tableTextNauticalRouteCourse +
+    ";" +
+    tableTextNauticalRouteDistance +
+    ";" +
+    tableTextNauticalRouteCoordinate +
+    "\n";
+  var latA, latB, lonA, lonB, distance, bearing;
+  var totalDistance = 0;
 
-    for(i = 0; i < points.length - 1; i++) {
-        latA = y2lat(points[i].y);
-        lonA = x2lon(points[i].x);
-        latB = y2lat(points[i + 1].y);
-        lonB = x2lon(points[i + 1].x);
-        distance = getDistance(latA, latB, lonA, lonB).toFixed(2);
-        bearing = getBearing(latA, latB, lonA, lonB).toFixed(2);
-        totalDistance += parseFloat(distance);
-        buffText += parseInt(i+1)+ ";" + bearing + "°;" + distance + "nm;\"" + lat2DegreeMinute(latB) + " - " + lon2DegreeMinute(lonB) + "\"\n";
+  for (i = 0; i < points.length - 1; i++) {
+    latA = y2lat(points[i].y);
+    lonA = x2lon(points[i].x);
+    latB = y2lat(points[i + 1].y);
+    lonB = x2lon(points[i + 1].x);
+    distance = getDistance(latA, latB, lonA, lonB).toFixed(2);
+    bearing = getBearing(latA, latB, lonA, lonB).toFixed(2);
+    totalDistance += parseFloat(distance);
+    buffText += parseInt(i + 1) + ";" + bearing + "°;" + distance + 'nm;"';
+
+    if (document.getElementById("coordFormat").value == "coordFormatdms") {
+      buffText +=
+        formatCoords(latB, "N___°##.####'") +
+        " - " +
+        formatCoords(lonB, "W___°##.####'");
+    } else {
+      buffText +=
+        formatCoords(lat, "N __.___°") + " - " + formatCoords(lon, "W___.___°");
     }
+    buffText += '"\n';
+  }
 
-    return convert2Text(buffText);
+  return convert2Text(buffText);
 }
 
 function NauticalRoute_getRouteKml(feature) {
-    // var latA, lonA;
-    // var buffText = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n";
-    // buffText += "<Folder>\n<name>OpenSeaMap Route</name>\n<description>test</description>";
-    // buffText += "<Placemark>\n<name>OpenSeaMap</name>\n<description>No description available</description>";
-    // buffText += "<LineString>\n<coordinates>\n";
-    // for(i = 0; i < points.length; i++) {
-    //     latA = y2lat(points[i].y);
-    //     lonA = x2lon(points[i].x);
-    //     buffText += lonA + "," + latA + " ";
-    // }
-    // buffText += "\n</coordinates>\n</LineString>\n</Placemark>\n</Folder>\n</kml>";
+  // var latA, lonA;
+  // var buffText = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n";
+  // buffText += "<Folder>\n<name>OpenSeaMap Route</name>\n<description>test</description>";
+  // buffText += "<Placemark>\n<name>OpenSeaMap</name>\n<description>No description available</description>";
+  // buffText += "<LineString>\n<coordinates>\n";
+  // for(i = 0; i < points.length; i++) {
+  //     latA = y2lat(points[i].y);
+  //     lonA = x2lon(points[i].x);
+  //     buffText += lonA + "," + latA + " ";
+  // }
+  // buffText += "\n</coordinates>\n</LineString>\n</Placemark>\n</Folder>\n</kml>";
 
-    // return buffText;
+  // return buffText;
 
-    var parser = new ol.format.KML();
-    return parser.writeFeatures([feature], {
-        featureProjection: map.getView().getProjection(),
-        dataProjection: 'EPSG:4326'
-    });
+  var parser = new ol.format.KML();
+  return parser.writeFeatures([feature], {
+    featureProjection: map.getView().getProjection(),
+    dataProjection: "EPSG:4326",
+  });
 }
 
 function NauticalRoute_getRouteGpx(feature) {
-    var parser = new ol.format.GPX();
-    return parser.writeFeatures([feature], {
-        featureProjection: map.getView().getProjection(),
-        dataProjection: 'EPSG:4326'
-    });
+  var parser = new ol.format.GPX();
+  return parser.writeFeatures([feature], {
+    featureProjection: map.getView().getProjection(),
+    dataProjection: "EPSG:4326",
+  });
 }
 
 function NauticalRoute_getRouteGml(points) {
-
-    // GML2 parser is not implmented in ol7 and GML3 doesn not work.  
-    // var parser = new ol.format.GML32();
-    // return parser.writeFeatures([feature], {
-    //     featureProjection: map.getView().getProjection(),
-    //     dataProjection: 'EPSG:4326'
-    // });
-    let coordText = '';
-    for(i = 0; i < points.length; i++) {
-        const latA = y2lat(points[i].y);
-        const lonA = x2lon(points[i].x);
-        coordText += lonA + "," + latA + " ";
-    }
-    const gml = `
+  // GML2 parser is not implmented in ol7 and GML3 doesn not work.
+  // var parser = new ol.format.GML32();
+  // return parser.writeFeatures([feature], {
+  //     featureProjection: map.getView().getProjection(),
+  //     dataProjection: 'EPSG:4326'
+  // });
+  let coordText = "";
+  for (i = 0; i < points.length; i++) {
+    const latA = y2lat(points[i].y);
+    const lonA = x2lon(points[i].x);
+    coordText += lonA + "," + latA + " ";
+  }
+  const gml = `
 <gml:featureMember xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/gml http://schemas.opengis.net/gml/2.1.2/feature.xsd">
     <gml:null>
         <gml:geometry>
@@ -297,6 +345,5 @@ function NauticalRoute_getRouteGml(points) {
     </gml:null>
 </gml:featureMember>
 `;
-    return gml;
+  return gml;
 }
-
