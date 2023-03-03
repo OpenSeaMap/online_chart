@@ -14,7 +14,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <meta name="date" content="2012-06-02">
         <link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png">
-        <link rel="stylesheet" type="text/css" href="map-full.css">
+        <link rel="stylesheet" type="text/css" href="index.css">
         <link rel="stylesheet" type="text/css" href="topmenu.css">
         <link rel="stylesheet" type="text/css" href="javascript/route/NauticalRoute.css">
         <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
@@ -983,7 +983,7 @@
                     source: new ol.source.XYZ({
                        tileUrlFunction: function(coordinate) {
                             return getTileURLMarine("https://tiles.marinetraffic.com/ais_helpers/shiptilesingle.aspx?output=png&sat=1&grouping=shiptype&tile_size=256&legends=1&zoom=${z}&X=${x}&Y=${y}", coordinate);
-                        },
+                        },  
                     }),
                 });
                 layer_ais.on("change:visible", (evt) => {

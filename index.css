@@ -1,0 +1,416 @@
+/**
+ * -----------------------------------------------------------------------------
+ * Common CSS
+ * -----------------------------------------------------------------------------
+ */
+html,
+body {
+  background-color: #ffffff;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  color: #000000;
+}
+
+img {
+  vertical-align: middle;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: black !important;
+}
+
+#noJavascript {
+  position: absolute;
+  left: 30%;
+  top: 50%;
+  width: 30%;
+}
+
+.unselectable {
+  user-select: none;
+}
+
+/**
+ * -----------------------------------------------------------------------------
+ * Map CSS
+ * -----------------------------------------------------------------------------
+ */
+#map {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.ol-mouse-position {
+  top: unset !important;
+  bottom: 20px !important;
+  right: 5px !important;
+  border: 1px solid #000080;
+  border-radius: 6px 6px 6px 6px;
+  background-color: #fff;
+  margin: 0;
+  padding: 5px;
+  font-family: monospace;
+  height: auto;
+}
+
+.ol-scale-line-metric,
+.ol-scale-line-nautical {
+  display: block;
+  position: absolute;
+  left: 10px;
+  font-size: xx-small;
+  text-align: center;
+  border: 2px solid black;
+}
+
+.ol-scale-line-metric {
+  bottom: 20px;
+  border-bottom: none;
+}
+
+.ol-scale-line-nautical {
+  bottom: 30px;
+  border-top: none;
+}
+
+.ol-permalink {
+  right: 5px;
+  bottom: 50px;
+  display: block;
+  position: absolute;
+  font-size: smaller;
+}
+
+.ol-popup {
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  bottom: 12px;
+  left: -50px;
+  min-width: 280px;
+}
+.ol-popup:after,
+.ol-popup:before {
+  top: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.ol-popup:after {
+  border-top-color: white;
+  border-width: 10px;
+  left: 48px;
+  margin-left: -10px;
+}
+
+.ol-popup:before {
+  border-top-color: #cccccc;
+  border-width: 11px;
+  left: 48px;
+  margin-left: -11px;
+}
+.ol-popup-closer {
+  text-decoration: none;
+  position: absolute;
+  top: 2px;
+  right: 8px;
+}
+
+.ol-popup-closer:after {
+  content: "✖";
+}
+
+/**
+ * -----------------------------------------------------------------------------
+ * Tools CSS
+ * -----------------------------------------------------------------------------
+ */
+#actionDialog {
+  position: absolute;
+  top: 50px;
+  left: 60px;
+  visibility: hidden;
+  border: 2px solid #000080;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px 6px 6px 6px;
+  background-color: #fff;
+  padding: 5px;
+}
+
+/**
+ * -----------------------------------------------------------------------------
+ * Compass CSS
+ * -----------------------------------------------------------------------------
+ */
+/* geo north image is 301x301, mag north image is 200x200 */
+#compassRose {
+  position: absolute;
+  bottom: 58px;
+  right: 10px;
+  width: 261px;
+  height: 261px;
+  visibility: hidden;
+  border-radius: 50%;
+  /* background-color:white; */
+}
+
+#geoCompassRose {
+  position: absolute;
+  right: calc(50%+581px);
+  bottom: (50%+581px);
+  width: 261px;
+  height: 261px;
+}
+
+#magCompassRose {
+  position: absolute;
+  right: calc(50%+581px);
+  bottom: (50%+581px);
+  width: 261px;
+  height: 261px;
+  transform: rotate(0deg);
+}
+
+#magCompassText {
+  position: absolute;
+  left: 132px;
+  bottom: 118px;
+  color: #e50083;
+  font-size: 9px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  width: 100px;
+  text-align: center;
+}
+
+#magCompassTextTop {
+  position: relative;
+  left: -50%;
+  bottom: 20px;
+}
+
+#magCompassTextBottom {
+  position: relative;
+  left: -50%;
+  bottom: -20px;
+}
+
+/**
+ * -----------------------------------------------------------------------------
+ * AIS layer
+ * -----------------------------------------------------------------------------
+ */
+.ais h2 {
+  font-size: 16px;
+  border-bottom: 1px solid #484848;
+}
+
+.ais div {
+  padding: 2px;
+  font-size: 13px;
+}
+
+.ais td:first-child {
+  font-size: 14px;
+  font-weight: normal;
+  /*text-align:right;*/
+  color: #808080;
+  padding-right: 10px;
+}
+
+.ais td {
+  font-size: 14px;
+  font-weight: bold;
+  color: #484848;
+  height: 18px;
+}
+
+.ais ul {
+  padding: 2px;
+  font-size: 14px;
+  list-style-type: disc;
+  list-style-position: inside;
+  margin-top: 13px;
+}
+
+.ais table {
+  margin-top: 13px;
+}
+
+.ais img {
+  margin-right: 6px;
+  margin-bottom: 2px;
+  border: 1px solid #484848;
+  padding: 1px;
+}
+
+/**
+ * -----------------------------------------------------------------------------
+ * SatPro layer
+ * -----------------------------------------------------------------------------
+ */
+.satpro h2 {
+  font-size: 16px;
+  border-bottom: 1px solid #484848;
+}
+
+.satpro td:first-child {
+  font-size: 14px;
+  font-weight: normal;
+  /*text-align:right;*/
+  color: #808080;
+  padding-right: 10px;
+}
+
+.satpro td {
+  font-size: 14px;
+  font-weight: bold;
+  color: #484848;
+}
+
+.satpro table {
+  margin-top: 13px;
+}
+
+/**
+ * -----------------------------------------------------------------------------
+ * Disaster layer
+ * -----------------------------------------------------------------------------
+ */
+.disaster h2 {
+  font-size: 16px;
+  border-bottom: 1px solid #484848;
+}
+
+.disaster td:first-child {
+  font-size: 14px;
+  font-weight: normal;
+  color: #808080;
+  padding-right: 10px;
+}
+
+.disaster td {
+  font-size: 14px;
+  font-weight: bold;
+  color: #484848;
+}
+
+.disaster table {
+  margin-top: 13px;
+}
+
+/**
+ * -----------------------------------------------------------------------------
+  * Menu CSS
+ * -----------------------------------------------------------------------------
+  */
+#topmenu {
+  position: absolute;
+  top: 10px;
+  left: 60px;
+}
+
+.menu {
+  border: 2px solid #000080;
+  border-radius: 6px;
+  background-color: #fff;
+  margin: 0;
+  padding: 2px;
+}
+
+.menu label {
+  cursor: pointer;
+  flex: 2;
+}
+
+.menu img {
+  text-decoration: none;
+}
+
+.menu img,
+.menu input {
+  margin-right: 5px;
+}
+
+.menu li {
+  list-style: none;
+  background: white;
+  cursor: pointer;
+  position: relative;
+  padding: 2px 5px;
+  display: flex;
+  align-items: center;
+}
+
+.menu li:hover {
+  background: #add8e6;
+}
+
+/* LEVEL TWO AND THREE */
+.menu li > ul {
+  width: 240px;
+  display: none;
+  position: absolute;
+  border: 1px solid #ccc;
+}
+
+.menu li:hover > ul {
+  display: block;
+}
+
+.menu li > ul > li {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.menu li > ul > li:last-child {
+  border: none;
+}
+
+/* LEVEL ONE */
+.menu > ul {
+  display: flex;
+  flex-direction: row;
+}
+
+.menu > ul > li {
+  border-right: 1px solid #333;
+}
+
+.menu > ul > li:last-child {
+  border-right: none;
+}
+
+/* LEVEL TWO */
+.menu > ul > li > ul {
+  top: 100%;
+  left: 0;
+}
+
+/* LEVEL THREE */
+.menu > ul > li > ul > li > ul {
+  left: 100%;
+  top: 0;
+}
