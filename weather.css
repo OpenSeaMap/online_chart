@@ -165,14 +165,6 @@ img {
   max-height: 415px;
 }
 
-.olImageLoadError {
-  /* Some layers (e.g. seamark, sports) only render tiles where
-     * an object exists. Unknown tiles are displayed in pink by
-     * default. We change this behaviour by hiding these tiles.
-     */
-  display: none !important;
-}
-
 .ol-permalink {
   right: 10px;
   bottom: 20px;

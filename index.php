@@ -14,11 +14,9 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <meta name="date" content="2012-06-02">
         <link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png">
+        <link rel="stylesheet" href="./javascript/ol@v7.2.2/ol.css">
         <link rel="stylesheet" type="text/css" href="index.css">
-        <link rel="stylesheet" type="text/css" href="topmenu.css">
-        <link rel="stylesheet" type="text/css" href="javascript/route/NauticalRoute.css">
-        <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
+        <script src="./javascript/ol@v7.2.2/ol.js"></script>
         <script type="text/javascript" src="./javascript/translation-<?=$t->getCurrentLanguageSafe()?>.js"></script>
         <script type="text/javascript" src="./javascript/permalink.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>
@@ -27,7 +25,7 @@
         <script type="text/javascript" src="./javascript/harbours.js"></script>
         <script type="text/javascript" src="./javascript/nominatim.js"></script>
         <script type="text/javascript" src="./javascript/tidal_scale.js"></script>
-        <script type="text/javascript" src="./javascript/route/NauticalRoute.js"></script>
+        <script type="text/javascript" src="./javascript/NauticalRoute.js"></script>
         <script type="text/javascript" src="./javascript/geomagjs/cof2Obj.js"></script>
         <script type="text/javascript" src="./javascript/geomagjs/geomag.js"></script>
         <script type="text/javascript" src="./javascript/mag_deviation.js"></script>
