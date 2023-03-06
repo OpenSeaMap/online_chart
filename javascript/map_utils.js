@@ -220,7 +220,6 @@ const markerStyle = new ol.style.Style({
 function addMarker(layer, lon, lat, popupContentHTML) {
   const coord = ol.proj.fromLonLat([lon, lat]);
   var feature = new ol.Feature(new ol.geom.Point(coord));
-
   feature.set("popupContentHTML", popupContentHTML);
   feature.setStyle(markerStyle);
   layer.getSource().addFeature(feature);
