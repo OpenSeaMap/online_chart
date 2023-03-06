@@ -1375,7 +1375,7 @@
 
             function mapEventClick(event) {
                 // If permalink dialog is open we add a marker on click
-                if (layer_permalink.getVisible()) {
+                if (layer_permalink.getVisible() && document.getElementById('checkPermalink').checked) {
                     addPermalinkMarker(event.coordinate);
                 } else {
                     // Otherwise we search for feature with popup content to display.
