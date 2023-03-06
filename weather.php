@@ -15,8 +15,8 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png"/>
         <link rel="stylesheet" type="text/css" href="weather.css">
-        <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
+        <link rel="stylesheet" href="./javascript/ol@v7.3.0/ol.css">
+        <script src="./javascript/ol@v7.3.0/ol.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>
         <script type="text/javascript" src="./javascript/map_utils.js"></script>
         <script type="text/javascript" src="./javascript/permalink.js"></script>

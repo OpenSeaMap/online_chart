@@ -14,9 +14,9 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <meta name="date" content="2012-06-02">
         <link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png">
-        <link rel="stylesheet" href="./javascript/ol@v7.2.2/ol.css">
+        <link rel="stylesheet" href="./javascript/ol@v7.3.0/ol.css">
         <link rel="stylesheet" type="text/css" href="index.css">
-        <script src="./javascript/ol@v7.2.2/ol.js"></script>
+        <script src="./javascript/ol@v7.3.0/ol.js"></script>
         <script type="text/javascript" src="./javascript/translation-<?=$t->getCurrentLanguageSafe()?>.js"></script>
         <script type="text/javascript" src="./javascript/permalink.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>
@@ -229,10 +229,6 @@
                 layer.setVisible(!layer.getVisible());
             }
 
-            function showTidalScale() {
-                layer_tidalscale.setVisible(!layer_tidalscale.getVisible());
-            }
-
             function toggleNauticalRoute(show) {
                 if (show) {
                     addNauticalRoute();
@@ -249,6 +245,14 @@
                 }
             }
 
+            function toggleMapDownload(show) {
+                if (show) {
+                    openMapDownloadDialog();
+                } else {
+                    closeMapDownloadDialog();
+                }
+            }
+
             function showBingAerial() {
                 if (layer_bing_aerial.getVisible()) {
                     layer_bing_aerial.setVisible(false);
@@ -256,24 +260,6 @@
                 } else {
                     layer_mapnik.setVisible(false);
                     layer_bing_aerial.setVisible(true);
-                }
-            }
-
-            function showDisaster() {
-                layer_disaster.setVisible(!layer_disaster.getVisible());
-           
-                if (!layer_disaster.getVisible()) {
-                    setCookie("DisasterLayerVisible", "false");
-                } else {
-                    setCookie("DisasterLayerVisible", "true");
-                }
-            }
-
-            function toggleMapDownload(show) {
-                if (show) {
-                    openMapDownloadDialog();
-                } else {
-                    closeMapDownloadDialog();
                 }
             }
 
