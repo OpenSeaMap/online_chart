@@ -571,6 +571,19 @@
                     }
                 }
 
+                // Use a 512*5212 tile grid for some layers
+                const projExtent = ol.proj.get('EPSG:3857').getExtent();
+                const startResolution = ol.extent.getWidth(projExtent) / 256;
+                const resolutions = new Array(22);
+                for (let i = 0, ii = resolutions.length; i < ii; ++i) {
+                resolutions[i] = startResolution / Math.pow(2, i);
+                }
+                const tileGrid512 = new ol.tilegrid.TileGrid({
+                    extent: projExtent,
+                    resolutions: resolutions,
+                    tileSize: [512, 512],
+                });
+
                 // Add Layers to map-------------------------------------------------------------------------------------------------------
 
                 // Mapnik (Base map)
@@ -900,8 +913,9 @@
                     },
                     source: new ol.source.XYZ({
                        tileUrlFunction: function(coordinate) {
-                            return getTileURLMarine("https://tiles.marinetraffic.com/ais_helpers/shiptilesingle.aspx?output=png&sat=1&grouping=shiptype&tile_size=256&legends=1&zoom=${z}&X=${x}&Y=${y}", coordinate);
-                        },  
+                            return getTileURLMarine("https://tiles.marinetraffic.com/ais_helpers/shiptilesingle.aspx?output=png&sat=1&grouping=shiptype&tile_size=512&legends=1&zoom=${z}&X=${x}&Y=${y}", coordinate);
+                        },
+                       tileGrid: tileGrid512
                     }),
                 });
                 layer_ais.on("change:visible", (evt) => {
@@ -1173,9 +1187,7 @@
                 //       numZoomLevels: 22,
                 //       projection: this.projectionMercator,
                 //       type: 'png',
-
                 //       transparent: true},
-                //     { layerId: 22, isBaseLayer: false, visibility: false,tileSize: new OpenLayers.Size(1024,1024), });
                 layer_waterdepth_contours =new ol.layer.Tile({
                     visible: false,
                     maxZoom: 22,
@@ -1197,7 +1209,8 @@
                         serverType: 'mapserver',
                         tileLoadFunction:(imageTile, src) => {
                             imageTile.getImage().src = src.replace('3857', '900913');
-                        }
+                        },
+                        tileGrid: tileGrid512,
                     }),
                 });
                 layer_waterdepth_contours.on("change:visible", (evt) => {
