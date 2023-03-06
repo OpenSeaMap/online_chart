@@ -277,9 +277,7 @@
                 }
             }
 
-            function showWaterDepthTrackPoints(fromClick) {
-              var checked = document.getElementById("checkLayerWaterDepthTrackPoints").checked;
-
+            function toggleWaterDepthTrackPoints(checked) {
               if(!checked){ 
                 layer_waterdepth_trackpoints_10m.setVisible(false);
                 layer_waterdepth_trackpoints_100m.setVisible(false);
@@ -291,31 +289,13 @@
               }
             }
 
-            // Show Wikipedia layer
-            function showWikipediaLinks(sub) {
-                if (sub) {
-                  var checked = document.getElementById("checkLayerWikipediaThumbnails").checked
-
-                  if (checked) {
-                   setWikiLayer(checked);
-                  } 
-
-                  wikipediaThumbs = checked;
-                  layer_wikipedia.getSource().refresh();
-
-                } else {
-                  // toggle wiki layer
-                  setWikiLayer(!layer_wikipedia.getVisible());
-                  layer_wikipedia.getSource().refresh();
+            // Show Wikipedia layer with thumbnails or not.
+            function toggleWikipediaThumbnails(visible) {
+                if (visible && !layer_wikipedia.getVisible()) {
+                layer_wikipedia.setVisible(true);
                 }
-            }
-
-            function setWikiLayer(visible){
-              layer_wikipedia.setVisible(visible);
-              if (!visible) {
-                selectControl?.getFeatures().clear();
-              }
-              layer_wikipedia.getSource().refresh();
+                wikipediaThumbs = visible;
+                layer_wikipedia.getSource().refresh();
             }
 
 
@@ -913,7 +893,9 @@
 
                     if (!evt.target.getVisible()) {
                         document.getElementById("checkLayerWikipediaThumbnails").checked = false;
-                        setCookie("WikipediaLayerThumbs", false);               
+                        setCookie("WikipediaLayerThumbs", false);  
+                        selectControl?.getFeatures().clear(); 
+                        layer_wikipedia.getSource().refresh();            
                     }
                 });
 
@@ -1636,11 +1618,11 @@
                             <label for="checkLayerSatPro"><?=$t->tr("satPro")?></label>
                         </li-->
                         <li>
-                            <input type="checkbox" id="checkLayerWikipedia" onClick="showWikipediaLinks(false)"/>
+                            <input type="checkbox" id="checkLayerWikipedia" onClick="toggleLayer(layer_wikipedia);"/>
                             <label for="checkLayerWikipedia">Wikipedia-Links</label>
                             <ul>
                                 <li>
-                                    <input type="checkbox" id="checkLayerWikipediaThumbnails" onClick="showWikipediaLinks(true)">
+                                    <input type="checkbox" id="checkLayerWikipediaThumbnails" onClick="toggleWikipediaThumbnails(this.checked)">
                                     <label for="checkLayerWikipediaThumbnails">Thumbnails</label>
                                 </li>
                             </ul>
@@ -1654,16 +1636,16 @@
                             <label for="checkCompassrose"><?=$t->tr("compassRose")?></label>
                         </li>
                         <li>
-                            <input type="checkbox" id="checkLayerWaterDepthTrackPoints" onClick="showWaterDepthTrackPoints(true)"/>
+                            <input type="checkbox" id="checkLayerWaterDepthTrackPoints" onClick="toggleWaterDepthTrackPoints(this.checked)"/>
                             <label for="checkLayerWaterDepthTrackPoints"><?=$t->tr("water_depth")?></label>
                             
                             <ul>
                                 <li>
-                                    <input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints10m" onClick="toggleLayer(layer_waterdepth_trackpoints_10m);"/>
+                                    <input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints10m" onClick="layer_waterdepth_trackpoints_10m.setVisible(true);"/>
                                     <label for="checkLayerWaterDepthTrackPoints10m">10 m</label>
                                 </li>
                                 <li>
-                                    <input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints100m" onClick="toggleLayer(layer_waterdepth_trackpoints_100m);"/>
+                                    <input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints100m" onClick="layer_waterdepth_trackpoints_100m.setVisible(true);"/>
                                     <label for="checkLayerWaterDepthTrackPoints100m">100 m</label>
                                 </li>
                             </ul>
