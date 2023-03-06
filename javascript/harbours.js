@@ -225,6 +225,6 @@ function create_harbour_marker(x, y, popupText, type) {
     var pointFeature = new ol.Feature(new ol.geom.Point([x, y]));
     pointFeature.setStyle(layer_poi_icon_style);
     pointFeature.set("popupContentHTML", popupText);
-    layer_pois.getSource().addFeature(pointFeature);
+    layer_harbours.getSource().addFeature(pointFeature);
   }
 }

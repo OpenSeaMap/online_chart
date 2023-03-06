@@ -79,7 +79,7 @@
             var layer_sport;                       // 4
 //            var layer_gebco_deepshade;             // 5
             var layer_gebco_deeps_gwc;             // 6
-            var layer_pois;                        // 7
+            var layer_harbours;                        // 7
             var layer_download;                    // 8
             var layer_nautical_route;              // 9
             var layer_grid;                        // 10
@@ -91,6 +91,9 @@
             var layer_tidalscale;                  // 16
             var layer_permalink;                   // 17
             var layer_waterdepth_trackpoints_100m;      // 18
+            // elevation layers are not available
+            // see layer's definiton in old commit:
+            // https://github.com/OpenSeaMap/online_chart/commit/32378f1c8655593e2e6701cd4ba2eb8fd10352b1
             // var layer_elevation_profile_contours;  // 19
             // var layer_elevation_profile_hillshade;  //20
             var layer_waterdepth_trackpoints_10m;      // 21
@@ -222,12 +225,8 @@
                 }
             }
 
-            function showSeamarks() {
-                layer_seamark.setVisible(!layer_seamark.getVisible());
-            }
-
-            function showHarbours() {
-                layer_pois.setVisible(!layer_pois.getVisible());
+            function toggleLayer(layer) {
+                layer.setVisible(!layer.getVisible());
             }
 
             function showTidalScale() {
@@ -250,18 +249,6 @@
                 }
             }
 
-            function showSport() {
-                layer_sport.setVisible(!layer_sport.getVisible());
-            }
-
-            function showGridWGS() {
-                layer_grid.setVisible(!layer_grid.getVisible());
-            }
-
-            function showGebcoDepth() {
-                layer_gebco_deeps_gwc.setVisible(!layer_gebco_deeps_gwc.getVisible());
-            }
-
             function showBingAerial() {
                 if (layer_bing_aerial.getVisible()) {
                     layer_bing_aerial.setVisible(false);
@@ -270,20 +257,6 @@
                     layer_mapnik.setVisible(false);
                     layer_bing_aerial.setVisible(true);
                 }
-            }
-
-            function showElevationProfile() {
-                // elevation layers are not avialable
-                // see layer's definiton in old commit:
-                // https://github.com/OpenSeaMap/online_chart/commit/32378f1c8655593e2e6701cd4ba2eb8fd10352b1
-            }
-
-            function showAis() {
-                layer_ais.setVisible(!layer_ais.getVisible());
-            }
-
-            function showSatPro() {
-                layer_satpro.setVisible(!layer_satpro.getVisible());
             }
 
             function showDisaster() {
@@ -304,9 +277,7 @@
                 }
             }
 
-            /// update visual elements based onlayer visibility
-            function setWaterDepthBoxes(fromClick){
-
+            function showWaterDepthTrackPoints(fromClick) {
               var checked = document.getElementById("checkLayerWaterDepthTrackPoints").checked;
 
               if(!checked){ 
@@ -318,23 +289,6 @@
               ) {
                 layer_waterdepth_trackpoints_10m.setVisible(true);
               }
-
-             }
-
-            function showWaterDepthTrackPoints(fromClick) {
-              setWaterDepthBoxes(fromClick);
-            }
-
-            function showWaterDepthTrackPoints10m() {
-                layer_waterdepth_trackpoints_10m.setVisible(!layer_waterdepth_trackpoints_10m.getVisible());
-            }
-
-            function showWaterDepthTrackPoints100m() {
-               layer_waterdepth_trackpoints_100m.setVisible(!layer_waterdepth_trackpoints_100m.getVisible());
-            }
-
-            function showContours() {
-              layer_waterdepth_contours.setVisible(!layer_waterdepth_contours.getVisible());
             }
 
             // Show Wikipedia layer
@@ -413,7 +367,7 @@
                 downloadWindow = window.open(url);
             }
 
-            function selectedMap (event) {
+            function selectedMap(event) {
                 var feature = event.feature;
 
                 downloadName = feature.get('name');
@@ -761,13 +715,13 @@
                 
                 // POI-Layer for harbours
                 // old definition
-                // layer_pois = new OpenLayers.Layer.Vector("pois", {
+                // layer_harbours = new OpenLayers.Layer.Vector("pois", {
                 //     layerId: 7,
                 //     visibility: true,
                 //     projection: proj4326,
                 //     displayOutsideMaxExtent:true
                 // });
-                layer_pois = new ol.layer.Vector({
+                layer_harbours = new ol.layer.Vector({
                     visible: true,
                     properties: {
                         name: "pois",
@@ -779,11 +733,11 @@
                         features: [],
                     }),
                 });
-                layer_pois.on("change:visible", (evt) => {
+                layer_harbours.on("change:visible", (evt) => {
                     updateCheckboxAndCookie(evt.target);
 
                     if (!evt.target.getVisible()) {
-                        clearPoiLayer();
+                        clearHarboursLayer();
                     } else {
                         refreshHarbours();
                     }
@@ -984,6 +938,7 @@
                 });
                 layer_ais.on("change:visible", (evt) => {
                     updateCheckboxAndCookie(evt.target);
+                    document.getElementById("license_marine_traffic").style.display = evt.target.getVisible() ? 'inline' : 'none';
                 });
 
                 // SatPro
@@ -1286,7 +1241,7 @@
                     layer.on('change:visible', () => {
                         const showCopyright = waterDepthLayers.find((l) => l.getVisible());
                         document.getElementById("license_waterdepth").style.display = showCopyright ? 'inline' : 'none';
-                    })
+                    });
                 });
 
                 layer_marker = new ol.layer.Vector({
@@ -1304,18 +1259,18 @@
                     layer_gebco_deeps_gwc,
                     layer_seamark,
                     layer_grid,
-                    layer_pois,
+                    layer_harbours,
                     layer_tidalscale,
                     layer_wikipedia,
                     layer_nautical_route,
                     layer_sport,
                     layer_ais,
-                    layer_satpro,
-                    layer_download,
-                    layer_permalink,
+                    // layer_satpro,
                     layer_waterdepth_trackpoints_10m,
                     layer_waterdepth_trackpoints_100m,
                     layer_waterdepth_contours,
+                    layer_download,
+                    layer_permalink,
                     layer_marker,
                 ].forEach((layer)=> {
                     map.addLayer(layer);
@@ -1329,10 +1284,10 @@
 
             }
 
-            function clearPoiLayer() {
+            function clearHarboursLayer() {
                 harbours = [];
-                if (layer_pois) {
-                  layer_pois.getSource().clear();
+                if (layer_harbours) {
+                  layer_harbours.getSource().clear();
                 }
             }
 
@@ -1374,7 +1329,7 @@
                 setCookie("lon", lon.toFixed(5));
 
                 // Update harbour layer
-                if (layer_pois && layer_pois.getVisible() === true) {
+                if (layer_harbours && layer_harbours.getVisible() === true) {
                     refreshHarbours();
                 }
                 // Update tidal scale layer
@@ -1399,7 +1354,7 @@
                     oldZoom = zoom;
                 }
                 // Clear POI layer
-                clearPoiLayer();
+                clearHarboursLayer();
                 clearTidalScaleLayer();
                 if (layer_download && layer_download.getVisible() === true) {
                     closeMapDownloadDialog();
@@ -1576,11 +1531,21 @@
             <p id="noJavascript"><?=$t->tr("noJavascript")?></p>
         </noscript>
         <div style="position:absolute; bottom:48px; left:5px; cursor:pointer;">
-            <a id="license_osm"  onClick="showMapKey('license')"><img alt="OSM-Logo" src="resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>"></a>
-            <a id="license_ccbysa" onClick="showMapKey('license')"><img alt="CC by SA" src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>"></a>
-            <a id="license_bing" href="https://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none"><img alt="bing" src="resources/icons/bing.png" height="29px"></a>
-            <a id="license_marine_traffic" onClick="showMapKey('license')" style="display:none"><img alt="Marine Traffic" src="resources/icons/MarineTrafficLogo.png" height="30px"></a>
-            <a id="license_waterdepth" onClick="showMapKey('license')" style="display:none"><img alt="Water Depth" src="resources/icons/depth.jpg" height="32px"></a>
+            <a id="license_osm"  onClick="showMapKey('license')">
+                <img alt="OSM-Logo" src="resources/icons/OSM-Logo-32px.png" height="32px" title="<?=$t->tr("SomeRights")?>">
+            </a>
+            <a id="license_ccbysa" onClick="showMapKey('license')">
+                <img alt="CC by SA" src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>">
+            </a>
+            <a id="license_bing" href="https://wiki.openseamap.org/wiki/Bing" target="_blank" style="display:none">
+                <img alt="bing" src="resources/icons/bing.png" height="29px">
+            </a>
+            <a id="license_marine_traffic" onClick="showMapKey('license')" style="display:none">
+                <img alt="Marine Traffic" src="resources/icons/MarineTrafficLogo.png" height="30px">
+            </a>
+            <a id="license_waterdepth" onClick="showMapKey('license')" style="display:none">
+                <img alt="Water Depth" src="resources/icons/depth.jpg" height="32px">
+            </a>
         </div>
         <div id="actionDialog">
             <br>not found<br>
@@ -1635,19 +1600,19 @@
                             </a>
                         </li>
                         <li>
-                            <input type="checkbox" id="checkLayerSeamark" onClick="showSeamarks()">
+                            <input type="checkbox" id="checkLayerSeamark" onClick="toggleLayer(layer_seamark);">
                             <label for="checkLayerSeamark"><?=$t->tr("Seezeichen")?></label>
                         </li>
                         <li>
-                            <input type="checkbox" id="checkLayerHarbour" onClick="showHarbours()">
+                            <input type="checkbox" id="checkLayerHarbour" onClick="toggleLayer(layer_harbours);">
                             <label for="checkLayerHarbour"><?=$t->tr("harbours")?></label>
                         </li>
                         <li>
-                            <input type="checkbox" id="checkLayerTidalScale" onClick="showTidalScale()">
+                            <input type="checkbox" id="checkLayerTidalScale" onClick="toggleLayer(layer_tidalscale);">
                             <label for="checkLayerTidalScale"><?=$t->tr("tidalScale")?></label>
                         </li>
                         <li>
-                            <input type="checkbox" id="checkLayerSport" nClick="showSport()">
+                            <input type="checkbox" id="checkLayerSport" nClick="toggleLayer(layer_sport);">
                             <label for="checkLayerSport">Sport</label>
                         </li>
                         <li>
@@ -1655,19 +1620,19 @@
                             <label for="checkLayerBingAerial"><?=$t->tr("bingaerial")?></label>
                         </li>
                         <li>
-                            <input type="checkbox" id="checkLayerGridWGS" onClick="showGridWGS()">
+                            <input type="checkbox" id="checkLayerGridWGS" onClick="toggleLayer(layer_grid);">
                             <label for="checkLayerGridWGS"><?=$t->tr("coordinateGrid")?></label>
                         </li>
                         <!-- <li>
-                            <input type="checkbox" id="checkLayerElevationProfile" disabled onClick="showElevationProfile()">
+                            <input type="checkbox" id="checkLayerElevationProfile" disabled onClick="toggleLayer(layer_elevation_profile_contours);toggleLayer(layer_elevation_profile_hillshade);">
                             <label><?=$t->tr("elevationProfile")?></label>
                         </li> -->
                         <li>
-                            <input type="checkbox" id="checkLayerGebcoDepth" onClick="showGebcoDepth()">
+                            <input type="checkbox" id="checkLayerGebcoDepth" onClick="toggleLayer(layer_gebco_deeps_gwc);">
                             <label for="checkLayerGebcoDepth"><?=$t->tr("gebcoDepth")?></label>
                         </li>
                         <!--li>
-                            <input type="checkbox" id="checkLayerSatPro" onClick="showSatPro()">
+                            <input type="checkbox" id="checkLayerSatPro" onClick="toggleLayer(layer_satpro);">
                             <label for="checkLayerSatPro"><?=$t->tr("satPro")?></label>
                         </li-->
                         <li>
@@ -1681,7 +1646,7 @@
                             </ul>
                         </li>
                         <li>
-                            <input type="checkbox" id="checkLayerAis" onClick="showAis()">
+                            <input type="checkbox" id="checkLayerAis" onClick="toggleLayer(layer_ais);">
                             <label for="checkLayerAis"><?=$t->tr("ais")?></label>
                         </li>
                         <li>
@@ -1694,17 +1659,17 @@
                             
                             <ul>
                                 <li>
-                                    <input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints10m" onClick="layer_waterdepth_trackpoints_10m.setVisible(true);"/>
+                                    <input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints10m" onClick="toggleLayer(layer_waterdepth_trackpoints_10m);"/>
                                     <label for="checkLayerWaterDepthTrackPoints10m">10 m</label>
                                 </li>
                                 <li>
-                                    <input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints100m" onClick="layer_waterdepth_trackpoints_100m.setVisible(true)"/>
+                                    <input type="radio" name="radioLayerWaterDepthTrackPoints" id="checkLayerWaterDepthTrackPoints100m" onClick="toggleLayer(layer_waterdepth_trackpoints_100m);"/>
                                     <label for="checkLayerWaterDepthTrackPoints100m">100 m</label>
                                 </li>
                             </ul>
                         </li>
                         <li >
-                            <input type="checkbox" id="checkDepthContours" onClick="showContours()" />
+                            <input type="checkbox" id="checkDepthContours" onClick="toggleLayer(layer_waterdepth_contours);" />
                             <label for="checkDepthContours"><?=$t->tr("depth_contours")?></label>
                         </li>
                         <li>
@@ -1756,36 +1721,38 @@
                     <label><?=$t->tr("help")?></label>
                     <ul>
                         <li>
-                            <a><img alt="help" src="./resources/action/help.png" width="22" height="22" border="0"><?=$t->tr("help")?></a>
+                            <img alt="help" src="./resources/action/help.png" width="22" height="22" border="0">
+                            <label><?=$t->tr("help")?></label>
                             <ul>
                                 <li onClick="showMapKey('help-josm')">
-                                    <a><?=$t->tr("help-josm")?></a>
+                                    <label><?=$t->tr("help-josm")?></label>
                                 </li>
                                 <li onClick="showMapKey('help-tidal-scale')">
-                                    <a><?=$t->tr("help-tidal-scale")?></a>
+                                    <label><?=$t->tr("help-tidal-scale")?></label>
                                 </li>
                                 <li onClick="showMapKey('help-trip-planner')">
-                                    <a><?=$t->tr("tripPlanner")?></a>
+                                    <label><?=$t->tr("tripPlanner")?></label>
                                 </li>
                                 <li onClick="showMapKey('help-website')">
-                                    <a><?=$t->tr("help-website-int")?></a>
+                                    <label><?=$t->tr("help-website-int")?></label>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a><img alt="info" src="./resources/action/info.png" width="22" height="22" border="0"><?=$t->tr("Legende")?></a>
+                            <img alt="info" src="./resources/action/info.png" width="22" height="22" border="0">
+                            <label><?=$t->tr("Legende")?></label>
                             <ul>
                                 <li onClick="showMapKey('harbour')">
-                                    <a><?=$t->tr("harbour")?></a>
+                                    <label><?=$t->tr("harbour")?></label>
                                 </li>
                                 <li onClick="showMapKey('seamark')">
-                                    <a><?=$t->tr("Seezeichen")?></a>
+                                    <label><?=$t->tr("Seezeichen")?></label>
                                 </li>
                                 <li onClick="showMapKey('light')">
-                                    <a><?=$t->tr("Leuchtfeuer")?></a>
+                                    <label><?=$t->tr("Leuchtfeuer")?></label>
                                 </li>
                                 <li onClick="showMapKey('lock')">
-                                    <a><?=$t->tr("BrückenSchleusen")?></a>
+                                    <label><?=$t->tr("BrückenSchleusen")?></label>
                                 </li>
                             </ul>
                         </li>
@@ -1794,8 +1761,9 @@
                                 <img alt="forum" src="./resources/action/forum.png" width="22" height="22" border="0">Forum
                             </a>
                         </li>
-                        <li onClick="showMapKey('license')">
-                            <a><img alt="CC by SA" src="./resources/action/Cc-sa-32px.png" width="22" height="22" border="0"><?=$t->tr("license")?></a>
+                        <li onClick="showMapKey('license')" role="button">
+                            <img alt="CC by SA" src="./resources/action/Cc-sa-32px.png" width="22" height="22" border="0">
+                            <label><?=$t->tr("license")?></label>
                         </li>
                     </ul>
                 </li>
