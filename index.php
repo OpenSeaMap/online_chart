@@ -686,6 +686,7 @@
                         params: {'LAYERS': 'gebco2021:gebco_2021', 'VERSION':'1.1.1'},
                         ratio: 1,
                         serverType: 'geoserver',
+                        hidpi: false,
                     }),
                 }),
                 layer_gebco_deeps_gwc.on("change:visible", (evt) => {
@@ -1115,6 +1116,7 @@
                                 'test_zoom_2_cor_1_points_10',
                             ].join(','), 'VERSION':'1.1.1'},
                         ratio: 1,
+                        hidpi: false,
                         serverType: 'mapserver',
                         tileLoadFunction:(imageTile, src) => {
                             imageTile.getImage().src = src.replace('3857', '900913');
@@ -1164,6 +1166,7 @@
                             ].join(','),
                             'VERSION':'1.3.0'},
                         ratio: 1,
+                        hidpi: false,
                         serverType: 'mapserver',
                         tileLoadFunction:(imageTile, src) => {
                             imageTile.getImage().src = src.replace('3857', '900913');
@@ -1206,6 +1209,7 @@
                             ].join(','),
                             'VERSION':'1.3.0'},
                         ratio: 1,
+                        hidpi: false,
                         serverType: 'mapserver',
                         tileLoadFunction:(imageTile, src) => {
                             imageTile.getImage().src = src.replace('3857', '900913');
