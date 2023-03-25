@@ -15,6 +15,7 @@
     $recset = mysql_query("SELECT * FROM harbours WHERE $l<lon AND lon<$r AND $b<lat AND lat<$t", $mysql);
 
     while($rec = mysql_fetch_object($recset)) {
+        // TODO: Will be a lot easier for frontend to return a GeoJSON feature collection.
         echo "putHarbourMarker($rec->id, $rec->lon, $rec->lat, '$rec->name', '$rec->link', '$rec->type');\n";
     }
 ?>

@@ -23,48 +23,16 @@
  Version 0.1.5  03.10.2011
  ******************************************************************************/
 
-// List of downloaded harbours:
-var harbours = new Array();
-
-var selectControlHarbour;
-
-// Current state of the user interface. This is used
-// to keep track which popups are displayed.
-var harbour_state = 0;
-var harbour_current_feature = null;
-var popuptime = 0;
-
-// AJAX functions--------------------------------------------------------------------------------------------
-
-// Request harbours from the server.
-function make_harbour_request(params) {
-  var url = "";
-  for (var name in params) {
-    url += url.indexOf("?") > -1 ? "&" : "?";
-    url += encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);
-  }
-  // Example: https://harbour.openseamap.org/getHarbours.php?b=43.16098&t=43.46375&l=16.23863&r=17.39219&ucid=0&maxSize=5&zoom=11
-  var skgUrl = "https://harbour.openseamap.org/getHarbours.php" + url;
-
-  var script = document.createElement("script");
-  script.src = skgUrl;
-  script.type = "text/javascript";
-  document.body.appendChild(script);
-}
-
 // This function is called from the scripts that are returned on make_harbour_request calls.
-function putHarbourMarker(id, lon, lat, names, link, type) {
+function putHarbourMarker(id, lon, lat, name, link, type) {
   if (!harbour_exist(id, type)) {
-    var name = names.split("-");
-    if (type == -1) {
-      type = determineHarbourType(name[0]);
+    var names = name?.split("-") || [];
+    var popupText = "<b>" + names[0] + "</b>&nbsp;&nbsp;&nbsp;&nbsp;<br/>";
+    if (typeof names[1] != "undefined") {
+      popupText += names[1];
     }
-    var popupText = "<b>" + name[0] + "</b>&nbsp;&nbsp;&nbsp;&nbsp;<br/>";
-    if (typeof name[1] != "undefined") {
-      popupText += name[1];
-    }
-    if (typeof name[2] != "undefined") {
-      popupText += "<br/><i>" + name[2] + "</i>";
+    if (typeof names[2] != "undefined") {
+      popupText += "<br/><i>" + names[2] + "</i>";
     }
     if (link != "") {
       popupText +=
@@ -82,7 +50,7 @@ function putHarbourMarker(id, lon, lat, names, link, type) {
       "&lang=" +
       language +
       "&unit=metric&label=" +
-      convert2Locode(name[0]) +
+      convert2Locode(names[0]) +
       "' target='blank'>" +
       linkTextWeatherHarbour +
       "</a>";
@@ -92,7 +60,7 @@ function putHarbourMarker(id, lon, lat, names, link, type) {
 
     var harbour = {
       id: id,
-      name: names,
+      name: name,
       lat: lat,
       lon: lon,
       type: type,
@@ -102,50 +70,83 @@ function putHarbourMarker(id, lon, lat, names, link, type) {
   }
 }
 
+function getPopupContentHTML(harbour) {
+  let { id, lon, lat, name, link, type } = harbour;
+  var names = name.split("-");
+  var popupText = "<b>" + names[0] + "</b>&nbsp;&nbsp;&nbsp;&nbsp;<br/>";
+  if (typeof names[1] != "undefined") {
+    popupText += names[1];
+  }
+  if (typeof names[2] != "undefined") {
+    popupText += "<br/><i>" + names[2] + "</i>";
+  }
+  if (link != "") {
+    popupText +=
+      "<br/><br/><a href='" +
+      link +
+      "' target='blank'>" +
+      linkTextSkipperGuide +
+      "</a>";
+  }
+  popupText +=
+    "<br/><a href='https://weather.openportguide.de/cgi-bin/weather.pl/weather.png?var=meteogram&nx=614&ny=750&lat=" +
+    lat +
+    "&lon=" +
+    lon +
+    "&lang=" +
+    language +
+    "&unit=metric&label=" +
+    convert2Locode(names[0]) +
+    "' target='blank'>" +
+    linkTextWeatherHarbour +
+    "</a>";
+  return popupText;
+}
+
 // Harbour management----------------------------------------------------------------------------------------
 
 // Downloads new harbours from the server.
-function refreshHarbours() {
-  if (refreshHarbours.call_count == undefined) {
-    refreshHarbours.call_count = 0;
-  } else {
-    ++refreshHarbours.call_count;
-  }
-  bounds = map.getView().calculateExtent();
+// function refreshHarbours() {
+//   if (refreshHarbours.call_count == undefined) {
+//     refreshHarbours.call_count = 0;
+//   } else {
+//     ++refreshHarbours.call_count;
+//   }
+//   bounds = map.getView().calculateExtent();
 
-  const [lon0, lat0] = ol.proj.toLonLat([bounds[0], bounds[1]]);
-  const [lon1, lat1] = ol.proj.toLonLat([bounds[2], bounds[3]]);
-  var b = lat0.toFixed(5);
-  var t = lat1.toFixed(5);
-  var l = lon0.toFixed(5);
-  var r = lon1.toFixed(5);
+//   const [lon0, lat0] = ol.proj.toLonLat([bounds[0], bounds[1]]);
+//   const [lon1, lat1] = ol.proj.toLonLat([bounds[2], bounds[3]]);
+//   var b = lat0.toFixed(5);
+//   var t = lat1.toFixed(5);
+//   var l = lon0.toFixed(5);
+//   var r = lon1.toFixed(5);
 
-  var params = {
-    b: b,
-    t: t,
-    l: l,
-    r: r,
-    ucid: refreshHarbours.call_count,
-    maxSize: getHarbourVisibility(zoom),
-    zoom: zoom,
-  };
-  make_harbour_request(params);
-}
+//   var params = {
+//     b: b,
+//     t: t,
+//     l: l,
+//     r: r,
+//     ucid: refreshHarbours.call_count,
+//     maxSize: getHarbourVisibility(zoom),
+//     zoom: zoom,
+//   };
+//   make_harbour_request(params);
+// }
 
 // Check if a harbour has been downloaded already.
-function harbour_exist(id, type) {
-  for (var i in harbours) {
-    if (
-      harbours[i].id == id &&
-      (harbours[i].type == type ||
-        (type == -1 && (harbours[i].type == 5 || harbours[i].type == 6)))
-    ) {
-      return true;
-    }
-  }
+// function harbour_exist(id, type) {
+//   for (var i in harbours) {
+//     if (
+//       harbours[i].id == id &&
+//       (harbours[i].type == type ||
+//         (type == -1 && (harbours[i].type == 5 || harbours[i].type == 6)))
+//     ) {
+//       return true;
+//     }
+//   }
 
-  return false;
-}
+//   return false;
+// }
 
 function isWPI(type) {
   /**********************************
@@ -157,13 +158,12 @@ function isWPI(type) {
     6 = Anchorage (representative skipperguide)
     7 = other descr. skipperguide
     ***********************************/
-  if (type <= 4) {
-    return true;
-  }
-  return false;
+  return type <= 4;
 }
 
-function determineHarbourType(myName) {
+function determineHarbourType(harbour, harboursById) {
+  const myName = harbour.name.split("-")[0];
+  const harbours = Object.values(harboursById);
   for (var i in harbours) {
     var otherName = harbours[i].name.split("-");
     if (myName == otherName[0]) {
@@ -187,44 +187,157 @@ function getHarbourVisibility(zoom) {
   if (zoom >= 10) {
     maxType = 6;
   }
-
   return maxType;
 }
 
 // Return a harbour description from the list of downloaded harbours.
-function get_harbour(id, type) {
-  for (var i in harbours) {
-    if (harbours[i].id == id && harbours[i].type == type) {
-      return harbours[i];
-    }
-  }
+// function get_harbour(id, type) {
+//   for (var i in harbours) {
+//     if (harbours[i].id == id && harbours[i].type == type) {
+//       return harbours[i];
+//     }
+//   }
 
-  return "";
-}
+//   return "";
+// }
 
-function create_harbour_marker(x, y, popupText, type) {
-  var maxType = getHarbourVisibility(zoom);
+const marinaStyle = new ol.style.Style({
+  image: new ol.style.Icon({
+    src: "resources/places/marina_32.png",
+    imgSize: [32, 32],
+    size: [32, 32],
+    scale: 24 / 32,
+  }),
+});
 
-  if (type <= maxType && (zoom >= 5 || refreshHarbours.call_count > 0)) {
-    var imageSrc = "resources/places/marina_32.png";
+const harbourStyle = new ol.style.Style({
+  image: new ol.style.Icon({
+    src: "resources/places/harbour_32.png",
+    imgSize: [32, 32],
+    size: [32, 32],
+    scale: 24 / 32,
+  }),
+});
+
+const anchorageStyle = new ol.style.Style({
+  image: new ol.style.Icon({
+    src: "resources/places/anchorage_32.png",
+    imgSize: [32, 32],
+    size: [32, 32],
+    scale: 24 / 32,
+  }),
+});
+
+// StyleFunction used by the ol.layer.Vector
+function harbourStyleFunction(feature, resolution) {
+  const zoom = map.getView().getZoomForResolution(resolution);
+  const type = feature.get("type");
+  const maxType = getHarbourVisibility(zoom);
+  let style = null;
+  console.log(maxType);
+  if (type <= maxType) {
+    style = marinaStyle;
     if (isWPI(type)) {
-      imageSrc = "resources/places/harbour_32.png";
+      style = harbourStyle;
     } else if (type == 6) {
-      imageSrc = "resources/places/anchorage_32.png";
+      style = anchorageStyle;
     }
-
-    var layer_poi_icon_style = new ol.style.Style({
-      image: new ol.style.Icon({
-        src: imageSrc,
-        imgSize: [32, 32],
-        size: [32, 32],
-        scale: 24 / 32,
-      }),
-    });
-
-    var pointFeature = new ol.Feature(new ol.geom.Point([x, y]));
-    pointFeature.setStyle(layer_poi_icon_style);
-    pointFeature.set("popupContentHTML", popupText);
-    layer_harbours.getSource().addFeature(pointFeature);
   }
+  return style;
 }
+
+// Loader used by the ol.source.Vector
+let callCount = 0;
+function harbourSourceLoader(extent, resolution, projection, success, failure) {
+  const proj = projection.getCode();
+  const bbox = ol.proj.transformExtent(
+    extent,
+    map.getView().getProjection(),
+    "EPSG:4326"
+  );
+  const params = new URLSearchParams({
+    b: bbox[1].toFixed(5),
+    t: bbox[3].toFixed(5),
+    l: bbox[0].toFixed(5),
+    r: bbox[2].toFixed(5),
+    ucid: callCount++,
+    maxSize: getHarbourVisibility(zoom),
+    zoom: zoom,
+  });
+
+  // const url = '/api/proxy.php?csurl=' + encodeURIComponent('https://harbours.openseamap.org/getHarbours.php?' + params.toString());
+  const url =
+    "https://harbours.openseamap.org/getHarbours.php?" + params.toString();
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", url);
+  const vectorSource = this;
+  const onError = function () {
+    vectorSource.removeLoadedExtent(extent);
+    failure();
+  };
+  xhr.onerror = onError;
+  xhr.onload = function () {
+    if (xhr.status == 200) {
+      // Parse JSONP response into ol features
+      let text = xhr.responseText;
+      text = text.replace(/(\r|\n)/g, "");
+      text = text.replace(/putHarbourMarker\(/g, "");
+      text = text.replace(/\);/g, ";");
+      harboursById = {};
+      const features = text
+        .split(";")
+        .filter((str) => str)
+        .map((str) => {
+          const [id, lon, lat, name, link, type] = str.split(", ");
+          const harbour = {
+            id: parseInt(id, 10),
+            lon: parseFloat(lon),
+            lat: parseFloat(lat),
+            name: name?.replace(/'/g, ""),
+            link: link?.replace(/'/g, ""),
+            type: parseInt(type, 10),
+          };
+
+          // Determine a type when type = -1;
+          if (harbour.type === -1) {
+            harbour.type = determineHarbourType(harbour, harboursById);
+          }
+          harboursById[harbour.id] = harbour;
+
+          // Generate popup content
+          harbour.popupContentHTML = getPopupContentHTML(harbour);
+
+          // Build the feature
+          const feature = new ol.Feature(
+            new ol.geom.Point(ol.proj.fromLonLat([harbour.lon, harbour.lat]))
+          );
+          feature.setProperties(harbour);
+          return feature;
+        });
+      vectorSource.addFeatures(features);
+      success(features);
+    } else {
+      onError();
+    }
+  };
+  xhr.send();
+}
+
+// function create_harbour_marker(x, y, popupText, type) {
+//   var maxType = getHarbourVisibility(zoom);
+
+//   if (type <= maxType && (zoom >= 5 || refreshHarbours.call_count > 0)) {
+//     var style = marinaStyle;
+
+//     if (isWPI(type)) {
+//       style = harbourStyle;
+//     } else if (type == 6) {
+//       style = anchorageStyle;
+//     }
+
+//     var pointFeature = new ol.Feature(new ol.geom.Point([x, y]));
+//     pointFeature.setStyle(style);
+//     pointFeature.set("popupContentHTML", popupText);
+//     layer_harbours.getSource().addFeature(pointFeature);
+//   }
+// }
