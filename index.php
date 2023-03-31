@@ -1303,6 +1303,7 @@
                 setCookie("zoom",zoom);
                 if(oldZoom != zoom) {
                     oldZoom = zoom;
+                   layer_harbours.getSource().refresh();
                 }
                 // Clear POI layer
                 clearTidalScaleLayer();
@@ -1313,7 +1314,6 @@
                 refreshWeatherAppLink();
                 updatePermaLinkInDialog();
 
-                layer_harbours.getSource().refresh();
             }
 
             function openPopup(feature, coordinate) {
