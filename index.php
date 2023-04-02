@@ -1099,7 +1099,7 @@
                         cookieKey: "WaterDepthTrackPointsLayerVisible10m",
                     },
                     source: new ol.source.TileWMS({
-                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi',
+                        url: 'http://depth.openseamap.org/cgi-bin/mapserv.fcgi',
                         params: {
                             'TRANSPARENT': 'TRUE',
                             'LAYERS': [
@@ -1148,7 +1148,7 @@
                         cookieKey: "WaterDepthTrackPointsLayerVisible100m",
                     },
                     source: new ol.source.TileWMS({
-                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
+                        url: 'http://depth.openseamap.org/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
                         params: {
                             'TRANSPARENT': 'TRUE',
                             'LAYERS': [
@@ -1184,7 +1184,7 @@
                     updateCheckboxAndCookie(evt.target);
                 });
                
-                // layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
+                // layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http://depth.openseamap.org.de/cgi-bin/mapserv.fcgi?",
                 //     {
                 //       layers: ['contour','contour2'],
                 //       numZoomLevels: 22,
@@ -1201,7 +1201,7 @@
                         cookieKey: "WaterDepthContoursVisible",
                     },
                     source: new ol.source.TileWMS({
-                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
+                        url: 'http://depth.openseamap.org/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
                         params: {
                             'TRANSPARENT': 'TRUE',
                             'LAYERS': [
