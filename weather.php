@@ -10,66 +10,30 @@
         <title>OpenSeaMap - <?php echo $t->tr("weather")?></title>
         <meta name="AUTHOR" content="Olaf Hannemann" />
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-        <meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+        <meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>"/> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png"/>
         <link rel="stylesheet" type="text/css" href="weather.css">
-        <script type="text/javascript" src="./javascript/openlayers/OpenLayers.js"></script>
+        <link rel="stylesheet" href="./javascript/ol@v7.3.0/ol.css">
+        <script src="./javascript/ol@v7.3.0/ol.js"></script>
         <script type="text/javascript" src="./javascript/utilities.js"></script>
         <script type="text/javascript" src="./javascript/map_utils.js"></script>
+        <script type="text/javascript" src="./javascript/permalink.js"></script>
         <script type="text/javascript">
 
             // The map
             var map;
+            var layers_weather_wind;
+            var layers_weather_pressure;
+            var layers_weather_air_temperature;
+            var layers_weather_precipitation;
+            var layers_weather_significant_wave_height;
 
-            // Wind layers
-            var layer_weather_wind1;
-            var layer_weather_wind2;
-            var layer_weather_wind3;
-            var layer_weather_wind4;
-            var layer_weather_wind5;
-            var layer_weather_wind6;
-            var layer_weather_wind7;
-            var layer_weather_wind8;
-            // Air pressure layers
-            var layer_weather_pressure1;
-            var layer_weather_pressure2;
-            var layer_weather_pressure3;
-            var layer_weather_pressure4;
-            var layer_weather_pressure5;
-            var layer_weather_pressure6;
-            var layer_weather_pressure7;
-            var layer_weather_pressure8;
-            // Temperature layers
-            var layer_weather_air_temperature1;
-            var layer_weather_air_temperature2;
-            var layer_weather_air_temperature3;
-            var layer_weather_air_temperature4;
-            var layer_weather_air_temperature5;
-            var layer_weather_air_temperature6;
-            var layer_weather_air_temperature7;
-            var layer_weather_air_temperature8;
-            // Precipitation layers
-            var layer_weather_precipitation1;
-            var layer_weather_precipitation2;
-            var layer_weather_precipitation3;
-            var layer_weather_precipitation4;
-            var layer_weather_precipitation5;
-            var layer_weather_precipitation6;
-            var layer_weather_precipitation7;
-            var layer_weather_precipitation8;
-            // Significant wave height layers
-            var layer_weather_significant_wave_height1;
-            var layer_weather_significant_wave_height2;
-            var layer_weather_significant_wave_height3;
-            var layer_weather_significant_wave_height4;
-            var layer_weather_significant_wave_height5;
-            var layer_weather_significant_wave_height6;
-            var layer_weather_significant_wave_height7;
-            var layer_weather_significant_wave_height8;
 
             // Selected time layer
-            var layerNumber = 1;
+            var layerNumber = 0;
+            var numbers = ['5', '7', '9' , '11', '15', '19', '23', '27'];
 
             // Layer visibility
             var showWindLayer = false;
@@ -85,190 +49,155 @@
 
             // Load page for the first time
             function init() {
-                var buffZoom = parseInt(getCookie("weather_zoom"));
-                var buffLat = parseFloat(getCookie("weather_lat"));
-                var buffLon = parseFloat(getCookie("weather_lon"));
-                if (buffZoom != -1) {
-                    zoom = buffZoom;
-                }
-                if (buffLat != -1 && buffLon != -1) {
-                    lat = buffLat;
-                    lon = buffLon;
-                }
-                fillTimeDiv();
-                drawmap();
+                buildTimeMenu();
+                initMap();
+                readPermalinkOrCookies();
                 showWind();
-                document.getElementById("timeLayer1").style.background = "#ADD8E6";
+                document.getElementById("timeLayer0").className = "selected";
                 document.getElementById("checkPressure").checked = false;
                 document.getElementById("checkAirTemperature").checked = false;
                 document.getElementById("checkPrecipitation").checked = false;
                 document.getElementById("checkSignificantWaveHeight").checked = false;
             }
 
-            // Set current language for internationalization
-            OpenLayers.Lang.setCode("<?= $t->getCurrentLanguage() ?>");
+            // Apply the url parameters or cookies or default values
+            function readPermalinkOrCookies() {
 
-            function drawmap() {
-                map = new OpenLayers.Map('map', {
-                    numZoomLevels     : 8,
-                    zoomOffset        : 4,
-                    projection        : projMerc,
-                    displayProjection : proj4326,
-                    eventListeners: {
-                        "moveend": mapEventMove,
-                        "zoomend": mapEventZoom
-                    },
+                // Read zoom, lat, lon
+                var cookieZoom = parseInt(getCookie("weather_zoom"), 10);
+                var cookieLat = parseFloat(getCookie("weather_lat"));
+                var cookieLon = parseFloat(getCookie("weather_lon"));
+                var permalinkLat = parseFloat(getArgument("lat"));
+                var permalinkLon = parseFloat(getArgument("lon"));
+                var permalinkZoom = parseInt(getArgument("zoom"), 10);
+
+                zoom = permalinkZoom || cookieZoom || zoom;
+                lat = permalinkLat || cookieLat || lat;
+                lon = permalinkLon || cookieLon || lon;
+
+                // Zoom to coordinates from marker/permalink/cookie or default values. 
+                jumpTo(lon, lat, zoom);
+
+                // Apply layers visiblity from permalink
+                const permalinkLayers = getArgument("layers");
+                if (permalinkLayers) {
+                    const layers = map.getLayers().getArray();
+                    [...permalinkLayers].forEach((visibility, index) => {
+                        const layer = layers.find((l) => {
+                        return l.get('layerId') === index + 1;
+                        });
+                        if (layer) {
+                           layer.setVisible(/^(B|T)$/.test(visibility));
+                        }
+                    });
+                } else {
+                    map.getLayers().forEach((layer)=> {
+                        const cookieKey = layer.get('cookieKey');
+                        const cookieValue =  getCookie(cookieKey);
+                        if (cookieKey && cookieValue) {
+                        layer.setVisible((cookieValue === 'true'));
+                        }
+                    });
+                }
+            }
+
+            var layerId = 1;
+            function createWeatherXYZLayer(type, number) {
+                return new ol.layer.Tile({
+                    visible: false,
+                    source: new ol.source.XYZ({
+                        tileUrlFunction: function(coordinate) {
+                            return getTileUrlFunction(`http://weather.openportguide.de/tiles/actual/${type}/${number}/`, 'png', coordinate);
+
+                        }
+                    }),
+                    properties: {
+                        layerId: layerId++,
+                    }
+                });
+            }
+
+            function initMap() {
+                map = new ol.Map({
+                    target: 'map',
+                    view: new ol.View({
+                        minZoom: 3,
+                        maxZoom: 7,
+                    }),
                     controls: [
-                        new OpenLayers.Control.Permalink(),
-                        new OpenLayers.Control.OverviewMap(),
-                        new OpenLayers.Control.Navigation({zoomWheelEnabled: false})
+                        new ol.control.Zoom(),
+                        new ol.control.Attribution(),   
+                        new Permalink(),
                     ]
                 });
 
-                // Add Layers to map-------------------------------------------------------------------------------------------------------
-                // Mapnik
-                var layer_mapnik = new OpenLayers.Layer.XYZ('Mapnik', [
-                    'http://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
-                    'http://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
-                    'http://c.tile.openstreetmap.org/${z}/${x}/${y}.png'
-                ]);
-                // Wind layers
-                layer_weather_wind1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/wind_stream/5/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind2 = new OpenLayers.Layer.TMS("Wind18", "http://weather.openportguide.de/tiles/actual/wind_stream/7/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind3 = new OpenLayers.Layer.TMS("Wind24", "http://weather.openportguide.de/tiles/actual/wind_stream/9/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind4 = new OpenLayers.Layer.TMS("Wind30", "http://weather.openportguide.de/tiles/actual/wind_stream/11/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind5 = new OpenLayers.Layer.TMS("Wind42", "http://weather.openportguide.de/tiles/actual/wind_stream/15/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind6 = new OpenLayers.Layer.TMS("Wind54", "http://weather.openportguide.de/tiles/actual/wind_stream/19/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind7 = new OpenLayers.Layer.TMS("Wind66", "http://weather.openportguide.de/tiles/actual/wind_stream/23/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_wind8 = new OpenLayers.Layer.TMS("Wind78", "http://weather.openportguide.de/tiles/actual/wind_stream/27/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                // Air pressure layers
-                layer_weather_pressure1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/surface_pressure/5/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure2 = new OpenLayers.Layer.TMS("Wind18", "http://weather.openportguide.de/tiles/actual/surface_pressure/7/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure3 = new OpenLayers.Layer.TMS("Wind24", "http://weather.openportguide.de/tiles/actual/surface_pressure/9/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure4 = new OpenLayers.Layer.TMS("Wind30", "http://weather.openportguide.de/tiles/actual/surface_pressure/11/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure5 = new OpenLayers.Layer.TMS("Wind42", "http://weather.openportguide.de/tiles/actual/surface_pressure/15/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure6 = new OpenLayers.Layer.TMS("Wind54", "http://weather.openportguide.de/tiles/actual/surface_pressure/19/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure7 = new OpenLayers.Layer.TMS("Wind66", "http://weather.openportguide.de/tiles/actual/surface_pressure/23/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_pressure8 = new OpenLayers.Layer.TMS("Wind78", "http://weather.openportguide.de/tiles/actual/surface_pressure/27/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                // Temperature layers
-                layer_weather_air_temperature1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/air_temperature/5/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature2 = new OpenLayers.Layer.TMS("Wind18", "http://weather.openportguide.de/tiles/actual/air_temperature/7/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature3 = new OpenLayers.Layer.TMS("Wind24", "http://weather.openportguide.de/tiles/actual/air_temperature/9/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature4 = new OpenLayers.Layer.TMS("Wind30", "http://weather.openportguide.de/tiles/actual/air_temperature/11/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature5 = new OpenLayers.Layer.TMS("Wind42", "http://weather.openportguide.de/tiles/actual/air_temperature/15/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature6 = new OpenLayers.Layer.TMS("Wind54", "http://weather.openportguide.de/tiles/actual/air_temperature/19/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature7 = new OpenLayers.Layer.TMS("Wind66", "http://weather.openportguide.de/tiles/actual/air_temperature/23/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_air_temperature8 = new OpenLayers.Layer.TMS("Wind78", "http://weather.openportguide.de/tiles/actual/air_temperature/27/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                // Precipitation layers
-                layer_weather_precipitation1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/precipitation/5/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation2 = new OpenLayers.Layer.TMS("Wind18", "http://weather.openportguide.de/tiles/actual/precipitation/7/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation3 = new OpenLayers.Layer.TMS("Wind24", "http://weather.openportguide.de/tiles/actual/precipitation/9/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation4 = new OpenLayers.Layer.TMS("Wind30", "http://weather.openportguide.de/tiles/actual/precipitation/11/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation5 = new OpenLayers.Layer.TMS("Wind42", "http://weather.openportguide.de/tiles/actual/precipitation/15/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation6 = new OpenLayers.Layer.TMS("Wind54", "http://weather.openportguide.de/tiles/actual/precipitation/19/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation7 = new OpenLayers.Layer.TMS("Wind66", "http://weather.openportguide.de/tiles/actual/precipitation/23/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_precipitation8 = new OpenLayers.Layer.TMS("Wind78", "http://weather.openportguide.de/tiles/actual/precipitation/27/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                // Temperature layers
-                layer_weather_significant_wave_height1 = new OpenLayers.Layer.TMS("Wind12", "http://weather.openportguide.de/tiles/actual/significant_wave_height/5/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height2 = new OpenLayers.Layer.TMS("Wind18", "http://weather.openportguide.de/tiles/actual/significant_wave_height/7/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height3 = new OpenLayers.Layer.TMS("Wind24", "http://weather.openportguide.de/tiles/actual/significant_wave_height/9/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height4 = new OpenLayers.Layer.TMS("Wind30", "http://weather.openportguide.de/tiles/actual/significant_wave_height/11/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height5 = new OpenLayers.Layer.TMS("Wind42", "http://weather.openportguide.de/tiles/actual/significant_wave_height/15/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height6 = new OpenLayers.Layer.TMS("Wind54", "http://weather.openportguide.de/tiles/actual/significant_wave_height/19/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height7 = new OpenLayers.Layer.TMS("Wind66", "http://weather.openportguide.de/tiles/actual/significant_wave_height/23/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                layer_weather_significant_wave_height8 = new OpenLayers.Layer.TMS("Wind78", "http://weather.openportguide.de/tiles/actual/significant_wave_height/27/",
-                { type: 'png', getURL:getTileURL, isBaseLayer:false, visibility: false, displayOutsideMaxExtent:true});
-                map.addLayers([layer_mapnik, layer_weather_wind1, layer_weather_wind2, layer_weather_wind3, layer_weather_wind4, layer_weather_wind5, layer_weather_wind6, layer_weather_wind7,
-                    layer_weather_wind8, layer_weather_pressure1, layer_weather_pressure2, layer_weather_pressure3, layer_weather_pressure4, layer_weather_pressure5, layer_weather_pressure6, layer_weather_pressure7, layer_weather_pressure8,
-                    layer_weather_air_temperature1, layer_weather_air_temperature2, layer_weather_air_temperature3, layer_weather_air_temperature4, layer_weather_air_temperature5, layer_weather_air_temperature6, layer_weather_air_temperature7, layer_weather_air_temperature8,
-                    layer_weather_precipitation1, layer_weather_precipitation2, layer_weather_precipitation3, layer_weather_precipitation4, layer_weather_precipitation5, layer_weather_precipitation6, layer_weather_precipitation7, layer_weather_precipitation8,
-                    layer_weather_significant_wave_height1, layer_weather_significant_wave_height2, layer_weather_significant_wave_height3, layer_weather_significant_wave_height4, layer_weather_significant_wave_height5, layer_weather_significant_wave_height6, layer_weather_significant_wave_height7, layer_weather_significant_wave_height8]);
+                map.on('moveend', mapEventMove);
 
-                if (!map.getCenter()) {
-                    jumpTo(lon, lat, zoom);
-                }
+                // Mapnik
+                var layer_mapnik = new ol.layer.Tile({
+                    source: new ol.source.OSM(),
+                    properties: {
+                        layerId: layerId++,
+                    }
+                });
+                
+                // Wind layers
+                layers_weather_wind = numbers.map((number)=> {
+                    return createWeatherXYZLayer('wind_stream', number);
+                });
+                
+
+                // Air pressure layers
+                layers_weather_pressure = numbers.map((number)=> {
+                    return createWeatherXYZLayer('surface_pressure', number);
+                });
+
+                // Temperature layers
+                layers_weather_air_temperature = numbers.map((number)=> {
+                    return createWeatherXYZLayer('air_temperature', number);
+                });
+
+                // Precipitation layers
+                layers_weather_precipitation = numbers.map((number)=> {
+                    return createWeatherXYZLayer('precipitation', number);
+                });
+
+                // Wave height layers
+                layers_weather_significant_wave_height = numbers.map((number)=> {
+                    return createWeatherXYZLayer('significant_wave_height', number);
+                });
+                
+                [
+                    layer_mapnik,
+                    ...layers_weather_wind, 
+                    ...layers_weather_pressure,
+                    ...layers_weather_air_temperature,
+                    ...layers_weather_precipitation,
+                    ...layers_weather_significant_wave_height,
+                ].forEach((l) => map.addLayer(l));
             }
 
             // Map event listener moved
             function mapEventMove(event) {
-                // Set cookie for remembering lat lon values
-                setCookie("weather_lat", y2lat(map.getCenter().lat).toFixed(5));
-                setCookie("weather_lon", x2lon(map.getCenter().lon).toFixed(5));
-            }
-
-            // Map event listener Zoomed
-            function mapEventZoom(event) {
-                zoom = map.getZoom();
-                if (zoom >= 8) {
-                    map.zoomTo(7)
-                } else if (zoom <= 3) {
-                    map.zoomTo(4)
-                }
-                // Set cookie for remembering #zoomlevel
+                zoom = map.getView().getZoom();
+                const lonLat = ol.proj.toLonLat(map.getView().getCenter());
+;                // Set cookie for remembering lat lon values
+                setCookie("weather_lat", lonLat[1].toFixed(5));
+                setCookie("weather_lon", lonLat[0].toFixed(5));
                 setCookie("weather_zoom",zoom);
-            }
-
-            function zoomIn() {
-                if (zoom <= 6) {
-                    map.zoomIn();
-                }
-            }
-
-            function zoomOut() {
-                if (zoom >= 5) {
-                    map.zoomOut();
-                }
             }
 
             function showWind() {
                 if (!showWindLayer) {
                     document.getElementById("checkWind").checked = true;
                     document.getElementById("comment").style.visibility = "visible";
-                    document.getElementById("buttonWind").style.background = "#ADD8E6";
+                    document.getElementById("buttonWind").className = "selected";
                     setWindLayerVisible();
                     showWindLayer = true;
                 } else {
                     document.getElementById("checkWind").checked = false;
                     document.getElementById("comment").style.visibility = "hidden";
+                    document.getElementById("buttonWind").className = "";
                     clearWindLayerVisibility();
                     showWindLayer = false;
                 }
@@ -277,11 +206,13 @@
             function showPressure() {
                 if (!showPressureLayer) {
                     document.getElementById("checkPressure").checked = true;
-                    document.getElementById("buttonPressure").style.background = "#ADD8E6";
+                    document.getElementById("buttonPressure").className = "selected";
+                    setWindLayerVisible();
                     setPressureLayerVisible();
                     showPressureLayer = true;
                 } else {
                     document.getElementById("checkPressure").checked = false;
+                    document.getElementById("buttonPressure").className = "";
                     clearPressureLayerVisibility();
                     showPressureLayer = false;
                 }
@@ -290,11 +221,12 @@
             function showAirTemperature() {
                 if (!showAirTemperatureLayer) {
                     document.getElementById("checkAirTemperature").checked = true;
-                    document.getElementById("buttonAirTemperature").style.background = "#ADD8E6";
+                    document.getElementById("buttonAirTemperature").className = "selected";
                     setAirTemperatureLayerVisible();
                     showAirTemperatureLayer = true;
                 } else {
                     document.getElementById("checkAirTemperature").checked = false;
+                    document.getElementById("buttonAirTemperature").className = "";
                     clearAirTemperatureLayerVisibility();
                     showAirTemperatureLayer = false;
                 }
@@ -303,11 +235,12 @@
             function showPrecipitation() {
                 if (!showPrecipitationLayer) {
                     document.getElementById("checkPrecipitation").checked = true;
-                    document.getElementById("buttonPrecipitation").style.background = "#ADD8E6";
+                    document.getElementById("buttonPrecipitation").className = "selected";
                     setPrecipitationLayerVisible();
                     showPrecipitationLayer = true;
                 } else {
                     document.getElementById("checkPrecipitation").checked = false;
+                    document.getElementById("buttonPrecipitation").className = "";
                     clearPrecipitationLayerVisibility();
                     showPrecipitationLayer = false;
                 }
@@ -316,38 +249,37 @@
             function showSignificantWaveHeight() {
                 if (!showSignificantWaveHeightLayer) {
                     document.getElementById("checkSignificantWaveHeight").checked = true;
-                    document.getElementById("buttonSignificantWaveHeight").style.background = "#ADD8E6";
+                    document.getElementById("buttonSignificantWaveHeight").className = "selected";
                     setSignificantWaveHeightLayerVisible();
                     showSignificantWaveHeightLayer = true;
                 } else {
                     document.getElementById("checkSignificantWaveHeight").checked = false;
+                    document.getElementById("buttonSignificantWaveHeight").className = "";
                     clearSignificantWaveHeightLayerVisibility();
                     showSignificantWaveHeightLayer = false;
                 }
             }
 
             // Read time files from server and create the menu
-            function fillTimeDiv() {
-                var arrayTimeValues = new Array();
-
-                arrayTimeValues[0] = "<?=$utc->getWeatherUtc('5')?>";
-                arrayTimeValues[1] = "<?=$utc->getWeatherUtc('7')?>";
-                arrayTimeValues[2] = "<?=$utc->getWeatherUtc('9')?>";
-                arrayTimeValues[3] = "<?=$utc->getWeatherUtc('11')?>";
-                arrayTimeValues[4] = "<?=$utc->getWeatherUtc('15')?>";
-                arrayTimeValues[5] = "<?=$utc->getWeatherUtc('19')?>";
-                arrayTimeValues[6] = "<?=$utc->getWeatherUtc('23')?>";
-                arrayTimeValues[7] = "<?=$utc->getWeatherUtc('27')?>";
+            function buildTimeMenu() {
+                var arrayTimeValues = [
+                    "<?=$utc->getWeatherUtc('5')?>",
+                    "<?=$utc->getWeatherUtc('7')?>",
+                    "<?=$utc->getWeatherUtc('9')?>",
+                    "<?=$utc->getWeatherUtc('11')?>",
+                    "<?=$utc->getWeatherUtc('15')?>",
+                    "<?=$utc->getWeatherUtc('19')?>",
+                    "<?=$utc->getWeatherUtc('23')?>",
+                    "<?=$utc->getWeatherUtc('27')?>",
+                ]
 
                 var oldDate = "00";
                 var html = "<b><?=$t->tr("time")?> (UTC)</b><br/><br/>";
-                var layer = 1;
 
                 for(i = 0; i < arrayTimeValues.length; i++) {
                     var values = arrayTimeValues[i].split(" ");
                     var date = values[0];
                     var time = values[1];
-                    layer = i + 1;
                     if (oldDate != date) {
                         if (oldDate != "00") {
                             html += "</ul>";
@@ -356,16 +288,21 @@
                         html += "<ul>";
                         oldDate = date;
                     }
-                    html += "<li id = timeLayer" + layer + " onClick='setLayerVisible(" + layer + ")' onMouseover=\"this.style.background='#ADD8E6'\" onMouseout=\"if(layerNumber !=" + layer + ") {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}\">" + time + "</li>";
+                    html += `
+                    <li id="timeLayer${i}"
+                        className="${layerNumber === i ? 'selected' : ''}"
+                        onClick="setLayerVisible(${i})">${time}</li>
+                    `;
                 }
                 html += "</ul>";
                 document.getElementById('timemenu').innerHTML = html;
             }
 
             function setLayerVisible(number) {
-                document.getElementById("timeLayer" + layerNumber).style.background = "#FFFFFF";
+                document.getElementById("timeLayer" + layerNumber).className = "";
                 layerNumber = number;
-                document.getElementById("timeLayer" + layerNumber).style.background = "#ADD8E6";
+                document.getElementById("timeLayer" + layerNumber).className = "selected";
+
                 if (showWindLayer) {
                     setWindLayerVisible();
                 }
@@ -385,240 +322,94 @@
 
             function setWindLayerVisible() {
                 clearWindLayerVisibility();
-                switch (layerNumber) {
-                    case 1:
-                        layer_weather_wind1.setVisibility(true);
-                        break;
-                    case 2:
-                        layer_weather_wind2.setVisibility(true);
-                        break;
-                    case 3:
-                        layer_weather_wind3.setVisibility(true);
-                        break;
-                    case 4:
-                        layer_weather_wind4.setVisibility(true);
-                        break;
-                    case 5:
-                        layer_weather_wind5.setVisibility(true);
-                        break;
-                    case 6:
-                        layer_weather_wind6.setVisibility(true);
-                        break;
-                    case 7:
-                        layer_weather_wind7.setVisibility(true);
-                        break;
-                    case 8:
-                        layer_weather_wind8.setVisibility(true);
-                        break;
-                }
+                layers_weather_wind[layerNumber].setVisible(true);
             }
 
             function setPressureLayerVisible() {
                 clearPressureLayerVisibility();
-                switch (layerNumber) {
-                    case 1:
-                        layer_weather_pressure1.setVisibility(true);
-                        break;
-                    case 2:
-                        layer_weather_pressure2.setVisibility(true);
-                        break;
-                    case 3:
-                        layer_weather_pressure3.setVisibility(true);
-                        break;
-                    case 4:
-                        layer_weather_pressure4.setVisibility(true);
-                        break;
-                    case 5:
-                        layer_weather_pressure5.setVisibility(true);
-                        break;
-                    case 6:
-                        layer_weather_pressure6.setVisibility(true);
-                        break;
-                    case 7:
-                        layer_weather_pressure7.setVisibility(true);
-                        break;
-                    case 8:
-                        layer_weather_pressure8.setVisibility(true);
-                        break;
-                }
+                layers_weather_pressure[layerNumber].setVisible(true);
             }
 
             function setAirTemperatureLayerVisible() {
                 clearAirTemperatureLayerVisibility();
-                switch (layerNumber) {
-                    case 1:
-                        layer_weather_air_temperature1.setVisibility(true);
-                        break;
-                    case 2:
-                        layer_weather_air_temperature2.setVisibility(true);
-                        break;
-                    case 3:
-                        layer_weather_air_temperature3.setVisibility(true);
-                        break;
-                    case 4:
-                        layer_weather_air_temperature4.setVisibility(true);
-                        break;
-                    case 5:
-                        layer_weather_air_temperature5.setVisibility(true);
-                        break;
-                    case 6:
-                        layer_weather_air_temperature6.setVisibility(true);
-                        break;
-                    case 7:
-                        layer_weather_air_temperature7.setVisibility(true);
-                        break;
-                    case 8:
-                        layer_weather_air_temperature8.setVisibility(true);
-                        break;
-                }
+                layers_weather_air_temperature[layerNumber].setVisible(true);
             }
 
             function setPrecipitationLayerVisible() {
                 clearPrecipitationLayerVisibility();
-                switch (layerNumber) {
-                    case 1:
-                        layer_weather_precipitation1.setVisibility(true);
-                        break;
-                    case 2:
-                        layer_weather_precipitation2.setVisibility(true);
-                        break;
-                    case 3:
-                        layer_weather_precipitation3.setVisibility(true);
-                        break;
-                    case 4:
-                        layer_weather_precipitation4.setVisibility(true);
-                        break;
-                    case 5:
-                        layer_weather_precipitation5.setVisibility(true);
-                        break;
-                    case 6:
-                        layer_weather_precipitation6.setVisibility(true);
-                        break;
-                    case 7:
-                        layer_weather_precipitation7.setVisibility(true);
-                        break;
-                    case 8:
-                        layer_weather_precipitation8.setVisibility(true);
-                        break;
-                }
+                layers_weather_precipitation[layerNumber].setVisible(true);
             }
 
             function setSignificantWaveHeightLayerVisible() {
                 clearSignificantWaveHeightLayerVisibility();
-                switch (layerNumber) {
-                    case 1:
-                        layer_weather_significant_wave_height1.setVisibility(true);
-                        break;
-                    case 2:
-                        layer_weather_significant_wave_height2.setVisibility(true);
-                        break;
-                    case 3:
-                        layer_weather_significant_wave_height3.setVisibility(true);
-                        break;
-                    case 4:
-                        layer_weather_significant_wave_height4.setVisibility(true);
-                        break;
-                    case 5:
-                        layer_weather_significant_wave_height5.setVisibility(true);
-                        break;
-                    case 6:
-                        layer_weather_significant_wave_height6.setVisibility(true);
-                        break;
-                    case 7:
-                        layer_weather_significant_wave_height7.setVisibility(true);
-                        break;
-                    case 8:
-                        layer_weather_significant_wave_height8.setVisibility(true);
-                        break;
-                }
+                layers_weather_significant_wave_height[layerNumber].setVisible(true);
             }
 
             function clearWindLayerVisibility() {
-                layer_weather_wind1.setVisibility(false);
-                layer_weather_wind2.setVisibility(false);
-                layer_weather_wind3.setVisibility(false);
-                layer_weather_wind4.setVisibility(false);
-                layer_weather_wind5.setVisibility(false);
-                layer_weather_wind6.setVisibility(false);
-                layer_weather_wind7.setVisibility(false);
-                layer_weather_wind8.setVisibility(false);
+                layers_weather_wind.forEach((l) => l.setVisible(false));
             }
 
             function clearPressureLayerVisibility() {
-                layer_weather_pressure1.setVisibility(false);
-                layer_weather_pressure2.setVisibility(false);
-                layer_weather_pressure3.setVisibility(false);
-                layer_weather_pressure4.setVisibility(false);
-                layer_weather_pressure5.setVisibility(false);
-                layer_weather_pressure6.setVisibility(false);
-                layer_weather_pressure7.setVisibility(false);
-                layer_weather_pressure8.setVisibility(false);
+                layers_weather_pressure.forEach((l) => l.setVisible(false));
             }
 
             function clearAirTemperatureLayerVisibility() {
-                layer_weather_air_temperature1.setVisibility(false);
-                layer_weather_air_temperature2.setVisibility(false);
-                layer_weather_air_temperature3.setVisibility(false);
-                layer_weather_air_temperature4.setVisibility(false);
-                layer_weather_air_temperature5.setVisibility(false);
-                layer_weather_air_temperature6.setVisibility(false);
-                layer_weather_air_temperature7.setVisibility(false);
-                layer_weather_air_temperature8.setVisibility(false);
+                layers_weather_air_temperature.forEach((l) => l.setVisible(false));
             }
 
             function clearPrecipitationLayerVisibility() {
-                layer_weather_precipitation1.setVisibility(false);
-                layer_weather_precipitation2.setVisibility(false);
-                layer_weather_precipitation3.setVisibility(false);
-                layer_weather_precipitation4.setVisibility(false);
-                layer_weather_precipitation5.setVisibility(false);
-                layer_weather_precipitation6.setVisibility(false);
-                layer_weather_precipitation7.setVisibility(false);
-                layer_weather_precipitation8.setVisibility(false);
+                layers_weather_precipitation.forEach((l) => l.setVisible(false));
             }
 
             function clearSignificantWaveHeightLayerVisibility() {
-                layer_weather_significant_wave_height1.setVisibility(false);
-                layer_weather_significant_wave_height2.setVisibility(false);
-                layer_weather_significant_wave_height3.setVisibility(false);
-                layer_weather_significant_wave_height4.setVisibility(false);
-                layer_weather_significant_wave_height5.setVisibility(false);
-                layer_weather_significant_wave_height6.setVisibility(false);
-                layer_weather_significant_wave_height7.setVisibility(false);
-                layer_weather_significant_wave_height8.setVisibility(false);
+                layers_weather_significant_wave_height.forEach((l) => l.setVisible(false));
             }
-
         </script>
     </head>
     <body onload=init();>
-        <div id="map" style="position:absolute; bottom:0px; left:0px;"></div>
-        <div style="position:absolute; bottom:10px; left:12px; width:700px;">
+        <div id="map"></div>
+        <div id="copyright">
             <img src="resources/icons/somerights20.png" height="30px" title="<?=$t->tr("SomeRights")?>" onClick="window.open('http://creativecommons.org/licenses/by-sa/2.0')" />
             <img src="resources/icons/OpenPortGuideLogo_32.png" height="32px" title="<?=$t->tr("OpenPortGuide")?>" onClick="window.open('http://weather.openportguide.de/')" />
         </div>
-        <div id="topmenu" style="position:absolute; top:10px; left:12px;">
+        <div id="topmenu">
             <ul>
                 <li onClick="window.location.href='./index.php?lang=<?=$t->getCurrentLanguage()?>'"><IMG src="resources/icons/OpenSeaMapLogo_88.png" width="24" height="24" align="center" border="0"><?=$t->tr("SeaChart")?></img></li>
-                <li>&nbsp;|&nbsp;</li>
-                <li id="buttonWind" onClick="showWind()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showWindLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkWind"/><IMG src="./resources/map/WindIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("wind")?>&nbsp;</img></li>
-                <li>&nbsp;&nbsp;</li>
-                <li id="buttonPressure" onClick="showPressure()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showPressureLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkPressure"/><IMG src="./resources/map/AirPressureIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("AirPressure")?>&nbsp;</img></li>
-                <li>&nbsp;&nbsp;</li>
-                <li id="buttonAirTemperature" onClick="showAirTemperature()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showAirTemperatureLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkAirTemperature"/><IMG src="./resources/map/AirTemperatureIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("AirTemperature")?>&nbsp;</img></li>
-                <li>&nbsp;&nbsp;</li>
-                <li id="buttonPrecipitation" onClick="showPrecipitation()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showPrecipitationLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkPrecipitation"/><IMG src="./resources/map/PrecipitationIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("precipitation")?>&nbsp;</img></li>
-                <li>&nbsp;&nbsp;</li>
-                <li id="buttonSignificantWaveHeight" onClick="showSignificantWaveHeight()" onMouseover="this.style.background='#ADD8E6'" onMouseout="if(!showSignificantWaveHeightLayer) {this.style.background='#FFFFFF'} else {this.style.background='#ADD8E6'}"><input type="checkbox" id="checkSignificantWaveHeight"/><IMG src="./resources/map/WaveIcon.png" width="24" height="24" align="center" border="0"><?=$t->tr("WaveHeight")?>&nbsp;</img></li>
-                <li>&nbsp;|&nbsp;</li>
-                <li onClick="zoomIn()"><IMG src="./resources/map/zoom-in.png" width="24" height="24" align="center" border="0">Zoom +</img></li>
-                <li onClick="zoomOut()"><IMG src="./resources/map/zoom-out.png" width="24" height="24" align="center" border="0">Zoom -</img></li>
+                <li>|</li>
+                <li id="buttonWind" onClick="showWind()">
+                    <input type="checkbox" id="checkWind"/>
+                    <img src="./resources/map/WindIcon.png"/>
+                    <soan><?=$t->tr("wind")?></span>
+                </li>
+                <li id="buttonPressure" onClick="showPressure()">
+                    <input type="checkbox" id="checkPressure"/>
+                    <img src="./resources/map/AirPressureIcon.png"/>
+                    <span><?=$t->tr("AirPressure")?></span>
+                </li>
+                <li id="buttonAirTemperature" onClick="showAirTemperature()">
+                    <input type="checkbox" id="checkAirTemperature"/>
+                    <img src="./resources/map/AirTemperatureIcon.png"/>
+                    <span><?=$t->tr("AirTemperature")?></span>
+                </li>
+                <li id="buttonPrecipitation" onClick="showPrecipitation()">
+                    <input type="checkbox" id="checkPrecipitation"/>
+                    <img src="./resources/map/PrecipitationIcon.png"/>
+                    <span><?=$t->tr("precipitation")?></span>
+                </li>
+                <li id="buttonSignificantWaveHeight" onClick="showSignificantWaveHeight()">
+                    <input type="checkbox" id="checkSignificantWaveHeight"/>
+                    <img src="./resources/map/WaveIcon.png"/>
+                    <span><?=$t->tr("WaveHeight")?></span>
+                </li>
             </ul>
         </div>
-        <div id="timemenu" style="position:absolute; top:55px; left:12px;">
+        <div id="timemenu">
             <h4>Time (UTC)</h4>
         </div>
-        <div id="comment" style="position:absolute; top:10px; right:12px;  visibility:hidden;">
-            <img src="./resources/map/WindScale.png"/>
+        <div id="comment">
+            <div>
+                <img src="./resources/map/WindScale.png"/>
+            </div>
         </div>
     </body>
 </html>

@@ -21,51 +21,73 @@
  ******************************************************************************/
 
 // the geomagnetic model. This gets set up at application start
-let geoMag ;
+let geoMag;
 
 function setMagdev(p) {
-    // pick the right bottom corner of the map to avoid problems with interpolating
-    // across the date boundary
-    let latitude = (p.b+p.t)/2;
-    let longitude = (p.l+p.r)/2;
+  // pick the right bottom corner of the map to avoid problems with interpolating
+  // across the date boundary
+  let latitude = (p.b + p.t) / 2;
+  let longitude = (p.l + p.r) / 2;
 
-    // get two dates exactly one year apart
-    const msInYear = 1000*60*60*24*365.25;
-    let now  = new Date();
-    let then = new Date(); then.setTime(now.getTime() + msInYear);
+  // get two dates exactly one year apart
+  const msInYear = 1000 * 60 * 60 * 24 * 365.25;
+  let now = new Date();
+  let then = new Date();
+  then.setTime(now.getTime() + msInYear);
 
-    let myGeoMagNow = geoMag(latitude, longitude, 0, now);
-    let myGeoMagThen = geoMag(latitude, longitude, 0, then);
-    let nextyear = (then.getTime()-now.getTime())/msInYear;
-    let deviation = myGeoMagNow.dec;
-    let change = (myGeoMagThen.dec-myGeoMagNow.dec) / nextyear;
+  let myGeoMagNow = geoMag(latitude, longitude, 0, now);
+  let myGeoMagThen = geoMag(latitude, longitude, 0, then);
+  let nextyear = (then.getTime() - now.getTime()) / msInYear;
+  let deviation = myGeoMagNow.dec;
+  let change = (myGeoMagThen.dec - myGeoMagNow.dec) / nextyear;
 
-    document.getElementById('magCompassRose').style.transform = 'rotate('+deviation.toFixed(1)+'deg)';
-    // EXAMPLE
-    // VAR 3.5°5'E (2015)
-    // ANNUAL DECREASE 8'
-    $('#magCompassTextTop').html("VAR "+deviation.toFixed(1)+(deviation>=0 ? "E":"W")+" ("+now.getFullYear()+")");
-    $('#magCompassTextBottom').html("ANNUAL "+(change >= 0 ? "INCREASE ":"DECREASE ")+(60*change).toFixed(0)+"'");
+  document.getElementById("magCompassRose").style.transform =
+    "rotate(" + deviation.toFixed(1) + "deg)";
+  // EXAMPLE
+  // VAR 3.5°5'E (2015)
+  // ANNUAL DECREASE 8'
+  document.getElementById("magCompassTextTop").innerHTML =
+    "VAR " +
+    deviation.toFixed(1) +
+    (deviation >= 0 ? "E" : "W") +
+    " (" +
+    now.getFullYear() +
+    ")";
+  document.getElementById("magCompassTextBottom").innerHTML =
+    "ANNUAL " +
+    (change >= 0 ? "INCREASE " : "DECREASE ") +
+    (60 * change).toFixed(0) +
+    "'";
 }
 
 // Downloads new magnetic deviation(s) from the server. This is called when the map moves.
 function refreshMagdev() {
-    let bounds = map.getExtent().toArray();
-    let params = { "b": y2lat(bounds[1]), "t": y2lat(bounds[3]), "l": x2lon(bounds[0]), "r": x2lon(bounds[2])};
+  const [minX, minY, maxX, maxY] = map.getView().calculateExtent();
+  const [l, b] = ol.proj.toLonLat([minX, minY]);
+  const [r, t] = ol.proj.toLonLat([maxX, maxY]);
+  const params = { b, t, l, r };
 
-    if (geoMag == undefined) {
-        function initModel(data) {
-            var wmm = cof2Obj(data);
-            geoMag = geoMagFactory(wmm);
-            setMagdev($(this)[0]);
-        }
-
-        /* if the geomagnetic model has not been loaded yet, load it and update the deviation asynchronously */
-        jQuery.ajax({
-            url:"javascript/geomagjs/WMM.COF",
-            context:params}).done(initModel);
-    } else {
-        /* else, synchronous update */
+  if (geoMag == undefined) {
+    /* if the geomagnetic model has not been loaded yet, load it and update the deviation asynchronously */
+    fetch(
+      "javascript/geomagjs/WMM.COF?" +
+        "b=" +
+        params.b +
+        "&t=" +
+        params.t +
+        "&l=" +
+        params.l +
+        "&r=" +
+        params.r
+    )
+      .then((response) => response.text())
+      .then((data) => {
+        var wmm = cof2Obj(data);
+        geoMag = geoMagFactory(wmm);
         setMagdev(params);
-    }
+      });
+  } else {
+    /* else, synchronous update */
+    setMagdev(params);
+  }
 }
