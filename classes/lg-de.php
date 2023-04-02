@@ -160,9 +160,9 @@ $german = array(
     "send404"                => "Speichern Fehlgeschlagen: Der OSM-Datenbankserver antwortet nicht!",
 
     // Urls ---------------------------------------------------------
-    "UrlOSM"                 => "http://openstreetmap.de",
-    "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/Hauptseite",
-    "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/DE:OpenSeaMap",
+    "UrlOSM"                 => "https://openstreetmap.de",
+    "UrlOSMWiki_Hauptseite"  => "https://wiki.openstreetmap.org/wiki/Hauptseite",
+    "UrlOSMWiki_OpenSeaMap"  => "https://wiki.openstreetmap.org/wiki/DE:OpenSeaMap",
     "UrlGPLV3"               => "http://www.gnu.de/documents/gpl.de.html",
 
     // Legende ------------------------------------------------------

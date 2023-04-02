@@ -101,9 +101,9 @@ $spanish = array(
     "send404"                => "Grabación fallida: ¡El servidor de la base de datos de OSM no responde!",
 
     // Urls ---------------------------------------------------------
-    "UrlOSM"                 => "http://openstreetmap.org",
-    "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/ES:Main_Page",
-    "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/OpenSeaMap",
+    "UrlOSM"                 => "https://openstreetmap.org",
+    "UrlOSMWiki_Hauptseite"  => "https://wiki.openstreetmap.org/wiki/ES:Main_Page",
+    "UrlOSMWiki_OpenSeaMap"  => "https://wiki.openstreetmap.org/wiki/OpenSeaMap",
 
     // Legende ------------------------------------------------------
     "Legende"                => "Leyenda",

@@ -42,9 +42,9 @@ $french = array(
     "WaveHeight"             => "Hauteur des vagues",
 
     // Urls ---------------------------------------------------------
-    "UrlOSM"                 => "http://openstreetmap.fr",
-    "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/Page_Principale",
-    "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/FR:OpenSeaMap",
+    "UrlOSM"                 => "https://openstreetmap.fr",
+    "UrlOSMWiki_Hauptseite"  => "https://wiki.openstreetmap.org/wiki/Page_Principale",
+    "UrlOSMWiki_OpenSeaMap"  => "https://wiki.openstreetmap.org/wiki/FR:OpenSeaMap",
 
     // Legende ------------------------------------------------------
     "Legende"                => "Légende",
