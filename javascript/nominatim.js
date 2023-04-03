@@ -60,7 +60,7 @@ function nominatim_callback(xmlHttp, infotext) {
 
 
 // in addition to the CC-BY-SA of the wiki feel free to use the following source for any purpose without restrictions (PD)
-// credits and additions appreciated: http://wiki.openstreetmap.org/wiki/User:Stephankn
+// credits and additions appreciated: https://wiki.openstreetmap.org/wiki/User:Stephankn
 
 function checkJOSM(version){
    alert(version.application + " uses protocol version " + version.protocolversion.major + "." + version.protocolversion.minor);

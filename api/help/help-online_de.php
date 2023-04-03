@@ -5,7 +5,7 @@ Finde hier eine Liste der verschiedenen Möglichkeiten, mit anderen OpenSeaMap-M
 Fragen zu stellen und über OpenSeaMap zu diskutieren.
 
 <h4>Neuigkeiten</h4>
-Auf unserer Startseite <a href="http://openseamap.org" target="_blank">openseamap.org</a> findest du wichtige Neuigkeiten und Ankündigungen. 
+Auf unserer Startseite <a href="https://openseamap.org" target="_blank">openseamap.org</a> findest du wichtige Neuigkeiten und Ankündigungen. 
 <h4>Mailinglisten</h4>
 Mailinglisten sind ein Weg zur Kommunikation mit anderen Mitgliedern der OpenSeaMap-Gemeinschaft.<br>
 Trage dich bei einer der folgenden Mailinglisten ein: 
@@ -14,4 +14,4 @@ Trage dich bei einer der folgenden Mailinglisten ein:
 </li></ul>
 <h4>Foren</h4>
 Internetforen sind wie schwarze Bretter. Du brauchest keine zusätzliche Software, um mitzumachen, dein Web-Browser reicht aus, 
-besuche einfach die Internetseite <a href="http://forum.openseamap.org" target="_blank">forum.openseamap.org</a> um in die Diskussion einzusteigen, oder um nach Hilfe zu fragen.
+besuche einfach die Internetseite <a href="https://forum.openseamap.org" target="_blank">forum.openseamap.org</a> um in die Diskussion einzusteigen, oder um nach Hilfe zu fragen.

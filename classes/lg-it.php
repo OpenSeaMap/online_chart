@@ -42,9 +42,9 @@ $italian = array(
     "WaveHeight"             => "Altezza dell’onda",
 
     // Urls ---------------------------------------------------------
-    "UrlOSM"                 => "http://openstreetmap.it",
-    "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/IT:Pagina_Principale",
-    "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/IT:OpenSeaMap",
+    "UrlOSM"                 => "https://openstreetmap.it",
+    "UrlOSMWiki_Hauptseite"  => "https://wiki.openstreetmap.org/wiki/IT:Pagina_Principale",
+    "UrlOSMWiki_OpenSeaMap"  => "https://wiki.openstreetmap.org/wiki/IT:OpenSeaMap",
 
     // Legende ------------------------------------------------------
     "Legende"                => "Legenda",

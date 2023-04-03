@@ -1099,7 +1099,7 @@
                         cookieKey: "WaterDepthTrackPointsLayerVisible10m",
                     },
                     source: new ol.source.TileWMS({
-                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi',
+                        url: 'https://depth.openseamap.org/cgi-bin/mapserv.fcgi',
                         params: {
                             'TRANSPARENT': 'TRUE',
                             'LAYERS': [
@@ -1148,7 +1148,7 @@
                         cookieKey: "WaterDepthTrackPointsLayerVisible100m",
                     },
                     source: new ol.source.TileWMS({
-                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
+                        url: 'https://depth.openseamap.org/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
                         params: {
                             'TRANSPARENT': 'TRUE',
                             'LAYERS': [
@@ -1184,7 +1184,7 @@
                     updateCheckboxAndCookie(evt.target);
                 });
                
-                // layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
+                // layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "https://depth.openseamap.org.de/cgi-bin/mapserv.fcgi?",
                 //     {
                 //       layers: ['contour','contour2'],
                 //       numZoomLevels: 22,
@@ -1201,7 +1201,7 @@
                         cookieKey: "WaterDepthContoursVisible",
                     },
                     source: new ol.source.TileWMS({
-                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
+                        url: 'https://depth.openseamap.org/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
                         params: {
                             'TRANSPARENT': 'TRUE',
                             'LAYERS': [
@@ -1551,7 +1551,7 @@
         <div id="topmenu" class="menu">
             <ul>
                 <li>
-                    <a href="http://openseamap.org/" target="blank">
+                    <a href="https://openseamap.org/" target="blank">
                         <img alt="OpenSeaMapLogo" src="./resources/icons/OpenSeaMapLogo_32.png" width="24" height="24" border="0">
                     </a>
                 </li>
@@ -1688,16 +1688,16 @@
                             <label><?=$t->tr("downloadChart")?></label>
                         </li>-->
                         <li>
-                            <a href="http://openseamap.org/index.php?id=kartendownload"><strong>Download</strong></a>
+                            <a href="https://openseamap.org/index.php?id=kartendownload"><strong>Download</strong></a>
                         </li>
                         <li>
                             <a href="https://map2.openseamap.org/#/download/.*/null?lat=35.0245&lon=-63.2636&zoom=3&layers=A10001011000&lang=en" target="_blank">OpenCPN (Kap)</a>
                         </li>
                         <li>
-                            <a href="http://wiki.openstreetmap.org/wiki/DE:OpenSeaMap_and_Garmin_nautical_chart_plotter#Download" target="_blank">Garmin</a>
+                            <a href="https://wiki.openstreetmap.org/wiki/DE:OpenSeaMap_and_Garmin_nautical_chart_plotter#Download" target="_blank">Garmin</a>
                         </li>
                         <li>
-                            <a href="http://wiki.openstreetmap.org/wiki/AT5-OpenSeaMap-Chart_for_Lowrance_Simrad_B%26G" target="_blank">Navico (Lowrance, Simrad, B&amp;G)</a>
+                            <a href="https://wiki.openstreetmap.org/wiki/AT5-OpenSeaMap-Chart_for_Lowrance_Simrad_B%26G" target="_blank">Navico (Lowrance, Simrad, B&amp;G)</a>
                         </li>
                     </ul>
                 </li>
@@ -1742,7 +1742,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="http://forum.openseamap.org" target='blank'>
+                            <a href="https://forum.openseamap.org" target='blank'>
                                 <img alt="forum" src="./resources/action/forum.png" width="22" height="22" border="0">Forum
                             </a>
                         </li>

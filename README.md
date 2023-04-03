@@ -10,8 +10,8 @@ and
 
 ## Main Files
 
-- index.php : entry point of <http://map.openseamap.org>
-- weather.php: entry point for <http://weather.openseamap.org>
-- legend.php: display legend, help and other legal informations, used by elp menu in  <http://map.openseamap.org>
+- index.php : entry point of <https://map.openseamap.org>
+- weather.php: entry point for <https://weather.openseamap.org>
+- legend.php: display legend, help and other legal informations, used by elp menu in  <https://map.openseamap.org>
 
 Each of these php files have their own css files.
