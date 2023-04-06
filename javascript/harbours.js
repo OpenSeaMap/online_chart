@@ -165,7 +165,9 @@ function harbourSourceLoader(extent, resolution, projection, success, failure) {
 
   // CORS errors
   const url =
-    "https://harbours.openseamap.org/getHarbours.php?" + params.toString();
+    "/api/proxy.php?method=GET&cors=https://harbours.openseamap.org/getHarbours.php&" +
+    params.toString();
+
   const xhr = new XMLHttpRequest();
   xhr.open("GET", url);
   const vectorSource = this;
