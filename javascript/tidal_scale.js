@@ -140,16 +140,11 @@ function refreshTidalScales() {
   } else {
     ++refreshTidalScales.call_count;
   }
-  bounds = map.getView().calculateExtent();
 
-  const [lon0, lat0] = ol.proj.toLonLat([bounds[0], bounds[1]]);
-  const [lon1, lat1] = ol.proj.toLonLat([bounds[2], bounds[3]]);
-  var b = lat0.toFixed(5);
-  var t = lat1.toFixed(5);
-  var l = lon0.toFixed(5);
-  var r = lon1.toFixed(5);
-
-  var params = { b: b, t: t, l: l, r: r };
+  const [minX, minY, maxX, maxY] = map.getView().calculateExtent();
+  const [l, b] = ol.proj.toLonLat([minX, minY]);
+  const [r, t] = ol.proj.toLonLat([maxX, maxY]);
+  const params = { b, t, l, r };
   makeTidalScaleRequest(params);
 }
 

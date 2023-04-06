@@ -62,23 +62,12 @@ function setMagdev(p) {
 
 // Downloads new magnetic deviation(s) from the server. This is called when the map moves.
 function refreshMagdev() {
-  let bounds = map.getView().calculateExtent();
-
-  const [lon0, lat0] = ol.proj.toLonLat([bounds[0], bounds[1]]);
-  const [lon1, lat1] = ol.proj.toLonLat([bounds[2], bounds[3]]);
-  var b = lat0.toFixed(5);
-  var t = lat1.toFixed(5);
-  var l = lon0.toFixed(5);
-  var r = lon1.toFixed(5);
-  let params = { b, t, l, r };
+  const [minX, minY, maxX, maxY] = map.getView().calculateExtent();
+  const [l, b] = ol.proj.toLonLat([minX, minY]);
+  const [r, t] = ol.proj.toLonLat([maxX, maxY]);
+  const params = { b, t, l, r };
 
   if (geoMag == undefined) {
-    function initModel(data) {
-      var wmm = cof2Obj(data);
-      geoMag = geoMagFactory(wmm);
-      setMagdev(params);
-    }
-
     /* if the geomagnetic model has not been loaded yet, load it and update the deviation asynchronously */
     fetch(
       "javascript/geomagjs/WMM.COF?" +
@@ -92,7 +81,11 @@ function refreshMagdev() {
         params.r
     )
       .then((response) => response.text())
-      .then(initModel);
+      .then((data) => {
+        var wmm = cof2Obj(data);
+        geoMag = geoMagFactory(wmm);
+        setMagdev(params);
+      });
   } else {
     /* else, synchronous update */
     setMagdev(params);

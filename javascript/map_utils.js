@@ -53,7 +53,8 @@ function formatCoords(coord, format) {
     return s;
   }
 
-  // OL2 has a bug (?) where sometimes the coordinates go beyond +-180
+  // TODO verify if this bug still exists
+  // OL2 had a bug maybe OL7 also (?) where sometimes the coordinates go beyond +-180
   if (coord > 180) coord -= 360;
   if (coord < -180) coord += 360;
 

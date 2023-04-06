@@ -11,7 +11,7 @@
     </tr>
     <tr>
         <td><img alt="OSM-Logo" src="resources/icons/OSM-Logo-44px.png" height="44" border="0"></td>
-        <td>All Data of the base map is created by the <a href="http://wiki.openstreetmap.org/wiki/DE:Main_Page" target="_blank">OpenStreetMap-Project</a>.</td>
+        <td>All Data of the base map is created by the <a href="https://wiki.openstreetmap.org/wiki/DE:Main_Page" target="_blank">OpenStreetMap-Project</a>.</td>
     </tr>
     <tr>
         <td height="5" class="normal" colspan="2">
@@ -57,7 +57,7 @@
             <span>The depth data are from the following sources:</span>
             <ul>
                 <li>
-                    <a href="http://depth.openseamap.org" target="_blank">OpenSeaMap Water Depths Project</a>
+                    <a href="https://depth.openseamap.org" target="_blank">OpenSeaMap Water Depths Project</a>
                 </li>
             </ul>
         </td>
