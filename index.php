@@ -926,7 +926,7 @@
                     if (evt.target.getVisible()) {
                         aisRefreshInterval = window.setInterval(()=> {
                             layer_ais.getSource().refresh();
-                        }, 121000);
+                        }, 60000);
                     }
                 });
 
