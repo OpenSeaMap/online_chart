@@ -197,7 +197,6 @@ function harbourSourceLoader(extent, resolution, projection, success, failure) {
             link: link?.replace(/'/g, ""),
             type: parseInt(type, 10),
           };
-          console.log(harbour);
 
           // Determine a type when type = -1;
           if (harbour.type === -1) {
