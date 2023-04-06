@@ -77,9 +77,9 @@
             var layer_marker;                      // 2
             var layer_seamark;                     // 3
             var layer_sport;                       // 4
-//            var layer_gebco_deepshade;             // 5
+            // var layer_gebco_deepshade;             // 5
             var layer_gebco_deeps_gwc;             // 6
-            var layer_harbours;                        // 7
+            var layer_harbours;                    // 7
             var layer_download;                    // 8
             var layer_nautical_route;              // 9
             var layer_grid;                        // 10
@@ -87,10 +87,10 @@
             var layer_bing_aerial;                 // 12
             var layer_ais;                         // 13
             var layer_satpro;                      // 14
-            // layer_disaster                      // 15
+            // var layer_disaster                      // 15
             var layer_tidalscale;                  // 16
             var layer_permalink;                   // 17
-            var layer_waterdepth_trackpoints_100m;      // 18
+            var layer_waterdepth_trackpoints_100m; // 18
             // elevation layers are not available
             // see layer's definiton in old commit:
             // https://github.com/OpenSeaMap/online_chart/commit/32378f1c8655593e2e6701cd4ba2eb8fd10352b1
@@ -709,18 +709,14 @@
                         checkboxId: "checkLayerHarbour",
                         cookieKey: "HarbourLayerVisible",
                     },
+                    style: harbourStyleFunction,
                     source: new ol.source.Vector({
-                        features: [],
+                        strategy: ol.loadingstrategy.bbox,
+                        loader: harbourSourceLoader,                            
                     }),
                 });
                 layer_harbours.on("change:visible", (evt) => {
                     updateCheckboxAndCookie(evt.target);
-
-                    if (!evt.target.getVisible()) {
-                        clearHarboursLayer();
-                    } else {
-                        refreshHarbours();
-                    }
                 });
                 
                 // Bing
@@ -903,6 +899,7 @@
                 // layer_ais = new OpenLayers.Layer.TMS("Marinetraffic", "https://tiles.marinetraffic.com/ais_helpers/shiptilesingle.aspx?output=png&sat=1&grouping=shiptype&tile_size=512&legends=1&zoom=${z}&X=${x}&Y=${y}",
                 //     { layerId: 13, numZoomLevels: 19, type: 'png', getURL:getTileURLMarine, isBaseLayer:false, displayOutsideMaxExtent:true, tileSize    : new OpenLayers.Size(512,512)
                 //   });
+                let aisRefreshInterval = null;
                 layer_ais = new ol.layer.Tile({
                     visible: false,
                     maxZom: 19,
@@ -922,6 +919,15 @@
                 layer_ais.on("change:visible", (evt) => {
                     updateCheckboxAndCookie(evt.target);
                     document.getElementById("license_marine_traffic").style.display = evt.target.getVisible() ? 'inline' : 'none';
+                    
+                    // Refresh position every 2 minutes. marine traffic requests are cached for 2 minutes.
+                    // See http cache-control header.
+                    window.clearInterval(aisRefreshInterval);
+                    if (evt.target.getVisible()) {
+                        aisRefreshInterval = window.setInterval(()=> {
+                            layer_ais.getSource().refresh();
+                        }, 121000);
+                    }
                 });
 
                 // SatPro
@@ -945,7 +951,6 @@
                         loader: function(extent, resolution, projection, success, failure) {               
                             const proj = projection.getCode();
                             const bbox = ol.proj.transformExtent(extent, map.getView().getProjection(), 'EPSG:4326');
-                            // Beforee it used the api/prox-wikipedia.php but i seems to work without the proxy
                             const url = 'api/getSatPro.php?' + 'bbox=' + bbox.join(',');
                             const xhr = new XMLHttpRequest();
                             xhr.open('GET', url);
@@ -1099,7 +1104,7 @@
                         cookieKey: "WaterDepthTrackPointsLayerVisible10m",
                     },
                     source: new ol.source.TileWMS({
-                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi',
+                        url: 'https://depth.openseamap.org/cgi-bin/mapserv.fcgi',
                         params: {
                             'TRANSPARENT': 'TRUE',
                             'LAYERS': [
@@ -1148,7 +1153,7 @@
                         cookieKey: "WaterDepthTrackPointsLayerVisible100m",
                     },
                     source: new ol.source.TileWMS({
-                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
+                        url: 'https://depth.openseamap.org/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
                         params: {
                             'TRANSPARENT': 'TRUE',
                             'LAYERS': [
@@ -1184,7 +1189,7 @@
                     updateCheckboxAndCookie(evt.target);
                 });
                
-                // layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "http:///osm.franken.de/cgi-bin/mapserv.fcgi?",
+                // layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "https://depth.openseamap.org.de/cgi-bin/mapserv.fcgi?",
                 //     {
                 //       layers: ['contour','contour2'],
                 //       numZoomLevels: 22,
@@ -1201,7 +1206,7 @@
                         cookieKey: "WaterDepthContoursVisible",
                     },
                     source: new ol.source.TileWMS({
-                        url: 'http://osm.franken.de/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
+                        url: 'https://depth.openseamap.org/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
                         params: {
                             'TRANSPARENT': 'TRUE',
                             'LAYERS': [
@@ -1240,7 +1245,6 @@
                 [
                     layer_mapnik,
                     layer_bing_aerial,
-//                    layer_gebco_deepshade,
                     layer_gebco_deeps_gwc,
                     layer_seamark,
                     layer_grid,
@@ -1269,40 +1273,10 @@
 
             }
 
-            function clearHarboursLayer() {
-                harbours = [];
-                if (layer_harbours) {
-                  layer_harbours.getSource().clear();
-                }
-            }
-
             function clearTidalScaleLayer() {
                 arrayTidalScales = [];
                 if (layer_tidalscale) {
                   layer_tidalscale.getSource().clear();
-                }
-            }
-
-            function onFeatureSelectPoiLayers(event) {
-                feature = event.feature;
-                if (feature.layer == layer_nautical_route) {
-                    feature.style = style_edit;
-                } else {
-                    selectControl.removePopup();
-                    if (feature.data.popupContentHTML) {
-                        var buff = feature.data.popupContentHTML;
-                    } else {
-                        var buff = '<b>'+feature.attributes.name +'</b><br>'+ feature.attributes.description;
-                    }
-                    popup = new OpenLayers.Popup.FramedCloud("chicken",
-                        feature.geometry.getBounds().getCenterLonLat(),
-                        null,
-                        buff,
-                        null,
-                        true
-                    );
-                    selectControl.popup = popup;
-                    map.addPopup(popup);
                 }
             }
 
@@ -1313,10 +1287,6 @@
                 setCookie("lat", lat.toFixed(5));
                 setCookie("lon", lon.toFixed(5));
 
-                // Update harbour layer
-                if (layer_harbours && layer_harbours.getVisible() === true) {
-                    refreshHarbours();
-                }
                 // Update tidal scale layer
                 if (layer_tidalscale && layer_tidalscale.getVisible() === true) {
                     refreshTidalScales();
@@ -1337,9 +1307,9 @@
                 setCookie("zoom",zoom);
                 if(oldZoom != zoom) {
                     oldZoom = zoom;
+                   layer_harbours.getSource().refresh();
                 }
                 // Clear POI layer
-                clearHarboursLayer();
                 clearTidalScaleLayer();
                 if (layer_download && layer_download.getVisible() === true) {
                     closeMapDownloadDialog();
@@ -1347,12 +1317,13 @@
                 }
                 refreshWeatherAppLink();
                 updatePermaLinkInDialog();
+
             }
 
             function openPopup(feature, coordinate) {
                 let html = feature.get('popupContentHTML');
 
-                if (feature.get('name')) {
+                if (!html && feature.get('name')) {
                     html = '<b>'+feature.get('name') +'</b><br>'+ feature.get('description');
                 }
 
@@ -1551,7 +1522,7 @@
         <div id="topmenu" class="menu">
             <ul>
                 <li>
-                    <a href="http://openseamap.org/" target="blank">
+                    <a href="https://openseamap.org/" target="blank">
                         <img alt="OpenSeaMapLogo" src="./resources/icons/OpenSeaMapLogo_32.png" width="24" height="24" border="0">
                     </a>
                 </li>
@@ -1616,10 +1587,10 @@
                             <input type="checkbox" id="checkLayerGebcoDepth" onClick="toggleLayer(layer_gebco_deeps_gwc);">
                             <label for="checkLayerGebcoDepth"><?=$t->tr("gebcoDepth")?></label>
                         </li>
-                        <!--li>
+                        <!-- <li>
                             <input type="checkbox" id="checkLayerSatPro" onClick="toggleLayer(layer_satpro);">
                             <label for="checkLayerSatPro"><?=$t->tr("satPro")?></label>
-                        </li-->
+                        </li> -->
                         <li>
                             <input type="checkbox" id="checkLayerWikipedia" onClick="toggleLayer(layer_wikipedia);"/>
                             <label for="checkLayerWikipedia">Wikipedia-Links</label>
@@ -1688,16 +1659,16 @@
                             <label><?=$t->tr("downloadChart")?></label>
                         </li>-->
                         <li>
-                            <a href="http://openseamap.org/index.php?id=kartendownload"><strong>Download</strong></a>
+                            <a href="https://openseamap.org/index.php?id=kartendownload"><strong>Download</strong></a>
                         </li>
                         <li>
                             <a href="https://map2.openseamap.org/#/download/.*/null?lat=35.0245&lon=-63.2636&zoom=3&layers=A10001011000&lang=en" target="_blank">OpenCPN (Kap)</a>
                         </li>
                         <li>
-                            <a href="http://wiki.openstreetmap.org/wiki/DE:OpenSeaMap_and_Garmin_nautical_chart_plotter#Download" target="_blank">Garmin</a>
+                            <a href="https://wiki.openstreetmap.org/wiki/DE:OpenSeaMap_and_Garmin_nautical_chart_plotter#Download" target="_blank">Garmin</a>
                         </li>
                         <li>
-                            <a href="http://wiki.openstreetmap.org/wiki/AT5-OpenSeaMap-Chart_for_Lowrance_Simrad_B%26G" target="_blank">Navico (Lowrance, Simrad, B&amp;G)</a>
+                            <a href="https://wiki.openstreetmap.org/wiki/AT5-OpenSeaMap-Chart_for_Lowrance_Simrad_B%26G" target="_blank">Navico (Lowrance, Simrad, B&amp;G)</a>
                         </li>
                     </ul>
                 </li>
@@ -1742,7 +1713,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="http://forum.openseamap.org" target='blank'>
+                            <a href="https://forum.openseamap.org" target='blank'>
                                 <img alt="forum" src="./resources/action/forum.png" width="22" height="22" border="0">Forum
                             </a>
                         </li>

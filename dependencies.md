@@ -63,7 +63,7 @@ Should return a ```image/png```.
 Should return a ```text/html``` website.
 
 ## Sport layer
-- http://t1.openseamap.org/sport/8/132/81.png
+- https://t1.openseamap.org/sport/8/132/81.png
 
 Should return a png tile with the size 256x256 px.
 
@@ -83,7 +83,7 @@ Should return an image.
 Should return an image.
 
 ## Marine Profile
-- http://osm.franken.de:8080/geoserver/wms?LAYERS=gebco%3Adeepshade_2014&PROJECTION=EPSG%3A900913&FORMAT=image%2Fpng&TRANSPARENT=true&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG%3A900913&BBOX=2504688.5425,7514065.6275,3130860.678125,8140237.763125&WIDTH=256&HEIGHT=256
+- https://depth.openseamap.org:8080/geoserver/wms?LAYERS=gebco%3Adeepshade_2014&PROJECTION=EPSG%3A900913&FORMAT=image%2Fpng&TRANSPARENT=true&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG%3A900913&BBOX=2504688.5425,7514065.6275,3130860.678125,8140237.763125&WIDTH=256&HEIGHT=256
 
 Should return a ```image/png```.
 
@@ -103,19 +103,19 @@ Should return a xml file.
 
 ## Water depth
 
-- http://osm.franken.de/cgi-bin/mapserv.fcgi?PROJECTION=EPSG%3A900913&TYPE=png&TRANSPARENT=TRUE&LAYERS=trackpoints_cor1_test_dbs_10,trackpoints_cor1_test_10,test_zoom_10_cor_1_points_10,test_zoom_9_cor_1_points_10,test_zoom_8_cor_1_points_10,test_zoom_7_cor_1_points_10,test_zoom_6_cor_1_points_10,test_zoom_5_cor_1_points_10,test_zoom_4_cor_1_points_10,test_zoom_3_cor_1_points_10,test_zoom_2_cor_1_points_10&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&FORMAT=image%2Fpng&SRS=EPSG%3A900913&BBOX=1095801.2373438,7044436.5257813,1252344.27125,7200979.5596875&WIDTH=1024&HEIGHT=1024
+- https://depth.openseamap.org/cgi-bin/mapserv.fcgi?PROJECTION=EPSG%3A900913&TYPE=png&TRANSPARENT=TRUE&LAYERS=trackpoints_cor1_test_dbs_10,trackpoints_cor1_test_10,test_zoom_10_cor_1_points_10,test_zoom_9_cor_1_points_10,test_zoom_8_cor_1_points_10,test_zoom_7_cor_1_points_10,test_zoom_6_cor_1_points_10,test_zoom_5_cor_1_points_10,test_zoom_4_cor_1_points_10,test_zoom_3_cor_1_points_10,test_zoom_2_cor_1_points_10&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&FORMAT=image%2Fpng&SRS=EPSG%3A900913&BBOX=1095801.2373438,7044436.5257813,1252344.27125,7200979.5596875&WIDTH=1024&HEIGHT=1024
 
 Should return a ```image/png```.
 
 ## Depth Contours
 
-- http://osm.franken.de/cgi-bin/mapserv.fcgi?LAYERS=contour,contour2&NUMZOOMLEVELS=22&TYPE=png&TRANSPARENT=TRUE&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&FORMAT=image%2Fpng&SRS=EPSG%3A900913&BBOX=1252344.27125,7044436.5257813,1408887.3051562,7200979.5596875&WIDTH=1024&HEIGHT=1024
+- https://depth.openseamap.org/cgi-bin/mapserv.fcgi?LAYERS=contour,contour2&NUMZOOMLEVELS=22&TYPE=png&TRANSPARENT=TRUE&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&FORMAT=image%2Fpng&SRS=EPSG%3A900913&BBOX=1252344.27125,7044436.5257813,1408887.3051562,7200979.5596875&WIDTH=1024&HEIGHT=1024
 
 Should return a ```image/png```.
 
 ## Download chart
 
-- http://map.openseamap.org/gml/map_download.xml
+- https://map.openseamap.org/gml/map_download.xml
 
 Should return a ```text/xml```.
 
@@ -123,6 +123,6 @@ Should return a ```text/xml```.
 
 Fetched via api/nominatim.php
 
-- http://nominatim.openstreetmap.org/search?format=xml&q=schwerin
+- https://nominatim.openstreetmap.org/search?format=xml&q=schwerin
 
 Should return a ```text/xml```.

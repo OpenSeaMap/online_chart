@@ -157,9 +157,9 @@ $english = array(
     "send404"                => "Saving failed: The OSM-Database server doesn't respond!",
 
     // Urls ---------------------------------------------------------
-    "UrlOSM"                 => "http://openstreetmap.org",
-    "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/Main_Page",
-    "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/OpenSeaMap",
+    "UrlOSM"                 => "https://openstreetmap.org",
+    "UrlOSMWiki_Hauptseite"  => "https://wiki.openstreetmap.org/wiki/Main_Page",
+    "UrlOSMWiki_OpenSeaMap"  => "https://wiki.openstreetmap.org/wiki/OpenSeaMap",
     "UrlGPLV3"               => "http://www.gnu.de/documents/gpl-3.0.en.html",
 
     // Map key ------------------------------------------------------

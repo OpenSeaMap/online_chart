@@ -101,9 +101,9 @@ $russian = array(
     "send404"                => "Облом: сервер базы OSM не отвечает!",
     
     // Urls ---------------------------------------------------------
-    "UrlOSM"                 => "http://openstreetmap.org",
-    "UrlOSMWiki_Hauptseite"  => "http://wiki.openstreetmap.org/wiki/Ru:Main_Page",
-    "UrlOSMWiki_OpenSeaMap"  => "http://wiki.openstreetmap.org/wiki/Ru:OpenSeaMap",
+    "UrlOSM"                 => "https://openstreetmap.org",
+    "UrlOSMWiki_Hauptseite"  => "https://wiki.openstreetmap.org/wiki/Ru:Main_Page",
+    "UrlOSMWiki_OpenSeaMap"  => "https://wiki.openstreetmap.org/wiki/Ru:OpenSeaMap",
 
     // Legende ------------------------------------------------------
     "Legende"                => "Условные обозначения",

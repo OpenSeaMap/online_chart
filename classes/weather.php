@@ -26,7 +26,7 @@ class Weather {
       $opts = array(
         'http'=>array(
           'method'=>"GET",
-          'header'=>"Referer: http://map.openseamap.org/weather.php"
+          'header'=>"Referer: https://map.openseamap.org/weather.php"
         )
       );
 
