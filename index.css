@@ -334,6 +334,8 @@ ul {
   position: absolute;
   top: 10px;
   left: 60px;
+  max-width: 80%;
+  width: auto;
 }
 
 .menu {
@@ -398,6 +400,7 @@ ul {
 .menu > ul {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .menu > ul > li {
