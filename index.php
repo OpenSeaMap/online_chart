@@ -122,12 +122,12 @@
             function readPermalinkOrCookies() {
 
                 // Read zoom, lat, lon
-                var cookieZoom = parseInt(getCookie("zoom"), 10);
+                var cookieZoom = parseFloat(getCookie("zoom"));
                 var cookieLat = parseFloat(getCookie("lat"));
                 var cookieLon = parseFloat(getCookie("lon"));
                 var permalinkLat = parseFloat(getArgument("lat"));
                 var permalinkLon = parseFloat(getArgument("lon"));
-                var permalinkZoom = parseInt(getArgument("zoom"), 10);
+                var permalinkZoom = parseFloat(getArgument("zoom"));
                 var markerLat  = parseFloat(getArgument("mlat"));
                 var markerLon  = parseFloat(getArgument("mlon"));
 

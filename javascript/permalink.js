@@ -1,6 +1,11 @@
 // Create a url from the current map's view.
 function getPermalink(otherParams = {}) {
-  const zoom = parseInt(map.getView().getZoom(), 10);
+  let zoom = map.getView().getZoom().toFixed(1);
+
+  // Remove the .0 from the zoom.
+  if (/\.0$/.test(zoom)) {
+    zoom = parseInt(map.getView().getZoom(), 10);
+  }
   const [lon, lat] = ol.proj.toLonLat(map.getView().getCenter());
 
   const mapLayers = map.getLayers().getArray();

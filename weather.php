@@ -64,12 +64,12 @@
             function readPermalinkOrCookies() {
 
                 // Read zoom, lat, lon
-                var cookieZoom = parseInt(getCookie("weather_zoom"), 10);
+                var cookieZoom = parseFloat(getCookie("weather_zoom"));
                 var cookieLat = parseFloat(getCookie("weather_lat"));
                 var cookieLon = parseFloat(getCookie("weather_lon"));
                 var permalinkLat = parseFloat(getArgument("lat"));
                 var permalinkLon = parseFloat(getArgument("lon"));
-                var permalinkZoom = parseInt(getArgument("zoom"), 10);
+                var permalinkZoom = parseFloat(getArgument("zoom"));
 
                 zoom = permalinkZoom || cookieZoom || zoom;
                 lat = permalinkLat || cookieLat || lat;
