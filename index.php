@@ -920,7 +920,7 @@
                     updateCheckboxAndCookie(evt.target);
                     document.getElementById("license_marine_traffic").style.display = evt.target.getVisible() ? 'inline' : 'none';
                     
-                    // Refresh position every 2 minutes. marine traffic requests are cached for 2 minutes.
+                    // Refresh position every 1 minute. marine traffic requests are cached for 2 minutes.
                     // See http cache-control header.
                     window.clearInterval(aisRefreshInterval);
                     if (evt.target.getVisible()) {
