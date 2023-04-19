@@ -417,9 +417,9 @@
                 }
 
                 var mText = document.getElementById("markerText").value;
-                if(mText != "")
+                if(mText != "") {
                     params.mtext = mText; // add marker text; if empty OSM-permalink JS will ignore the '&mtext'
-
+                }
                 document.getElementById("userURL").innerHTML = getPermalink(params); // write contents of userURL to textarea
             }
 
