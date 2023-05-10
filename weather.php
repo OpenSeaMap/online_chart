@@ -11,7 +11,7 @@
         <meta name="AUTHOR" content="Olaf Hannemann" />
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
         <meta http-equiv="content-language" content="<?= $t->getCurrentLanguage() ?>"/> 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, user-scalable=no" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <link rel="SHORTCUT ICON" href="resources/icons/OpenSeaMapLogo_16.png"/>
         <link rel="stylesheet" type="text/css" href="weather.css">
@@ -64,12 +64,12 @@
             function readPermalinkOrCookies() {
 
                 // Read zoom, lat, lon
-                var cookieZoom = parseInt(getCookie("weather_zoom"), 10);
+                var cookieZoom = parseFloat(getCookie("weather_zoom"));
                 var cookieLat = parseFloat(getCookie("weather_lat"));
                 var cookieLon = parseFloat(getCookie("weather_lon"));
                 var permalinkLat = parseFloat(getArgument("lat"));
                 var permalinkLon = parseFloat(getArgument("lon"));
-                var permalinkZoom = parseInt(getArgument("zoom"), 10);
+                var permalinkZoom = parseFloat(getArgument("zoom"));
 
                 zoom = permalinkZoom || cookieZoom || zoom;
                 lat = permalinkLat || cookieLat || lat;

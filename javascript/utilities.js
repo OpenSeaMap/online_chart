@@ -37,19 +37,7 @@ function getCookie(argument) {
 }
 
 function getArgument(argument) {
-  if (window.location.search != "") {
-    // We have parameters
-    var undef = document.URL.split("?");
-    var args = undef[1].split("&");
-    for (i = 0; i < args.length; i++) {
-      var a = args[i].split("=");
-      if (a[0] == argument) {
-        return a[1];
-      }
-    }
-    return NaN;
-  }
-  return NaN;
+  return new URLSearchParams(window.location.search).get(argument) || NaN;
 }
 
 function checkKeyReturn(e) {
