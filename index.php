@@ -1563,10 +1563,13 @@
                             <input type="checkbox" id="checkLayerHarbour" onClick="toggleLayer(layer_harbours);">
                             <label for="checkLayerHarbour"><?=$t->tr("harbours")?></label>
                         </li>
+                        <!-- disable tidal scale until there are working servers -->
+                        <!--
                         <li>
                             <input type="checkbox" id="checkLayerTidalScale" onClick="toggleLayer(layer_tidalscale);">
                             <label for="checkLayerTidalScale"><?=$t->tr("tidalScale")?></label>
                         </li>
+                        -->
                         <li>
                             <input type="checkbox" id="checkLayerSport" nClick="toggleLayer(layer_sport);">
                             <label for="checkLayerSport">Sport</label>
