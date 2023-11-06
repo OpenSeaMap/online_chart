@@ -668,7 +668,7 @@
 
                 //GebcoDepth
                 // old definition
-                // layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("gebco_2021", "https://depth.openseamap.org/geoserver/gwc/service/wms",
+                // layer_gebco_deeps_gwc = new OpenLayers.Layer.WMS("gebco_2021", "https://geoserver.openseamap.org/geoserver/gwc/service/wms",
                 //     {layers: "gebco2021:gebco_2021", format:"image/png"},
                 //     { layerId: 6, isBaseLayer: false, visibility: false, opacity: 0.8});
                 layer_gebco_deeps_gwc = new ol.layer.Tile({
@@ -682,7 +682,7 @@
                         cookieKey: "GebcoDepthLayerVisible",
                     },
                     source: new ol.source.TileWMS({
-                        url: 'https://depth.openseamap.org/geoserver/gwc/service/wms',
+                        url: 'https://geoserver.openseamap.org/geoserver/gwc/service/wms',
                         params: {'LAYERS': 'gebco2021:gebco_2021', 'VERSION':'1.1.1'},
                         ratio: 1,
                         serverType: 'geoserver',
