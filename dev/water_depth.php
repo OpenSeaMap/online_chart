@@ -99,7 +99,7 @@
                         minZoom,
                         maxZoom,
                         source: new ol.source.ImageWMS({
-                            url: 'https://depth.openseamap.org:8080/geoserver/wms',
+                            url: 'https://geoserver.openseamap.org/geoserver/wms',
                             params: {'LAYERS': layers},
                             ratio: 1,
                             serverType: 'geoserver',
