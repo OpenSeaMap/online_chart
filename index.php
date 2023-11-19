@@ -1138,39 +1138,19 @@
                     updateCheckboxAndCookie(evt.target);
                 });
                
-                // layer_waterdepth_contours = new OpenLayers.Layer.WMS("Contours", "https://depth.openseamap.org.de/cgi-bin/mapserv.fcgi?",
-                //     {
-                //       layers: ['contour','contour2'],
-                //       numZoomLevels: 22,
-                //       projection: this.projectionMercator,
-                //       type: 'png',
-                //       transparent: true},
-                layer_waterdepth_contours =new ol.layer.Tile({
-                    visible: false,
-                    maxZoom: 22,
-                    properties:{
-                        name: 'Contours',
-                        layerId: 22,
-                        checkboxId: "checkDepthContours",
-                        cookieKey: "WaterDepthContoursVisible",
+                // layer_waterdepth_contours 
+                layer_waterdepth_contours = new ol.layer.Image({
+                  source: new ol.source.ImageWMS({
+                    url: 'https://depth.openseamap.org/geoserver/openseamap/wms',
+                    params: {
+                      'LAYERS': 'openseamap:contour2,openseamap:contour',
+                      'VERSION': '1.1.0'
                     },
-                    source: new ol.source.TileWMS({
-                        url: 'https://depth.openseamap.org/cgi-bin/mapserv.fcgi?SRS=EPSG:900913&',
-                        params: {
-                            'TRANSPARENT': 'TRUE',
-                            'LAYERS': [
-                                'contour','contour2'
-                            ].join(','),
-                            'VERSION':'1.3.0'},
-                        ratio: 1,
-                        hidpi: false,
-                        serverType: 'mapserver',
-                        tileLoadFunction:(imageTile, src) => {
-                            imageTile.getImage().src = src.replace('3857', '900913');
-                        },
-                        tileGrid: tileGrid512,
-                    }),
+                    attributions: '&copy; OpenSeaMap Contributors,'
+                  })
                 });
+
+
                 layer_waterdepth_contours.on("change:visible", (evt) => {
                     updateCheckboxAndCookie(evt.target);
                 })
