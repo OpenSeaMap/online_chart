@@ -1093,6 +1093,13 @@
                 
                 // layer_waterdepth_trackpoints_10m 
                 layer_waterdepth_trackpoints_10m = new ol.layer.Image({
+                  visible: false,
+                  properties:{
+                    name: 'Water Depth Track Points',
+                    layerId: 21,
+                    checkboxId: "checkLayerWaterDepthTrackPoints10m",
+                    cookieKey: "WaterDepthTrackPointsLayerVisible10m",
+                  },
                   source: new ol.source.ImageWMS({
                     url: 'https://depth.openseamap.org/geoserver/openseamap/wms',
                     params: {
@@ -1116,6 +1123,13 @@
 
                 // layer_waterdepth_trackpoints_100m
                 layer_waterdepth_trackpoints_100m = new ol.layer.Image({
+                  visible: false,
+                  properties:{
+                    name: 'Water Depth Track Points',
+                    layerId: 18,
+                    checkboxId: "checkLayerWaterDepthTrackPoints100m",
+                    cookieKey: "WaterDepthTrackPointsLayerVisible100m",
+                  },  
                   source: new ol.source.ImageWMS({
                     url: 'https://depth.openseamap.org/geoserver/openseamap/wms',
                     params: {
@@ -1140,6 +1154,14 @@
                
                 // layer_waterdepth_contours 
                 layer_waterdepth_contours = new ol.layer.Image({
+                  visible: false,
+                  maxZoom: 22,
+                  properties:{
+                    name: 'Contours',
+                    layerId: 22,
+                    checkboxId: "checkDepthContours",
+                    cookieKey: "WaterDepthContoursVisible",
+                  },  
                   source: new ol.source.ImageWMS({
                     url: 'https://depth.openseamap.org/geoserver/openseamap/wms',
                     params: {
