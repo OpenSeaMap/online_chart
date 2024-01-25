@@ -116,7 +116,7 @@ class Translation {
      * Parsed die vom Browser gesendeten bevorzugten Sprachen und gibt sie als Array mit Gewichtigkeit zurück
      */
     function getHttpPreferredLanguages() {
-        $list = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        $list = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en';
         $preferredLanguages = array();
         $array = explode(",",$list);
         foreach ($array as $key => $value) {
