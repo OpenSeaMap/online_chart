@@ -155,9 +155,9 @@ class Translation {
     function getHttpPreferredLanguage() {
         $languages = $this->getHttpPreferredLanguages();
         $quality = 0;
-        $code = "";
+        $code = "en";
         foreach ($languages as $key => $value) {
-            if ($value['quality'] > $quality) {
+            if ($value['quality'] > $quality and array_key_exists($value['language'],$this->languages)) {
                 $quality = $value['quality'];
                 $code = $value['language'];
             }
