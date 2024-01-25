@@ -1543,7 +1543,7 @@
                         </li>
                         <!-- <li>
                             <input type="checkbox" id="checkLayerSatPro" onClick="toggleLayer(layer_satpro);">
-                            <label for="checkLayerSatPro"><?=$t->tr("satPro")?></label>
+                            <label for="checkLayerSatPro"><?=$t->tr("satpro")?></label>
                         </li> -->
                         <li>
                             <input type="checkbox" id="checkLayerWikipedia" onClick="toggleLayer(layer_wikipedia);"/>
