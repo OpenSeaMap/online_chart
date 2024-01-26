@@ -23,6 +23,7 @@ $english = array(
     "download"               => "Download",
     "reload"                 => "Reload",
     "edit"                   => "Edit",
+    "info"                   => "Information",
     "move"                   => "Move",
     "delete"                 => "Delete",
     "login"                  => "Login",
