@@ -65,11 +65,9 @@ class Translation {
         // Wenn language nicht gesetzt ist, die aktuell gesetzte Sprache benutzen
         if ($language == "")
             $language = $this->getCurrentLanguage();
-        $text = $this->languages[$language][$entry];
-        // Wenn kein Text gefunden wurde, als Fallback die Standardsprache probieren
-        if (!isset($text) && $language != $this->defaultLanguage) {
-            $text = $this->languages[$this->defaultLanguage][$entry];
-        }
+
+        $text = $this->languages[$language][$entry] ?? $this->languages[$this->defaultLanguage][$entry];
+
         return $text;
     }
     function pr($entry,$language = "") {
