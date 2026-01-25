@@ -487,3 +487,27 @@ td:nth-child(4) {
 table#routeSegmentList tr:nth-child(even) {
   background-color: #ececec;
 }
+/* --- UI MODERNIZATION START --- */
+/* Mobile Touch Targets & Visual Polish */
+
+.ol-control button {
+    min-width: 44px !important;    /* Fat Finger Friendly */
+    min-height: 44px !important;
+    font-size: 1.5rem !important;
+    margin-bottom: 5px !important; /* Space between buttons */
+    cursor: pointer;
+}
+
+.ol-control, .ol-control button {
+    background-color: #FFFFFF !important;
+    border-radius: 8px !important; /* Soft corners */
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; /* Floating effect */
+    transition: all 0.2s ease;
+}
+
+.ol-control button:active {
+    background-color: #FF5722 !important; /* Orange on tap */
+    color: #FFFFFF !important;
+}
+/* --- UI MODERNIZATION END --- */
