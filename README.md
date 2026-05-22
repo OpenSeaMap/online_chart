@@ -12,6 +12,6 @@ and
 
 - index.php : entry point of <https://map.openseamap.org>
 - weather.php: entry point for <https://weather.openseamap.org>
-- legend.php: display legend, help and other legal informations, used by elp menu in  <https://map.openseamap.org>
+- legend.php: display legend, help and other legal informations, used by help menu in  <https://map.openseamap.org>
 
 Each of these php files have their own css files.
