@@ -178,7 +178,20 @@ ul {
   height: 261px;
   visibility: hidden;
   border-radius: 50%;
-  /* background-color:white; */
+}
+
+#compassRose::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 112px;
+  height: 112px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 0 0 1px rgba(20, 20, 20, 0.35);
+  z-index: 1;
 }
 
 #geoCompassRose {
@@ -200,25 +213,27 @@ ul {
 
 #magCompassText {
   position: absolute;
-  left: 132px;
-  bottom: 118px;
-  color: #e50083;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #111;
   font-size: 9px;
+  font-weight: 600;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  width: 100px;
+  width: 104px;
   text-align: center;
+  line-height: 1.15;
+  z-index: 2;
 }
 
 #magCompassTextTop {
-  position: relative;
-  left: -50%;
-  bottom: 20px;
+  position: static;
 }
 
 #magCompassTextBottom {
-  position: relative;
-  left: -50%;
-  bottom: -20px;
+  position: static;
+  margin-top: 5px;
+  font-size: 8px;
 }
 
 /**
