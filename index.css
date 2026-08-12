@@ -185,11 +185,12 @@ ul {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 122px;
-  height: 122px;
+  width: 112px;
+  height: 112px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.94);
+  background-color: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 0 0 1px rgba(20, 20, 20, 0.35);
   z-index: 1;
 }
 
@@ -216,12 +217,12 @@ ul {
   top: 50%;
   transform: translate(-50%, -50%);
   color: #111;
-  font-size: 14px;
+  font-size: 9px;
   font-weight: 600;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  width: 180px;
+  width: 104px;
   text-align: center;
-  line-height: 1.25;
+  line-height: 1.15;
   z-index: 2;
 }
 
@@ -231,7 +232,8 @@ ul {
 
 #magCompassTextBottom {
   position: static;
-  margin-top: 8px;
+  margin-top: 5px;
+  font-size: 8px;
 }
 
 /**
