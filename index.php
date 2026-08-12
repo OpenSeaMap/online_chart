@@ -29,8 +29,11 @@
         <script type="text/javascript">
 
             <?php
-                $tempval = parse_ini_file("/var/lib/online-chart/online_chart.ini");
-                $osm_server = $tempval['osmserver'];
+                $configFile = "/var/lib/online-chart/online_chart.ini";
+                $tempval = is_readable($configFile) ? parse_ini_file($configFile) : false;
+                $osm_server = is_array($tempval) && isset($tempval['osmserver'])
+                    ? $tempval['osmserver']
+                    : 'OSM';
                 echo "var OsmTileServer = ", "\"", $osm_server, "\""
             ?>
 
@@ -524,13 +527,26 @@
                 });
 
                 map.addControl(new Permalink());
-                map.addControl(new ol.control.ScaleLine({
-                    className: 'ol-scale-line-metric'
-                }));
-                map.addControl(new ol.control.ScaleLine({
+                const scaleLineMaxWidth = () => Math.min(
+                    240,
+                    Math.max(100, Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.2))
+                );
+                const metricScaleLine = new ol.control.ScaleLine({
+                    className: 'ol-scale-line-metric',
+                    maxWidth: scaleLineMaxWidth()
+                });
+                const nauticalScaleLine = new ol.control.ScaleLine({
                     className: 'ol-scale-line-nautical',
-                    units: "nautical",
-                }));
+                    units: 'nautical',
+                    maxWidth: scaleLineMaxWidth()
+                });
+                map.addControl(metricScaleLine);
+                map.addControl(nauticalScaleLine);
+                window.addEventListener('resize', () => {
+                    const maxWidth = scaleLineMaxWidth();
+                    metricScaleLine.setMaxWidth(maxWidth);
+                    nauticalScaleLine.setMaxWidth(maxWidth);
+                });
                 map.addControl(new ol.control.ZoomSlider());
                 map.addControl(new ol.control.MousePosition({
                     coordinateFormat: (coordinate) => {
